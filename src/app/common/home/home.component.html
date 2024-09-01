@@ -1,5 +1,52 @@
-<p>home works!</p>
-
-<div class="card flex justify-content-center">
-    <p-button label="Check" icon="pi pi-check"></p-button>
+<div class="image-container">
+    <img src="logo.png" alt="Logo" />
 </div>
+
+<div class="flex justify-content-center flex-wrap">
+
+    <div class="login-container flex align-items-center justify-content-center">
+        
+        <div class="login-form">
+
+            <div class="form-input">
+                <div class="card flex justify-content-center">
+                    <p-floatLabel>
+                        <input pInputText id="username" [(ngModel)]="username" />
+                        <label for="username">Username</label>
+                    </p-floatLabel>
+                </div>
+            </div>
+
+            <div class="form-input">
+                <div class="card flex justify-content-center">
+                    <p-floatLabel>
+                        <p-password [(ngModel)]="password" [toggleMask]="true"/>
+                        <label for="password">Password</label>
+                    </p-floatLabel>
+                </div>
+            </div>
+
+            <div class="form-button">
+                <div class="card flex justify-content-center">
+                    <p-button label="Log In" [outlined]="true"/>
+                </div>
+            </div>
+
+            <div class="reset-password">
+                <div class="card flex justify-content-center">
+                    <a href="#">Forgot your password? Click here</a>
+                </div>
+            </div>
+        </div>
+    
+        <p-divider layout="vertical" />
+    
+        <div class="sign-in-text">
+            <div class="card flex justify-content-center">
+                <p-button label="Sign Up" [rounded]="true" />
+            </div>
+        </div>
+        
+    </div>
+</div> 
+

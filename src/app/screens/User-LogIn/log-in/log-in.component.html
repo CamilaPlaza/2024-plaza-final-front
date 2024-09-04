@@ -34,7 +34,7 @@
 
             <div class="reset-password">
                 <div class="card flex justify-content-center">
-                    <a href="#">Forgot your password? Click here</a>
+                    <a [routerLink]="'/user-forgot-password'" >Forgot your password? Click here</a>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
     
         <div class="sign-in-text">
             <div class="card flex justify-content-center">
-                <p-button label="Sign Up" [rounded]="true" />
+                <p-button label="Sign Up" [routerLink]="'/user-register'" [rounded]="true" />
             </div>
         </div>
         

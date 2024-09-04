@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './common/home/home.component';
 import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
@@ -13,13 +12,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent } from './common/footer/footer.component';
 import { HeaderComponent } from './common/header/header.component';
 import { HttpClientModule } from '@angular/common/http';
+import { LogInComponent } from './screens/User-LogIn/log-in/log-in.component';
+import { UserRegisterComponent } from './screens/User-LogIn/user-register/user-register.component';
+import { UserForgotPasswordComponent } from './screens/User-LogIn/user-forgot-password/user-forgot-password.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
+    LogInComponent,
+    UserRegisterComponent,
+    UserForgotPasswordComponent
+
   ],
   imports: [
     BrowserModule,

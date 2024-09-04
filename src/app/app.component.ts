@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'pm-root',
@@ -7,20 +7,16 @@ import { NavigationEnd, Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'APM-New';
-  showBackgroundImage: boolean = false;
-  constructor(private router: Router) { }
+  showHeader: boolean = true;
 
-  ngOnInit() {
+  constructor(private router: Router) {
     this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.showBackgroundImage = (event.urlAfterRedirects === '/');
+      if (this.router.url === '/' || this.router.url === '/user-register') {
+        this.showHeader = false;
+      } else {
+        this.showHeader = true;
       }
     });
-  }
-
-  onRouterOutletActivate(component: any) {
-    // Aquí puedes realizar alguna lógica adicional si es necesario
   }
 }
 

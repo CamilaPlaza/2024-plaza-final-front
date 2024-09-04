@@ -1,0 +1,19 @@
+:host ::ng-deep .custom-menubar .p-menubar {
+    background-color: #035d7b7b; /* Cambia el color de fondo del menú */
+}
+
+:host ::ng-deep .custom-menubar .p-menuitem {
+    color: #035d7bdd; /* Cambia el color del texto de los ítems del menú */
+}
+
+:host ::ng-deep .custom-menubar .p-menuitem-icon {
+    color: #022632; /* Cambia el color del ícono de los ítems del menú */
+}
+
+:host ::ng-deep .custom-menubar .p-menuitem-text {
+    color: #022632; /* Cambia el color del texto del ítem del menú */
+}
+
+:host ::ng-deep .custom-menubar .p-submenu-icon {
+    color: #035d7b9d; /* Cambia el color del ícono del submenú */
+}

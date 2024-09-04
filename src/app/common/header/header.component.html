@@ -1,0 +1,11 @@
+<p-menubar [model]="items" class="custom-menubar">
+    <ng-template pTemplate="start">
+        <a [routerLink]="'/'">
+            <img src="../../../assets/images/isologo.png" height="40" class="mr-2" />
+        </a>
+        
+    </ng-template>
+    <ng-template pTemplate="end">
+        <input type="text" pInputText placeholder="Search" class="w-full" />
+    </ng-template>
+</p-menubar>

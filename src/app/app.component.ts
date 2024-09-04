@@ -1,16 +1,27 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HomeComponent } from "./common/home/home.component";
-import { HeaderComponent } from "./common/header/header.component";
-import { FooterComponent } from "./common/footer/footer.component";
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, HomeComponent, HeaderComponent, FooterComponent],
+  selector: 'pm-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'C&v-Bar';
+  title = 'APM-New';
+  showBackgroundImage: boolean = false;
+  constructor(private router: Router) { }
+
+  ngOnInit() {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.showBackgroundImage = (event.urlAfterRedirects === '/');
+      }
+    });
+  }
+
+  onRouterOutletActivate(component: any) {
+    // Aquí puedes realizar alguna lógica adicional si es necesario
+  }
 }
+
+

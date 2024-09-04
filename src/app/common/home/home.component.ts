@@ -1,28 +1,30 @@
-
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { PasswordModule } from 'primeng/password';
-import { DividerModule } from 'primeng/divider';
-import { InputTextModule } from 'primeng/inputtext';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { ButtonModule } from 'primeng/button';
-import { InputIconModule } from 'primeng/inputicon';
-import { IconFieldModule } from 'primeng/iconfield';
-
+import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/services/user_service';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
-  standalone: true,
-  imports: [FormsModule, DividerModule, PasswordModule, InputIconModule, IconFieldModule, InputTextModule, FloatLabelModule, ButtonModule] 
+  styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  username: string = '';
+export class HomeComponent implements OnInit {
+  email: string = '';
   password: string = '';
 
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+  }
+
   onLogin() {
-    console.log('Username:', this.username);
-    console.log('Password:', this.password);
+    const user = new User(this.email, this.password);
+    this.userService.login(user).subscribe(
+      response => {
+        console.log('Login successful', response);
+      },
+      error => {
+        console.error('Login failed', error);
+      }
+    );
   }
 }

@@ -1,5 +1,5 @@
 <div class="image-container">
-    <img src="logo.png" alt="Logo" />
+    <img src="../../../assets/images/logo.png" alt="Logo" />
 </div>
 
 <div class="flex justify-content-center flex-wrap">
@@ -11,8 +11,8 @@
             <div class="form-input">
                 <div class="card flex justify-content-center">
                     <p-floatLabel>
-                        <input pInputText id="username" [(ngModel)]="username" />
-                        <label for="username">Username</label>
+                        <input pInputText id="email" [(ngModel)]="email" />
+                        <label for="email">Email</label>
                     </p-floatLabel>
                 </div>
             </div>
@@ -28,7 +28,7 @@
 
             <div class="form-button">
                 <div class="card flex justify-content-center">
-                    <p-button label="Log In" [outlined]="true"/>
+                    <p-button label="Log In" (click)="onLogin()" [outlined]="true"/>
                 </div>
             </div>
 

@@ -20,7 +20,7 @@
             <div class="form-input">
                 <div class="card flex justify-content-center">
                     <p-floatLabel>
-                        <p-password [(ngModel)]="password" [toggleMask]="true"/>
+                        <p-password [(ngModel)]="password"/>
                         <label for="password">Password</label>
                     </p-floatLabel>
                 </div>
@@ -39,7 +39,7 @@
             </div>
         </div>
     
-        <p-divider layout="vertical" />
+        <p-divider [layout]="isMobile ? 'horizontal' : 'vertical'"/>
     
         <div class="sign-in-text">
             <div class="card flex justify-content-center">

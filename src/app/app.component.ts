@@ -11,7 +11,7 @@ export class AppComponent {
 
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
-      if (this.router.url === '/' || this.router.url === '/user-register') {
+      if (this.router.url === '/' || this.router.url === '/user-register' || this.router.url === '/user-forgot-password') {
         this.showHeader = false;
       } else {
         this.showHeader = true;

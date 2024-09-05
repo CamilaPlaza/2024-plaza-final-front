@@ -16,9 +16,9 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  async login(user: User): Promise<String> {
+  async login(email: string, password: string): Promise<String> {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('User logged in successfully:', userCredential.user);
       return "true";
     } catch (error: any) {

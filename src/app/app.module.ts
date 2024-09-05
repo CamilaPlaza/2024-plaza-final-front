@@ -16,6 +16,7 @@ import { LogInComponent } from './screens/User-LogIn/log-in/log-in.component';
 import { UserRegisterComponent } from './screens/User-LogIn/user-register/user-register.component';
 import { UserForgotPasswordComponent } from './screens/User-LogIn/user-forgot-password/user-forgot-password.component';
 import { MenubarModule } from 'primeng/menubar';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { MenubarModule } from 'primeng/menubar';
     InputTextModule,
     AppRoutingModule,
     FloatLabelModule,
+    CalendarModule,
     MenubarModule
   ],
   providers: [],

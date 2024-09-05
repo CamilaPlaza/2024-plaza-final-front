@@ -1,3 +1,71 @@
-<a [routerLink]="'/'">
-    <img src="../../../assets/images/isologo.png" height="40" class="mr-2" />
-</a>
+<div class="login-container">
+
+    <div class="welcome-container">
+        <div class="text">
+            <p class="title">Welcome!</p>
+            <p class="description">Please enter your information <br> to register</p>
+        </div>
+
+        <div class="image-container">
+            <a [routerLink]="'/'">
+                <img src="../../../assets/images/isologo.png" alt="Logo" />
+            </a>
+        </div>     
+            
+    </div>
+    
+    <!-- Línea divisora vertical -->
+    <p-divider layout="vertical"></p-divider>
+        
+    <div class="login-form">
+
+        <div class="form-input">
+            <div class="card flex justify-content-center">
+                <p-floatLabel>
+                    <input pInputText id="name" [(ngModel)]="name" />
+                    <label for="name">Name</label>
+                </p-floatLabel>
+            </div>
+        </div>
+
+        <div class="form-input">
+            <div class="card flex justify-content-center">
+                <p-floatLabel>
+                    <input pInputText id="email" [(ngModel)]="email" />
+                    <label for="email">Email</label>
+                </p-floatLabel>
+            </div>
+        </div>
+
+        <div class="form-input">
+            <div class="card flex justify-content-center">
+                <p-floatLabel>
+                    <p-password [(ngModel)]="password" [toggleMask]="true"/>
+                    <label for="password">Password</label>
+                </p-floatLabel>
+            </div>
+        </div>
+
+        <div class="form-input">
+            <div class="card flex justify-content-center">
+                <p-floatLabel>
+                    <p-calendar 
+                        [(ngModel)]="birthDate" 
+                        inputId="buttondisplay" 
+                        [iconDisplay]="'input'" 
+                        [showIcon]="true"/>
+                    <label for="birthDate">Birthday</label>
+                </p-floatLabel>
+            </div>
+        </div>
+
+        <div class="form-button">
+            <div class="card flex justify-content-center">
+                <p-button label="Register" (onClick)="onRegister()" [outlined]="true"/>
+            </div>
+        </div>
+        
+
+    </div>
+        
+</div>

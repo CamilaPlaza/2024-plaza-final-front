@@ -17,6 +17,9 @@ import { UserRegisterComponent } from './screens/User-LogIn/user-register/user-r
 import { UserForgotPasswordComponent } from './screens/User-LogIn/user-forgot-password/user-forgot-password.component';
 import { MenubarModule } from 'primeng/menubar';
 import { CalendarModule } from 'primeng/calendar';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,8 @@ import { CalendarModule } from 'primeng/calendar';
   ],
   imports: [
     BrowserModule,
+    ToastModule,
+    ConfirmDialogModule,
     HttpClientModule,
     FormsModule,
     PasswordModule,
@@ -42,7 +47,7 @@ import { CalendarModule } from 'primeng/calendar';
     CalendarModule,
     MenubarModule
   ],
-  providers: [],
+  providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

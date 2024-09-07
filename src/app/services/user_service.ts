@@ -49,6 +49,7 @@ export class UserService {
       return "false";
     }
   }
+
   async resetPassword(email: string): Promise<void> {
     try {
       await sendPasswordResetEmail(auth, email);
@@ -57,9 +58,9 @@ export class UserService {
       console.error('Error sending password reset email:', error.message);
     }
   }
+
   deleteCurrentUser(): Promise<void> {
     const user = auth.currentUser;
-
     if (user) {
       return deleteUser(user)
         .then(() => {
@@ -73,4 +74,5 @@ export class UserService {
       return Promise.reject('No user is currently logged in');
     }
   }
+
 }

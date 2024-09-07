@@ -1,8 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { User } from 'src/app/models/user';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/services/user_service';
+import { UserService } from '../../../services/user_service';
 
 @Component({
   selector: 'app-user-register',
@@ -21,11 +21,9 @@ export class UserRegisterComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private confirmationService: ConfirmationService, 
-    private messageService: MessageService, 
+    private confirmationService: ConfirmationService,
     private router: Router
   ) {}
-
 
 
   async onRegister(event: Event) {
@@ -38,7 +36,7 @@ export class UserRegisterComponent implements OnInit {
         try {
           const response = await this.userService.onRegister(this.email, this.password, this.name, this.birthDate)
           console.log('Register successful', response);
-          this.router.navigate(['/']);
+          this.router.navigate(['/home']);
     
         } catch (error: any) {
           console.error('Register failed', error);
@@ -46,9 +44,11 @@ export class UserRegisterComponent implements OnInit {
       }
     });
   }
+ 
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isMobile = window.innerWidth <= 800;
   } 
+
 }

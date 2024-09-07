@@ -9,8 +9,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AppRoutingModule } from './app-routing.module';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FooterComponent } from './common/footer/footer.component';
-import { HeaderComponent } from './common/header/header.component';
+import { FooterComponent } from './screens/common/footer/footer.component';
+import { HeaderComponent } from './screens/common/header/header.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LogInComponent } from './screens/User-LogIn/log-in/log-in.component';
 import { UserRegisterComponent } from './screens/User-LogIn/user-register/user-register.component';
@@ -20,12 +20,14 @@ import { CalendarModule } from 'primeng/calendar';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { HomeComponent } from './screens/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
     HeaderComponent,
+    HomeComponent,
     LogInComponent,
     UserRegisterComponent,
     UserForgotPasswordComponent

@@ -12,6 +12,8 @@ export class LogInComponent implements OnInit {
   email: string = '';
   password: string = '';
   isMobile: boolean = window.innerWidth <= 800;
+  displayForgotPasswordDialog: boolean = false;
+
   
   constructor(private userService: UserService, private router: Router) {}
   
@@ -25,7 +27,7 @@ export class LogInComponent implements OnInit {
       try {
         const response = await this.userService.login(this.email, this.password);
         console.log('Login successful', response);
-        this.router.navigate(['/user-register']);
+        this.router.navigate(['/home']);
 
       } catch (error: any) {
         console.error('Login failed', error);
@@ -36,4 +38,13 @@ export class LogInComponent implements OnInit {
   onResize(event: any) {
     this.isMobile = window.innerWidth <= 800;
   }
+
+  showForgotPasswordDialog() {
+    this.displayForgotPasswordDialog = true;
+  }
+
+  closeForgotPasswordDialog() {
+    this.displayForgotPasswordDialog = false;
+  }
+
 }

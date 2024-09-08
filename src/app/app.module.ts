@@ -21,6 +21,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HomeComponent } from './screens/home/home.component';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { HomeComponent } from './screens/home/home.component';
     FormsModule,
     PasswordModule,
     ButtonModule,
+    DialogModule,
     BrowserAnimationsModule,
     DividerModule,
     InputTextModule,

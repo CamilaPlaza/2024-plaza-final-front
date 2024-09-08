@@ -34,7 +34,7 @@
 
             <div class="reset-password">
                 <div class="card flex justify-content-center">
-                    <a [routerLink]="'/user-forgot-password'" >Forgot your password? Click here</a>
+                    <a (click)="showForgotPasswordDialog()" >Forgot your password? Click here</a>
                 </div>
             </div>
         </div>
@@ -50,3 +50,6 @@
     </div>
 </div> 
 
+<p-dialog header="Forgot Password" [(visible)]="displayForgotPasswordDialog" [modal]="true" [closable]="true">
+    <app-user-forgot-password (onClose)="closeForgotPasswordDialog()"></app-user-forgot-password>
+</p-dialog>

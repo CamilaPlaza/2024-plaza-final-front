@@ -38,7 +38,6 @@ export class UserService {
     }
   }
   
-
   async login(email: string, password: string): Promise<String> {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);

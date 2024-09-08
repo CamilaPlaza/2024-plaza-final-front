@@ -5,7 +5,7 @@ html, body {
 }
 
 .app-container {
-    background-color: #eedfd6;
+    background-color: #eedfd63f;
     min-height: 100vh;
     min-width: 100%;
     margin: -8px;

@@ -1,19 +1,27 @@
 :host ::ng-deep .custom-menubar .p-menubar {
-    background-color: #035d7b7b; /* Cambia el color de fondo del menú */
-}
-
-:host ::ng-deep .custom-menubar .p-menuitem {
-    color: #035d7bdd; /* Cambia el color del texto de los ítems del menú */
+    background-color: #035E7B; /* Fondo del menú principal */
 }
 
 :host ::ng-deep .custom-menubar .p-menuitem-icon {
-    color: #022632; /* Cambia el color del ícono de los ítems del menú */
+    color: #ffffff; /* Color del ícono de los ítems */
 }
 
 :host ::ng-deep .custom-menubar .p-menuitem-text {
-    color: #022632; /* Cambia el color del texto del ítem del menú */
+    color: #ffffff; /* Color del texto de los ítems */
 }
 
-:host ::ng-deep .custom-menubar .p-submenu-icon {
-    color: #035d7b9d; /* Cambia el color del ícono del submenú */
+/* Estilos para los submenús desplegables */
+:host ::ng-deep .custom-menubar .p-submenu-list {
+    background-color: #035E7B; /* Fondo del submenú desplegable */
 }
+
+/* Al pasar el ratón sobre un ítem del submenú */
+:host ::ng-deep .custom-menubar .p-submenu-list .p-menuitem-link:hover {
+    background-color: #024A63; /* Cambia el color de fondo al hacer hover */
+}
+
+:host ::ng-deep .custom-menubar .p-menubar .p-menuitem-link:hover {
+    background-color: #024A63; /* Cambia el color de fondo al hacer hover */
+}
+
+

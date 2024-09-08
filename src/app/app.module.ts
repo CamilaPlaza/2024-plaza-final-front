@@ -22,6 +22,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HomeComponent } from './screens/home/home.component';
 import { DialogModule } from 'primeng/dialog';
+import { UserProfileComponent } from './screens/user-profile/user-profile.component';
+import { ProductsViewComponent } from './screens/product/products-view/products-view.component';
+import { RegisterProductComponent } from './screens/product/register-product/register-product.component';
 
 @NgModule({
   declarations: [
@@ -29,10 +32,12 @@ import { DialogModule } from 'primeng/dialog';
     FooterComponent,
     HeaderComponent,
     HomeComponent,
+    UserProfileComponent,
+    ProductsViewComponent,
+    RegisterProductComponent,
     LogInComponent,
     UserRegisterComponent,
     UserForgotPasswordComponent
-
   ],
   imports: [
     BrowserModule,

@@ -17,3 +17,7 @@ html, body {
     z-index: -1;
     width: 100%;
 }
+
+.main-content{
+    margin-left: 6%;
+}

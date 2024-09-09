@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
     styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-        items: MenuItem[] | undefined;
+    items: MenuItem[] | undefined;
 
     constructor(private router: Router) { }
 

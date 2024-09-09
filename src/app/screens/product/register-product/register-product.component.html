@@ -1,44 +1,40 @@
 <div class="container">
-    <div class="title">Register a new Product</div>
-    <div class="form">
-        <div class="form-row">
-            <div class="form-input">
-                <div class="flex flex-column gap-2">
-                    <label for="name">Product Name</label>
-                    <input pInputText id="name" [(ngModel)]="name" />
-                </div>
+    <div class="column column-left">
+        <p class="title">PRODUCT REGISTER</p>
+        <form class="form">
+            <div class="form-group">
+                <label for="product-name">Product Name</label>
+                <input 
+                    pInputText 
+                    id="product-name" 
+                    [(ngModel)]="name" 
+                    placeholder="Enter product name" />
             </div>
-
-            <div class="form-input description-input">
-                <div class="flex flex-column gap-2">
-                    <label for="description">Description</label>
-                    <textarea pInputTextarea id="description" [(ngModel)]="description"></textarea>
-                </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input 
+                    pInputText 
+                    id="description" 
+                    [(ngModel)]="description" 
+                    placeholder="Enter description" />
             </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-input">
-                <div class="flex flex-column gap-2">
-                    <label for="price">Price</label>
-                    <input pInputText id="price" [(ngModel)]="price" />
-                </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input 
+                    pInputText 
+                    id="price" 
+                    [(ngModel)]="price" 
+                    placeholder="Enter price" />
             </div>
-
-            <div class="form-input">
-                <div class="flex flex-column gap-2">
-                    <label for="amount">Amount</label>
-                    <input pInputText id="amount" [(ngModel)]="amount" />
-                </div>
+            <div class="card flex justify-content-center">
+                <p-toast></p-toast>
+                <p-confirmDialog></p-confirmDialog>
+                <button (click)="onRegister()" class="btn-save">Save</button>            
             </div>
-        </div>
+            
+        </form>
     </div>
-
-    <div class="form-button">
-        <div class="card flex justify-content-center">
-            <p-toast />
-            <p-confirmDialog />
-            <p-button (onClick)="registerProduct()" label="Save" [outlined]="true" />
-        </div>
+    <div class="column column-right">
+        <img src="../../../../assets/images/new_product.jpg" alt="Imagen de fondo" class="background-image">
     </div>
 </div>

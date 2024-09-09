@@ -1,55 +1,68 @@
-/* Container centralizado */
+/* Contenedor para centrar y ajustar */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     height: 100vh;
-    padding: 0 2rem;
+    padding: 2rem;
 }
 
 /* Título alineado a la izquierda */
 .title {
-    align-self: flex-start;
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 2rem;
-    color: #035E7B;
+    align-self: flex-start;
 }
 
-/* Inputs centrados y estilizados */
+/* Estilo general del formulario */
 .form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
     width: 100%;
-    max-width: 600px; /* Limitar el tamaño máximo */
+    max-width: 800px; /* Ajusta el tamaño máximo */
 }
 
+/* Fila para los inputs */
 .form-row {
     display: flex;
-    justify-content: space-between;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    gap: 2rem; /* Espacio entre columnas */
+    justify-content: center; /* Centrar las filas */
 }
 
-/* Inputs estilizados */
-input {
+/* Inputs flexibles en la fila */
+.form-input {
+    flex: 1;
+}
+
+/* Asegurar que el textarea ocupe el espacio de dos inputs */
+.description-input {
+    flex: 2;
+}
+
+/* Estilo para todos los inputs y el textarea */
+input[pInputText], textarea[pInputTextarea] {
     width: 100%;
-    padding: 0.75rem;
-    border-radius: 4px;
-    border: none;
+    padding: 10px;
     background-color: #035E7B;
     color: #ffffff;
-    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
 }
 
-input:focus {
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Botón centrado */
+/* Alinear el botón de registro */
 .form-button {
-    text-align: center;
     margin-top: 2rem;
+    text-align: center;
+}
+
+p-button {
+    background-color: #035E7B;
+    border-radius: 4px;
+    color: #ffffff;
+    padding: 10px 20px;
 }
 
 /* Ajuste para pantallas pequeñas */

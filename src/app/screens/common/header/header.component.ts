@@ -15,64 +15,38 @@ export class HeaderComponent implements OnInit {
     ngOnInit(): void {
         this.items = [
             {
-                label: 'Home',
                 icon: 'pi pi-fw pi-home',
                 routerLink: '/home'
             },
             {
-                label: 'Products',
-                icon: 'pi pi-fw pi-user-edit',
+                icon: 'pi pi-fw pi-pencil',
                 items: [
                     {
-                        label: 'Register Products',
-                        icon: 'pi pi-fw pi-pencil',
+                        label: 'Register',
                         routerLink: '/register-product'
                     },
                     {
-                        label: 'View Products',
-                        icon: 'pi pi-fw pi-pencil',
+                        label: 'Table',
                         routerLink: '/products-view'
                     }
                 ]
             },
             {
-                label: 'Expenses',
-                icon: 'pi pi-fw pi-dollar',
-                items: [
-                    {
-                        label: 'Total expenses',
-                        icon: 'pi pi-fw pi-money-bill',
-                        routerLink: '/total-expenses'  // Agrega la ruta si existe
-                    },
-                    {
-                        label: 'Suppliers',
-                        icon: 'pi pi-fw pi-users',
-                        routerLink: '/suppliers'  // Agrega la ruta si existe
-                    },
-                    {
-                        label: 'Maintenance',
-                        icon: 'pi pi-fw pi-wrench',
-                        routerLink: '/maintenance'  // Agrega la ruta si existe
-                    }
-                ]
+                icon: 'pi pi-fw pi-dollar'
             },
             {
-                label: 'Calendar',
                 icon: 'pi pi-fw pi-calendar',
                 routerLink: '/calendar'
             },
             {
-                label: 'Profile',
                 icon: 'pi pi-fw pi-user-edit',
                 items: [
                     {
                         label: 'Edit',
-                        icon: 'pi pi-fw pi-pencil',
                         routerLink: '/user-profile'
                     },
                     {
                         label: 'Quit',
-                        icon: 'pi pi-fw pi-power-off',
                         command: () => this.logout() // Agrega una acción si es necesario
                     }
                 ]

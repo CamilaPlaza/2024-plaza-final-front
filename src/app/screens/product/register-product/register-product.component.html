@@ -1,6 +1,5 @@
 <div class="container">
     <div class="title">Register a new Product</div>
-    
     <div class="form">
         <div class="form-row">
             <div class="form-input">
@@ -10,10 +9,10 @@
                 </div>
             </div>
 
-            <div class="form-input">
+            <div class="form-input description-input">
                 <div class="flex flex-column gap-2">
-                    <label for="price">Price</label>
-                    <input pInputText id="price" [(ngModel)]="price" />
+                    <label for="description">Description</label>
+                    <textarea pInputTextarea id="description" [(ngModel)]="description"></textarea>
                 </div>
             </div>
         </div>
@@ -21,8 +20,8 @@
         <div class="form-row">
             <div class="form-input">
                 <div class="flex flex-column gap-2">
-                    <label for="description">Description</label>
-                    <input pInputText id="description" [(ngModel)]="description" />
+                    <label for="price">Price</label>
+                    <input pInputText id="price" [(ngModel)]="price" />
                 </div>
             </div>
 
@@ -36,6 +35,10 @@
     </div>
 
     <div class="form-button">
-        <p-button (onClick)="registerProduct()" label="Save" [outlined]="true" />
+        <div class="card flex justify-content-center">
+            <p-toast />
+            <p-confirmDialog />
+            <p-button (onClick)="registerProduct()" label="Save" [outlined]="true" />
+        </div>
     </div>
 </div>

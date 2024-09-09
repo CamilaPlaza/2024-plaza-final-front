@@ -50,6 +50,7 @@ import { MenuModule } from 'primeng/menu';
     HttpClientModule,
     FormsModule,
     TieredMenuModule,
+    MenuModule,
     PasswordModule,
     ButtonModule,
     DialogModule,

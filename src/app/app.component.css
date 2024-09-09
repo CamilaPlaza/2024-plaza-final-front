@@ -7,13 +7,12 @@ html, body {
 .app-container {
     background-color: #eedfd63f;
     min-height: 100vh;
-    min-width: 100%;
-    margin: -8px;
+    margin: 0; /* Quitar margen negativo */
     display: flex;
     flex-direction: column;
 }
 
-.fondo {
-    z-index: -1;
-    width: 100%;
+.main-content {
+    margin-left: 5%;
 }
+

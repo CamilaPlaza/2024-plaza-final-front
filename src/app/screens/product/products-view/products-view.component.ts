@@ -1,29 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Product } from 'src/app/models/product';
+import { ProductService } from 'src/app/services/product_service';
 
 @Component({
   selector: 'app-products-view',
   templateUrl: './products-view.component.html',
   styleUrls: ['./products-view.component.css']
 })
-export class ProductsViewComponent {
-  products = [
-    { name: 'Product A', price: 25.99, description: 'Description A', status: 'Available' },
-    { name: 'Product B', price: 39.99, description: 'Description B', status: 'Out of Stock' },
-    { name: 'Product C', price: 15.49, description: 'Description C', status: 'Available' },
-    { name: 'Product D', price: 49.99, description: 'Description D', status: 'Discontinued' },
-    { name: 'Product A', price: 25.99, description: 'Description A', status: 'Available' },
-    { name: 'Product B', price: 39.99, description: 'Description B', status: 'Out of Stock' },
-    { name: 'Product C', price: 15.49, description: 'Description C', status: 'Available' },
-    { name: 'Product D', price: 49.99, description: 'Description D', status: 'Discontinued' }
-  ];
+export class ProductsViewComponent implements OnInit {
+getSeverity(arg0: any) {
+throw new Error('Method not implemented.');
+}
+products: Product[] = [];  // Arreglo para almacenar los productos
 
-  getSeverity(status: string): 'success' | 'info' | 'warning' | 'danger' | 'secondary' | 'contrast' {
-    switch (status) {
-      case 'Available': return 'success';
-      case 'Out of Stock': return 'warning';
-      case 'Discontinued': return 'danger';
-      default: return 'info';
+constructor(private productService: ProductService) {}
+
+ngOnInit(): void {
+  this.loadProducts();
+}
+
+// Método para cargar los productos usando el servicio
+loadProducts(): void {
+  this.productService.getProducts().subscribe({
+    next: (data) => {
+      console.log('Products fetched:', data);
+      if (data && data.message && Array.isArray(data.message.products)) {
+        this.products = data.message.products;
+      } else {
+        console.error('Unexpected data format:', data);
+      }
+    },
+    error: (err) => {
+      console.error('Error fetching products:', err);
     }
+  });
   }
   
 }

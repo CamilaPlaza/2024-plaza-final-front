@@ -17,22 +17,23 @@ export class LogInComponent implements OnInit {
   
   constructor(private userService: UserService, private router: Router) {}
   
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-    async onLogin() {
-      console.log('Email:', this.email);
-      console.log('Password:', this.password);
-          
-      try {
-        const response = await this.userService.login(this.email, this.password);
-        console.log('Login successful', response);
-        this.router.navigate(['/home']);
-
-      } catch (error: any) {
-        console.error('Login failed', error);
-      }
+  async onLogin() {
+    console.log('Email:', this.email);
+    console.log('Password:', this.password);
+  
+    const loginSuccess = await this.userService.login(this.email, this.password);
+  
+    if (loginSuccess) {
+      this.userService.handleAuthState();  // Gestiona la sesión
+      this.router.navigate(['/home']);
+    } else {
+      console.error('Login failed');
+      // Mostrar un mensaje de error al usuario
+      // Puedes usar un servicio de notificaciones o un componente de alerta aquí
     }
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {

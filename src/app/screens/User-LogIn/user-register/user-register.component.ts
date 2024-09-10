@@ -16,6 +16,7 @@ export class UserRegisterComponent implements OnInit {
   birthDate!: Date;
   user: User | undefined;
   isMobile: boolean = window.innerWidth <= 800;
+  loading: boolean = false;
 
   ngOnInit(): void {}
 
@@ -27,6 +28,7 @@ export class UserRegisterComponent implements OnInit {
 
 
   async onRegister(event: Event) {
+    this.loading = true;
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Are you sure that you want to proceed?',
@@ -43,6 +45,10 @@ export class UserRegisterComponent implements OnInit {
         }
       }
     });
+
+    setTimeout(() => {
+      this.loading = false
+    }, 2000);
   }
  
 

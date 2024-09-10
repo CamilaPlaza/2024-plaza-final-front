@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user_service';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 
 @Component({
@@ -17,7 +17,8 @@ export class UserProfileComponent implements OnInit{
 
   constructor(private confirmationService: ConfirmationService,
     private router: Router,
-    private userService: UserService){}
+    private userService: UserService,
+    private messageService: MessageService){}
 
   ngOnInit(): void {}
 
@@ -30,11 +31,15 @@ export class UserProfileComponent implements OnInit{
         this.userService.deleteCurrentUser()
           .then(() => {
             console.log('Account deleted successfully');
-            // Aquí puedes agregar lógica adicional, como redireccionar a otra página
+            this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted' });
           })
           .catch(error => {
             console.error('Error deleting account:', error);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error ocurred', life: 3000 });
           });
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'secondary', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
       }
     });
   }
@@ -45,8 +50,12 @@ export class UserProfileComponent implements OnInit{
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
-        console.log('cambiamos');
+        this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'A email was send it to you' });
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'secondary', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
       }
+
     });
   }
 

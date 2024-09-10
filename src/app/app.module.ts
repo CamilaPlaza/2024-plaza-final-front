@@ -26,8 +26,8 @@ import { UserProfileComponent } from './screens/user-profile/user-profile.compon
 import { ProductsViewComponent } from './screens/product/products-view/products-view.component';
 import { RegisterProductComponent } from './screens/product/register-product/register-product.component';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-import { PanelMenuModule } from 'primeng/panelmenu';
-import { MenuModule } from 'primeng/menu';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
@@ -44,9 +44,10 @@ import { MenuModule } from 'primeng/menu';
   ],
   imports: [
     BrowserModule,
-    PanelMenuModule,
     ToastModule,
     ConfirmDialogModule,
+    TagModule,
+    TableModule,
     HttpClientModule,
     FormsModule,
     TieredMenuModule,

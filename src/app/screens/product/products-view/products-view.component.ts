@@ -8,9 +8,6 @@ import { ProductService } from 'src/app/services/product_service';
   styleUrls: ['./products-view.component.css']
 })
 export class ProductsViewComponent implements OnInit {
-getSeverity(arg0: any) {
-throw new Error('Method not implemented.');
-}
 products: Product[] = [];  // Arreglo para almacenar los productos
 
 constructor(private productService: ProductService) {}

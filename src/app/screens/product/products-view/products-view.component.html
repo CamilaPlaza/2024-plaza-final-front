@@ -13,7 +13,6 @@
                         <th pResizableColumn>Name</th>
                         <th pResizableColumn>Price</th>
                         <th pResizableColumn>Description</th>
-                        <th pResizableColumn>Status</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-product>
@@ -21,7 +20,6 @@
                         <td>{{product.name}}</td>
                         <td>{{product.price | currency:'USD'}}</td>
                         <td>{{product.description}}</td>
-                        <td><p-tag [value]="product.status" [severity]="getSeverity(product.status)"></p-tag></td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">

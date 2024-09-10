@@ -9,6 +9,7 @@
     align-items: center;
     border-radius: 0px;
     background-color: #533521;
+    z-index: 9999;
 }
 
 .custom-tieredmenu {

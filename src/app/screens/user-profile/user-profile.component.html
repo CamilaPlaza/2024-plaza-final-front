@@ -18,9 +18,11 @@
                 <hr>
             </div>
         </div>
+        
+        <!-- Grupo de botones -->
         <div class="button-group">
-            <button class="btn">Change Password</button>
-            <button class="btn">Delete Account</button>
+            <button (click)="changePassword()" class="btn">Change Password</button>
+            <button (click)="onDeleteAccount()" class="btn">Delete Account</button>
             <button class="btn">Help</button>
         </div>
     </div>
@@ -30,4 +32,8 @@
         <div class="blurred-background"></div> <!-- Fondo desenfocado -->
         <img src="../../../assets/images/user.jpg" alt="Imagen de perfil del usuario" class="profile-image">
     </div>
+    
+    <!-- Una única instancia de p-toast y p-confirmDialog -->
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
 </div>

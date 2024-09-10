@@ -23,7 +23,7 @@ export class UserProfileComponent implements OnInit{
 
   async onDeleteAccount() {
     this.confirmationService.confirm({
-      message: 'Are you sure that you want to proceed?',
+      message: 'Are you sure that you want to delete your account?',
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
@@ -38,4 +38,17 @@ export class UserProfileComponent implements OnInit{
       }
     });
   }
+
+  async changePassword() {
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to change your password?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: async () => {
+        console.log('cambiamos');
+      }
+    });
+  }
+
+  
 }

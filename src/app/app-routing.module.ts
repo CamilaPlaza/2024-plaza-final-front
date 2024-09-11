@@ -9,6 +9,7 @@ import { HomeComponent } from './screens/home/home.component';
 import { UserProfileComponent } from './screens/user-profile/user-profile.component';
 import { ProductsViewComponent } from './screens/product/products-view/products-view.component';
 import { RegisterProductComponent } from './screens/product/register-product/register-product.component';
+import { AuthGuard } from './services/auth_guard';
 
 const routes: Routes = [
   { path: '', component: LogInComponent},
@@ -16,10 +17,11 @@ const routes: Routes = [
   { path: 'header', component: HeaderComponent},
   { path: 'user-register', component: UserRegisterComponent},
   { path: 'user-forgot-password', component: UserForgotPasswordComponent},
-  { path: 'home', component: HomeComponent},
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   { path: 'user-profile', component: UserProfileComponent},
   { path: 'products-view', component: ProductsViewComponent},
-  { path: 'register-product', component: RegisterProductComponent}
+  { path: 'register-product', component: RegisterProductComponent},
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

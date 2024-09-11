@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { User } from 'src/app/models/user';
+import { UserData } from 'src/app/models/user';
 import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user_service';
@@ -15,7 +15,7 @@ export class UserRegisterComponent implements OnInit {
   email: string = '';
   password: string = '';
   birthDate!: Date;
-  user: User | undefined;
+  user: UserData | undefined;
   isMobile: boolean = window.innerWidth <= 800;
   loading: boolean = false;
   animateForm: boolean = false;

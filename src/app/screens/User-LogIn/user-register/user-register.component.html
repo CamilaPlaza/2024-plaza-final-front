@@ -1,75 +1,77 @@
-<div class="fullscreen-container">
-    <div class="login-container">
+<!-- user-register.component.html -->
+<div class="login-container">
+    <!-- Imagen de fondo borrosa -->
+    <div class="background-blurred"></div>
 
-        <div class="welcome-container">
-            <div class="text">
-                <p class="title">Welcome!</p>
-                <p class="description">Please enter your information <br> to register</p>
-            </div>
-
-            <div class="image-container">
-                <a [routerLink]="'/'">
-                    <img src="../../../assets/images/isologo.png" alt="Logo" />
-                </a>
-            </div>     
-                
+    <!-- Contenedor centrado con la imagen y el formulario -->
+    <div class="center-container">
+        <!-- Imagen partida a la mitad -->
+        <div class="image-half" [ngClass]="{'fadeinleft animation-duration-1000': animateForm}">
+            <img src="assets/images/login.jpg" alt="Imagen centrada">
         </div>
-        
-        <!-- Línea divisora vertical -->
-        <p-divider [layout]="isMobile ? 'horizontal' : 'vertical'"></p-divider>
+
+        <!-- Formulario en fondo marrón -->
+        <div class="form-half" [ngClass]="{'fadeinright animation-duration-1000': animateForm}">
+            <div class="form-container">
+                <!-- Botones de navegación en la parte superior -->
+                <div class="nav-buttons">
+                    <button class="nav-btn" [routerLink]="'/'">LOG IN</button>
+                    <button class="nav-btn active">SIGN UP</button>
+                </div>
             
-        <div class="login-form">
+                <!-- Formulario de registro -->
+                <div class="login-form">
+                    <!-- Campo de Nombre -->
+                    <div class="form-input">
+                        <div class="card flex justify-content-center">
+                            <p-floatLabel>
+                                <input pInputText id="name" [(ngModel)]="name" name="name" />
+                                <label for="name">Name</label>
+                            </p-floatLabel>
+                        </div>
+                    </div>
 
-            <div class="form-input">
-                <div class="card flex justify-content-center">
-                    <p-floatLabel>
-                        <input pInputText id="name" [(ngModel)]="name" />
-                        <label for="name">Name</label>
-                    </p-floatLabel>
-                </div>
-            </div>
+                    <!-- Campo de Email -->
+                    <div class="form-input">
+                        <div class="card flex justify-content-center">
+                            <p-floatLabel>
+                                <input pInputText id="email" [(ngModel)]="email" name="email" />
+                                <label for="email">Email</label>
+                            </p-floatLabel>
+                        </div>
+                    </div>
+            
+                    <!-- Campo de Contraseña -->
+                    <div class="form-input">
+                        <div class="card flex justify-content-center">
+                            <p-floatLabel>
+                                <p-password [feedback]="false" [(ngModel)]="password" name="password" />
+                                <label for="password">Password</label>
+                            </p-floatLabel>
+                        </div>
+                    </div>
 
-            <div class="form-input">
-                <div class="card flex justify-content-center">
-                    <p-floatLabel>
-                        <input pInputText id="email" [(ngModel)]="email" />
-                        <label for="email">Email</label>
-                    </p-floatLabel>
-                </div>
-            </div>
+                    <!-- Campo de Fecha de Nacimiento -->
+                    <div class="form-input">
+                        <div class="card flex justify-content-center">
+                            <p-floatLabel>
+                                <p-calendar [(ngModel)]="birthDate" id="birthday" name="birthday" dateFormat="dd/mm/yy"></p-calendar>
+                                <label for="birthday">Birthday</label>
+                            </p-floatLabel>
+                        </div>
+                    </div>
+            
+                    <!-- Botón de Enviar -->
+                    <div class="form-button">
+                        <div class="card flex justify-content-center">
+                            <p-toast />
+                            <p-confirmDialog />
+                            <p-button label="Register" (click)="onRegister($event)"></p-button>
+                        </div>
+                    </div>
 
-            <div class="form-input">
-                <div class="card flex justify-content-center">
-                    <p-floatLabel>
-                        <p-password [(ngModel)]="password" [toggleMask]="true"/>
-                        <label for="password">Password</label>
-                    </p-floatLabel>
-                </div>
-            </div>
-
-            <div class="form-input">
-                <div class="card flex justify-content-center">
-                    <p-floatLabel>
-                        <p-calendar 
-                            [(ngModel)]="birthDate" 
-                            inputId="buttondisplay" 
-                            [iconDisplay]="'input'" 
-                            [showIcon]="true"/>
-                        <label for="birthDate">Birthday</label>
-                    </p-floatLabel>
-                </div>
-            </div>
-
-            <div class="form-button">
-                <div class="card flex justify-content-center">
-                    <p-toast />
-                    <p-confirmDialog />
-                    <p-button [loading]="loading" (onClick)="onRegister($event)" label="Save" [outlined]="true" />            
                 </div>
             </div>
         </div>
-            
     </div>
-
 </div>
-    

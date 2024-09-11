@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener  } from '@angular/core';
 import { UserService } from 'src/app/services/user_service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -15,14 +16,12 @@ export class LogInComponent implements OnInit {
   displayForgotPasswordDialog: boolean = false;
 
   
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router, private messageService: MessageService) {}
   
   ngOnInit(): void {}
 
   async onLogin() {
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
-  
+
     const loginSuccess = await this.userService.login(this.email, this.password);
   
     if (loginSuccess) {
@@ -30,8 +29,8 @@ export class LogInComponent implements OnInit {
       this.router.navigate(['/home']);
     } else {
       console.error('Login failed');
-      // Mostrar un mensaje de error al usuario
-      // Puedes usar un servicio de notificaciones o un componente de alerta aquí
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No credentials were found', life: 3000 });
+  
     }
   }
 

@@ -1,57 +1,62 @@
-<div class="image-container">
-    <a [routerLink]="'/home'">
-        <img src="../../../assets/images/logo.png" alt="Logo" />
-    </a>
-</div>
+<div class="login-container">
+    <!-- Imagen de fondo borrosa -->
+    <div class="background-blurred"></div>
 
-<div class="flex justify-content-center flex-wrap">
+    <!-- Contenedor centrado con la imagen y el formulario -->
+    <div class="center-container">
+        <!-- Formulario en fondo marrón (ahora a la izquierda) -->
+        <div class="form-half">
+            <div class="form-container">
+                <!-- Botones de navegación en la parte superior -->
+                <div class="nav-buttons">
+                    <button class="nav-btn active">LOG IN</button>
+                    <button class="nav-btn" [routerLink]="'/user-register'">SIGN UP</button>
+                </div>
+            
+                <!-- Formulario de login -->
+                <div class="login-form">
+                    <div class="form-input">
+                        <div class="card flex justify-content-center">
+                            <p-floatLabel>
+                                <input pInputText id="email" [(ngModel)]="email" name="email" />
+                                <label for="email">Email</label>
+                            </p-floatLabel>
+                        </div>
+                    </div>
+            
+                    <div class="form-input">
+                        <div class="card flex justify-content-center">
+                            <p-floatLabel>
+                                <p-password [feedback]="false" [(ngModel)]="password" name="password"/>
+                                <label for="password">Password</label>
+                            </p-floatLabel>
+                        </div>
+                    </div>
+            
+                    <div class="reset-password">
+                        <div class="card flex justify-content-center">
+                            <a (click)="showForgotPasswordDialog()">Forgot your password? Click here</a>
+                        </div>
+                    </div>
 
-    <div class="login-container flex align-items-center justify-content-center">
-        
-        <div class="login-form">
-
-            <div class="form-input">
-                <div class="card flex justify-content-center">
-                    <p-floatLabel>
-                        <input pInputText id="email" [(ngModel)]="email" />
-                        <label for="email">Email</label>
-                    </p-floatLabel>
+                    <div class="form-button">
+                        <div class="card flex justify-content-center">
+                            <p-button label="Log In" (click)="onLogin()"/>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-input">
-                <div class="card flex justify-content-center">
-                    <p-floatLabel>
-                        <p-password [(ngModel)]="password"/>
-                        <label for="password">Password</label>
-                    </p-floatLabel>
-                </div>
-            </div>
-
-            <div class="form-button">
-                <div class="card flex justify-content-center">
-                    <p-button label="Log In" (click)="onLogin()" [outlined]="true"/>
-                </div>
-            </div>
-
-            <div class="reset-password">
-                <div class="card flex justify-content-center">
-                    <a (click)="showForgotPasswordDialog()" >Forgot your password? Click here</a>
-                </div>
-            </div>
+            
         </div>
-    
-        <p-divider [layout]="isMobile ? 'horizontal' : 'vertical'"/>
-    
-        <div class="sign-in-text">
-            <div class="card flex justify-content-center">
-                <p-button label="Sign Up" [routerLink]="'/user-register'" [rounded]="true" />
-            </div>
+
+        <!-- Imagen partida a la mitad (ahora a la derecha) -->
+        <div class="image-half">
+            <img src="assets/images/login.jpg" alt="Imagen centrada">
         </div>
-        
     </div>
-</div> 
-
+</div>
 <p-dialog header="Forgot Password" [(visible)]="displayForgotPasswordDialog" [modal]="true" [closable]="true">
     <app-user-forgot-password (onClose)="closeForgotPasswordDialog()"></app-user-forgot-password>
 </p-dialog>
+
+<p-toast></p-toast>

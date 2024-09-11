@@ -1,180 +1,184 @@
+/* Contenedor principal */
 .login-container {
-    background-color: #4281A4;
-    height: 100%;
-    width: 45%;
-    padding: 2rem;
-    border-radius: 50px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    position: relative;
+    height: 100vh;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
-.login-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
+/* Imagen de fondo borrosa */
+.background-blurred {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
     width: 100%;
-    max-width: 200px;
-    margin-right: 15%;
+    background: url('../../../../assets/images/login.jpg') no-repeat center center/cover;
+    filter: blur(2px); /* Aplicar efecto de desenfoque */
+    z-index: -1;
 }
+
+/* Contenedor centrado con la imagen y el formulario */
+.center-container {
+    display: flex;
+    height: 70%;
+    width: 65%;
+    box-shadow: 0 4px 8px rgba(205, 205, 205, 0.3);
+}
+
+/* Imagen partida a la mitad */
+.image-half {
+    width: 50%;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.image-half img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right;
+    transform: scale(1.5) translateX(-13%);
+    margin: 0;
+}
+
+/* Fondo marrón con el formulario */
+.form-half {
+    width: 50%;
+    background-color: #533521de; /* Color marrón */
+    display: flex;
+    padding: 5%;
+    justify-content: center;
+}
+
+/* Contenedor del formulario */
+.form-container {
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+/* Estilos para los botones de navegación */
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15%;
+}
+
+.nav-btn {
+    background-color: #3e1f076d; /* Color marrón */
+    border: none;
+    color: #fff;
+    padding: 10px 30px;
+    cursor: pointer;
+    font-size: 22px;
+    border-radius: 25px;
+    margin: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.nav-btn.active {
+    background-color: #ab602f; /* Color más oscuro para el botón activo */
+    cursor: default;
+}
+
+.nav-btn:hover:not(.active) {
+    background-color: #ab602f;
+}
+
+/* Estilos formulario */
 
 .form-input {
-    margin-bottom: 15%;
-    width: 100%;
+    margin-bottom: 7%;
+}
+/* Estilos para los inputs dentro de .form-input */
+::ng-deep .form-input input {
+    width: 300px;
+    padding: 18px;
+    border-radius: 30px  !important; 
+    border: 1px solid #af9375;
+    background-color: #af9375;
+    color: #fff;
+    font-size: 18px;
+    box-sizing: border-box;
 }
 
-/*Estilos para username, password, log in*/
+/* Estilos para p-password dentro de .form-input */
+::ng-deep .form-input p-password .p-password-input {
+    width: 300px;
+    padding: 18px;
+    border-radius: 30px  !important; 
+    border: 1px solid #af9375;
+    background-color: #af9375;
+    color: #fff;
+    font-size: 18px;
+    box-sizing: border-box;
+}
 
-.p-inputtext {
-    width: 275px; 
-    height: 45px;
-    background-color: #035E7B;
-    border: 1px solid #035E7B;
-    border-radius: 4px; 
-    padding: 0.5rem;
-    color: #ffffff;
+/* Estilo específico para p-password en el focus */
+::ng-deep .form-input p-password .p-password-input:focus {
+    border-color: #6d4f28;
+    outline: none;
+}
+
+/* Estilo para los labels dentro de .form-input */
+::ng-deep .form-input label {
+    color: #fff;
+    margin-left: 10px;
 }
 
 
-::ng-deep .p-password input {
-    width: 275px;
-    height: 45px;
-    background-color: #035E7B;
-    border: 1px solid #035E7B;
-    border-radius: 4px !important;
-    padding: 0.5rem !important;
-    color: #ffffff;
-}
 
-::ng-deep .p-float-label label  {
-    color: #ffffffa2;
-}
-
-.form-button {
-    width: 100%;
-}
-
-:host ::ng-deep .form-button .p-button {
-    color: #ffffff;
-    width: 280px;
-    border-radius: 50px;
-}
-
-:host ::ng-deep .form-button .p-button:hover {
-    background-color: #035E7B ;
-}
-
+/* Estilos para el enlace de contraseña olvidada */
 .reset-password {
-    justify-content: center;
-    margin-top: 10px;
-    font-size: 12px;
+    margin-top: -6%;
+}
+
+.reset-password .card {
+    text-align: center;
 }
 
 .reset-password a {
-    color: #ffffff;
+    color: #fff;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .reset-password a:hover {
-    text-decoration: underline;
+    color: #ddd;
 }
 
-/*Estilos division*/
 
-:host ::ng-deep p-divider {
-    height: 250px;
+/* Estilos Boton */
+::ng-deep .form-button .p-button {
+    margin-top: 40%;
+    width: 200px;
+    background-color: #ab602f !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 16px !important;
+    border-radius: 80px !important;
+    transition: background-color 0.3s !important;
 }
 
-.sign-in-text {
-    display: flex;
-    margin-right: -6%;
-    margin-left: 7%;
+::ng-deep .form-button .p-button:hover {
+    background-color: #894d24 !important; /* Color más oscuro al pasar el cursor */
 }
 
-:host ::ng-deep .sign-in-text .p-button {
-    color: #ffffff;
-    background: #035E7B;
-    width: 150px;
-    border: none;
-    border-radius: 50px;
-}
-
-:host ::ng-deep .sign-in-text .p-button:hover {
-    background-color: #035d7baa ;
-}
-
-/*imagen*/
-
-.image-container {
-    text-align: center;
-    margin-top: 2%;
-    margin-bottom: -15px;
-}
-
-.image-container img {
-    max-width: 230px; 
+::ng-deep .form-button .p-button .p-button-label {
+    font-weight: 500 !important; /* Ajustar el grosor de la fuente */
+    font-family: Arial, sans-serif !important; /* O la fuente que estés usando */
 }
 
 
 
 
 
-@media screen and (max-width: 800px) {
-
-    .login-container {
-        width: 70%;
-        height: 450px;
-    }
-
-    :host ::ng-deep p-divider {
-        width: 100%; 
-        height: 1px;
-        margin-bottom: 10%;
-     }
-
-
-     .login-form {
-        margin-right: 0px;
-    }
-
-    .p-inputtext {
-        width: 220px; 
-    }
-
-    ::ng-deep .p-password input {
-        width: 220px;
-    }
-
-    .form-button {
-        width: 100%;
-    }
-
-    :host ::ng-deep .form-button .p-button {
-        width: 220px;
-    }
-
-    .sign-in-text {
-        display: flex;
-        margin-right: 0px;
-        margin-left: 0px;
-    }
-    
-    /*imagen*/
-
-    .image-container {
-        margin-bottom: -20px;
-    }
-
-    .image-container img {
-        max-width: 200px; 
-    }
-
-    
-
-    
-
-    
-}

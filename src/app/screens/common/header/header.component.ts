@@ -50,7 +50,8 @@ export class HeaderComponent implements OnInit {
                     },
                     {
                         label: 'Quit',
-                        command: () => this.logout() // Agrega una acción si es necesario
+                        routerLink:'/',
+                        command: () => this.logout()
                     }
                 ]
             }

@@ -182,3 +182,34 @@
 
 
 
+/* Animación de fadeOut para el formulario de inicio de sesión */
+.fadeoutleft {
+    animation: fadeoutleft 1s forwards;
+}
+
+@keyframes fadeoutleft {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+}
+
+/* Animación de fadeIn para el formulario de registro */
+.fadeinright {
+    animation: fadeinright 1s forwards;
+}
+
+@keyframes fadeinright {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

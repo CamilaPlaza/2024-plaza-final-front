@@ -14,6 +14,7 @@ export class LogInComponent implements OnInit {
   password: string = '';
   isMobile: boolean = window.innerWidth <= 800;
   displayForgotPasswordDialog: boolean = false;
+  animateForm: boolean = false;
 
   
   constructor(private userService: UserService, private router: Router, private messageService: MessageService) {}
@@ -45,6 +46,16 @@ export class LogInComponent implements OnInit {
 
   closeForgotPasswordDialog() {
     this.displayForgotPasswordDialog = false;
+  }
+
+  onSignUpClick() {
+    // Activamos la animación
+    this.animateForm = true;
+
+    // Después de 1 segundo (la duración de la animación), navegamos al registro
+    setTimeout(() => {
+      this.router.navigate(['/user-register']);
+    }, 1000);  // 1000ms = 1 segundo, coincidiendo con 'animation-duration-1000'
   }
 
 }

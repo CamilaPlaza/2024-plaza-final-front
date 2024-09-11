@@ -1,3 +1,4 @@
+<!-- log-in.component.html -->
 <div class="login-container">
     <!-- Imagen de fondo borrosa -->
     <div class="background-blurred"></div>
@@ -5,12 +6,12 @@
     <!-- Contenedor centrado con la imagen y el formulario -->
     <div class="center-container">
         <!-- Formulario en fondo marrón (ahora a la izquierda) -->
-        <div class="form-half">
+        <div class="form-half" [ngClass]="{'fadeoutright animation-duration-1000': animateForm}">
             <div class="form-container">
                 <!-- Botones de navegación en la parte superior -->
                 <div class="nav-buttons">
                     <button class="nav-btn active">LOG IN</button>
-                    <button class="nav-btn" [routerLink]="'/user-register'">SIGN UP</button>
+                    <button class="nav-btn" (click)="onSignUpClick()">SIGN UP</button>
                 </div>
             
                 <!-- Formulario de login -->
@@ -46,15 +47,15 @@
                     </div>
                 </div>
             </div>
-            
         </div>
 
         <!-- Imagen partida a la mitad (ahora a la derecha) -->
-        <div class="image-half">
+        <div class="image-half" [ngClass]="{'fadeoutleft animation-duration-1000': animateForm}">
             <img src="assets/images/login.jpg" alt="Imagen centrada">
         </div>
     </div>
 </div>
+
 <p-dialog header="Forgot Password" [(visible)]="displayForgotPasswordDialog" [modal]="true" [closable]="true">
     <app-user-forgot-password (onClose)="closeForgotPasswordDialog()"></app-user-forgot-password>
 </p-dialog>

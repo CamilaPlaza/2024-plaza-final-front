@@ -178,38 +178,80 @@
     font-family: Arial, sans-serif !important; /* O la fuente que estés usando */
 }
 
+@media (max-width: 920px) {
 
+    ::ng-deep .form-input input {
+        width: 100%;
+    }
+    
+    /* Estilos para p-password dentro de .form-input */
+    ::ng-deep .form-input p-password .p-password-input {
+        width: 100%;
+    }
 
+    ::ng-deep .form-button .p-button {
+        width: 100%;
+    }
 
+    .nav-btn {
+        padding: 10px 20px;
+        font-size: 18px;
+    }
+    
+    .login-form {
+        margin-top: 30%;
+    }
 
-/* Animación de fadeOut para el formulario de inicio de sesión */
-.fadeoutleft {
-    animation: fadeoutleft 1s forwards;
+}
+/* Estilos para pantallas pequeñas */
+@media (max-width: 600px) {
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .center-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+    }
+
+    .image-half {
+        display: none;
+    }
+
+    .form-half {
+        width: 100%;
+        padding: 10% 5%;
+    }
+
+    .form-container {
+        width: 100%;
+        text-align: center;
+    }
+
+    .form-input input,
+    .form-input p-password .p-password-input {
+        width: 100%;
+        max-width: 400px; /* Opcional: para evitar que el input se estire demasiado */
+    }
+
+    .form-button .p-button {
+        width: 100%;
+        max-width: 200px; /* Opcional: para evitar que el botón se estire demasiado */
+        margin-top: 10%;
+    }
+
+    .login-form {
+        margin-top: 0; /* Elimina el margen superior para centrar el formulario */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: auto; /* Ajusta el alto automáticamente para el contenido */
+    }
+
 }
 
-@keyframes fadeoutleft {
-    from {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateX(-100%);
-    }
-}
-
-/* Animación de fadeIn para el formulario de registro */
-.fadeinright {
-    animation: fadeinright 1s forwards;
-}
-
-@keyframes fadeinright {
-    from {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}

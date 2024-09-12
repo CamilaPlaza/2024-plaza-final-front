@@ -51,11 +51,12 @@ export class LogInComponent implements OnInit {
   onSignUpClick() {
     // Activamos la animación
     this.animateForm = true;
+    this.router.navigate(['/user-register']);
 
     // Después de 1 segundo (la duración de la animación), navegamos al registro
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.router.navigate(['/user-register']);
-    }, 1000);  // 1000ms = 1 segundo, coincidiendo con 'animation-duration-1000'
+    }, 1000); */ // 1000ms = 1 segundo, coincidiendo con 'animation-duration-1000'
   }
 
 }

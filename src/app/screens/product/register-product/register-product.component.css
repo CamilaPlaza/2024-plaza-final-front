@@ -98,3 +98,17 @@ input {
     color: #ffffff;
     border-color: #b58958; 
 }
+
+@media (max-width: 600px) {
+    .column-left {
+        width: 100%; /* Ajusta el ancho del contenedor izquierdo */
+    }
+
+    .column-right {
+        display: none; /* Oculta la columna derecha en pantallas pequeñas */
+    }
+
+    .container {
+        margin-left: 10%;
+    }
+}

@@ -8,3 +8,8 @@
 ::ng-deep .p-dialog {
     border-radius: 50px !important;
 }
+
+.p-toast, .p-confirmDialog {
+    position: fixed;
+    z-index: 10000;
+}

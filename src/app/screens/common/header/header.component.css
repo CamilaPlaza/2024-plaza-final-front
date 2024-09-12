@@ -4,12 +4,13 @@
     left: 0;
     height: 100vh;
     width: 5%;
+    min-width: 50px;
     display: flex;
     flex-direction: column;
     align-items: center;
     border-radius: 0px;
     background-color: #533521;
-    z-index: 9999;
+    z-index: 8000;
 }
 
 .custom-tieredmenu {
@@ -20,6 +21,7 @@
     width: 5%;
     background-color: transparent;
     border-radius: 0px;
+    min-width: 50px;
 }
 
 .menu-header {
@@ -89,4 +91,87 @@
 
 :host ::ng-deep .p-submenu-icon {
     display: none;
+}
+
+/* Estilos para el tiered menu */
+.custom-tieredmenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 5%;
+    background-color: transparent;
+    border-radius: 0px;
+}
+
+/* Estilos para el menú dentro del tiered menu */
+:host ::ng-deep .custom-tieredmenu .p-tieredmenu {
+    background-color: #533521;
+    width: 100%;
+    height: 100vh;
+    border-radius: 4px;
+    padding-top: 60px;
+    position: relative;
+    border-color: #533521;
+}
+
+/* Estilo para los ítems del menú */
+:host ::ng-deep .custom-tieredmenu .p-menuitem-link:hover {
+    background-color: #7f522e !important;
+    color: #ffffff !important;
+}
+
+/* Estilo para el submenú */
+:host ::ng-deep .custom-tieredmenu .p-menuitem-link .p-submenu {
+    background-color: #795548 !important;
+}
+
+/* Estilo para los ítems dentro del submenú */
+:host ::ng-deep .custom-tieredmenu .p-menuitem-link .p-menuitem-link {
+    color: #ffffff !important;
+}
+
+/* Estilo de hover para los ítems del submenú */
+:host ::ng-deep .custom-tieredmenu .p-menuitem-link .p-menuitem-link:hover {
+    background-color: #7f522e !important;
+    color: #ffffff !important;
+}
+
+/* Estilo para los íconos del menú */
+:host ::ng-deep .custom-tieredmenu .p-menuitem-icon {
+    color: #ffffff;
+    font-size: 1.2rem;
+    margin: 0 auto;
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Ocultar íconos del submenú */
+:host ::ng-deep .p-submenu-icon {
+    display: none;
+}
+
+
+/* Estilo para el menú en pantallas pequeñas */
+@media (max-width: 1000px) {
+
+    .menu-logo {
+        width: 20px;
+    }
+
+    :host ::ng-deep .custom-tieredmenu .p-menuitem-icon {
+        font-size: 0.8rem;}
+}
+
+
+/* Estilo para el menú en pantallas muy pequeñas */
+@media (max-width: 480px) {
+    
+    .menu-logo {
+        width: 15px;
+    }
+    
 }

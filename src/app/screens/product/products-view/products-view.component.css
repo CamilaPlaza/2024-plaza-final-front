@@ -58,3 +58,9 @@ html, body {
 p-table {
     width: 100%;
 }
+
+@media (max-width: 600px) {
+    .container {
+        margin-left: 10%;
+    }
+}

@@ -107,3 +107,24 @@ label {
     background-color: #b58958;
     color: #ffffff;
 }
+:host ::ng-deep .p-toast,
+:host ::ng-deep .p-confirmDialog {
+    max-width: 300px;
+    width: auto;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@media (max-width: 600px) {
+    .column-left {
+        width: 100%; /* Ajusta el ancho del contenedor izquierdo */
+    }
+
+    .column-right {
+        display: none; /* Oculta la columna derecha en pantallas pequeñas */
+    }
+
+    .container {
+        margin-left: 10%;
+    }
+}

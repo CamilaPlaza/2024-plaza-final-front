@@ -88,6 +88,7 @@ export class UserService {
   deleteCurrentUser(): Promise<void> {
     const user = auth.currentUser;
     if (user) {
+      this.http.delete(`${this.baseUrl}/users/${user.uid}`).toPromise();
       return deleteUser(user)
         .then(() => {
           console.log('User deleted successfully');

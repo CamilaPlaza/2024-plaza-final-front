@@ -18,9 +18,9 @@ const routes: Routes = [
   { path: 'user-register', component: UserRegisterComponent},
   { path: 'user-forgot-password', component: UserForgotPasswordComponent},
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  { path: 'user-profile', component: UserProfileComponent},
-  { path: 'products-view', component: ProductsViewComponent},
-  { path: 'register-product', component: RegisterProductComponent},
+  { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard]},
+  { path: 'products-view', component: ProductsViewComponent, canActivate: [AuthGuard]},
+  { path: 'register-product', component: RegisterProductComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: '' }
 ];
 

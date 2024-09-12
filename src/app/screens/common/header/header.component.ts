@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user_service';
 
 @Component({
     selector: 'app-header',
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
     items: MenuItem[] | undefined;
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, public userService: UserService) { }
 
     ngOnInit(): void {
         this.items = [
@@ -50,16 +51,16 @@ export class HeaderComponent implements OnInit {
                     },
                     {
                         label: 'Quit',
-                        routerLink:'/',
-                        command: () => this.logout()
+                        command: () => this.logout(),
                     }
                 ]
             }
         ];
     }
-
-    logout() {
-        // Acción para el cierre de sesión
-        this.router.navigate(['/login']);
+    async logout(){
+    this.userService.logOut()
+          .then(() => {
+            this.router.navigate(['/']); 
+          })
     }
 }

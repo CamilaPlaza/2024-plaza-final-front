@@ -178,6 +178,31 @@
     font-family: Arial, sans-serif !important; /* O la fuente que estés usando */
 }
 
+/* Estilos para el texto centrado en la imagen */
+.image-half .title{
+    font-size: 48px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Sombra para hacer el texto más legible */
+}
+
+.image-half .subtitle{
+    font-size: 18px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Sombra para hacer el texto más legible */
+}
+
+.image-half .centered-text{
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    font-family: 'Arial', sans-serif;
+}
+
+
+
 @media (max-width: 920px) {
 
     ::ng-deep .form-input input {

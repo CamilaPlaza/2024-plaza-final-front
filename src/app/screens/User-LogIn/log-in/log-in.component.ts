@@ -22,17 +22,18 @@ export class LogInComponent implements OnInit {
   ngOnInit(): void {}
 
   async onLogin() {
+    this.router.navigate(['/home']);
 
-    const loginSuccess = await this.userService.login(this.email, this.password);
-  
+    //const loginSuccess = await this.userService.login(this.email, this.password);
+    /*const loginSuccess = true;
     if (loginSuccess) {
-      this.userService.handleAuthState();  // Gestiona la sesión
+      //this.userService.handleAuthState();  // Gestiona la sesión
       this.router.navigate(['/home']);
     } else {
       console.error('Login failed');
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No credentials were found', life: 3000 });
   
-    }
+    }*/
   }
 
   @HostListener('window:resize', ['$event'])

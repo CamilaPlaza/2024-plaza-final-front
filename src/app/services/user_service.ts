@@ -53,11 +53,11 @@ export class UserService {
     }
   }
   
-  async login(email: string, password: string): Promise<boolean> {
+  //async login(email: string, password: string): Promise<boolean> {
     
-    try {
+    /*try {
       // Configurar la persistencia de la sesión
-      await setPersistence(auth, browserSessionPersistence);
+      //await setPersistence(auth, browserSessionPersistence);
       
       // Iniciar sesión
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -68,8 +68,8 @@ export class UserService {
     } catch (error) {
       console.error('Error during login:', error);
       return false; // Error en el inicio de sesión
-    }
-  }
+    }*/
+  //}
 
   async getUserDataFromFirestore(uid: string): Promise<Observable<any>> {
     const url = `http://localhost:8000/users/${uid}`; // URL del backend FastAPI
@@ -116,11 +116,12 @@ export class UserService {
   }
 
   isLoggedIn(): boolean{
-    if(this.currentUser){
+    return true;
+    /*if(this.currentUser){
       return true;
     }else{
       return false
-    }
+    }*/
     // Implementa tu lógica de autenticación aquí
   }
   // Cerrar sesión

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { UserService } from './user_service';
 
@@ -17,4 +17,4 @@ export class AuthGuard implements CanActivate {
       return false;  // Previene el acceso al Home
     }
   }
-}
+}*/

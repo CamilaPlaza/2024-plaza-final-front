@@ -9,7 +9,7 @@ import { HomeComponent } from './screens/home/home.component';
 import { UserProfileComponent } from './screens/user-profile/user-profile.component';
 import { ProductsViewComponent } from './screens/product/products-view/products-view.component';
 import { RegisterProductComponent } from './screens/product/register-product/register-product.component';
-import { AuthGuard } from './services/auth_guard';
+//import { AuthGuard } from './services/auth_guard';
 
 const routes: Routes = [
   { path: '', component: LogInComponent},

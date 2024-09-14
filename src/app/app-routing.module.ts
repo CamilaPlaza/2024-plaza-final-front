@@ -17,10 +17,10 @@ const routes: Routes = [
   { path: 'header', component: HeaderComponent},
   { path: 'user-register', component: UserRegisterComponent},
   { path: 'user-forgot-password', component: UserForgotPasswordComponent},
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard]},
-  { path: 'products-view', component: ProductsViewComponent, canActivate: [AuthGuard]},
-  { path: 'register-product', component: RegisterProductComponent, canActivate: [AuthGuard]},
+  { path: 'home', component: HomeComponent},
+  { path: 'user-profile', component: UserProfileComponent},
+  { path: 'products-view', component: ProductsViewComponent},
+  { path: 'register-product', component: RegisterProductComponent},
   { path: '**', redirectTo: '' }
 ];
 

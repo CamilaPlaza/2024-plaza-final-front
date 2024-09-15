@@ -30,27 +30,18 @@ export class RegisterProductComponent implements OnInit{
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
         try {
-          // Crear el objeto Product basado en los campos del formulario
           this.product = new Product(this.name, this.description, this.price);
           console.log(this.product);
-  
-          // Llamar al servicio para registrar el producto
           const response = await this.productService.onRegister(this.product);
-          console.log('Register successful', response);
-  
-          // Mostrar mensaje de éxito
-          this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Product registered successfully' });
-  
-          // Redirigir a la vista de productos si el registro es exitoso
-          if (response === "true") {
+          if(response){
+            console.log('Register successful', response);
+            this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Product registered successfully', life: 3000});
             this.router.navigate(['/products-view']);
-          } else {
-            console.error('Error during product registration');
+          }else{
+            this.messageService.add({ severity: 'info', summary: 'Fail', detail: 'An error occurred',life: 3000 });
           }
         } catch (error: any) {
           console.error('Register failed', error);
-  
-          // Mostrar mensaje de error
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred during registration', life: 3000 });
         }
       },

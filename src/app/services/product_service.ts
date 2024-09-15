@@ -12,14 +12,14 @@ export class ProductService {
 
   constructor(private http: HttpClient) { }
 
-  async onRegister(product: Product): Promise<string> {
+  async onRegister(product: Product): Promise<boolean> {
     try {
       // Simplemente pasa el objeto `product` directamente en el post request
       await this.http.post(`${this.baseUrl}/register-product`, product).toPromise();
-      return "true";
+      return true;
     } catch (error: any) {
       console.error('Error durante el registro:', error);
-      return "false";
+      return false;
     }
   }
   getProducts(): Observable<{ message: { products: Product[]; message: string } }> {

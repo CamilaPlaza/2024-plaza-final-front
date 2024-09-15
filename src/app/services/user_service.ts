@@ -29,7 +29,7 @@ export class UserService {
     });
   }
 
-  async onRegister(email: string, password: string, name: string, birthday: Date): Promise<string> {
+  async onRegister(email: string, password: string, name: string, birthday: string): Promise<string> {
     try {
 
       // Crear usuario en Firebase Authentication

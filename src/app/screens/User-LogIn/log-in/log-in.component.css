@@ -102,7 +102,7 @@
 ::ng-deep .form-input input {
     width: 300px;
     padding: 18px;
-    border-radius: 30px  !important; 
+    border-radius: 20px  !important; 
     border: 1px solid #af9375;
     background-color: #af9375;
     color: #fff;
@@ -114,12 +114,11 @@
 ::ng-deep .form-input p-password .p-password-input {
     width: 300px;
     padding: 18px;
-    border-radius: 30px  !important; 
+    border-radius: 20px  !important; 
     border: 1px solid #af9375;
     background-color: #af9375;
     color: #fff;
     font-size: 18px;
-    box-sizing: border-box;
 }
 
 /* Estilo específico para p-password en el focus */
@@ -133,7 +132,6 @@
     color: #fff;
     margin-left: 10px;
 }
-
 
 
 /* Estilos para el enlace de contraseña olvidada */
@@ -200,6 +198,7 @@
     z-index: 2;
     font-family: 'Arial', sans-serif;
 }
+
 
 
 

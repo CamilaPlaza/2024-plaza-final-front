@@ -4,6 +4,8 @@ import { ConfirmationService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user_service';
 import { MessageService } from 'primeng/api';
+import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-user-register',
@@ -19,6 +21,13 @@ export class UserRegisterComponent implements OnInit {
   isMobile: boolean = window.innerWidth <= 800;
   loading: boolean = false;
   animateForm: boolean = false;
+  passwordValid = {
+    lowercase: false,
+    uppercase: false,
+    numeric: false,
+    minLength: false
+  };
+  formattedBirthDate: string = '';
 
   ngOnInit(): void {}
 
@@ -26,7 +35,8 @@ export class UserRegisterComponent implements OnInit {
     private userService: UserService,
     private confirmationService: ConfirmationService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private datePipe: DatePipe
   ) {}
 
 
@@ -39,7 +49,10 @@ export class UserRegisterComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
         try {
-          const response = await this.userService.onRegister(this.email, this.password, this.name, this.birthDate)
+          this.formattedBirthDate = this.datePipe.transform(this.birthDate, 'dd/MM/yyyy') || '';
+          console.log(this.formattedBirthDate);
+                
+          const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate)
           console.log('Register successful', response);
           this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Registration successfully' });
           this.router.navigate(['/home']);
@@ -63,13 +76,24 @@ export class UserRegisterComponent implements OnInit {
   } 
 
   onLogInClick() {
-    // Activamos la animación
-    this.animateForm = true;
+    this.router.navigate(['/']);
+  }
 
-    // Después de 1 segundo (la duración de la animación), navegamos al registro
-    setTimeout(() => {
-      this.router.navigate(['/']);
-    }, 1000);  // 1000ms = 1 segundo, coincidiendo con 'animation-duration-1000'
+  validatePassword() {
+    const password = this.password || '';
+
+    // Validaciones
+    this.passwordValid.lowercase = /[a-z]/.test(password);
+    this.passwordValid.uppercase = /[A-Z]/.test(password);
+    this.passwordValid.numeric = /[0-9]/.test(password);
+    this.passwordValid.minLength = password.length >= 8;
+  }
+
+  isPasswordValid(): boolean {
+    return this.passwordValid.lowercase && 
+           this.passwordValid.uppercase && 
+           this.passwordValid.numeric && 
+           this.passwordValid.minLength;
   }
 
 }

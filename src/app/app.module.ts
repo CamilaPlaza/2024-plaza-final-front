@@ -28,6 +28,7 @@ import { RegisterProductComponent } from './screens/product/register-product/reg
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,7 @@ import { TagModule } from 'primeng/tag';
     CalendarModule,
     MenubarModule
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService, MessageService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

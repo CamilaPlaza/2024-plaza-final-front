@@ -156,6 +156,12 @@
     font-family: Arial, sans-serif !important; /* O la fuente que estés usando */
 }
 
+.valid {
+    color: green;
+    font-weight: 600;
+}
+
+
 /* Estilos para el texto centrado en la imagen */
 .image-half .title{
     font-size: 48px;

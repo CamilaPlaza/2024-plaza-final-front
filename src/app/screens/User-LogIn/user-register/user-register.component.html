@@ -49,7 +49,19 @@
                     <div class="form-input">
                         <div class="card flex justify-content-center">
                             <p-floatLabel>
-                                <p-password [feedback]="false" [(ngModel)]="password" name="password" />
+                                <p-password [toggleMask]="true" [(ngModel)]="password" (ngModelChange)="validatePassword()" class="custom-password">         
+                                    <!-- Footer Template -->
+                                    <ng-template pTemplate="footer">
+                                        <p-divider></p-divider>
+                                        <p class="mt-2">Requirements</p>
+                                        <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                                            <li [class.valid]="passwordValid.lowercase">At least one lowercase</li>
+                                            <li [class.valid]="passwordValid.uppercase">At least one uppercase</li>
+                                            <li [class.valid]="passwordValid.numeric">At least one numeric</li>
+                                            <li [class.valid]="passwordValid.minLength">Minimum 8 characters</li>
+                                        </ul>
+                                    </ng-template>
+                                </p-password>
                                 <label for="password">Password</label>
                             </p-floatLabel>
                         </div>
@@ -70,7 +82,7 @@
                         <div class="card flex justify-content-center">
                             <p-toast />
                             <p-confirmDialog />
-                            <p-button label="Register" (click)="onRegister($event)"></p-button>
+                            <p-button label="Register" [disabled]="!isPasswordValid()" (click)="onRegister($event)"></p-button>
                         </div>
                     </div>
 

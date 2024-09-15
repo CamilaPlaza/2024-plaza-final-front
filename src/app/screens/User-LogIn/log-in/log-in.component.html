@@ -28,7 +28,7 @@
                     <div class="form-input">
                         <div class="card flex justify-content-center">
                             <p-floatLabel>
-                                <p-password [feedback]="false" [(ngModel)]="password" name="password"/>
+                                <p-password [toggleMask]="true" [feedback]="false" [(ngModel)]="password" class="custom-password" name="password"/>
                                 <label for="password">Password</label>
                             </p-floatLabel>
                         </div>

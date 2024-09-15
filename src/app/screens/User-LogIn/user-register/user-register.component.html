@@ -75,7 +75,7 @@
                     <div class="form-input">
                         <div class="card flex justify-content-center">
                             <p-floatLabel>
-                                <p-calendar [(ngModel)]="birthDate" id="birthday" name="birthday" dateFormat="dd/mm/yy"></p-calendar>
+                                <p-calendar [(ngModel)]="birthDate" [maxDate]="maxDate" id="birthday" name="birthday" dateFormat="dd/mm/yy"></p-calendar>
                                 <label for="birthday">Birthday</label>
                             </p-floatLabel>
                         </div>
@@ -84,9 +84,7 @@
                     <!-- Botón de Enviar -->
                     <div class="form-button">
                         <div class="card flex justify-content-center">
-                            <p-toast />
-                            <p-confirmDialog />
-                            <p-button label="Register" [disabled]="!areAllFieldsFilled()" (click)="onRegister($event)"></p-button>
+                            <p-button label="Register" [disabled]="!areAllFieldsFilled()" (click)="showConfirmDialog()"></p-button>
                         </div>
                     </div>
 
@@ -95,3 +93,12 @@
         </div>
     </div>
 </div>
+
+<p-dialog [(visible)]="displayConfirmDialog" [modal]="true" header="Confirm Registration" [closable]="true">
+    <app-confirmation-pop-up 
+        [subtitle]="'Are you sure you want to proceed?'" 
+        (onClose)="closeConfirmDialog()">
+    </app-confirmation-pop-up>
+</p-dialog>
+
+<p-toast></p-toast>

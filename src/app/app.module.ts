@@ -30,6 +30,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { DatePipe } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ConfirmationPopUpComponent } from './screens/confirmation-pop-up/confirmation-pop-up.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     HomeComponent,
     UserProfileComponent,
     ProductsViewComponent,
+    ConfirmationPopUpComponent,
     RegisterProductComponent,
     LogInComponent,
     UserRegisterComponent,

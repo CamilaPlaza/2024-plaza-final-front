@@ -28,6 +28,8 @@ export class UserRegisterComponent implements OnInit {
     minLength: false
   };
   formattedBirthDate: string = '';
+  displayConfirmDialog: boolean = false;
+  maxDate: Date = new Date();
 
   ngOnInit(): void {}
 
@@ -41,7 +43,7 @@ export class UserRegisterComponent implements OnInit {
 
 
   async onRegister(event: Event) {
-    this.loading = true; // Iniciar el spinner
+    
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Are you sure that you want to proceed?',
@@ -49,6 +51,7 @@ export class UserRegisterComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
         try {
+          this.loading = true;
           this.formattedBirthDate = this.datePipe.transform(this.birthDate, 'dd/MM/yyyy') || '';
           console.log(this.formattedBirthDate);
                 
@@ -109,5 +112,12 @@ export class UserRegisterComponent implements OnInit {
            this.isPasswordValid();
   }
   
+  showConfirmDialog() {
+    this.displayConfirmDialog = true;
+  }
+
+  closeConfirmDialog() {
+    this.displayConfirmDialog = false;
+  }
 
 }

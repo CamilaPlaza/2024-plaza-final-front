@@ -26,8 +26,6 @@
     border-color: #533521da !important;
 }
 
-::ng-deep .p-inputtext:focus {
+::ng-deep .p-button:focus {
     outline: none !important;
-    border-color: #ab602f !important; /* Puedes cambiar este color */
-    box-shadow: 0 0 5px rgba(171, 96, 47, 0.5) !important; /* Efecto visual opcional */
 }

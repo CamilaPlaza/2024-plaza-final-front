@@ -99,6 +99,25 @@ input {
     border-color: #b58958; 
 }
 
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    z-index: 9999; /* Asegurarse de que esté por encima de todo */
+  }
+  
+  .loading-overlay p-progressSpinner {
+    width: 80px;
+    height: 80px;
+  }
+  
+
 @media (max-width: 600px) {
     .column-left {
         width: 100%; /* Ajusta el ancho del contenedor izquierdo */

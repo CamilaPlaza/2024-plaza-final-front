@@ -1,0 +1,21 @@
+::ng-deep .p-inputtext {
+    border-radius: 10px !important;
+}
+
+::ng-deep .p-button {
+    border-radius: 8px !important;
+}
+
+::ng-deep .custom-cancel-button .p-button {
+    background-color: #533521c7 !important;
+    border-color: #533521c7 !important;
+}
+
+::ng-deep .custom-cancel-button .p-button:hover {
+    background-color: #533521da !important;
+    border-color: #533521da !important;
+}
+
+::ng-deep .p-button:focus {
+    outline: none !important;
+}

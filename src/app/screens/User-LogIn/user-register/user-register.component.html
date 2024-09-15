@@ -97,8 +97,17 @@
 <p-dialog [(visible)]="displayConfirmDialog" [modal]="true" header="Confirm Registration" [closable]="true">
     <app-confirmation-pop-up 
         [subtitle]="'Are you sure you want to proceed?'" 
-        (onClose)="closeConfirmDialog()">
+        (onClose)="closeConfirmDialog()"    
+        (onSend)="onRegister()">
     </app-confirmation-pop-up>
 </p-dialog>
+
+<p-dialog [(visible)]="displayErrorDialog" [modal]="true" header="Error" [closable]="true">
+    <app-error-notice
+        [subtitle]="'This email already exists'" 
+        (onClose)="closeErrorDialog()">
+    </app-error-notice>
+</p-dialog>
+
 
 <p-toast></p-toast>

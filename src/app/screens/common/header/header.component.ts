@@ -51,13 +51,14 @@ export class HeaderComponent implements OnInit {
                     },
                     {
                         label: 'Quit',
-                        command: () => this.logout(),
+                        command: () => this.logOut(),
                     }
                 ]
             }
         ];
     }
-    async logout(){
+
+    async logOut(){
     this.userService.logOut()
           .then(() => {
             this.router.navigate(['/']); 

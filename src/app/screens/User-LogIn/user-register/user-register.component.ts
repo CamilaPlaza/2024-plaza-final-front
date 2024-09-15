@@ -29,54 +29,43 @@ export class UserRegisterComponent implements OnInit {
   };
   formattedBirthDate: string = '';
   displayConfirmDialog: boolean = false;
+  displayErrorDialog: boolean = false;
   maxDate: Date = new Date();
 
   ngOnInit(): void {}
 
   constructor(
     private userService: UserService,
-    private confirmationService: ConfirmationService,
     private router: Router,
-    private messageService: MessageService,
     private datePipe: DatePipe
   ) {}
 
 
-  async onRegister(event: Event) {
-    
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Are you sure that you want to proceed?',
-      header: 'Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      accept: async () => {
-        try {
-          this.loading = true;
-          this.formattedBirthDate = this.datePipe.transform(this.birthDate, 'dd/MM/yyyy') || '';
-          console.log(this.formattedBirthDate);
+  async onRegister() {
+    try {
+      //CHEQUEO DE SI SALE BIEN
+      this.closeConfirmDialog();
+      this.loading = true;
+      this.formattedBirthDate = this.datePipe.transform(this.birthDate, 'dd/MM/yyyy') || '';
+      console.log(this.formattedBirthDate);
                 
-          const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate)
-          console.log('Register successful', response);
-          this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Registration successfully' });
-          setTimeout(() => {
-            this.router.navigate(['/home']);
-        }, 1000);
+      const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate)
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 2000);
     
-        } catch (error: any) {
-          console.error('Register failed', error);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred during registration', life: 3000 });
-        } finally {
-          this.loading = false; // Detener el spinner cuando se complete
-        }
-      }
-    });
+    } catch (error: any) {
+      console.error('Register failed', error);
+      this.showErrorDialog();    
+    } finally {
+      this.loading = false;
+    }
 
     setTimeout(() => {
-      this.loading = false; // En caso de que falle, detener el spinner después de 2 segundos
+      this.loading = false;
     }, 2000);
 }
 
- 
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -119,5 +108,15 @@ export class UserRegisterComponent implements OnInit {
   closeConfirmDialog() {
     this.displayConfirmDialog = false;
   }
+
+  showErrorDialog() {
+    this.displayErrorDialog = true;
+  }
+
+  closeErrorDialog() {
+    this.displayErrorDialog = false;
+  }
+
+
 
 }

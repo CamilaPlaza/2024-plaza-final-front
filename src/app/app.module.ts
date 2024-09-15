@@ -29,6 +29,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { DatePipe } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { DatePipe } from '@angular/common';
     FormsModule,
     TieredMenuModule,
     PasswordModule,
+    ProgressSpinnerModule,
     ButtonModule,
     DialogModule,
     BrowserAnimationsModule,

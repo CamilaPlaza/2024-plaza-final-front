@@ -1,10 +1,14 @@
-<!-- user-register.component.html -->
 <div class="login-container">
     <!-- Imagen de fondo borrosa -->
     <div class="background-blurred"></div>
 
-    <!-- Contenedor centrado con la imagen y el formulario -->
-    <div class="center-container">
+    <!-- Mostrar el spinner si loading es true -->
+    <div *ngIf="loading" class="spinner-container">
+        <p-progressSpinner ariaLabel="loading" />
+    </div>
+
+    <!-- Ocultar el contenido del formulario mientras loading es true -->
+    <div *ngIf="!loading" class="center-container">
         <!-- Imagen partida a la mitad -->
         <div class="image-half">
             <img src="assets/images/login.jpg" alt="Imagen centrada">
@@ -82,7 +86,7 @@
                         <div class="card flex justify-content-center">
                             <p-toast />
                             <p-confirmDialog />
-                            <p-button label="Register" [disabled]="!isPasswordValid()" (click)="onRegister($event)"></p-button>
+                            <p-button label="Register" [disabled]="!areAllFieldsFilled()" (click)="onRegister($event)"></p-button>
                         </div>
                     </div>
 

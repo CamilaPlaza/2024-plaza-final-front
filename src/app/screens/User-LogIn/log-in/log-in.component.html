@@ -1,10 +1,14 @@
-<!-- log-in.component.html -->
 <div class="login-container">
     <!-- Imagen de fondo borrosa -->
     <div class="background-blurred"></div>
 
-    <!-- Contenedor centrado con la imagen y el formulario -->
-    <div class="center-container">
+    <!-- Mostrar el spinner si loading es true -->
+    <div *ngIf="loading" class="spinner-container">
+        <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+    </div>
+
+    <!-- Contenedor centrado con la imagen y el formulario (oculto si loading es true) -->
+    <div *ngIf="!loading" class="center-container">
         <!-- Formulario en fondo marrón (ahora a la izquierda) -->
         <div class="form-half">
             <div class="form-container">
@@ -42,7 +46,7 @@
 
                     <div class="form-button">
                         <div class="card flex justify-content-center">
-                            <p-button label="Log In" (click)="onLogin()"/>
+                            <p-button label="Log In" (click)="onLogin()"></p-button>
                         </div>
                     </div>
                 </div>

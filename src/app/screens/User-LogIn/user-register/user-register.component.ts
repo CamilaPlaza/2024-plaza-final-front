@@ -41,7 +41,7 @@ export class UserRegisterComponent implements OnInit {
 
 
   async onRegister(event: Event) {
-    this.loading = true;
+    this.loading = true; // Iniciar el spinner
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Are you sure that you want to proceed?',
@@ -55,19 +55,24 @@ export class UserRegisterComponent implements OnInit {
           const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate)
           console.log('Register successful', response);
           this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Registration successfully' });
-          this.router.navigate(['/home']);
+          setTimeout(() => {
+            this.router.navigate(['/home']);
+        }, 1000);
     
         } catch (error: any) {
           console.error('Register failed', error);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred during registration', life: 3000 });
+        } finally {
+          this.loading = false; // Detener el spinner cuando se complete
         }
       }
     });
 
     setTimeout(() => {
-      this.loading = false
+      this.loading = false; // En caso de que falle, detener el spinner después de 2 segundos
     }, 2000);
-  }
+}
+
  
 
   @HostListener('window:resize', ['$event'])
@@ -95,5 +100,14 @@ export class UserRegisterComponent implements OnInit {
            this.passwordValid.numeric && 
            this.passwordValid.minLength;
   }
+
+  areAllFieldsFilled(): boolean {
+    return this.name.trim() !== '' && 
+           this.email.trim() !== '' && 
+           this.password.trim() !== '' && 
+           this.birthDate !== undefined && 
+           this.isPasswordValid();
+  }
+  
 
 }

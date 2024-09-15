@@ -16,6 +16,7 @@ export class LogInComponent implements OnInit {
   isMobile: boolean = window.innerWidth <= 800;
   displayForgotPasswordDialog: boolean = false;
   animateForm: boolean = false;
+  loading: boolean = false; 
 
   
   constructor(private userService: UserService, private router: Router, private messageService: MessageService) {}
@@ -23,13 +24,18 @@ export class LogInComponent implements OnInit {
   ngOnInit(): void {}
 
   async onLogin() {
-    this.router.navigate(['/home']);
+    this.loading = true;
+    setTimeout(() => {
+      this.router.navigate(['/home']);
+      this.loading = false;
+  }, 1000);
 
     //const loginSuccess = await this.userService.login(this.email, this.password);
     /*const loginSuccess = true;
     if (loginSuccess) {
       //this.userService.handleAuthState();  // Gestiona la sesión
       this.router.navigate(['/home']);
+      this.loading = false;
     } else {
       console.error('Login failed');
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No credentials were found', life: 3000 });

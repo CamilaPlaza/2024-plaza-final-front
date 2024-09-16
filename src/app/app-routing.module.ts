@@ -10,6 +10,7 @@ import { UserProfileComponent } from './screens/user-profile/user-profile.compon
 import { ProductsViewComponent } from './screens/product/products-view/products-view.component';
 import { RegisterProductComponent } from './screens/product/register-product/register-product.component';
 import { AuthGuard } from './services/auth_guard';
+import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', component: LogInComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'user-profile', component: UserProfileComponent, canActivate:[AuthGuard]},
   { path: 'products-view', component: ProductsViewComponent, canActivate:[AuthGuard]},
   { path: 'register-product', component: RegisterProductComponent, canActivate:[AuthGuard]},
+  { path: 'reset-password', component: ResetPasswordComponent},
   { path: '**', redirectTo: '' }
 ];
 

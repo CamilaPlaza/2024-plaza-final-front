@@ -51,12 +51,14 @@ export class UserRegisterComponent implements OnInit {
       this.formattedBirthDate = this.datePipe.transform(this.birthDate, 'dd/MM/yyyy') || '';
       console.log(this.formattedBirthDate);
                 
-      const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate)
-      this.router.navigate(['/home']);
+      const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate);
+      if(response){this.router.navigate(['/home']);}
     
     } catch (error: any) {
       console.error('Register failed', error);
-      this.showErrorDialog();    
+      if(error.code === 'auth/email-already-in-use'){
+        this.showErrorDialog(); 
+      } else{this.showErrorDialog();} 
     } finally {
       this.loading = false;
     }

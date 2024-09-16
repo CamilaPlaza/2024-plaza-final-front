@@ -11,8 +11,8 @@ export class AppComponent {
   showHeader: boolean = true;
   isAuthenticated: boolean | null = null;
   constructor(private router: Router, private authService: AuthService) {
-    this.router.events.subscribe((event) => {
-      if (this.router.url === '/' || this.router.url === '/user-register' || this.router.url === '/user-forgot-password') {
+    this.router.events.subscribe(() => {
+      if (this.router.url === '/' || this.router.url === '/user-register' || this.router.url === '/user-forgot-password' || this.router.url === '/reset-password') {
         this.showHeader = false;
       } else {
         this.showHeader = true;

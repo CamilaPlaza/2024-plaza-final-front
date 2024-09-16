@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { auth } from '../services/firebaseconfig';  // Import Firebase auth
-import { signInWithEmailAndPassword, sendPasswordResetEmail, deleteUser, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, UserCredential, User, onAuthStateChanged, setPersistence, browserSessionPersistence, signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail, deleteUser, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, UserCredential, User, onAuthStateChanged, setPersistence, browserSessionPersistence, signOut, confirmPasswordReset } from 'firebase/auth';
 import { Observable } from 'rxjs';
 
 
@@ -29,7 +29,7 @@ export class UserService {
     });
   }
 
-  async onRegister(email: string, password: string, name: string, birthday: string): Promise<string> {
+  async onRegister(email: string, password: string, name: string, birthday: string): Promise<boolean>{
     try {
 
       // Crear usuario en Firebase Authentication
@@ -46,10 +46,11 @@ export class UserService {
       console.log(this.http.post(`${this.baseUrl}/register/`, data));
       await this.http.post(`${this.baseUrl}/register/`, data).toPromise();
       console.log('Datos adicionales guardados en Firestore');
-      return "true";
+      return true;
     } catch (error: any) {
       console.error('Error durante el registro:', error);
-      return "false";
+      throw error;
+      return false;
     }
   }
   
@@ -77,6 +78,9 @@ export class UserService {
       console.error('Error sending password reset email:', error.message);
     }
   }
+
+  async confirmPasswordReset(oobCode: string, newPassword: string) {
+    return confirmPasswordReset(auth, oobCode, newPassword);}
 
   deleteCurrentUser(): Promise<void> {
     const user = auth.currentUser;

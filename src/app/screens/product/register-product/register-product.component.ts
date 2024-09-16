@@ -68,5 +68,17 @@ export class RegisterProductComponent implements OnInit{
     this.displayErrorDialog = false;
   }
 
+  onPriceChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = parseFloat(input.value);
+  
+    if (value < 0) {
+      input.value = '0'; // Establece el valor a 0 si es negativo
+      this.price = '0'; // Asegúrate de actualizar el modelo ngModel
+    } else {
+      this.price = input.value; // Actualiza el modelo ngModel con el valor válido
+    }
+  }
+  
   
 }

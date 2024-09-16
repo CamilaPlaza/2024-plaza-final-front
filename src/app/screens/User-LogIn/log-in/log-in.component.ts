@@ -22,7 +22,9 @@ export class LogInComponent implements OnInit {
   
   constructor(private userService: UserService, private router: Router, private messageService: MessageService) {}
   
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    localStorage.removeItem("token");
+  }
 
   async onLogin() {
     this.loading = true;

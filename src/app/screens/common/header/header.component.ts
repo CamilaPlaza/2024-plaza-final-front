@@ -60,6 +60,7 @@ export class HeaderComponent implements OnInit {
     }
     logOut() {
         this.userService.logOut().then(() => {
+            localStorage.removeItem("token");
             this.router.navigate(['/']);  // Redirigir al login
         });     
     }

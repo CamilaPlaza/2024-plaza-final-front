@@ -32,7 +32,9 @@ export class UserRegisterComponent implements OnInit {
   displayErrorDialog: boolean = false;
   maxDate: Date = new Date();
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    localStorage.removeItem("token");
+  }
 
   constructor(
     private userService: UserService,

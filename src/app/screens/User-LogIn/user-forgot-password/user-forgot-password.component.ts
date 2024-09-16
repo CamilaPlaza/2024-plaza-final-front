@@ -1,6 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { UserService } from 'src/app/services/user_service';
-import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-user-forgot-password',
@@ -11,28 +10,36 @@ export class UserForgotPasswordComponent {
   email: string = '';
   visible: boolean = false;
   @Output() onClose = new EventEmitter<void>();
+  @Output() onFailed = new EventEmitter<void>();
+  @Output() onSuccess = new EventEmitter<void>();
 
 
-  constructor(private userService: UserService, private messageService: MessageService) {}
+  constructor(private userService: UserService) {}
 
   async onForgotPassword() {
     try {
       const response = await this.userService.resetPassword(this.email);
       console.log('Reset successful', response);
-      this.messageService.add({ severity: 'info', summary: 'Success', detail: 'An email was sent to you' });
-  
       this.closeDialog();
+      this.success();
 
     } catch (error: any) {
       console.error('Reset failed', error);
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred', life: 3000 });
-        
+      this.failed();
     }
     
   }
 
   closeDialog() {
     this.onClose.emit();
+  }
+
+  success(){
+    this.onSuccess.emit();
+  }
+
+  failed(){
+    this.onFailed.emit();
   }
 
 }

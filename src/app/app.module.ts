@@ -31,7 +31,7 @@ import { TagModule } from 'primeng/tag';
 import { DatePipe } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmationPopUpComponent } from './screens/announcements/confirmation-pop-up/confirmation-pop-up.component';
-import { ErrorNoticeComponent } from './screens/announcements/error-notice/error-notice.component';
+import { NoticeComponent } from './screens/announcements/notice/notice.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +45,7 @@ import { ErrorNoticeComponent } from './screens/announcements/error-notice/error
     RegisterProductComponent,
     LogInComponent,
     UserRegisterComponent,
-    ErrorNoticeComponent,
+    NoticeComponent,
     UserForgotPasswordComponent
   ],
   imports: [

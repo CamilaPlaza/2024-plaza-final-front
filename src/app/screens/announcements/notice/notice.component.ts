@@ -1,11 +1,11 @@
 import { Component, Output, EventEmitter, Input  } from '@angular/core';
 
 @Component({
-  selector: 'app-error-notice',
-  templateUrl: './error-notice.component.html',
-  styleUrl: './error-notice.component.css'
+  selector: 'app-notice',
+  templateUrl: './notice.component.html',
+  styleUrl: './notice.component.css'
 })
-export class ErrorNoticeComponent {
+export class NoticeComponent {
   @Input() subtitle: string = ''; 
   @Output() onClose = new EventEmitter<void>();
 

@@ -65,15 +65,27 @@
 </div>
 
 <p-dialog header="Forgot Password" [(visible)]="displayForgotPasswordDialog" [modal]="true" [closable]="true">
-    <app-user-forgot-password (onClose)="closeForgotPasswordDialog()"></app-user-forgot-password>
+    <app-user-forgot-password 
+        (onClose)="closeForgotPasswordDialog()"
+        (onSuccess)="showEmailDialog('A email was sent to you successfully')"
+        (onFailed)="showEmailDialog('Something went wrong while sending your email')"
+    ></app-user-forgot-password>
 </p-dialog>
 
 <p-dialog [(visible)]="displayErrorDialog" [modal]="true" header="Error" [closable]="true">
-    <app-error-notice
+    <app-notice
         [subtitle]="'Email or password incorrect'" 
         (onClose)="closeErrorDialog()">
-    </app-error-notice>
+    </app-notice>
 </p-dialog>
+
+<p-dialog [(visible)]="displayEmailDialog" [modal]="true" header="Password Recover" [closable]="true">
+    <app-notice
+      [subtitle]="message"
+      (onClose)="closeEmailDialog()">
+    </app-notice>
+  </p-dialog>
+
 
 
 <p-toast></p-toast>

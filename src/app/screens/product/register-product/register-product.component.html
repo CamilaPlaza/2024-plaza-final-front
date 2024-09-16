@@ -66,10 +66,10 @@
   </p-dialog>
   
   <p-dialog [(visible)]="displayErrorDialog" [modal]="true" header="Error" [closable]="true">
-    <app-error-notice
+    <app-notice
       [subtitle]="errorSubtitle"
       (onClose)="closeErrorDialog()">
-    </app-error-notice>
+    </app-notice>
   </p-dialog>
   
   <p-toast></p-toast>

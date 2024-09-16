@@ -68,4 +68,12 @@
     <app-user-forgot-password (onClose)="closeForgotPasswordDialog()"></app-user-forgot-password>
 </p-dialog>
 
+<p-dialog [(visible)]="displayErrorDialog" [modal]="true" header="Error" [closable]="true">
+    <app-error-notice
+        [subtitle]="'Email or password incorrect'" 
+        (onClose)="closeErrorDialog()">
+    </app-error-notice>
+</p-dialog>
+
+
 <p-toast></p-toast>

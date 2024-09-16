@@ -53,23 +53,16 @@ export class UserService {
     }
   }
   
-  //async login(email: string, password: string): Promise<boolean> {
-    
-    /*try {
-      // Configurar la persistencia de la sesión
-      //await setPersistence(auth, browserSessionPersistence);
-      
-      // Iniciar sesión
+  async login(email: string, password: string): Promise<boolean> {
+    try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      console.log('User signed in:', user);
-      
-      return true; // Inicio de sesión exitoso
+      localStorage.setItem('token', await userCredential.user?.getIdToken() ?? '');
+      return true;  // Retorna true si el login fue exitoso
     } catch (error) {
-      console.error('Error during login:', error);
-      return false; // Error en el inicio de sesión
-    }*/
-  //}
+      console.error('Error al iniciar sesión', error);
+      return false;  // Retorna false si el login falla
+    }
+  }
 
   async getUserDataFromFirestore(uid: string): Promise<Observable<any>> {
     const url = `http://localhost:8000/users/${uid}`; // URL del backend FastAPI
@@ -115,26 +108,10 @@ export class UserService {
     this.idleTime = 0;
   }
 
-  isLoggedIn(): boolean{
-    return true;
-    /*if(this.currentUser){
-      return true;
-    }else{
-      return false
-    }*/
-    // Implementa tu lógica de autenticación aquí
-  }
-  // Cerrar sesión
-  logOut(): Promise<void> {
-    return signOut(auth) // Usa `auth`, no el objeto `User`
-      .then(() => {
-        console.log('User signed out successfully');
-      })
-      .catch((error) => {
-        console.error('Error signing out user:', error);
-        throw error;
-      });
-  }
+logOut(){
+  return signOut(auth)
+}
+
   // Monitorea la actividad del usuario (para resetear el temporizador de inactividad)
   monitorUserActivity() {
     window.addEventListener('mousemove', () => this.resetIdleTime());
@@ -163,3 +140,4 @@ export class UserService {
   }
 
 }
+

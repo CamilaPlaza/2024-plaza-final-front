@@ -21,18 +21,22 @@
             name="description" />
         </div>
         <div class="form-group">
-            <label for="price">Price</label>
-            <input
-              pInputText
-              id="price"
-              type="number" 
-              [(ngModel)]="price"
-              placeholder="Enter price"
-              name="product_price"
-              min="0"
-              (input)="onPriceChange($event)"
-              required />
-          </div>
+          <label for="price">Price</label>
+          <input
+            pInputText
+            id="price"
+            type="number"
+            [(ngModel)]="price"
+            placeholder="Enter price"
+            name="product_price"
+            min="0"
+            (input)="onPriceChange($event)"
+            (keypress)="onlyAllowNumbers($event)"
+            
+            required
+          />
+        </div>
+        
           
   
         <div class="card flex justify-content-center">

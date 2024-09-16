@@ -12,12 +12,6 @@ export class HomeComponent {
 
   constructor(public userService: UserService, private confirmationService: ConfirmationService, private router: Router) {}
 
-  ngOnInit(): void {
-    if (!this.userService.isLoggedIn()) {
-      this.router.navigate(['/']);
-    }
-  }
-
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any): void {
     // Cierra la sesión cuando se intenta cerrar la ventana o pestaña

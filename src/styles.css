@@ -13,3 +13,26 @@
     position: fixed;
     z-index: 10000;
 }
+
+.p-confirm-dialog-accept {
+    background-color: #5b3114 !important; /* Cambiar el color de fondo */
+    color: white !important; /* Cambiar el color del texto */
+    border: none !important;
+  }
+  
+  /* Estilo para el botón de rechazar */
+  .p-confirm-dialog-reject {
+    background-color:#5b3114 !important; /* Cambiar el color de fondo */
+    color: white !important; /* Cambiar el color del texto */
+    border: none !important;
+  }
+  
+  /* Estilo para los botones al pasar el ratón por encima */
+  .p-confirm-dialog-accept:hover {
+    background-color: #96745b  !important;
+  }
+  
+  .p-confirm-dialog-reject:hover {
+    background-color: #96745b  !important;
+  }
+  

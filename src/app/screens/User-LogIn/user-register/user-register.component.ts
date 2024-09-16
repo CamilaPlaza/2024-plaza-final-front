@@ -50,9 +50,7 @@ export class UserRegisterComponent implements OnInit {
       console.log(this.formattedBirthDate);
                 
       const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate)
-      setTimeout(() => {
-        this.router.navigate(['/home']);
-      }, 2000);
+      this.router.navigate(['/home']);
     
     } catch (error: any) {
       console.error('Register failed', error);

@@ -17,6 +17,7 @@ export class LogInComponent implements OnInit {
   displayForgotPasswordDialog: boolean = false;
   animateForm: boolean = false;
   loading: boolean = false; 
+  displayErrorDialog: boolean = false;
 
   
   constructor(private userService: UserService, private router: Router, private messageService: MessageService) {}
@@ -25,23 +26,21 @@ export class LogInComponent implements OnInit {
 
   async onLogin() {
     this.loading = true;
-    setTimeout(() => {
-      this.router.navigate(['/home']);
+    const loginSuccess = await this.userService.login(this.email, this.password);
+    setTimeout(async () => {
       this.loading = false;
   }, 1000);
-
-    //const loginSuccess = await this.userService.login(this.email, this.password);
-    /*const loginSuccess = true;
+    
+    // Si el login es exitoso, redirige a la página 'home'
     if (loginSuccess) {
-      //this.userService.handleAuthState();  // Gestiona la sesión
       this.router.navigate(['/home']);
       this.loading = false;
     } else {
-      console.error('Login failed');
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No credentials were found', life: 3000 });
-  
-    }*/
+      // Si falla, muestra un mensaje de error (puedes usar un modal, snackbar, etc.)
+      this.showErrorDialog();    
+    }
   }
+  
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -65,6 +64,14 @@ export class LogInComponent implements OnInit {
     /*setTimeout(() => {
       this.router.navigate(['/user-register']);
     }, 1000); */ // 1000ms = 1 segundo, coincidiendo con 'animation-duration-1000'
+  }
+
+  showErrorDialog() {
+    this.displayErrorDialog = true;
+  }
+
+  closeErrorDialog() {
+    this.displayErrorDialog = false;
   }
 
 }

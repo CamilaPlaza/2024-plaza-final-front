@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user_service';
 
@@ -10,8 +10,9 @@ import { UserService } from 'src/app/services/user_service';
 })
 export class HeaderComponent implements OnInit {
     items: MenuItem[] | undefined;
+    displayConfirmDialog: boolean = false;
 
-    constructor(private router: Router, public userService: UserService) { }
+    constructor(private router: Router, public userService: UserService, private confirmationService: ConfirmationService) { }
 
     ngOnInit(): void {
         this.items = [
@@ -39,7 +40,7 @@ export class HeaderComponent implements OnInit {
             },
             {
                 icon: 'pi pi-fw pi-calendar',
-                routerLink: '/calendar',
+                //routerLink: '/calendar',
                 tooltip: 'Calendar'
             },
             {
@@ -51,17 +52,29 @@ export class HeaderComponent implements OnInit {
                     },
                     {
                         label: 'Quit',
-                        command: () => this.logOut(),
+                        command: () => this.showConfirmDialog(),
                     }
                 ]
             }
         ];
     }
-
-    async logOut(){
-    this.userService.logOut()
-          .then(() => {
-            this.router.navigate(['/']); 
-          })
+    logOut() {
+        this.userService.logOut().then(() => {
+            this.router.navigate(['/']);  // Redirigir al login
+        });     
     }
+    showConfirmDialog() {
+        this.displayConfirmDialog = true;
+      }
+    
+      closeConfirmDialog() {
+        this.displayConfirmDialog = false;
+      }
 }
+    
+
+
+
+
+
+

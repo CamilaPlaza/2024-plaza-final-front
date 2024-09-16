@@ -79,6 +79,15 @@ export class RegisterProductComponent implements OnInit{
       this.price = input.value; // Actualiza el modelo ngModel con el valor válido
     }
   }
+
+  onlyAllowNumbers(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+    }
+  }
+  
+  
   
   
 }

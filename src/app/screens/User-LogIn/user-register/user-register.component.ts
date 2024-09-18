@@ -52,7 +52,11 @@ export class UserRegisterComponent implements OnInit {
       console.log(this.formattedBirthDate);
                 
       const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate);
-      if(response){this.router.navigate(['/home']);}
+      console.log(response);
+      if(response){
+        await this.userService.login(this.email, this.password);
+        this.router.navigate(['/home']);
+      }
     
     } catch (error: any) {
       console.error('Register failed', error);
@@ -63,9 +67,9 @@ export class UserRegisterComponent implements OnInit {
       this.loading = false;
     }
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.loading = false;
-    }, 2000);
+    }, 2000);*/
 }
 
 

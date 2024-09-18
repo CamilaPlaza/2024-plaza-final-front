@@ -25,7 +25,7 @@ const routes: Routes = [
   { path: 'products-view', component: ProductsViewComponent, canActivate:[AuthGuard]},
   { path: 'register-product', component: RegisterProductComponent, canActivate:[AuthGuard]},
   { path: 'reset-password', component: ResetPasswordComponent},
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
 @NgModule({

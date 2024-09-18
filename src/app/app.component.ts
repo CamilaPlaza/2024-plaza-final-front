@@ -12,12 +12,13 @@ export class AppComponent {
   isAuthenticated: boolean | null = null;
   constructor(private router: Router, private authService: AuthService) {
     this.router.events.subscribe(() => {
-      if (this.router.url === '/' || this.router.url === '/user-register' || this.router.url === '/user-forgot-password' || this.router.url === '/reset-password') {
+      const publicRoutes = ['/', '/user-register', '/user-forgot-password', '/reset-password'];
+      if (publicRoutes.includes(this.router.url)) {
         this.showHeader = false;
       } else {
         this.showHeader = true;
       }
-    });
+    });    
   }
   ngOnInit() {
     this.authService.isAuthenticated().then((authStatus) => {

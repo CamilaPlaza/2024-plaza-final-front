@@ -1,0 +1,100 @@
+<div class="image-container" [ngClass]="{ 'fadeinright': showPanel, 'fadeoutright': !showPanel }">
+    <div class="category-panel">
+        <div class="panel-header">
+            <div class="title">CATEGORIES</div>
+            <button class="add-new" (click)="addNewCategory()">+ Add New</button>
+        </div>
+        <div class="panel-body">
+            <p-toast></p-toast>
+            <p-toast></p-toast>
+            <p-table [value]="categories" dataKey="id" editMode="row" [tableStyle]="{'min-width': '100%'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width:40%">Name</th>
+                        <th style="width:40%">Type</th>
+                        <th style="width:20%"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-category let-editing="editing" let-ri="rowIndex">
+                    <tr [pEditableRow]="category">
+                        <!-- Name column -->
+                        <td>
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input 
+                                        pInputText 
+                                        type="text" 
+                                        [(ngModel)]="category.name"
+                                        [style.width.px]="140" 
+                                        [disabled]="category.type === 'Default'" />
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{ category.name }}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+
+                        <!-- Type column -->
+                        <td>
+                            {{ category.type }}
+                        </td>
+
+                        <!-- Action buttons column -->
+                        <td>
+                            <div class="flex align-items-center justify-content-center gap-2">
+                                <!-- Edit button for custom types only -->
+                                <button 
+                                    *ngIf="!editing && category.type !== 'Default'" 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    pInitEditableRow 
+                                    icon="pi pi-pencil" 
+                                    (click)="onRowEditInit(category)" 
+                                    class="p-button-rounded p-button-text">
+                                </button>
+
+                                <!-- Save button when editing -->
+                                <button 
+                                    *ngIf="editing && category.type !== 'Default'" 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    pSaveEditableRow 
+                                    icon="pi pi-check" 
+                                    (click)="showConfirmDialog(category)" 
+                                    class="p-button-rounded p-button-text p-button-success mr-2">
+                                </button>
+
+                                <!-- Cancel button when editing -->
+                                <button 
+                                    *ngIf="editing && category.type !== 'Default'" 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    pCancelEditableRow 
+                                    icon="pi pi-times" 
+                                    (click)="onRowEditCancel(category, ri)" 
+                                    class="p-button-rounded p-button-text p-button-danger">
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="panel-footer">
+            <button class="save-button" (click)="handleSave()">Save</button>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="displayConfirmDialog" [modal]="true" header="Register new product" [closable]="true">
+    <app-confirmation-pop-up
+      [subtitle]="'Are you sure you want to proceed?'"
+      (onClose)="closeConfirmDialog()"
+      (onSend)="onRowEditSave()">
+    </app-confirmation-pop-up>
+  </p-dialog>
+
+  <p-toast></p-toast>

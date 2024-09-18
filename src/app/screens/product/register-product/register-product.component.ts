@@ -18,13 +18,35 @@ export class RegisterProductComponent implements OnInit{
   displayErrorDialog: boolean = false;
   errorSubtitle: string = '';
   loading: boolean = false; 
+  isMobile: boolean = false;
+  categories = [
+    { label: 'Breakfast', value: 'breakfast' },
+    { label: 'Lunch', value: 'lunch' },
+    { label: 'Dinner', value: 'dinner' },
+    { label: 'Drinks', value: 'drinks' }
 
-  constructor(
-    private productService: ProductService,
-    private router: Router
-  ) {}
+  ];
+  selectedCategory: any = null;
+  showCategoryPanel = false;
+
+  constructor( private productService: ProductService, private router: Router) {
+    this.checkScreenSize();
+    window.addEventListener('resize', () => this.checkScreenSize());
+  }
 
   ngOnInit(): void {}
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 600; // Ajusta el ancho según tus necesidades
+  }
+
+  goToCategories() {
+    if (this.isMobile) {
+      this.router.navigate(['/categories']);
+    } else{
+      this.showCategories();
+    }
+  }
 
   async onRegister() {
     this.closeConfirmDialog();
@@ -86,8 +108,25 @@ export class RegisterProductComponent implements OnInit{
       event.preventDefault();
     }
   }
+
+  showCategories() {
+    this.showCategoryPanel = true;
+    console.log(this.showCategoryPanel);
+  }
+
+
+  handleCategorySave() {
+    this.showCategoryPanel = false;
+  }
+
+  handleCategoryClose() {
+    this.showCategoryPanel = false;
+  } 
   
-  
-  
-  
+  isFormValid(): boolean {
+    return this.name !== '' && 
+           this.description !== '' &&
+           this.price !== '';
+  }
+
 }

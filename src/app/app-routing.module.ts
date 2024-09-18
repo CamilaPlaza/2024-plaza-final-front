@@ -11,6 +11,7 @@ import { ProductsViewComponent } from './screens/product/products-view/products-
 import { RegisterProductComponent } from './screens/product/register-product/register-product.component';
 import { AuthGuard } from './services/auth_guard';
 import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
+import { CategoriesComponent } from './screens/product/categories/categories.component';
 
 const routes: Routes = [
   { path: '', component: LogInComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'header', component: HeaderComponent},
   { path: 'user-register', component: UserRegisterComponent},
   { path: 'user-forgot-password', component: UserForgotPasswordComponent},
+  { path: 'categories', component: CategoriesComponent},
   { path: 'home', component: HomeComponent, canActivate:[AuthGuard]},
   { path: 'user-profile', component: UserProfileComponent, canActivate:[AuthGuard]},
   { path: 'products-view', component: ProductsViewComponent, canActivate:[AuthGuard]},

@@ -32,6 +32,9 @@ import { DatePipe } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmationPopUpComponent } from './screens/announcements/confirmation-pop-up/confirmation-pop-up.component';
 import { NoticeComponent } from './screens/announcements/notice/notice.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { CategoriesComponent } from "./screens/product/categories/categories.component";
+
 
 @NgModule({
   declarations: [
@@ -46,10 +49,12 @@ import { NoticeComponent } from './screens/announcements/notice/notice.component
     LogInComponent,
     UserRegisterComponent,
     NoticeComponent,
-    UserForgotPasswordComponent
+    UserForgotPasswordComponent,
+    CategoriesComponent
   ],
   imports: [
     BrowserModule,
+    DropdownModule,
     ToastModule,
     ConfirmDialogModule,
     TagModule,
@@ -68,7 +73,7 @@ import { NoticeComponent } from './screens/announcements/notice/notice.component
     FloatLabelModule,
     CalendarModule,
     MenubarModule
-  ],
+],
   providers: [ConfirmationService, MessageService, DatePipe],
   bootstrap: [AppComponent]
 })

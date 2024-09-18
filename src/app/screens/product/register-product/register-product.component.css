@@ -40,7 +40,7 @@ html, body {
 .title {
     margin: 0;
     padding-top: 0px;
-    margin-bottom: 15%;
+    margin-bottom: 8%;
     font-size: 2rem;
     text-align: left;
     width: 100%;
@@ -55,7 +55,7 @@ html, body {
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     width: 100%; 
     max-width: 400px; 
 }
@@ -80,7 +80,7 @@ input {
 }
 
 .btn-save {
-    margin-top: 10%;
+    margin-top: 30%;
     width: 150px;
     height: 45px;
     padding: 10px;
@@ -99,6 +99,7 @@ input {
     border-color: #b58958; 
 }
 
+
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -112,22 +113,106 @@ input {
     z-index: 9999; /* Asegurarse de que esté por encima de todo */
   }
   
-  .loading-overlay p-progressSpinner {
+.loading-overlay p-progressSpinner {
     width: 80px;
     height: 80px;
-  }
+}
+
+.app-categories-overlay {
+    position: absolute; /* Para superponerlo sobre la imagen */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    object-fit: cover;
+    display: block;
+}
+
+
+/* Contenedor del dropdown y el botón de edición */
+.category-dropdown-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+}
+
+/* Estilos para p-dropdown */
+::ng-deep .category-dropdown-container .p-dropdown {
+    flex: 1;
+    height: 60px;
+    width: 340px;
+    border-radius: 10px;
+    border: 1px solid #7f522e;
+    background-color: #cbccbc;
+    color: #7f522e;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+/* Estilos para el label del p-dropdown */
+::ng-deep .category-dropdown-container .p-dropdown .p-dropdown-label {
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilos para los ítems del dropdown */
+::ng-deep .category-dropdown-container .p-dropdown .p-dropdown-item {
+    color: #7f522e;
+}
+
+/* Estilos para los ítems en hover */
+::ng-deep .category-dropdown-container .p-dropdown .p-dropdown-item:hover {
+    background-color: #caa171;
+}
+
+/* Estilos para el botón de edición */
+.category-dropdown-container button {
+    height: 60px; 
+    width: 60px;
+    border-radius: 50%; 
+    background-color: #56371e6b; 
+    color: white; 
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.category-dropdown-container button:hover {
+    background-color: #56371e89;
+}
   
 
 @media (max-width: 600px) {
-    .column-left {
-        width: 100%; /* Ajusta el ancho del contenedor izquierdo */
+    @media (max-width: 600px) {
+        .container {
+            margin-left: 10%;
+        }
+    
+        .column-left {
+            width: 100%;
+            padding: 2%; /* Ajuste del padding para pantallas pequeñas */
+        }
+    
+        .column-right {
+            display: none; /* Oculta la columna derecha en pantallas pequeñas */
+        }
+    
+        .category-dropdown-container {
+            width: 100%; /* Asegura que el contenedor del dropdown ocupe el ancho completo */
+            max-width: none; /* Quita el límite de ancho máximo */
+            position: static; /* Quita la posición relativa para que ocupe el ancho completo */
+        }
+    
+        ::ng-deep .category-dropdown-container .p-dropdown {
+            width: 100%; /* Asegura que el dropdown ocupe el ancho completo disponible */
+        }
     }
-
-    .column-right {
-        display: none; /* Oculta la columna derecha en pantallas pequeñas */
-    }
-
-    .container {
-        margin-left: 10%;
-    }
+    
 }

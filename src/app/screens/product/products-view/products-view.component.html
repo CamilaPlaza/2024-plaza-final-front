@@ -93,7 +93,7 @@
                                   (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
                               <!-- Botón para eliminar producto -->
                               <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
-                                  (click)="deleteProduct(product.id)"></button>
+                                  (click)="showConfirmDialog(product.id)"></button>
                           </div>
                       </td>
                   </tr>
@@ -108,3 +108,11 @@
       </div>
   </div>
 </div>
+
+<p-dialog [(visible)]="displayConfirmDialog" [modal]="true" header="Delete product" [closable]="true">
+  <app-confirmation-pop-up
+    [subtitle]="'Are you sure you want to proceed?'"
+    (onClose)="closeConfirmDialog()"
+    (onSend)="deleteProduct()">
+  </app-confirmation-pop-up>
+</p-dialog>

@@ -17,6 +17,8 @@
       { label: 'Dinner', value: 'Dinner' },
       { label: 'Drinks', value: 'Drinks' }
     ];
+    displayConfirmDialog: boolean = false;
+    deleteID: number = 0;
 
     constructor(private productService: ProductService, private router: Router) {}
 
@@ -72,13 +74,13 @@
       console.log('Row edit cancelled', product, index);
     }
 
-    deleteProduct(id: number) {
-      this.products = this.products.filter(product => product.id !== id);
-      console.log('Product deleted:', id);
+    deleteProduct() {
+      this.products = this.products.filter(product => product.id !== this.deleteID);
+      console.log('Product deleted:', this.deleteID);
+      this.closeConfirmDialog();
     }
 
 
-    // Custom sort function
     customSort(event: { data: any[]; field: string; order: number }) {
       event.data.sort((data1, data2) => {
         let value1 = data1[event.field];
@@ -100,5 +102,13 @@
       this.router.navigate(['/register-product']); // Asegúrate de que esta ruta esté configurada en tu router
     }
 
+    showConfirmDialog(id: number) {
+      this.deleteID = id;
+      this.displayConfirmDialog = true;
+    }
+  
+    closeConfirmDialog() {
+      this.displayConfirmDialog = false;
+    }
     
   }

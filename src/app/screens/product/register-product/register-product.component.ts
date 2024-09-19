@@ -52,7 +52,7 @@ export class RegisterProductComponent implements OnInit{
     this.closeConfirmDialog();
     this.loading = true;
     try {
-      this.product = new Product(this.name, this.description, this.price, '');
+      this.product = new Product(this.name, this.description, this.price, this.selectedCategory.name);
       console.log(this.product);
       const response = await this.productService.onRegister(this.product);
 

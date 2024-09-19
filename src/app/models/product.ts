@@ -1,11 +1,14 @@
 export class Product {
-    product_name: string = '';
+    name: string = '';
     description: string = '';
-    product_price: string = '';
+    price: string = '';
+    category: string = '';
+
   
-    constructor(product_name: string, description: string, product_price: string) {
-      this.product_name = product_name;
+    constructor(name: string, description: string, price: string, category: string) {
+      this.name = name;
       this.description = description;
-      this.product_price = product_price;
+      this.price = price;
+      this.category = category;
     }
 }

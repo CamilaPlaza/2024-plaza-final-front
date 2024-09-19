@@ -3,6 +3,7 @@ import { Product } from 'src/app/models/product';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product_service';
+import { Category } from 'src/app/models/category';
 
 @Component({
   selector: 'app-register-product',
@@ -19,14 +20,13 @@ export class RegisterProductComponent implements OnInit{
   errorSubtitle: string = '';
   loading: boolean = false; 
   isMobile: boolean = false;
-  categories = [
-    { label: 'Breakfast', value: 'breakfast' },
-    { label: 'Lunch', value: 'lunch' },
-    { label: 'Dinner', value: 'dinner' },
-    { label: 'Drinks', value: 'drinks' }
 
-  ];
-  selectedCategory: any = null;
+  categories = [ { label: 'Breakfast', value: new Category('Breakfast', 'Default') },
+  { label: 'Lunch', value: new Category('Lunch', 'Default') },
+  { label: 'Dinner', value: new Category('Dinner', 'Default') },
+  { label: 'Drinks', value: new Category('Drinks', 'Custom') }];
+  
+  selectedCategory: Category = new Category('','');
   showCategoryPanel = false;
 
   constructor( private productService: ProductService, private router: Router) {
@@ -52,7 +52,7 @@ export class RegisterProductComponent implements OnInit{
     this.closeConfirmDialog();
     this.loading = true;
     try {
-      this.product = new Product(this.name, this.description, this.price);
+      this.product = new Product(this.name, this.description, this.price, '');
       console.log(this.product);
       const response = await this.productService.onRegister(this.product);
 

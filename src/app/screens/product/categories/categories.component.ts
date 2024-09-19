@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
-
+import { Category } from 'src/app/models/category';
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
@@ -11,6 +11,7 @@ export class CategoriesComponent implements OnInit {
   @Output() onSave = new EventEmitter<void>();
   displayConfirmDialog: boolean = false;
   editingCategory: any;
+  newCategoryName: string = '';
   showPanel = true;
   categories: any[] = [
     { id: '1', name: 'Breakfast', type: 'Default' },
@@ -18,7 +19,9 @@ export class CategoriesComponent implements OnInit {
     { id: '3', name: 'Dinner', type: 'Default' },
     { id: '4', name: 'Drinks', type: 'Custom' }
   ];
-
+  displayNewCategoryDialog: boolean = false;
+  displayNoticeDialog: boolean = false;
+  message: string = '';
   clonedCategories: { [s: string]: any } = {};
 
   constructor() {}
@@ -30,14 +33,6 @@ export class CategoriesComponent implements OnInit {
     setTimeout(() => {
       this.onSave.emit();
     }, 1000);
-  }
-
-  addNewCategory() {
-    // Lógica para agregar una nueva categoría
-  }
-
-  editCategory(category: any) {
-    // Lógica para editar una categoría existente
   }
 
   onRowEditInit(category: any) {
@@ -58,6 +53,20 @@ export class CategoriesComponent implements OnInit {
     delete this.clonedCategories[category.id];
   }
 
+  async onNewCategory() {
+    const category = new Category(this.newCategoryName, 'Custom');
+    try {
+      //const response = await this.productService.postCategory(category);
+      this.message = 'Creation successfully';
+      this.showNoticeDialog();
+
+    } catch (error: any) {
+      this.message = 'Something went wrong';
+      this.showNoticeDialog();
+    }
+    
+  }
+
   onDeleteCategory(category: any){
 
   }
@@ -71,5 +80,26 @@ export class CategoriesComponent implements OnInit {
   closeConfirmDialog() {
     this.displayConfirmDialog = false;
   }
+
+  //ACA
+
+  
+  showNewCategoryDialog() {
+    this.displayNewCategoryDialog = true;
+  }
+
+  closeNewCategoryDialog() {
+    this.displayNewCategoryDialog = false;
+  }
+
+  showNoticeDialog() {
+    this.closeNewCategoryDialog();
+    this.displayNoticeDialog = true;
+  }
+
+  closeNoticeDialog() {
+    this.displayNoticeDialog = false;
+  }
+
 
 }

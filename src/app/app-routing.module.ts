@@ -12,6 +12,8 @@ import { RegisterProductComponent } from './screens/product/register-product/reg
 import { AuthGuard } from './services/auth_guard';
 import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
 import { CategoriesComponent } from './screens/product/categories/categories.component';
+import { TablesComponent } from './screens/tables/tables.component';
+import { OrdersComponent } from './screens/orders/orders.component';
 
 const routes: Routes = [
   { path: '', component: LogInComponent},
@@ -25,6 +27,8 @@ const routes: Routes = [
   { path: 'products-view', component: ProductsViewComponent, canActivate:[AuthGuard]},
   { path: 'register-product', component: RegisterProductComponent, canActivate:[AuthGuard]},
   { path: 'reset-password', component: ResetPasswordComponent},
+  { path: 'tables', component: TablesComponent},
+  { path: 'orders', component: OrdersComponent},
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 

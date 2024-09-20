@@ -35,13 +35,14 @@ export class HeaderComponent implements OnInit {
                 ]
             },
             {
-                icon: 'pi pi-fw pi-dollar',
-                tooltip: 'Expenses'
+                icon: 'pi pi-fw pi-desktop',
+                routerLink: '/tables',
+                tooltip: 'Tables'
             },
             {
-                icon: 'pi pi-fw pi-calendar',
-                //routerLink: '/calendar',
-                tooltip: 'Calendar'
+                icon: 'pi pi-fw pi-bell',
+                routerLink: '/orders',
+                tooltip: 'Orders'
             },
             {
                 icon: 'pi pi-fw pi-user-edit',

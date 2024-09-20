@@ -3,7 +3,6 @@
   import { ProductService } from 'src/app/services/product_service';
   import { Router } from '@angular/router'; 
   
-
   @Component({
     selector: 'app-products-view',
     templateUrl: './products-view.component.html',

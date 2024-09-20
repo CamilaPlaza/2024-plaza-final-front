@@ -34,11 +34,14 @@ import { ConfirmationPopUpComponent } from './screens/announcements/confirmation
 import { NoticeComponent } from './screens/announcements/notice/notice.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { CategoriesComponent } from "./screens/product/categories/categories.component";
-
+import { TablesComponent } from './screens/tables/tables.component';
+import { OrdersComponent } from './screens/orders/orders.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    TablesComponent,
+    OrdersComponent,
     FooterComponent,
     HeaderComponent,
     HomeComponent,

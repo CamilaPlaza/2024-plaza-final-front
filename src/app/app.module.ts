@@ -36,6 +36,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CategoriesComponent } from "./screens/product/categories/categories.component";
 import { TablesComponent } from './screens/tables/tables.component';
 import { OrdersComponent } from './screens/orders/orders.component';
+import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { OrdersComponent } from './screens/orders/orders.component';
     UserRegisterComponent,
     NoticeComponent,
     UserForgotPasswordComponent,
-    CategoriesComponent
+    CategoriesComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,

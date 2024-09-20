@@ -19,8 +19,11 @@
     ];
     displayConfirmDialog: boolean = false;
     deleteID: number = 0;
+    public tableScrollHeight: string='';
 
-    constructor(private productService: ProductService, private router: Router) {}
+    constructor(private productService: ProductService, private router: Router) {
+      
+    }
 
     ngOnInit(): void {
       this.loadProducts();
@@ -37,10 +40,22 @@
         new Product('Grilled Cheese Sandwich', 'Classic grilled cheese on toasted bread', '5.49', 'Breakfast', 9),
         new Product('Chocolate Cake', 'Moist chocolate cake with frosting', '4.99', 'Dessert', 10),
     ];
+
+    this.setScrollHeight();
+    window.addEventListener('resize', () => {
+      this.setScrollHeight();
+    });
     
     
     }
 
+    setScrollHeight() {
+      if (window.innerWidth <= 768) { // Móvil
+        this.tableScrollHeight = '800px';
+      } else { // Pantallas más grandes
+        this.tableScrollHeight = '400px';
+      }
+    }
     // Método para cargar los productos usando el servicio
     loadProducts(): void {
       this.productService.getProducts().subscribe({

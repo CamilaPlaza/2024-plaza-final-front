@@ -9,7 +9,7 @@
 
   <div class="section table-section">
       <div class="card">
-          <p-table [value]="products" dataKey="id" editMode="row" scrollable="true" scrollHeight="400px">
+          <p-table [value]="products" dataKey="id" editMode="row" scrollable="true"  [scrollHeight]="tableScrollHeight">
               <ng-template pTemplate="header">
                   <tr>
                       <th pSortableColumn="id" pResizableColumn>Id <p-sortIcon field="id"></p-sortIcon></th>

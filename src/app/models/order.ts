@@ -1,4 +1,4 @@
-export class Category {
+export class Order {
     id?: number;
     name: string = '';
     type: string = '';

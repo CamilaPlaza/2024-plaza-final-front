@@ -190,29 +190,50 @@ input {
   
 
 @media (max-width: 600px) {
-    @media (max-width: 600px) {
-        .container {
-            margin-left: 10%;
-        }
-    
-        .column-left {
-            width: 100%;
-            padding: 2%; /* Ajuste del padding para pantallas pequeñas */
-        }
-    
-        .column-right {
-            display: none; /* Oculta la columna derecha en pantallas pequeñas */
-        }
-    
-        .category-dropdown-container {
-            width: 100%; /* Asegura que el contenedor del dropdown ocupe el ancho completo */
-            max-width: none; /* Quita el límite de ancho máximo */
-            position: static; /* Quita la posición relativa para que ocupe el ancho completo */
-        }
-    
-        ::ng-deep .category-dropdown-container .p-dropdown {
-            width: 100%; /* Asegura que el dropdown ocupe el ancho completo disponible */
-        }
+    .container {
+        margin-left: 10%;
     }
     
+    .column-left {
+        width: 100%;
+        padding: 2%; /* Ajuste del padding para pantallas pequeñas */
+    }
+    
+    .column-right {
+        display: none; /* Oculta la columna derecha en pantallas pequeñas */
+    }
+
+    /* Estilos para el panel de categorías en móvil */
+    .category-panel {
+        margin-left: 5%;
+        position: fixed;
+        top: -100%; /* Oculto inicialmente */
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        background-color: white;
+        z-index: 1000;
+        transition: top 0.3s ease; /* Animación para que el panel baje */
+    }
+
+    /* Cuando el panel está visible */
+    .category-panel.open {
+        top: 0; /* Panel visible, baja desde arriba */
+    }
+
+    /* Estilos para el ícono del lápiz */
+    .category-icon {
+        position: relative;
+        cursor: pointer;
+    }
+
+    /* Cerrar botón dentro del panel */
+    .close-panel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.5em;
+        cursor: pointer;
+    }
 }

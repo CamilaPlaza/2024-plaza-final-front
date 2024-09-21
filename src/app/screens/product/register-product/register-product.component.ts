@@ -20,32 +20,28 @@ export class RegisterProductComponent implements OnInit{
   errorSubtitle: string = '';
   loading: boolean = false; 
   isMobile: boolean = false;
-
   categories = [ { label: 'Breakfast', value: new Category('Breakfast', 'Default') },
   { label: 'Lunch', value: new Category('Lunch', 'Default') },
   { label: 'Dinner', value: new Category('Dinner', 'Default') },
   { label: 'Drinks', value: new Category('Drinks', 'Custom') }];
-  
   selectedCategory: Category = new Category('','');
   showCategoryPanel = false;
 
-  constructor( private productService: ProductService, private router: Router) {
-    this.checkScreenSize();
-    window.addEventListener('resize', () => this.checkScreenSize());
+  constructor( private productService: ProductService, private router: Router) {}
+
+  ngOnInit(): void {this.checkIfMobile();}
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkIfMobile();
   }
 
-  ngOnInit(): void {}
-
-  checkScreenSize() {
-    this.isMobile = window.innerWidth <= 600; // Ajusta el ancho según tus necesidades
+  checkIfMobile() {
+    this.isMobile = window.innerWidth <= 600;
   }
 
   goToCategories() {
-    if (this.isMobile) {
-      this.router.navigate(['/categories']);
-    } else{
-      this.showCategories();
-    }
+    this.showCategories();
   }
 
   async onRegister() {

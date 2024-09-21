@@ -62,12 +62,19 @@
   <div class="column column-right">
     <img src="../../../../assets/images/new_product.jpg" alt="Imagen de fondo" class="background-image">
     <app-categories
-      *ngIf="showCategoryPanel" 
+      *ngIf="!isMobile && showCategoryPanel" 
       (onSave)="handleCategorySave()" 
       (onClose)="handleCategoryClose()"
       class="app-categories-overlay">
     </app-categories>
   </div>
+
+  <app-categories
+      *ngIf="isMobile && showCategoryPanel" 
+      (onSave)="handleCategorySave()" 
+      (onClose)="handleCategoryClose()"
+      class="app-categories-overlay">
+    </app-categories>
 
   <!-- Spinner overlay -->
   <div *ngIf="loading" class="loading-overlay">

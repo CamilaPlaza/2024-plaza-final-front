@@ -21,14 +21,14 @@ const routes: Routes = [
   { path: 'header', component: HeaderComponent},
   { path: 'user-register', component: UserRegisterComponent},
   { path: 'user-forgot-password', component: UserForgotPasswordComponent},
-  { path: 'categories', component: CategoriesComponent},
+  { path: 'categories', component: CategoriesComponent, canActivate:[AuthGuard]},
   { path: 'home', component: HomeComponent, canActivate:[AuthGuard]},
   { path: 'user-profile', component: UserProfileComponent, canActivate:[AuthGuard]},
   { path: 'products-view', component: ProductsViewComponent, canActivate:[AuthGuard]},
   { path: 'register-product', component: RegisterProductComponent, canActivate:[AuthGuard]},
   { path: 'reset-password', component: ResetPasswordComponent},
-  { path: 'tables', component: TablesComponent},
-  { path: 'orders', component: OrdersComponent},
+  { path: 'tables', component: TablesComponent, canActivate:[AuthGuard]},
+  { path: 'orders', component: OrdersComponent, canActivate:[AuthGuard]},
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 

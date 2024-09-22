@@ -1,3 +1,4 @@
+import { TableService } from './../../services/table_service';
 import { Component, OnInit } from '@angular/core';
 import { Table } from 'src/app/models/table';
 
@@ -10,18 +11,20 @@ export class TablesComponent implements OnInit {
   
   public tableScrollHeight: string='';
 
-  tables: Table[] = [
+  tablesExample: Table[] = [
     new Table(1, 'FREE'), new Table(2, 'FREE'), new Table(3, 'FREE'), new Table(4, 'BUSY'),
     new Table(5, 'FREE'), new Table(6, 'BUSY'), new Table(7, 'FREE'), new Table(8, 'BUSY'),
     new Table(9, 'FREE'), new Table(10, 'BUSY'), new Table(11, 'FREE'), new Table(12, 'BUSY'),
     new Table(13, 'FREE'), new Table(14, 'BUSY'), new Table(15, 'FREE'), new Table(16, 'BUSY'),
     new Table(17, 'FREE'), new Table(18, 'BUSY'), new Table(19, 'FREE'), new Table(20, 'BUSY')
   ];
+  tables: Table[] = []; 
   
 
-  constructor() {}
+  constructor(private tableService: TableService) {}
 
   ngOnInit(): void {
+    this.loadTables();
     this.setScrollHeight();
     window.addEventListener('resize', () => {
       this.setScrollHeight();
@@ -51,6 +54,22 @@ export class TablesComponent implements OnInit {
       else result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
 
       return (event.order * result);
+    });
+  }
+
+  loadTables(): void {
+    this.tableService.getTables().subscribe({
+      next: (data) => {
+        console.log('Tables fetched:', data);
+        if (data && data.message && Array.isArray(data.message.tables)) {
+          this.tables = data.message.tables;
+        } else {
+          console.error('Unexpected data format:', data);
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching tables:', err);
+      }
     });
   }
 

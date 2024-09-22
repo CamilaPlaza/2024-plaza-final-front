@@ -60,8 +60,8 @@ export class OrdersComponent implements OnInit {
     this.productService.getProducts().subscribe({
       next: (data) => {
         console.log('Products fetched:', data);
-        if (data && data.message && Array.isArray(data.message.products)) {
-          this.products = data.message.products;
+        if (data && data.message && Array.isArray(data.products)) {
+          this.products = data.products;
         } else {
           console.error('Unexpected data format:', data);
         }

@@ -22,8 +22,29 @@ export class ProductService {
       return false;
     }
   }
-  getProducts(): Observable<{ message: { products: Product[]; message: string } }> {
-    return this.http.get<{ message: { products: Product[]; message: string } }>(`${this.baseUrl}/products`);
+  getProducts(): Observable<{ products: Product[]; message: string }> {
+    return this.http.get<{ products: Product[]; message: string }>(`${this.baseUrl}/products`);
+  }
+
+  async updateProductPrice(productId: string, newPrice: number): Promise<boolean> {
+    try {
+      await this.http.put(`${this.baseUrl}/products/price/${productId}/${newPrice}`, { new_price: newPrice }).toPromise();
+      return true;
+    } catch (error: any) {
+      console.error('Error durante la actualización del precio:', error);
+      return false;
+    }
+  }
+
+  // Actualizar descripción de un producto
+  async updateProductDescription(productId: string, newDescription: string): Promise<boolean> {
+    try {
+      await this.http.put(`${this.baseUrl}/products/description/${productId}/${newDescription}`, { new_description: newDescription }).toPromise();
+      return true;
+    } catch (error: any) {
+      console.error('Error durante la actualización de la descripción:', error);
+      return false;
+    }
   }
   
 }

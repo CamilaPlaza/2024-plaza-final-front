@@ -26,19 +26,6 @@
 
     ngOnInit(): void {
       this.loadProducts();
-      // Productos de ejemplo
-      this.products = [
-        new Product('Breakfast Burrito', 'Scrambled eggs with sausage and cheese', '8.99', 'Breakfast', 1),
-        new Product('Chicken Salad', 'Grilled chicken with mixed greens', '10.99', 'Lunch', 2),
-        new Product('Spaghetti Carbonara', 'Pasta with creamy sauce and pancetta', '14.99', 'Dinner', 3),
-        new Product('Margarita Pizza', 'Tomato, mozzarella, and fresh basil pizza', '12.99', 'Dinner', 4),
-        new Product('Club Sandwich', 'Triple-layer sandwich with turkey, bacon, and lettuce', '9.99', 'Lunch', 5),
-        new Product('Caesar Salad', 'Romaine lettuce with Caesar dressing', '7.99', 'Lunch', 6),
-        new Product('Orange Juice', 'Freshly squeezed orange juice', '2.99', 'Drinks', 7),
-        new Product('Cappuccino', 'Rich coffee with steamed milk and foam', '3.99', 'Drinks', 8),
-        new Product('Grilled Cheese Sandwich', 'Classic grilled cheese on toasted bread', '5.49', 'Breakfast', 9),
-        new Product('Chocolate Cake', 'Moist chocolate cake with frosting', '4.99', 'Dessert', 10),
-    ];
 
     this.setScrollHeight();
     window.addEventListener('resize', () => {
@@ -60,8 +47,9 @@
       this.productService.getProducts().subscribe({
         next: (data) => {
           console.log('Products fetched:', data);
-          if (data && data.message && Array.isArray(data.message.products)) {
-            this.products = data.message.products;
+          // Accediendo correctamente a 'products'
+          if (data && Array.isArray(data.products)) {
+            this.products = data.products;
           } else {
             console.error('Unexpected data format:', data);
           }
@@ -71,18 +59,44 @@
         }
       });
     }
+    
 
     onRowEditInit(product: Product) {
       console.log('Row edit initialized', product);
     }
 
-    onRowEditSave(product: Product) {
+    async onRowEditSave(product: Product) {
       if (parseFloat(product.price) < 0) {
         console.error('Price cannot be negative');
         return;
       }
+    
+      // Asegúrate de que product.id esté definido
+      if (product.id === undefined) {
+        console.error('Product ID is undefined');
+        return;
+      }
+    
+      // Actualizar el precio del producto
+      const priceUpdated = await this.productService.updateProductPrice(String(product.id), parseFloat(product.price));
+      if (!priceUpdated) {
+        console.error('Failed to update product price');
+        return;
+      }
+    
+      // Actualizar la descripción si está definida
+      if (product.description) {
+        const descriptionUpdated = await this.productService.updateProductDescription(String(product.id), product.description);
+        if (!descriptionUpdated) {
+          console.error('Failed to update product description');
+          return;
+        }
+      }
+    
       console.log('Row edit saved', product);
     }
+    
+    
 
     onRowEditCancel(product: Product, index: number) {
       console.log('Row edit cancelled', product, index);

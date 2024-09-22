@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-
 import { Category } from 'src/app/models/category';
+
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',

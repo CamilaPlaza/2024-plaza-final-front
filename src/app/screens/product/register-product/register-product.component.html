@@ -47,9 +47,23 @@
     
             <!-- Icono de edición para abrir el panel -->
             <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text"
-                    (click)="goToCategories()"></button>
+                    (click)="showCategories()"></button>
         </div>
       </div>
+
+      
+      <div class="form-group">
+        <label for="calories">Calories</label>
+        <div class="calories">
+          <div class="calories-display">
+            {{ calories || 'Add the ingredients' }}
+          </div>
+          <!-- Icono de edición para abrir la sección de edición de calorías -->
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" 
+                  (click)="showCalories()"></button>
+        </div>
+      </div>
+      
     
 
       <div class="card flex justify-content-center">
@@ -58,6 +72,7 @@
         </button>
       </div>
     </form>
+
   </div>
   <div class="column column-right">
     <img src="../../../../assets/images/new_product.jpg" alt="Imagen de fondo" class="background-image">
@@ -67,6 +82,12 @@
       (onClose)="handleCategoryClose()"
       class="app-categories-overlay">
     </app-categories>
+    <app-calories
+      *ngIf="!isMobile && showCaloriesPanel" 
+      (onSave)="handleCaloriesSave()" 
+      (onClose)="handleCaloriesClose()"
+      class="app-categories-overlay">
+    </app-calories>
   </div>
 
   <app-categories
@@ -75,6 +96,13 @@
       (onClose)="handleCategoryClose()"
       class="app-categories-overlay">
     </app-categories>
+
+    <app-calories
+      *ngIf="isMobile && showCaloriesPanel" 
+      (onSave)="handleCaloriesSave()" 
+      (onClose)="handleCaloriesClose()"
+      class="app-categories-overlay">
+    </app-calories>
 
   <!-- Spinner overlay -->
   <div *ngIf="loading" class="loading-overlay">

@@ -26,6 +26,8 @@ export class RegisterProductComponent implements OnInit{
   { label: 'Drinks', value: new Category('Drinks', 'Custom') }];
   selectedCategory: Category = new Category('','');
   showCategoryPanel = false;
+  showCaloriesPanel = false;
+  calories?: number;
 
   constructor( private productService: ProductService, private router: Router) {}
 
@@ -38,10 +40,6 @@ export class RegisterProductComponent implements OnInit{
 
   checkIfMobile() {
     this.isMobile = window.innerWidth <= 600;
-  }
-
-  goToCategories() {
-    this.showCategories();
   }
 
   async onRegister() {
@@ -107,7 +105,7 @@ export class RegisterProductComponent implements OnInit{
 
   showCategories() {
     this.showCategoryPanel = true;
-    console.log(this.showCategoryPanel);
+    this.showCaloriesPanel = false;
   }
 
 
@@ -124,5 +122,19 @@ export class RegisterProductComponent implements OnInit{
            this.description !== '' &&
            this.price !== '';
   }
+
+  showCalories() {
+    this.showCaloriesPanel = true;
+    this.showCategoryPanel = false;
+  }
+
+
+  handleCaloriesSave() {
+    this.showCaloriesPanel = false;
+  }
+
+  handleCaloriesClose() {
+    this.showCaloriesPanel = false;
+  } 
 
 }

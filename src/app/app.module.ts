@@ -37,12 +37,14 @@ import { CategoriesComponent } from "./screens/product/categories/categories.com
 import { TablesComponent } from './screens/tables/tables.component';
 import { OrdersComponent } from './screens/orders/orders.component';
 import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
+import { CaloriesComponent } from './screens/product/calories/calories.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TablesComponent,
     OrdersComponent,
+    CaloriesComponent,
     FooterComponent,
     HeaderComponent,
     HomeComponent,

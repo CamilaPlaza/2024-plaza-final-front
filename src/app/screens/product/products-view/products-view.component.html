@@ -26,17 +26,8 @@
                       <!-- ID no editable -->
                       <td>{{ product.id }}</td>
 
-                      <!-- Name editable -->
-                      <td>
-                          <p-cellEditor>
-                              <ng-template pTemplate="input">
-                                  <input pInputText type="text" [(ngModel)]="product.name" />
-                              </ng-template>
-                              <ng-template pTemplate="output">
-                                  {{ product.name }}
-                              </ng-template>
-                          </p-cellEditor>
-                      </td>
+                      <!-- Name NO editable -->
+                      <td>{{ product.name }}</td>
 
                       <!-- Price editable con validación -->
                       <td>

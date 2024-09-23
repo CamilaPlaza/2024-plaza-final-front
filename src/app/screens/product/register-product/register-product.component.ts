@@ -1,6 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Product } from 'src/app/models/product';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product_service';
 import { Category } from 'src/app/models/category';
@@ -20,18 +19,23 @@ export class RegisterProductComponent implements OnInit{
   errorSubtitle: string = '';
   loading: boolean = false; 
   isMobile: boolean = false;
-  categories = [ { label: 'Breakfast', value: new Category('Breakfast', 'Default') },
-  { label: 'Lunch', value: new Category('Lunch', 'Default') },
-  { label: 'Dinner', value: new Category('Dinner', 'Default') },
-  { label: 'Drinks', value: new Category('Drinks', 'Custom') }];
-  selectedCategory: Category = new Category('','');
+
+  categories = [ { label: 'Breakfast', value: new Category('Breakfast', 'Default', 1) },
+  { label: 'Lunch', value: new Category('Lunch', 'Default', 2) },
+  { label: 'Dinner', value: new Category('Dinner', 'Default', 3) },
+  { label: 'Drinks', value: new Category('Drinks', 'Custom', 4) }];
+
+  selectedCategories: Category[] = [];
+  selectedCategoryIds: string = '';
   showCategoryPanel = false;
   showCaloriesPanel = false;
   calories?: number;
 
   constructor( private productService: ProductService, private router: Router) {}
 
-  ngOnInit(): void {this.checkIfMobile();}
+  ngOnInit(): void {
+    this.checkIfMobile();   
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -46,12 +50,11 @@ export class RegisterProductComponent implements OnInit{
     this.closeConfirmDialog();
     this.loading = true;
     try {
-      this.product = new Product(this.name, this.description, this.price, this.selectedCategory.name);
-      console.log(this.product);
+      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds);
+      console.log('PRODUCT: ', this.product);
       const response = await this.productService.onRegister(this.product);
 
       if (response) {
-
         console.log('Register successful', response);
         this.router.navigate(['/products-view']);
       } else {
@@ -62,10 +65,27 @@ export class RegisterProductComponent implements OnInit{
       this.errorSubtitle = 'An error occurred during registration.';
       this.showErrorDialog();
     } finally {
-      this.loading = false; // Ocultar el spinner cuando finaliza
+      this.loading = false;
     }
   }
 
+  onCategoryChange(event: any): void {
+    this.selectedCategories = event.value;
+    this.selectedCategoryIds = this.selectedCategories.map(cat => cat.id).join(', ');
+  }
+
+  getSelectedCategoriesLabel(): string {
+    return this.selectedCategories.length > 0 
+      ? this.selectedCategories.map(cat => cat.name).join(', ')
+      : 'Select categories'; 
+  }
+
+  logSelectedCategories() {
+    console.log('Selected Categories: ', this.selectedCategories);
+  }
+  
+
+  //POP UPS
   
   showConfirmDialog() {
     this.displayConfirmDialog = true;

@@ -129,7 +129,7 @@ input {
     display: block;
 }
 
-.category-dropdown-container {
+.category-container {
     display: flex;
     align-items: center;
     width: 100%;
@@ -137,7 +137,7 @@ input {
     position: relative;
 }
 
-::ng-deep .category-dropdown-container .p-dropdown {
+::ng-deep .category-container .p-multiselect {
     flex-grow: 1; 
     height: 50px;
     min-width: 340px; 
@@ -148,22 +148,22 @@ input {
     font-size: 1.2rem;
 }
 
-::ng-deep .category-dropdown-container .p-dropdown .p-dropdown-label {
+::ng-deep .category-container .p-multiselect .p-multiselect-label {
     font-size: 1.2rem;
     display: flex;
     align-items: center;
 }
 
-::ng-deep .category-dropdown-container .p-dropdown .p-dropdown-item {
+::ng-deep .category-container .p-multiselect .p-multiselect-item {
     color: #7f522e;
 }
 
-::ng-deep .category-dropdown-container .p-dropdown .p-dropdown-item:hover {
+::ng-deep .category-container .p-multiselect .p-multiselect-item:hover {
     background-color: #caa171;
 }
 
 
-.category-dropdown-container button {
+.category-container button {
     height: 50px;
     width: 50px; 
     border-radius: 50%; 
@@ -176,7 +176,7 @@ input {
     cursor: pointer;
 }
 
-.category-dropdown-container button:hover {
+.category-container button:hover {
     background-color: #56371e89;
 }
 
@@ -244,39 +244,39 @@ input {
     
     .column-left {
         width: 100%;
-        padding: 2%; /* Ajuste del padding para pantallas pequeñas */
+        padding: 2%;
     }
     
     .column-right {
-        display: none; /* Oculta la columna derecha en pantallas pequeñas */
+        display: none; 
     }
 
-    /* Estilos para el panel de categorías en móvil */
+
     .category-panel {
         margin-left: 5%;
         position: fixed;
-        top: -100%; /* Oculto inicialmente */
+        top: -100%; 
         left: 0;
         right: 0;
         height: 100%;
         width: 100%;
         background-color: white;
         z-index: 1000;
-        transition: top 0.3s ease; /* Animación para que el panel baje */
+        transition: top 0.3s ease; 
     }
 
-    /* Cuando el panel está visible */
+ 
     .category-panel.open {
-        top: 0; /* Panel visible, baja desde arriba */
+        top: 0;
     }
 
-    /* Estilos para el ícono del lápiz */
+ 
     .category-icon {
         position: relative;
         cursor: pointer;
     }
 
-    /* Cerrar botón dentro del panel */
+ 
     .close-panel {
         position: absolute;
         top: 10px;

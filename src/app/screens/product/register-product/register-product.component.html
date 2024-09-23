@@ -36,18 +36,20 @@
       </div>
       <div class="form-group">
         <label for="category">Category</label>
-        <div class="category-dropdown-container">
-            <!-- Dropdown de categorías -->
-            <p-dropdown 
-              id="category" 
-              [options]="categories" 
-              [(ngModel)]="selectedCategory"
-              placeholder="Select a category">
-            </p-dropdown>
+        <div class="category-container">
+          
+          <p-multiSelect 
+            [options]="categories" 
+            [(ngModel)]="selectedCategories"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select categories"
+            (onChange)="onCategoryChange($event)">
+          </p-multiSelect>
+
     
-            <!-- Icono de edición para abrir el panel -->
             <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text"
-                    (click)="showCategories()"></button>
+                    (click)="logSelectedCategories()"></button>
         </div>
       </div>
 
@@ -58,7 +60,7 @@
           <div class="calories-display">
             {{ calories || 'Add the ingredients' }}
           </div>
-          <!-- Icono de edición para abrir la sección de edición de calorías -->
+          
           <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" 
                   (click)="showCalories()"></button>
         </div>
@@ -67,7 +69,7 @@
     
 
       <div class="card flex justify-content-center">
-        <button (click)="showConfirmDialog()" [disabled]="!isFormValid() || loading"  class="btn-save">
+        <button (click)="showConfirmDialog()" [disabled]="loading"  class="btn-save">
           Save
         </button>
       </div>
@@ -104,7 +106,7 @@
       class="app-categories-overlay">
     </app-calories>
 
-  <!-- Spinner overlay -->
+
   <div *ngIf="loading" class="loading-overlay">
     <p-progressSpinner></p-progressSpinner>
   </div>

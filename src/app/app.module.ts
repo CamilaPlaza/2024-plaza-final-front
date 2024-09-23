@@ -38,6 +38,7 @@ import { TablesComponent } from './screens/tables/tables.component';
 import { OrdersComponent } from './screens/orders/orders.component';
 import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
 import { CaloriesComponent } from './screens/product/calories/calories.component';
+import { MultiSelectModule } from 'primeng/multiselect';  
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { CaloriesComponent } from './screens/product/calories/calories.component
     TagModule,
     TableModule,
     HttpClientModule,
+    MultiSelectModule,
     FormsModule,
     TieredMenuModule,
     PasswordModule,

@@ -12,4 +12,16 @@ export class HomeComponent {
 
   constructor(public userService: UserService, private confirmationService: ConfirmationService, private router: Router) {}
 
+  navigateToTables(): void {
+    this.router.navigate(['/tables']); 
+  }
+
+  navigateToOrders(): void {
+    this.router.navigate(['/orders']);
+  }
+
+  navigateToProductsView(): void {
+    this.router.navigate(['/products-view']); 
+  }
+
 }

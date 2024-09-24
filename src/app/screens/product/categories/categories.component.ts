@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Category } from 'src/app/models/category';
+import { CategoryService } from 'src/app/services/category_service';
 
 @Component({
   selector: 'app-categories',
@@ -13,20 +14,29 @@ export class CategoriesComponent implements OnInit {
   editingCategory: any;
   newCategoryName: string = '';
   showPanel = true;
-  categories: any[] = [
-    { id: '1', name: 'Breakfast', type: 'Default' },
-    { id: '2', name: 'Lunch', type: 'Default' },
-    { id: '3', name: 'Dinner', type: 'Default' },
-    { id: '4', name: 'Drinks', type: 'Custom' }
-  ];
   displayNewCategoryDialog: boolean = false;
   displayNoticeDialog: boolean = false;
   message: string = '';
   clonedCategories: { [s: string]: any } = {};
+  categories: Category[] = [];
+  defaultCategoryNames: string[] = []; // Para almacenar nombres de categorías default
 
-  constructor() {}
+  constructor(private categoryService: CategoryService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadCategories(); // Cargar categorías por defecto
+  }
+
+  loadCategories() {
+    this.categoryService.getCategories().subscribe(
+      (data) => {
+        this.categories = data;
+      },
+      (error: any) => {
+        console.error('Error loading categories', error);
+      }
+    );
+  }
 
   handleSave() {
     this.showPanel = false;
@@ -42,11 +52,26 @@ export class CategoriesComponent implements OnInit {
   onRowEditSave() {
     const category = this.editingCategory;
     if (category.name.trim()) {
-      delete this.clonedCategories[category.id];
-    } else {
+        // Check for duplicates before updating
+        if (this.categories.some(cat => cat.id !== category.id && cat.name.toLowerCase() === category.name.trim().toLowerCase())) {
+            this.message = 'Category cannot be repeated.';
+            this.showNoticeDialog();
+            return;
+        }
+
+        this.categoryService.updateCategoryName(category.id, category.name).subscribe(
+            () => {
+                delete this.clonedCategories[category.id];
+                this.editingCategory = null;
+                this.loadCategories();
+            },
+            (error: any) => {
+                console.error('Error updating category', error);
+            }
+        );
     }
     this.displayConfirmDialog = false;
-  }
+}
 
   onRowEditCancel(category: any, index: number) {
     this.categories[index] = this.clonedCategories[category.id];
@@ -54,41 +79,58 @@ export class CategoriesComponent implements OnInit {
   }
 
   async onNewCategory() {
+    const categoryName = this.newCategoryName.trim().toLowerCase();
+
+    // Check for duplicates in all categories
+    if (this.categories.some(cat => cat.name.toLowerCase() === categoryName)) {
+        this.message = `The category name "${this.newCategoryName}" already exists.`;
+        this.showNoticeDialog();
+        return;
+    }
+
     const category = new Category(this.newCategoryName, 'Custom');
     try {
-      //const response = await this.productService.postCategory(category);
-      this.message = 'Creation successfully';
-      this.showNoticeDialog();
-
+        await this.categoryService.createCategory(category).toPromise();
+        this.message = 'Creation successful';
+        this.loadCategories();
+        this.closeNewCategoryDialog();
+        this.showNoticeDialog();
     } catch (error: any) {
-      this.message = 'Something went wrong';
-      this.showNoticeDialog();
+        this.message = 'Something went wrong';
+        this.showNoticeDialog();
     }
-    
+}
+
+  onDeleteCategory(category: any) {
+    if (category.id !== undefined) {
+      this.categoryService.deleteCategory(category.id.toString()).subscribe(
+        () => {
+          this.loadCategories(); // Recargar categorías después de eliminar
+        },
+        (error) => {
+          console.error('Error deleting category:', error);
+        }
+      );
+    } else {
+      console.error('Category ID is undefined');
+    }
   }
-
-  onDeleteCategory(category: any){
-
-  }
-
+  
   showConfirmDialog(category: any) {
     this.editingCategory = category;
     this.displayConfirmDialog = true;
-
   }
 
   closeConfirmDialog() {
     this.displayConfirmDialog = false;
   }
 
-  //ACA
-
-  
   showNewCategoryDialog() {
     this.displayNewCategoryDialog = true;
   }
 
   closeNewCategoryDialog() {
+    this.newCategoryName = ''; // Limpiar el nombre de la nueva categoría
     this.displayNewCategoryDialog = false;
   }
 
@@ -100,6 +142,4 @@ export class CategoriesComponent implements OnInit {
   closeNoticeDialog() {
     this.displayNoticeDialog = false;
   }
-
-
 }

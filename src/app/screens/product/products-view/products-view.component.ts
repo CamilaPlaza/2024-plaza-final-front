@@ -10,12 +10,25 @@ import { Category } from 'src/app/models/category';
   styleUrls: ['./products-view.component.css']
 })
 export class ProductsViewComponent implements OnInit {
-  categories: Category [] = [];
-  products: Product[] = [];
+  /*categories = [
+    new Category('Breakfast', 'Default', 1),
+    new Category('Lunch', 'Default', 2),
+    new Category('Dinner', 'Default', 3),
+    new Category('Drinks', 'Custom', 4)
+  ];
+  products = [
+    new Product('Breakfast Burrito', 'Scrambled eggs with sausage and cheese', '8.99', '1, 2', 1),
+    new Product('Chicken Salad', 'Grilled chicken with mixed greens', '10.99', '1, 3', 2),
+    new Product('Spaghetti Carbonara', 'Pasta with creamy sauce and pancetta', '14.99', '3', 3),
+    new Product('Margarita Pizza', 'Tomato, mozzarella, and fresh basil pizza', '12.99', '4', 4)
+  ];*/
+  categories: Category[] = [];
+  products : Product[] = [];
   selectedCategories: Category[] = [];
   displayConfirmDialog: boolean = false;
   deleteID: number = 0;
   editingProductCategories: { [key: number]: Category[] } = {};
+  originalProductState: { [key: number]: Product } = {}; // Store original state
   public tableScrollHeight: string='';
 
   constructor(private productService: ProductService, private router: Router) {}
@@ -28,11 +41,11 @@ export class ProductsViewComponent implements OnInit {
       this.setScrollHeight();
     });
 
-    //LLAMADA AL GET CATEGORIES!!
+    //hacer el get de las categories
   }
 
   getCategories(){
-      //this.categories = el servicio
+    //completar this.categories
   }
 
   getCategoryNamesByIds(ids: string): string {
@@ -84,6 +97,9 @@ export class ProductsViewComponent implements OnInit {
       return;
     }
 
+    // Store original product state for comparison
+    this.originalProductState[product.id] = { ...product };
+
     const categoryIds = product.category.split(',').map(id => id.trim());
 
     this.editingProductCategories[product.id] = this.categories
@@ -91,40 +107,57 @@ export class ProductsViewComponent implements OnInit {
   }
 
   async onRowEditSave(product: Product) {
-
     if (product.id === undefined) {
       console.error('Product ID is undefined');
       return;
     }
 
+    const originalProduct = this.originalProductState[product.id];
     const tempCategories = this.editingProductCategories[product.id];
+    
+    // Update category if modified
     if (tempCategories) {
       const selectedIds = tempCategories.map(category => category.id).join(', ');
-      product.category = selectedIds;
+      if (selectedIds !== originalProduct.category) {
+        product.category = selectedIds;
+      }
     }
 
     console.log('onRowEditSave called with product CATEGORY:', product.category);
 
+    // Validate price
     if (parseFloat(product.price) < 0) {
       console.error('Price cannot be negative');
       return;
     }
 
-    const priceUpdated = await this.productService.updateProductPrice(String(product.id), parseFloat(product.price));
-    if (!priceUpdated) {
-      console.error('Failed to update product price');
-      return;
+    // Update only modified fields
+    const promises: Promise<any>[] = [];
+    
+    if (product.price !== originalProduct.price) {
+      console.log('Price updated');
+      promises.push(this.productService.updateProductPrice(String(product.id), parseFloat(product.price)));
     }
 
-    if (product.description) {
-      const descriptionUpdated = await this.productService.updateProductDescription(String(product.id), product.description);
-      if (!descriptionUpdated) {
-        console.error('Failed to update product description');
-        return;
-      }
+    if (product.description !== originalProduct.description) {
+      console.log('Description updated');
+      promises.push(this.productService.updateProductDescription(String(product.id), product.description));
     }
 
-    console.log('Row edit saved', product);
+    if (product.category !== originalProduct.category) {
+      console.log('Categories updated');
+      //promises.push(this.productService.updateProductCategory(String(product.id), product.category));
+    }
+
+    try {
+      await Promise.all(promises);
+      console.log('Row edit saved', product);
+    } catch (error) {
+      console.error('Failed to update product', error);
+    }
+
+    // Clear original product state after saving
+    delete this.originalProductState[product.id];
   }
 
   onRowEditCancel(product: Product, index: number) {
@@ -132,11 +165,11 @@ export class ProductsViewComponent implements OnInit {
   
     if (product.id !== undefined) {
       delete this.editingProductCategories[product.id];
+      delete this.originalProductState[product.id]; // Clear original state on cancel
     } else {
       console.error('Product ID is undefined, cannot cancel edit');
     }
   }
-  
 
   deleteProduct() {
     this.products = this.products.filter(product => product.id !== this.deleteID);

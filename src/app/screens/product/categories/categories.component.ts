@@ -19,7 +19,9 @@ export class CategoriesComponent implements OnInit {
   message: string = '';
   clonedCategories: { [s: string]: any } = {};
   categories: Category[] = [];
-  defaultCategoryNames: string[] = []; // Para almacenar nombres de categorías default
+  defaultCategoryNames: string[] = [];
+  displayDeleteDialog: boolean = false;
+  categoryToDelete: any;
 
   constructor(private categoryService: CategoryService) {}
 
@@ -101,9 +103,9 @@ export class CategoriesComponent implements OnInit {
     }
 }
 
-  onDeleteCategory(category: any) {
-    if (category.id !== undefined) {
-      this.categoryService.deleteCategory(category.id.toString()).subscribe(
+  onDeleteCategory() {
+    if (this.categoryToDelete.id !== undefined) {
+      this.categoryService.deleteCategory(this.categoryToDelete.id.toString()).subscribe(
         () => {
           this.loadCategories(); // Recargar categorías después de eliminar
         },
@@ -115,6 +117,17 @@ export class CategoriesComponent implements OnInit {
       console.error('Category ID is undefined');
     }
   }
+
+  showDeleteDialog(category: any){
+    this.categoryToDelete = category;
+    this.displayDeleteDialog = true;
+
+  }
+
+  closeDeleteDialog() {
+    this.displayDeleteDialog = false;
+  }
+
   
   showConfirmDialog(category: any) {
     this.editingCategory = category;
@@ -142,4 +155,5 @@ export class CategoriesComponent implements OnInit {
   closeNoticeDialog() {
     this.displayNoticeDialog = false;
   }
+  
 }

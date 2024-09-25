@@ -53,22 +53,25 @@
                           </p-cellEditor>
                       </td>
 
-                      <!-- Category editable -->
-                      <td>
-                          <p-cellEditor>
-                              <ng-template pTemplate="input">
-                                  <p-dropdown 
-                                      [options]="categories" 
-                                      [(ngModel)]="product.category" 
-                                      optionLabel="label" 
-                                      [style]="{'min-width': '150px'}"
-                                      [placeholder]="product.category" />
-                              </ng-template>
-                              <ng-template pTemplate="output">
-                                  {{ product.category }}
-                              </ng-template>
-                          </p-cellEditor>
-                      </td>
+                    
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-multiSelect 
+                                    [options]="categories" 
+                                    [(ngModel)]="editingProductCategories[product.id]" 
+                                    optionLabel="name"
+                                    placeholder="Select categories"
+                                    [maxSelectedLabels]="100"
+                                    (onChange)="updateTempSelectedCategories(product.id, editingProductCategories[product.id])">
+                                </p-multiSelect>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{ getCategoryNamesByIds(product.category) }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+
 
                       <!-- Columna para íconos de editar y eliminar -->
                       <td>

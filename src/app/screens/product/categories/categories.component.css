@@ -126,6 +126,17 @@ ng::p-cellEditor input {
   width: 140px; /* Ancho del input */
 }
 
+.custom-delete-button {
+  color: red; /* Color del ícono */
+  background-color: transparent !important; /* Sin fondo */
+  border: none; /* Sin borde */
+  box-shadow: none; /* Sin sombra */
+}
+
+.custom-delete-button:hover {
+  color: darkred; /* Color más oscuro al pasar el mouse */
+}
+
 
 /* Estilos para el panel de categorías en la versión móvil */
 @media (max-width: 600px) {

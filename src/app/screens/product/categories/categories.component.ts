@@ -23,6 +23,10 @@ export class CategoriesComponent implements OnInit {
   displayDeleteDialog: boolean = false;
   categoryToDelete: any;
 
+  /*categories: Category[] = [
+    new Category('Breakfast','Default', 1), new Category('Lunch','Default', 2), 
+    new Category('Dinner','Default', 3), new Category('Drinks','Custom', 4)];*/
+
   constructor(private categoryService: CategoryService) {}
 
   ngOnInit() {

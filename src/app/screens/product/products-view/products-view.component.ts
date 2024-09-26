@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product_service';
+import { CategoryService } from 'src/app/services/category_service';
 import { Router } from '@angular/router'; 
 import { Category } from 'src/app/models/category';
 
@@ -31,21 +32,31 @@ export class ProductsViewComponent implements OnInit {
   originalProductState: { [key: number]: Product } = {}; // Store original state
   public tableScrollHeight: string='';
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.loadProducts();
-
     this.setScrollHeight();
     window.addEventListener('resize', () => {
       this.setScrollHeight();
     });
-
-    //hacer el get de las categories
+    this.loadCategories();
   }
 
-  getCategories(){
-    //completar this.categories
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        console.log('Products fetched:', data);
+        if (data && Array.isArray(data.categories)) {
+          this.categories = data.categories;
+        } else {
+          console.error('Unexpected data format:', data);
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching products:', err);
+      }
+    });
   }
 
   getCategoryNamesByIds(ids: string): string {
@@ -101,7 +112,7 @@ export class ProductsViewComponent implements OnInit {
     this.originalProductState[product.id] = { ...product };
 
     const categoryIds = product.category.split(',').map(id => id.trim());
-
+    console.log(this.categories);
     this.editingProductCategories[product.id] = this.categories
       .filter((category: Category) => category.id && categoryIds.includes(category.id.toString()));
   }

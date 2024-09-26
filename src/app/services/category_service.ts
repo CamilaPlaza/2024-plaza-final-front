@@ -12,8 +12,8 @@ export class CategoryService {
   constructor(private http: HttpClient) {}
 
   // Obtener todas las categorías
-  getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.baseUrl}/categories`);
+  getCategories(): Observable<{ categories: Category[]; message: string }> {
+    return this.http.get<{ categories: Category[]; message: string }>(`${this.baseUrl}/categories`);
   }
 
   // Obtener una categoría por ID

@@ -33,15 +33,20 @@ export class CategoriesComponent implements OnInit {
     this.loadCategories(); // Cargar categorías por defecto
   }
 
-  loadCategories() {
-    this.categoryService.getCategories().subscribe(
-      (data) => {
-        this.categories = data;
+  loadCategories():void{
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        console.log('Categories fetched:', data);
+        if (data && Array.isArray(data.categories)) {
+          this.categories = data.categories;
+        } else {
+          console.error('Unexpected data format:', data);
+        }
       },
-      (error: any) => {
-        console.error('Error loading categories', error);
+      error: (err) => {
+        console.error('Error fetching products:', err);
       }
-    );
+    });
   }
 
   handleSave() {

@@ -32,27 +32,24 @@ export class TableFreeComponent implements OnInit {
   order: Order | undefined;
 
   ngOnInit() {
+    //TO DO: HACER EL GET DE LOS PRODUCTOS
     this.updateCurrentTime();
   }
 
-  // Actualizar la hora actual en tiempo real
   updateCurrentTime() {
     const hours = this.currentDate.getHours().toString().padStart(2, '0');
     const minutes = this.currentDate.getMinutes().toString().padStart(2, '0');
     this.currentTime = `${hours}:${minutes}`;
   }
-
-  // Actualizar la selección de producto
   onProductChange() {
+
     this.validateForm();
   }
 
-  // Validar si se puede agregar el producto a la lista
   validateForm() {
     this.canAddProduct = !!this.selectedProduct && this.selectedAmount > 0;
   }
 
-  // Agregar un producto a la orden
   addOrderItem() {
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
@@ -64,7 +61,6 @@ export class TableFreeComponent implements OnInit {
     }
   }
 
-  // Eliminar un producto de la orden
   removeOrderItem(item: OrderItem) {
     const index = this.orderItems.indexOf(item);
     if (index > -1) {
@@ -72,19 +68,16 @@ export class TableFreeComponent implements OnInit {
     }
   }
 
-  // Resetear el formulario de selección de producto
   resetForm() {
     this.selectedProduct = null;
     this.selectedAmount = 1;
     this.canAddProduct = false;
   }
 
-  // Calcula el total de la orden
   calculateTotal() {
     return this.orderItems.reduce((total, item) => total + item.amount * parseFloat(item.product.price), 0);
   }
 
-  // Función para crear la orden
   createOrder() {
     const total = this.calculateTotal();
     this.order = {
@@ -94,14 +87,19 @@ export class TableFreeComponent implements OnInit {
       time: this.currentTime,
       total: total.toString(),
       orderItems: this.orderItems
-    };
-
-    // Actualiza el estado de la mesa
-    this.table.status = 'BUSY';
+    }; //TO DO: POSTEAR this.order
+    
     console.log('Order created', this.order);
-    this.closeDialog();
-    this.orderItems = [];
-    this.order = undefined;
+
+    this.updateTable();
+  }
+
+  updateTable(){
+    //TO DO: QUE LO UPDATEE
+    this.table.status = 'BUSY';
+    this.table.order = this.order;    
+    
+    console.log('Table updated', this.table);
   }
 
   // Cerrar el diálogo

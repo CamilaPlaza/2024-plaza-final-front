@@ -86,6 +86,11 @@
     font-style: italic;
 }
 
+.image-space .overlay {
+  cursor: pointer;
+}
+
+
 @media (max-width: 600px) {
     .spaces-conteiner {
         grid-template-columns: repeat(2, 1fr);

@@ -11,9 +11,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background-color: #6a4b36;
-  border-bottom: 3px solid #533521;
+  padding: 15px;
+  background-color: #7f522e;
 }
 
 .table-number {
@@ -25,7 +24,7 @@
 .status {
   font-size: 1.2rem;
   font-weight: 500;
-  color: #ffdd57;
+  color: #ffffff;
 }
 
 .body {
@@ -92,9 +91,8 @@
   margin-right: 2%;
 }
 
-.create-order-button,
 .close-button {
-  background-color: #6a4b36;
+  background-color: #7f522e;
   border: none;
   border-radius: 8px;
   color: #fff;
@@ -105,9 +103,25 @@
   outline: none;
 }
 
-.create-order-button:hover,
+.create-order-button{
+  background-color: #23ae43;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  outline: none;
+}
+
 .close-button:hover {
-  background-color: #533521;
+  background-color: #613d20;
+}
+
+
+.create-order-button:hover {
+  background-color: #1b8734;
 }
 
 .action-buttons {
@@ -124,7 +138,7 @@
 
 .add-product label {
   font-weight: bold;
-  color: #533521;
+  color: #7f522e;
 }
 
 .add-product select {
@@ -160,7 +174,7 @@
 
 .add-product-button button {
   text-align: center;
-  background-color: #6a4b36;
+  background-color: #7f522ee0;
   border: none;
   border-radius: 8px;
   color: #fff;
@@ -172,7 +186,7 @@
 }
 
 .add-product-button button:hover {
-  background-color: #533521;
+  background-color: #613d20dd;
 }
 
 

@@ -20,8 +20,8 @@ export class TablesComponent implements OnInit {
   ];
   tables: Table[] = []; 
   displayModal: boolean = false;
-  selectedTable: any = null;
-  orderDetails: string = 'Order details go here';
+  selectedTable: Table = new Table(0,'');
+  selectedComponent: string = '';
 
   constructor(private tableService: TableService) {}
 
@@ -43,18 +43,16 @@ export class TablesComponent implements OnInit {
 
   onTableClick(table: any) {
     this.selectedTable = table;
+  if (table.status === 'FREE') {
+    this.selectedComponent = 'FREE';
     this.displayModal = true;
+  } else if (table.status === 'BUSY') {
+    this.selectedComponent = 'BUSY';
+    this.displayModal = true;
+  } else {
+    console.log('Table is not available.');
   }
-
-  // Crear una nueva orden y cambiar el estado de la mesa
-  createOrder() {
-    if (this.selectedTable) {
-      this.selectedTable.status = 'BUSY';
-      this.displayModal = false;
-      // Aquí puedes añadir lógica para crear la orden real
-      console.log(`Order created for table ${this.selectedTable.id}`);
-    }
-  }
+}
 
   // Cerrar el modal
   closeModal() {

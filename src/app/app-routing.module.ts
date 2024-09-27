@@ -12,7 +12,7 @@ import { RegisterProductComponent } from './screens/product/register-product/reg
 import { AuthGuard } from './services/auth_guard';
 import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
 import { CategoriesComponent } from './screens/product/categories/categories.component';
-import { TablesComponent } from './screens/tables/tables.component';
+import { TablesComponent } from './my-tables/tables/tables.component';
 import { OrdersComponent } from './screens/orders/orders.component';
 
 const routes: Routes = [

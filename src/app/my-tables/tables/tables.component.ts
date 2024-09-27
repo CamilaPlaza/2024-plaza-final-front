@@ -1,4 +1,4 @@
-import { TableService } from './../../services/table_service';
+import { TableService } from '../../services/table_service';
 import { Component, OnInit } from '@angular/core';
 import { Table } from 'src/app/models/table';
 
@@ -19,7 +19,9 @@ export class TablesComponent implements OnInit {
     new Table(17, 'FREE'), new Table(18, 'BUSY'), new Table(19, 'FREE'), new Table(20, 'BUSY')
   ];
   tables: Table[] = []; 
-  
+  displayModal: boolean = false;
+  selectedTable: any = null;
+  orderDetails: string = 'Order details go here';
 
   constructor(private tableService: TableService) {}
 
@@ -39,22 +41,24 @@ export class TablesComponent implements OnInit {
     }
   }
 
+  onTableClick(table: any) {
+    this.selectedTable = table;
+    this.displayModal = true;
+  }
 
-  customSort(event: { data: any[]; field: string; order: number }) {
-    event.data.sort((data1, data2) => {
-      let value1 = data1[event.field];
-      let value2 = data2[event.field];
-      let result = null;
+  // Crear una nueva orden y cambiar el estado de la mesa
+  createOrder() {
+    if (this.selectedTable) {
+      this.selectedTable.status = 'BUSY';
+      this.displayModal = false;
+      // Aquí puedes añadir lógica para crear la orden real
+      console.log(`Order created for table ${this.selectedTable.id}`);
+    }
+  }
 
-      if (value1 == null && value2 != null) result = -1;
-      else if (value1 != null && value2 == null) result = 1;
-      else if (value1 == null && value2 == null) result = 0;
-      else if (typeof value1 === 'string' && typeof value2 === 'string')
-        result = value1.localeCompare(value2);
-      else result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
-
-      return (event.order * result);
-    });
+  // Cerrar el modal
+  closeModal() {
+    this.displayModal = false;
   }
 
   loadTables(): void {

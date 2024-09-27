@@ -1,0 +1,45 @@
+<div class="container-table-free">
+  <!-- Título -->
+  <div class="header">
+    <h2 class="table-number">Table: {{ table?.id }}</h2>
+    <span class="status">{{ table?.status }}</span>
+  </div>
+
+  <div class="body">
+    <div class="subtitle">
+      <div class="date-time-wrapper">
+        <p class="current-date">{{ currentDate | date: 'fullDate' }}</p>
+        <p class="current-time">{{ currentTime }}hs</p>
+      </div>
+    </div>
+
+    <!-- Tabla de productos -->
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Amount</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products">
+          <td>{{ product.name }}</td>
+          <td>{{ product.amount }}</td>
+          <td>{{ product.price | currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Total -->
+    <div class="total">
+      <p>Total: {{ calculateTotal() | currency }}</p>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="action-buttons">
+      <button pButton label="Create Order" class="create-order-button" (click)="createOrder()"></button>
+      <button pButton label="Close" class="close-button" (click)="closeDialog()"></button>
+    </div>
+  </div>
+</div>

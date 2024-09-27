@@ -43,19 +43,9 @@
 </div>
 
 <!-- Modal -->
-<p-dialog header="Table Information" [(visible)]="displayModal" modal="true" [closable]="false" [responsive]="true">
-  <div>
-    <p>Table Number: {{ selectedTable?.id }}</p>
-    <p>Status: {{ selectedTable?.status }}</p>
-    <div *ngIf="selectedTable?.status === 'FREE'">
-      <button (click)="createOrder()">Create Order</button>
-    </div>
-    <div *ngIf="selectedTable?.status === 'BUSY'">
-      <!-- Mostrar la información de la orden aquí -->
-      <p>Order Information: {{ orderDetails }}</p>
-    </div>
-  </div>
-  <p-footer>
-    <button (click)="closeModal()">Close</button>
-  </p-footer>
+<p-dialog [(visible)]="displayModal" modal="true" [closable]="false" [responsive]="true">
+  <app-table-free 
+    [table]="selectedTable" 
+    (close)="displayModal = false"
+   ></app-table-free>
 </p-dialog>

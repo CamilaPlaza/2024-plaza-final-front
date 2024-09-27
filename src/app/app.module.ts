@@ -34,17 +34,20 @@ import { ConfirmationPopUpComponent } from './screens/announcements/confirmation
 import { NoticeComponent } from './screens/announcements/notice/notice.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { CategoriesComponent } from "./screens/product/categories/categories.component";
-import { TablesComponent } from './my-tables/tables/tables.component';
+import { TablesComponent } from './screens/my-tables/tables/tables.component';
 import { OrdersComponent } from './screens/orders/orders.component';
 import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
 import { CaloriesComponent } from './screens/product/calories/calories.component';
 import { MultiSelectModule } from 'primeng/multiselect';  
-
+import { TableBusyComponent } from './screens/my-tables/table-busy/table-busy.component';
+import { TableFreeComponent } from './screens/my-tables/table-free/table-free.component';
 @NgModule({
   declarations: [
     AppComponent,
     TablesComponent,
     OrdersComponent,
+    TableBusyComponent,
+    TableFreeComponent,
     CaloriesComponent,
     FooterComponent,
     HeaderComponent,

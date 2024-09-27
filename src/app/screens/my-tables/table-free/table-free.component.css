@@ -1,0 +1,105 @@
+.container-table-free {
+    background-color: #fff;
+    border-radius: 30px;
+    width: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .body {
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-radius: 30px 30px 0 0;
+    background-color: #533521;
+  }
+  
+  .date-time-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .current-date {
+    text-align: left;
+    font-size: 1rem;
+    color: #533521;
+  }
+  
+  .current-time {
+    text-align: right;
+    font-size: 1rem;
+    color: #533521;
+  }
+  
+  .table-number {
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin: 0;
+  }
+  
+  .status {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #ffffff;
+    text-align: right;
+    margin-left: auto;
+  }
+  
+  .product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .product-table th,
+  .product-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  .total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #533521;
+  }
+  
+  .create-order-button {
+    background-color: #533521;
+    border-color: #533521;
+    border-radius: 8px;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+  
+  .create-order-button:hover {
+    background-color: #533521da;
+    border-color: #533521da;
+  }
+  
+  .close-button {
+    background-color: #533521c7;
+    border-color: #533521c7;
+    border-radius: 8px;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  
+  .close-button:hover {
+    background-color: #533521da;
+    border-color: #533521da;
+  }
+  
+  .action-buttons {
+    text-align: right;
+  }
+  

@@ -1,4 +1,4 @@
-import { TableService } from '../../services/table_service';
+import { TableService } from 'src/app/services/table_service';
 import { Component, OnInit } from '@angular/core';
 import { Table } from 'src/app/models/table';
 

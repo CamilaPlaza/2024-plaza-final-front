@@ -8,7 +8,8 @@ import { Table } from '../models/table';
 })
 export class TableService {
 
-  private baseUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'https://two024-messidepaul-back.onrender.com';
+  //private baseLocalUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient) { }
 

@@ -11,18 +11,6 @@ import { Category } from 'src/app/models/category';
   styleUrls: ['./products-view.component.css']
 })
 export class ProductsViewComponent implements OnInit {
-  /*categories = [
-    new Category('Breakfast', 'Default', 1),
-    new Category('Lunch', 'Default', 2),
-    new Category('Dinner', 'Default', 3),
-    new Category('Drinks', 'Custom', 4)
-  ];
-  products = [
-    new Product('Breakfast Burrito', 'Scrambled eggs with sausage and cheese', '8.99', '1, 2', 1),
-    new Product('Chicken Salad', 'Grilled chicken with mixed greens', '10.99', '1, 3', 2),
-    new Product('Spaghetti Carbonara', 'Pasta with creamy sauce and pancetta', '14.99', '3', 3),
-    new Product('Margarita Pizza', 'Tomato, mozzarella, and fresh basil pizza', '12.99', '4', 4)
-  ];*/
   categories: Category[] = [];
   products : Product[] = [];
   selectedCategories: Category[] = [];
@@ -45,32 +33,43 @@ export class ProductsViewComponent implements OnInit {
 
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
-      next: (data) => {
-        console.log('Products fetched:', data);
-        if (data && Array.isArray(data.categories)) {
-          this.categories = data.categories;
-        } else {
-          console.error('Unexpected data format:', data);
+        next: (data) => {
+            console.log('Categories fetched:', data);
+            // Access the categories property from the response
+            if (data && Array.isArray(data.categories)) {
+                this.categories = data.categories.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    type: item.type
+                }));
+            } else {
+                console.error('Unexpected data format for categories:', data);
+            }
+        },
+        error: (err) => {
+            console.error('Error fetching categories:', err);
         }
-      },
-      error: (err) => {
-        console.error('Error fetching products:', err);
-      }
     });
+}
+
+
+
+getCategoryNamesByIds(ids: any): string {
+  // Verifica si ids no es una cadena
+  if (typeof ids !== 'string' || !ids) {
+    return '';
   }
 
-  getCategoryNamesByIds(ids: string): string {
-    if (!ids) {
-      return '';
-    }
+  const idArray = ids.split(',').map(id => id.trim());
+  const categoryNames = this.categories
+    .filter(category => category.id !== undefined && idArray.includes(category.id.toString()))
+    .map(category => category.name);
 
-    const idArray = ids.split(',').map(id => id.trim());
-    const categoryNames = this.categories
-      .filter(category => category.id && idArray.includes(category.id.toString()))
-      .map(category => category.name);
+  return categoryNames.join(', ');
+}
 
-    return categoryNames.join(', ');
-  }
+
+  
   
   updateTempSelectedCategories(productId: number, selectedCategories: Category[]): void {
     this.editingProductCategories[productId] = [...selectedCategories];

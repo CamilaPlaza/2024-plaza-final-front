@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CategoryService {
-  private baseUrl = 'http://127.0.0.1:8000'; // URL base de la API
+  private baseUrl = 'https://two024-messidepaul-back.onrender.com'; // URL base de la API HOSTEADA
+  //private baseLocalUrl = 'http://127.0.0.1:8000'; 
 
   constructor(private http: HttpClient) {}
 

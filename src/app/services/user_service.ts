@@ -12,7 +12,8 @@ import { Observable } from 'rxjs';
 export class UserService {
   currentUser: User | null = null;
 
-  private baseUrl = 'http://127.0.0.1:8000';  //URL de Backend
+  private baseUrl = 'https://two024-messidepaul-back.onrender.com';  //URL de Backend
+  //private baseLocalUrl = 'http://127.0.0.1:8000';
   idleTime: number = 0;
   maxIdleTime: number = 10 * 60 * 1000; // 10 minutos de inactividad
   idleInterval: any;
@@ -66,7 +67,7 @@ export class UserService {
   }
 
   async getUserDataFromFirestore(uid: string): Promise<Observable<any>> {
-    const url = `http://localhost:8000/users/${uid}`; // URL del backend FastAPI
+    const url = `${this.baseUrl}/users/${uid}`; // URL del backend FastAPI
     return this.http.get(url); // Retorna un Observable con los datos del usuario
   }
   

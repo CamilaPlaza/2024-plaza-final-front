@@ -1,14 +1,5 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // For ngModel binding
 import { getAuth, confirmPasswordReset } from 'firebase/auth';
-import { CommonModule } from '@angular/common';
-import { PasswordModule } from 'primeng/password';   // For p-password
-import { DividerModule } from 'primeng/divider';     // For p-divider
-import { InputTextModule } from 'primeng/inputtext'; // For input fields
-import { FloatLabelModule } from 'primeng/floatlabel'; // For p-floatLabel
-import { ButtonModule } from 'primeng/button'; 
-import { DialogModule } from 'primeng/dialog';
-import { ConfirmationPopUpComponent } from '../../../screens/announcements/confirmation-pop-up/confirmation-pop-up.component';
 import { Router } from '@angular/router';
 
 
@@ -16,19 +7,6 @@ import { Router } from '@angular/router';
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css'],
-  
-  //standalone: true, // Since you're using a standalone component
-  /*imports: [
-    CommonModule, 
-    FormsModule, 
-    PasswordModule,    // Import p-password
-    DividerModule,     // Import p-divider
-    InputTextModule,   // Import p-inputText
-    FloatLabelModule,   // Import p-floatLabel
-    ButtonModule,
-    DialogModule,
-    ConfirmationPopUpComponent
-  ] // Include FormsModule and CommonModule*/
 })
 export class ResetPasswordComponent {
   email: string = '';

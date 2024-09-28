@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 })
 export class ProductService {
 
-  private baseUrl = 'http://127.0.0.1:8000';  // URL del backend
-
+  private baseUrl = 'https://two024-messidepaul-back.onrender.com';  // URL del backend
+  //private baseLocalUrl = 'http://127.0.0.1:8000';
   constructor(private http: HttpClient) { }
 
   async onRegister(product: Product): Promise<boolean> {

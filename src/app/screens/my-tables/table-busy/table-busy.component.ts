@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Order } from 'src/app/models/order';
 import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
@@ -22,13 +23,22 @@ export class TableBusyComponent  implements OnInit {
   ];
 
   orderItems: OrderItem[] = [];
+  currentDate: string = '';
+  currentTime: string = '';
+  order: Order = new Order('',0,'','','',[]);
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
   wantToAddNewProduct: boolean = false;
+  displayConfirmDialog = false;
+  displayCloseTableDialog = false;
 
   ngOnInit() {
     //TO DO: HACER EL GET DE LOS PRODUCTOS
+    this.orderItems = this.table.order?.orderItems ?? [];
+    this.currentDate = this.table.order?.date ?? '';
+    this.currentTime = this.table.order?.time ?? '';
+    this.order = this.table.order ?? new Order('',0,'','','',[]);
   }
 
   onProductChange() {
@@ -39,8 +49,11 @@ export class TableBusyComponent  implements OnInit {
     this.canAddProduct = !!this.selectedProduct && this.selectedAmount > 0;
   }
 
-  addOrderItem() {
+  addNewProducts(){
     this.wantToAddNewProduct = true;
+  }
+
+  addOrderItem() {
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
         product: this.selectedProduct,
@@ -56,7 +69,7 @@ export class TableBusyComponent  implements OnInit {
     if (index > -1) {
       this.orderItems.splice(index, 1);
     }
-  }
+  }  
 
   resetForm() {
     this.selectedProduct = null;
@@ -70,27 +83,52 @@ export class TableBusyComponent  implements OnInit {
 
   createOrder() {
     const total = this.calculateTotal();
-    this.table.order = {
+    this.order = {
       status: 'BUSY',
       tableNumber: this.table?.id ?? 0,
-      date: this.table.order?.date ?? '',
-      time: this.table.order?.time ?? '',      
+      date: this.currentDate,
+      time: this.currentTime,      
       total: total.toString(),
       orderItems: this.orderItems
-    }; //TO DO: POSTEAR this.order
+    }; //TO DO: ACTUALIZAR this.order
+    /*try {
+      console.log('ORDER: ', this.order);
+      const response = await this.orderService.onUpdate(this.order);
+    */
 
-    this.updateTable();
   }
 
-  updateTable(){
-    //TO DO: QUE LO UPDATEE
-    
-    console.log('Table updated', this.table);
+  closeTable(){
+    //UPDETEAR LA MESA
+    this.table.status = 'FREE';
+    this.table.order = undefined;
+    //const response = await this.tableService.onUpdate(this.table);
+    this.closeDialog();
   }
 
-  // Cerrar el diálogo
+  closeTableAndSaveChanges(){
+    this.createOrder();
+    this.closeTable();
+  }
+
   closeDialog() {
     console.log('Dialog closed');
     this.close.emit();
+  }
+
+  showConfirmDialog() {
+    this.displayConfirmDialog = true;
+  }
+
+  closeConfirmDialog() {
+    this.displayConfirmDialog = false;
+  }
+  
+  showCloseTableDialog() {
+    this.displayCloseTableDialog = true;
+  }
+
+  closeCloseTableDialog() {
+    this.displayCloseTableDialog = false;
   }
 }

@@ -78,10 +78,6 @@ export class RegisterProductComponent implements OnInit{
   
     console.log('Selected Category IDs:', this.selectedCategoryIds);
   }
-  
-  
-  
-  
 
   getSelectedCategoriesLabel(): string {
     return this.selectedCategories.length > 0 

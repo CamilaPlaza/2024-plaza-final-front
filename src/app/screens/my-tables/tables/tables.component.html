@@ -53,6 +53,7 @@
 
   <ng-container *ngIf="selectedComponent === 'BUSY'">
     <app-table-busy
+      [table]="selectedTable" 
       (close)="displayModal = false">
     </app-table-busy>
   </ng-container>

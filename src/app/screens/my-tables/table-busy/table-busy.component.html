@@ -1,1 +1,76 @@
-<p>table-busy works!</p>
+<div class="container-table-free">
+
+    <div class="header">
+      <h2 class="table-number">Table: {{ table.id }}</h2>
+      <span class="status">{{ table.status }}</span>
+    </div>
+  
+    <div class="body">
+      <div class="subtitle">
+        <div class="date-time-wrapper">
+          <p class="current-date">{{ table.order?.date }}</p>
+          <p class="current-time">{{ table.order?.time }}hs</p>
+        </div>
+      </div>
+  
+      <!-- Formulario de la orden -->
+      <div class="order-form">
+        <div class="table-wrapper">
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Amount</th>
+                <th>Price</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of table.order?.orderItems">
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.amount }}</td>
+                <td>{{ item.product.price | currency }}</td>
+                <td>
+                  <button class="remove-button" (click)="removeOrderItem(item)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <div *ngIf="wantToAddNewProduct" class="add-product">
+          <label for="product">Product:</label>
+          <select id="product" [(ngModel)]="selectedProduct" (change)="onProductChange()">
+            <option *ngFor="let product of products" [ngValue]="product">{{ product.name }}</option>
+          </select>
+  
+          <label for="amount">Amount:</label>
+          <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" (input)="validateForm()" />
+  
+          <label for="price">Price:</label>
+          <input id="price" type="text" [value]="selectedProduct?.price" disabled />
+        </div>
+  
+        <div class="add-product-button">
+          <button (click)="addOrderItem()">Add Product</button>
+        </div>
+      </div>
+  
+  
+      
+  
+      <!-- Total -->
+      <div class="total">
+        <p>Total: {{ calculateTotal() | currency }}</p>
+      </div>
+  
+      <!-- Botones de acción -->
+      <div class="action-buttons">
+        <button pButton label="Close Table" class="create-order-button" (click)="createOrder()"></button>
+        <button pButton label="Close" class="close-button" (click)="closeDialog()"></button>
+      </div>
+    </div>
+  </div>
+  

@@ -10,7 +10,7 @@ import { Table } from 'src/app/models/table';
   styleUrls: ['./table-free.component.css']
 })
 export class TableFreeComponent implements OnInit {
-  @Input() table: Table = new Table(0, '');
+  @Input() table: Table = new Table('');
   @Output() close = new EventEmitter<void>();
 
   products: Product[] = [
@@ -82,7 +82,7 @@ export class TableFreeComponent implements OnInit {
     const total = this.calculateTotal();
     this.order = {
       status: 'BUSY',
-      tableNumber: this.table?.id,
+      tableNumber: this.table?.id ?? 0,
       date: this.currentDate.toLocaleDateString(),
       time: this.currentTime,
       total: total.toString(),

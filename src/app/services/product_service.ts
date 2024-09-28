@@ -46,5 +46,27 @@ export class ProductService {
       return false;
     }
   }
-  
+
+  // Inside ProductService
+  async updateProductCategories(productId: string, newCategories: string): Promise<boolean> {
+    try {
+      await this.http.put(`${this.baseUrl}/products/categories/${productId}/${newCategories}`, { categories: newCategories }).toPromise();
+      return true;
+    } catch (error: any) {
+      console.error('Error updating categories:', error);
+      return false;
+    }
+  }
+
+  async deleteProduct(productId: string): Promise<boolean> {
+    try {
+      // Send DELETE request to backend to remove the product by productId
+      await this.http.delete(`${this.baseUrl}/products/${productId}`).toPromise();
+      return true;
+    } catch (error: any) {
+      console.error('Error deleting product:', error);
+      return false;
+    }
+  }
+
 }

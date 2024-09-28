@@ -35,12 +35,12 @@ export class ProductsViewComponent implements OnInit {
   constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
+    this.loadCategories();
     this.loadProducts();
     this.setScrollHeight();
     window.addEventListener('resize', () => {
       this.setScrollHeight();
     });
-    this.loadCategories();
   }
 
   loadCategories(): void {
@@ -97,6 +97,7 @@ export class ProductsViewComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching products:', err);
       }
+      
     });
   }
 
@@ -157,7 +158,7 @@ export class ProductsViewComponent implements OnInit {
 
     if (product.category !== originalProduct.category) {
       console.log('Categories updated');
-      //promises.push(this.productService.updateProductCategory(String(product.id), product.category));
+      promises.push(this.productService.updateProductCategories(String(product.id), product.category));
     }
 
     try {
@@ -183,9 +184,15 @@ export class ProductsViewComponent implements OnInit {
   }
 
   deleteProduct() {
-    this.products = this.products.filter(product => product.id !== this.deleteID);
-    console.log('Product deleted:', this.deleteID);
-    this.closeConfirmDialog();
+    this.productService.deleteProduct((this.deleteID).toString()).then(success => {
+      if (success) {
+        this.products = this.products.filter(product => product.id !== this.deleteID);
+        console.log('Product deleted:', this.deleteID);
+      } else {
+        console.error('Failed to delete product:', this.deleteID);
+      }
+      this.closeConfirmDialog();
+    });
   }
 
   customSort(event: { data: any[]; field: string; order: number }) {

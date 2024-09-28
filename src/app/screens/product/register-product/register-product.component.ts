@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product_service';
+import { CategoryService } from 'src/app/services/category_service';
 import { Category } from 'src/app/models/category';
 
 @Component({
@@ -14,26 +15,23 @@ export class RegisterProductComponent implements OnInit{
   description: string = '';
   price: string = '';
   product: Product | undefined;
+  categories: Category[] = [];
+  categoryOptions: { label: string; value: string }[] = []; // Cambiar a string
   displayConfirmDialog: boolean = false;
   displayErrorDialog: boolean = false;
   errorSubtitle: string = '';
   loading: boolean = false; 
   isMobile: boolean = false;
-
-  categories = [ { label: 'Breakfast', value: new Category('Breakfast', 'Default', 1) },
-  { label: 'Lunch', value: new Category('Lunch', 'Default', 2) },
-  { label: 'Dinner', value: new Category('Dinner', 'Default', 3) },
-  { label: 'Drinks', value: new Category('Drinks', 'Custom', 4) }];
-
   selectedCategories: Category[] = [];
   selectedCategoryIds: string = '';
   showCategoryPanel = false;
   showCaloriesPanel = false;
   calories?: number;
 
-  constructor( private productService: ProductService, private router: Router) {}
+  constructor( private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
+    this.loadCategories();
     this.checkIfMobile();   
   }
 
@@ -70,9 +68,20 @@ export class RegisterProductComponent implements OnInit{
   }
 
   onCategoryChange(event: any): void {
-    this.selectedCategories = event.value;
-    this.selectedCategoryIds = this.selectedCategories.map(cat => cat.id).join(', ');
+    this.selectedCategories = event.value; // Asegúrate de que esto se llene correctamente
+  
+    // Aquí asumimos que `event.value` ya contiene los IDs seleccionados como strings
+    console.log('Selected Categories:', this.selectedCategories);
+  
+    // Crear el string de IDs directamente
+    this.selectedCategoryIds = this.selectedCategories.join(', ');
+  
+    console.log('Selected Category IDs:', this.selectedCategoryIds);
   }
+  
+  
+  
+  
 
   getSelectedCategoriesLabel(): string {
     return this.selectedCategories.length > 0 
@@ -156,5 +165,16 @@ export class RegisterProductComponent implements OnInit{
   handleCaloriesClose() {
     this.showCaloriesPanel = false;
   } 
+
+  loadCategories() {
+    this.categoryService.getCategories().subscribe(response => {
+      this.categories = response.categories;
+  
+      this.categoryOptions = this.categories.map((category: Category) => ({
+        label: category.name,
+        value: category.id !== undefined ? category.id.toString() : '' // Manejo de undefined
+      }));
+    });
+  }
 
 }

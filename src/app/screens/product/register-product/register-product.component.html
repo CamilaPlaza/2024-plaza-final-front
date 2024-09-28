@@ -39,8 +39,9 @@
         <div class="category-container">
           
           <p-multiSelect 
-            [options]="categories" 
+            [options]="categoryOptions" 
             [(ngModel)]="selectedCategories"
+            name="categories"
             optionLabel="label"
             optionValue="value"
             placeholder="Select categories"
@@ -66,8 +67,6 @@
                   (click)="showCalories()"></button>
         </div>
       </div>
-      
-    
 
       <div class="card flex justify-content-center">
         <button (click)="showConfirmDialog()" [disabled]="loading"  class="btn-save">

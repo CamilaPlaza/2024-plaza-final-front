@@ -58,11 +58,6 @@
       </div>
     </div>
 
-    
-
-
-    
-
     <!-- Total -->
     <div class="total">
       <p>Total: {{ calculateTotal() | currency }}</p>
@@ -70,7 +65,7 @@
 
     <!-- Botones de acción -->
     <div class="action-buttons">
-      <button pButton label="Create Order" class="create-order-button" (click)="createOrder()"></button>
+      <button pButton label="Create Order" class="create-order-button" (click)="createOrder()" [disabled]="orderItems.length === 0"></button>
       <button pButton label="Close" class="close-button" (click)="closeDialog()"></button>
     </div>
   </div>

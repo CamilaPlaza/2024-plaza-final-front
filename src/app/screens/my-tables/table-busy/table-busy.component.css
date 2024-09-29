@@ -203,3 +203,24 @@
     color: #c0392b;
   }
   
+  ::ng-deep .white-background-modal .p-dialog {
+    background-color: #ffffff !important; /* Fondo blanco del diálogo */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important; /* Sombra del diálogo */
+}
+
+::ng-deep .white-background-modal .p-dialog-content {
+    background-color: #ffffff !important; /* Fondo blanco del contenido del diálogo */
+}
+
+::ng-deep .white-background-modal .p-dialog .p-dialog-header {
+    background-color: #ffffff !important; /* Fondo blanco del header */
+    border-bottom: 1px solid #ddd !important; /* Opcional: línea en el header */
+}
+
+::ng-deep .white-background-modal .p-dialog .p-dialog-footer {
+    background-color: #ffffff !important; /* Fondo blanco del footer */
+    border-top: 1px solid #ddd !important; /* Opcional: línea en el footer */
+}
+::ng-deep .p-dialog-mask {
+  background-color: transparent !important; /* Hace el fondo del overlay transparente */
+}

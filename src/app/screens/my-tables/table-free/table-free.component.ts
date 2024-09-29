@@ -42,7 +42,6 @@ export class TableFreeComponent implements OnInit {
     this.currentTime = `${hours}:${minutes}`;
   }
   onProductChange() {
-
     this.validateForm();
   }
 
@@ -92,6 +91,7 @@ export class TableFreeComponent implements OnInit {
     console.log('Order created', this.order);
 
     this.updateTable();
+    this.closeDialog();
   }
 
   updateTable(){

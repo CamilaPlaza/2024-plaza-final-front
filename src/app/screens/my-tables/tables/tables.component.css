@@ -118,21 +118,21 @@ th, td {
     color: white;
 }
 
-::ng-deep .p-dialog {
+::ng-deep .custom-modal .p-dialog {
     background-color: transparent !important; /* Quita el fondo del diálogo */
     box-shadow: none !important; /* Quita la sombra alrededor del diálogo */
 }
 
-::ng-deep .p-dialog-content {
+::ng-deep .custom-modal .p-dialog-content {
     background-color: transparent !important; /* Quita el fondo del contenido del diálogo */
 }
 
-::ng-deep .p-dialog .p-dialog-header {
+::ng-deep .custom-modal .p-dialog .p-dialog-header {
     background-color: transparent !important; /* Quita el fondo del header */
     border-bottom: none !important; /* Opcional: quita la línea del header */
 }
 
-::ng-deep .p-dialog .p-dialog-footer {
+::ng-deep .custom-modal .p-dialog .p-dialog-footer {
     background-color: transparent !important; /* Quita el fondo del footer */
     border-top: none !important; /* Opcional: quita la línea del footer */
 }

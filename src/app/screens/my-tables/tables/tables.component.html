@@ -42,8 +42,7 @@
   </div>
 </div>
 
-<!-- Modal -->
-<p-dialog [(visible)]="displayModal" modal="true" [closable]="false" [responsive]="true">
+<p-dialog class="custom-modal" [(visible)]="displayModal" modal="true" [closable]="false" [responsive]="true">
   <ng-container *ngIf="selectedComponent === 'FREE'">
     <app-table-free 
       [table]="selectedTable" 

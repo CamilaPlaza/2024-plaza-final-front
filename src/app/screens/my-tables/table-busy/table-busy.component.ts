@@ -82,6 +82,7 @@ export class TableBusyComponent  implements OnInit {
   }
 
   createOrder() {
+    console.log('CREATE ORDER');
     const total = this.calculateTotal();
     this.order = {
       status: 'BUSY',
@@ -92,9 +93,11 @@ export class TableBusyComponent  implements OnInit {
       orderItems: this.orderItems
     }; //TO DO: ACTUALIZAR this.order
     /*try {
-      console.log('ORDER: ', this.order);
+
       const response = await this.orderService.onUpdate(this.order);
     */
+   console.log('ORDER: ', this.order);
+   this.closeConfirmDialog();
 
   }
 
@@ -113,6 +116,7 @@ export class TableBusyComponent  implements OnInit {
 
   closeDialog() {
     console.log('Dialog closed');
+    this.wantToAddNewProduct = false;
     this.close.emit();
   }
 
@@ -121,7 +125,10 @@ export class TableBusyComponent  implements OnInit {
   }
 
   closeConfirmDialog() {
+    console.log('CLOSE CONFIRM DE SALIR O NO DIALOG');
+    
     this.displayConfirmDialog = false;
+    this.closeDialog();
   }
   
   showCloseTableDialog() {
@@ -129,6 +136,7 @@ export class TableBusyComponent  implements OnInit {
   }
 
   closeCloseTableDialog() {
+    console.log('CLOSE TABLE CLOSE DIALOG');
     this.displayCloseTableDialog = false;
   }
 }

@@ -7,9 +7,9 @@ import { Table } from 'src/app/models/table';
 @Component({
   selector: 'app-table-busy',
   templateUrl: './table-busy.component.html',
-  styleUrl: './table-busy.component.css'
+  styleUrls: ['./table-busy.component.css'] // Cambié `styleUrl` a `styleUrls` para que sea correcto
 })
-export class TableBusyComponent  implements OnInit {
+export class TableBusyComponent implements OnInit {
   @Input() table: Table = new Table('');
   @Output() close = new EventEmitter<void>();
 
@@ -23,9 +23,10 @@ export class TableBusyComponent  implements OnInit {
   ];
 
   orderItems: OrderItem[] = [];
+  initialOrderItems: OrderItem[] = []; // Nueva variable para almacenar los items iniciales
   currentDate: string = '';
   currentTime: string = '';
-  order: Order = new Order('',0,'','','',[]);
+  order: Order = new Order('', 0, '', '', '', []);
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
@@ -36,9 +37,10 @@ export class TableBusyComponent  implements OnInit {
   ngOnInit() {
     //TO DO: HACER EL GET DE LOS PRODUCTOS
     this.orderItems = this.table.order?.orderItems ?? [];
+    this.initialOrderItems = JSON.parse(JSON.stringify(this.orderItems)); // Guardar una copia de los items iniciales
     this.currentDate = this.table.order?.date ?? '';
     this.currentTime = this.table.order?.time ?? '';
-    this.order = this.table.order ?? new Order('',0,'','','',[]);
+    this.order = this.table.order ?? new Order('', 0, '', '', '', []);
   }
 
   onProductChange() {
@@ -49,7 +51,7 @@ export class TableBusyComponent  implements OnInit {
     this.canAddProduct = !!this.selectedProduct && this.selectedAmount > 0;
   }
 
-  addNewProducts(){
+  addNewProducts() {
     this.wantToAddNewProduct = true;
   }
 
@@ -69,7 +71,7 @@ export class TableBusyComponent  implements OnInit {
     if (index > -1) {
       this.orderItems.splice(index, 1);
     }
-  }  
+  }
 
   resetForm() {
     this.selectedProduct = null;
@@ -88,28 +90,21 @@ export class TableBusyComponent  implements OnInit {
       status: 'BUSY',
       tableNumber: this.table?.id ?? 0,
       date: this.currentDate,
-      time: this.currentTime,      
+      time: this.currentTime,
       total: total.toString(),
       orderItems: this.orderItems
-    }; //TO DO: ACTUALIZAR this.order
-    /*try {
-
-      const response = await this.orderService.onUpdate(this.order);
-    */
-   console.log('ORDER: ', this.order);
-   this.closeConfirmDialog();
-
+    };
+    console.log('ORDER: ', this.order);
+    this.closeConfirmDialog();
   }
 
-  closeTable(){
-    //UPDETEAR LA MESA
+  closeTable() {
     this.table.status = 'FREE';
     this.table.order = undefined;
-    //const response = await this.tableService.onUpdate(this.table);
     this.closeDialog();
   }
 
-  closeTableAndSaveChanges(){
+  closeTableAndSaveChanges() {
     this.createOrder();
     this.closeTable();
   }
@@ -121,22 +116,27 @@ export class TableBusyComponent  implements OnInit {
   }
 
   showConfirmDialog() {
-    this.displayConfirmDialog = true;
+    if (this.hasChanges()) {
+      this.displayConfirmDialog = true;
+    } else {
+      this.closeDialog();
+    }
+  }
+
+  hasChanges(): boolean {
+    return JSON.stringify(this.orderItems) !== JSON.stringify(this.initialOrderItems);
   }
 
   closeConfirmDialog() {
-    console.log('CLOSE CONFIRM DE SALIR O NO DIALOG');
-    
     this.displayConfirmDialog = false;
     this.closeDialog();
   }
-  
+
   showCloseTableDialog() {
     this.displayCloseTableDialog = true;
   }
 
   closeCloseTableDialog() {
-    console.log('CLOSE TABLE CLOSE DIALOG');
     this.displayCloseTableDialog = false;
   }
 }

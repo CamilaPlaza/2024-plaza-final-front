@@ -92,10 +92,10 @@
     </app-confirmation-pop-up>
   </p-dialog>
   
-  <p-dialog class="white-background-modal" [(visible)]="displayCloseTableDialog" [modal]="true" header="Save Changes" [closable]="true">
+  <p-dialog class="white-background-modal" [(visible)]="displayCloseTableDialog" [modal]="true" header="Close Table" [closable]="true">
     <app-confirmation-pop-up
-      [subtitle]="'Do you want to save your changes CLOSETAABLE?'"
-      (onClose)="closeTable()"
+      [subtitle]="'Are you sure you want to close this table?'"
+      (onClose)="closeCloseTableDialog()"
       (onSend)="closeTableAndSaveChanges()"
       [cancelLabel]="'No'"
       [sendLabel]="'Yes'">

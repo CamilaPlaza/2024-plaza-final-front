@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { CalorieService } from 'src/app/services/calorie_service';
 
 @Component({
   selector: 'app-calories',
@@ -12,23 +13,33 @@ export class CaloriesComponent implements OnInit {
   showDropdown = false;
   selectedIngredient: any | null = null;
 
-  availableIngredients = [
-    { id: '1', name: 'Eggs', calories: 155 },
-    { id: '2', name: 'Chicken Breast', calories: 165 },
-    { id: '3', name: 'Broccoli', calories: 55 },
-    { id: '4', name: 'Rice', calories: 130 },
-    { id: '5', name: 'Almonds', calories: 576 },
-    { id: '6', name: 'Banana', calories: 105 },
-    { id: '7', name: 'Oatmeal', calories: 154 },
-    { id: '8', name: 'Greek Yogurt', calories: 59 }
-  ];
-
   ingredients: any[] = [];
+  availableIngredients: any[] = [];
 
-  constructor() {}
+  constructor(private calorieService: CalorieService) {}  // Inyecta el servicio
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadCalories();  // Cargar las calorías al iniciar el componente
+  }
 
+  // Función para cargar las comidas desde el servicio
+  loadCalories() {
+    this.calorieService.getCalories().subscribe(response => {
+      if (response && response.message && response.message.food) {
+        this.availableIngredients = response.message.food.map((item: any) => ({
+          name: item.name,
+          id: item.id ? item.id.toString() : '',  // Manejo de undefined
+          calories: item.calories_portion
+        }));
+        console.log(this.availableIngredients);  // Verifica los datos
+      } else {
+        console.error("No se encontraron alimentos en la respuesta.");
+      }
+    }, error => {
+      console.error("Error al cargar las calorías: ", error);
+    });
+  }
+  
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }

@@ -14,12 +14,12 @@ export class TableFreeComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   products: Product[] = [
-    { name: 'Pizza', description: 'Delicious cheese pizza', price: '12.50', category: '1', id: 1 },
-    { name: 'Burger', description: 'Juicy beef burger', price: '8.75', category: '2', id: 2 },
-    { name: 'Pasta', description: 'Creamy alfredo pasta', price: '9.00', category: '3', id: 3 },
-    { name: 'Salad', description: 'Fresh garden salad', price: '5.25', category: '1', id: 4 },
-    { name: 'Soda', description: 'Refreshing soda drink', price: '1.50', category: '1, 2', id: 5 },
-    { name: 'Coffee', description: 'Hot brewed coffee', price: '3.00', category: '2', id: 6 }
+    { name: 'Pizza', description: 'Delicious cheese pizza', price: '12.50', category: '1', calories: 220 , id: 1 },
+    { name: 'Burger', description: 'Juicy beef burger', price: '8.75', category: '2', calories: 220 , id: 2 },
+    { name: 'Pasta', description: 'Creamy alfredo pasta', price: '9.00', category: '3', calories: 220 , id: 3 },
+    { name: 'Salad', description: 'Fresh garden salad', price: '5.25', category: '1', calories: 220 , id: 4 },
+    { name: 'Soda', description: 'Refreshing soda drink', price: '1.50', category: '1, 2', calories: 220 , id: 5 },
+    { name: 'Coffee', description: 'Hot brewed coffee', price: '3.00', category: '2', calories: 220 , id: 6 }
   ];
 
   orderItems: OrderItem[] = [];

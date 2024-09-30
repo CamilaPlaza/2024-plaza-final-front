@@ -22,8 +22,8 @@ export class TablesComponent implements OnInit {
         time: '14:30',
         total: '45.00',
         orderItems: [
-          { product: { id: 1, name: 'Pizza Margherita', description: 'Classic pizza with cheese and tomato', price: '15.00', category: '1, 2' }, amount: 1 },
-          { product: { id: 2, name: 'Caesar Salad', description: 'Romaine lettuce with caesar dressing', price: '10.00', category: '3, 4' }, amount: 1 },
+          { product: { id: 1, name: 'Pizza Margherita', description: 'Classic pizza with cheese and tomato', price: '15.00', category: '1, 2', calories: 220  }, amount: 1 },
+          { product: { id: 2, name: 'Caesar Salad', description: 'Romaine lettuce with caesar dressing', price: '10.00', category: '3, 4', calories: 220  }, amount: 1 },
         ],
       }      
     ),
@@ -37,9 +37,9 @@ export class TablesComponent implements OnInit {
         time: '13:15',
         total: '30.00',
         orderItems: [
-          { product: { id: 8, name: 'Burger', description: 'Beef burger with cheese and lettuce', price: '15.00', category: '2' }, amount: 1 },
-          { product: { id: 9, name: 'French Fries', description: 'Golden fried potato sticks', price: '5.00', category: '1' }, amount: 1 },
-          { product: { id: 10, name: 'Coke', description: 'Chilled cola drink', price: '10.00', category: '3' }, amount: 1 },
+          { product: { id: 8, name: 'Burger', description: 'Beef burger with cheese and lettuce', price: '15.00', category: '2', calories: 220 }, amount: 1 },
+          { product: { id: 9, name: 'French Fries', description: 'Golden fried potato sticks', price: '5.00', category: '1', calories: 220  }, amount: 1 },
+          { product: { id: 10, name: 'Coke', description: 'Chilled cola drink', price: '10.00', category: '3', calories: 220  }, amount: 1 },
         ],
       }
       

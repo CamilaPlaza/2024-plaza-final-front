@@ -37,10 +37,20 @@
                         [options]="getFilteredIngredients()" 
                         [(ngModel)]="selectedIngredient" 
                         optionLabel="name"
-                        placeholder="Choose one">
+                        placeholder="Choose one"
+                        [filter]="true"
+                        (onFilter)="onDropdownFilter($event)">  <!-- Detecta el filtrado para saber si el ingrediente no está -->
                     </p-dropdown>
                 
-                    <button (click)="addIngredient()" class="p-button p-component p-button-success">
+                    <button 
+                        *ngIf="canAddCustomIngredient" 
+                        (click)="addCustomIngredient()" 
+                        class="p-button p-component p-button-info" 
+                        pTooltip="Create Ingredient" 
+                        tooltipPosition="top">
+                        <i class="pi pi-plus"></i>
+                    </button>
+                    <button (click)="addIngredient()" class="p-button p-component p-button-success" [disabled]="!selectedIngredient">
                         <i class="pi pi-check"></i>
                     </button>
                 
@@ -48,6 +58,7 @@
                         <i class="pi pi-times"></i>
                     </button>
                 </div>
+                
             </div>
 
             <div class="total-calories">

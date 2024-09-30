@@ -60,7 +60,7 @@
         <label for="calories">Calories</label>
         <div class="calories">
           <div class="calories-display">
-            {{ calories || 'Add the ingredients' }}
+            {{ totalCaloriesValue || 'Add the ingredients' }}
           </div>
           
           <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" 
@@ -88,7 +88,8 @@
       *ngIf="!isMobile && showCaloriesPanel" 
       (onSave)="handleCaloriesSave()" 
       (onClose)="handleCaloriesClose()"
-      class="app-categories-overlay">
+      class="app-categories-overlay"
+      (totalCalories)="handleTotalCalories($event)">
     </app-calories>
   </div>
 
@@ -103,7 +104,8 @@
       *ngIf="isMobile && showCaloriesPanel" 
       (onSave)="handleCaloriesSave()" 
       (onClose)="handleCaloriesClose()"
-      class="app-categories-overlay">
+      class="app-categories-overlay"
+      (totalCalories)="handleTotalCalories($event)">
     </app-calories>
 
 

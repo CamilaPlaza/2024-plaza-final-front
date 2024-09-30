@@ -26,7 +26,7 @@ export class RegisterProductComponent implements OnInit{
   selectedCategoryIds: string = '';
   showCategoryPanel = false;
   showCaloriesPanel = false;
-  calories?: number;
+  totalCaloriesValue?: number;
 
   constructor( private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
 
@@ -48,7 +48,7 @@ export class RegisterProductComponent implements OnInit{
     this.closeConfirmDialog();
     this.loading = true;
     try {
-      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds);
+      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds, this.totalCaloriesValue ?? 0);
       console.log('PRODUCT: ', this.product);
       const response = await this.productService.onRegister(this.product);
 
@@ -161,6 +161,11 @@ export class RegisterProductComponent implements OnInit{
   handleCaloriesClose() {
     this.showCaloriesPanel = false;
   } 
+
+  handleTotalCalories(calories: number) {
+    this.totalCaloriesValue = calories; // Asignar el valor de las calorías recibidas
+    console.log('Total Calories:', this.totalCaloriesValue);
+  }
 
   loadCategories() {
     this.categoryService.getCategories().subscribe(response => {

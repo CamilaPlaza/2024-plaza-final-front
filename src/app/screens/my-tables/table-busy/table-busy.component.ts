@@ -3,6 +3,7 @@ import { Order } from 'src/app/models/order';
 import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
+import { ProductService } from 'src/app/services/product_service';
 
 @Component({
   selector: 'app-table-busy',
@@ -13,17 +14,8 @@ export class TableBusyComponent implements OnInit {
   @Input() table: Table = new Table('');
   @Output() close = new EventEmitter<void>();
 
-  products: Product[] = [
-    { name: 'Pizza', description: 'Delicious cheese pizza', price: '12.50', category: '1', id: 1, calories: 285 },
-    { name: 'Burger', description: 'Juicy beef burger', price: '8.75', category: '2', id: 2, calories: 354 },
-    { name: 'Pasta', description: 'Creamy alfredo pasta', price: '9.00', category: '3', id: 3, calories: 420 },
-    { name: 'Salad', description: 'Fresh garden salad', price: '5.25', category: '1', id: 4, calories: 150 },
-    { name: 'Soda', description: 'Refreshing soda drink', price: '1.50', category: '1, 2', id: 5, calories: 140 },
-    { name: 'Coffee', description: 'Hot brewed coffee', price: '3.00', category: '2', id: 6, calories: 2 }
-  ];
-  
-
   orderItems: OrderItem[] = [];
+  products : Product[] = [];
   initialOrderItems: OrderItem[] = []; // Nueva variable para almacenar los items iniciales
   currentDate: string = '';
   currentTime: string = '';
@@ -35,13 +27,32 @@ export class TableBusyComponent implements OnInit {
   displayConfirmDialog = false;
   displayCloseTableDialog = false;
 
+  constructor(private productService: ProductService) {}
   ngOnInit() {
     //TO DO: HACER EL GET DE LOS PRODUCTOS
+    this.loadProducts();
     this.orderItems = this.table.order?.orderItems ?? [];
     this.initialOrderItems = JSON.parse(JSON.stringify(this.orderItems)); // Guardar una copia de los items iniciales
     this.currentDate = this.table.order?.date ?? '';
     this.currentTime = this.table.order?.time ?? '';
     this.order = this.table.order ?? new Order('', 0, '', '', '', []);
+  }
+
+  loadProducts(): void {
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        console.log('Products fetched:', data);
+        if (data && Array.isArray(data.products)) {
+          this.products = data.products;
+        } else {
+          console.error('Unexpected data format:', data);
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching products:', err);
+      }
+      
+    });
   }
 
   onProductChange() {

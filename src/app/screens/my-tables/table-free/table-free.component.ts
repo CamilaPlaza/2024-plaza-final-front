@@ -3,6 +3,7 @@ import { Order } from 'src/app/models/order';
 import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
+import { ProductService } from 'src/app/services/product_service';
 
 @Component({
   selector: 'app-table-free',
@@ -13,27 +14,38 @@ export class TableFreeComponent implements OnInit {
   @Input() table: Table = new Table('');
   @Output() close = new EventEmitter<void>();
 
-  products: Product[] = [
-    { name: 'Pizza', description: 'Delicious cheese pizza', price: '12.50', category: '1', calories: 220 , id: 1 },
-    { name: 'Burger', description: 'Juicy beef burger', price: '8.75', category: '2', calories: 220 , id: 2 },
-    { name: 'Pasta', description: 'Creamy alfredo pasta', price: '9.00', category: '3', calories: 220 , id: 3 },
-    { name: 'Salad', description: 'Fresh garden salad', price: '5.25', category: '1', calories: 220 , id: 4 },
-    { name: 'Soda', description: 'Refreshing soda drink', price: '1.50', category: '1, 2', calories: 220 , id: 5 },
-    { name: 'Coffee', description: 'Hot brewed coffee', price: '3.00', category: '2', calories: 220 , id: 6 }
-  ];
-
   orderItems: OrderItem[] = [];
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
-
+  products : Product[] = [];
   currentDate: Date = new Date();
   currentTime: string = '';
   order: Order | undefined;
 
+  constructor(private productService: ProductService) {}
+
   ngOnInit() {
     //TO DO: HACER EL GET DE LOS PRODUCTOS
     this.updateCurrentTime();
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        console.log('Products fetched:', data);
+        if (data && Array.isArray(data.products)) {
+          this.products = data.products;
+        } else {
+          console.error('Unexpected data format:', data);
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching products:', err);
+      }
+      
+    });
   }
 
   updateCurrentTime() {

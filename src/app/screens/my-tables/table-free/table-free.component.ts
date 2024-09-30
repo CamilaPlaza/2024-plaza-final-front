@@ -3,6 +3,7 @@ import { Order } from 'src/app/models/order';
 import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
+import { OrderService } from 'src/app/services/order_service';
 import { ProductService } from 'src/app/services/product_service';
 
 @Component({
@@ -23,7 +24,7 @@ export class TableFreeComponent implements OnInit {
   currentTime: string = '';
   order: Order | undefined;
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private orderService: OrderService) {}
 
   ngOnInit() {
     //TO DO: HACER EL GET DE LOS PRODUCTOS
@@ -89,7 +90,7 @@ export class TableFreeComponent implements OnInit {
     return this.orderItems.reduce((total, item) => total + item.amount * parseFloat(item.product.price), 0);
   }
 
-  createOrder() {
+  async createOrder() {
     const total = this.calculateTotal();
     this.order = {
       status: 'BUSY',
@@ -98,13 +99,19 @@ export class TableFreeComponent implements OnInit {
       time: this.currentTime,
       total: total.toString(),
       orderItems: this.orderItems
-    }; //TO DO: POSTEAR this.order
-    
-    console.log('Order created', this.order);
+    }; 
+    try{
+    const response = await this.orderService.onRegister(this.order);
+
+      if (response) {
+        console.log('Order Register successful', response);
+      } else {
+      }
+    } catch (error: any) {
 
     this.updateTable();
     this.closeDialog();
-  }
+  }}
 
   updateTable(){
     //TO DO: QUE LO UPDATEE

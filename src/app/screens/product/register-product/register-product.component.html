@@ -60,8 +60,9 @@
         <label for="calories">Calories</label>
         <div class="calories">
           <div class="calories-display">
-            {{ totalCaloriesValue || 'Add the ingredients' }}
+            {{ totalCaloriesValue !== undefined ? totalCaloriesValue : 'Add the ingredients' }}
           </div>
+          
           
           <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" 
                   (click)="showCalories()"></button>

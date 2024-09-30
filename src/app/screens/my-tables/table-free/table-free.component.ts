@@ -109,7 +109,7 @@ export class TableFreeComponent implements OnInit {
   updateTable(){
     //TO DO: QUE LO UPDATEE
     this.table.status = 'BUSY';
-    this.table.order = this.order;    
+    this.table.order_id = this.order?.id;  
     
     console.log('Table updated', this.table);
   }

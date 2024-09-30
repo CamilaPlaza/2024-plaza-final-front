@@ -2,12 +2,12 @@ import { Order } from "./order";
 
 export class Table {
     status: string = '';
-    order?: Order;
+    order_id?: number;
     id?: number;
     
-    constructor(status: string, id?: number, order? :Order) {
+    constructor(status: string, id?: number, order_id?: number) {
       this.id = id;
       this.status = status;
-      this.order = order;
+      this.order_id = order_id;
     }
 }

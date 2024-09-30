@@ -14,6 +14,21 @@ export class TableBusyComponent implements OnInit {
   @Input() table: Table = new Table('');
   @Output() close = new EventEmitter<void>();
 
+  ordersExample: Order[] = [
+    new Order('In Process', 3, '2024-09-27', '14:30', '45.00', [
+      { product: { id: 1, name: 'Pizza Margherita', description: 'Classic pizza with cheese and tomato', price: '15.00', category: '1, 2', calories: 220 }, amount: 1 },
+      { product: { id: 2, name: 'Caesar Salad', description: 'Romaine lettuce with caesar dressing', price: '10.00', category: '3, 4', calories: 220 }, amount: 1 },
+    ], 1),
+    new Order('Delivered', 5, '2024-09-28', '18:00', '60.00', [
+      { product: { id: 3, name: 'Spaghetti Carbonara', description: 'Spaghetti with creamy carbonara sauce', price: '20.00', category: '5, 6', calories: 350 }, amount: 2 },
+      { product: { id: 4, name: 'Garlic Bread', description: 'Bread with garlic butter', price: '5.00', category: '7', calories: 150 }, amount: 2 },
+    ], 2),
+    new Order('Pending', 2, '2024-09-29', '12:00', '35.00', [
+      { product: { id: 5, name: 'Grilled Chicken Sandwich', description: 'Chicken sandwich with lettuce and tomato', price: '12.00', category: '8, 9', calories: 300 }, amount: 1 },
+      { product: { id: 6, name: 'French Fries', description: 'Crispy golden french fries', price: '8.00', category: '10', calories: 250 }, amount: 2 },
+    ], 3),
+  ];
+  actualOrder?: Order;
   orderItems: OrderItem[] = [];
   products : Product[] = [];
   initialOrderItems: OrderItem[] = []; // Nueva variable para almacenar los items iniciales
@@ -31,11 +46,20 @@ export class TableBusyComponent implements OnInit {
   ngOnInit() {
     //TO DO: HACER EL GET DE LOS PRODUCTOS
     this.loadProducts();
-    this.orderItems = this.table.order?.orderItems ?? [];
-    this.initialOrderItems = JSON.parse(JSON.stringify(this.orderItems)); // Guardar una copia de los items iniciales
-    this.currentDate = this.table.order?.date ?? '';
-    this.currentTime = this.table.order?.time ?? '';
-    this.order = this.table.order ?? new Order('', 0, '', '', '', []);
+    this.getOrderInformation();
+    this.orderItems = this.actualOrder?.orderItems ?? [];
+    this.initialOrderItems = JSON.parse(JSON.stringify(this.orderItems));
+    this.currentDate = this.actualOrder?.date ?? '';
+    this.currentTime = this.actualOrder?.time ?? '';
+    this.order = this.actualOrder ?? new Order('', 0, '', '', '', []);
+  }
+
+  getOrderInformation(){
+    //Hacer un get de todas las orders
+    if (this.table.order_id) {
+      this.actualOrder = this.ordersExample.find(order => order.id === this.table.order_id);
+    }
+    return undefined;
   }
 
   loadProducts(): void {
@@ -112,7 +136,7 @@ export class TableBusyComponent implements OnInit {
 
   closeTable() {
     this.table.status = 'FREE';
-    this.table.order = undefined;
+    this.actualOrder = undefined;
     this.closeDialog();
   }
 

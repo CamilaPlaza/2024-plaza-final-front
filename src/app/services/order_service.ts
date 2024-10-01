@@ -16,7 +16,7 @@ export class OrderService {
     try {
       // Simplemente pasa el objeto `product` directamente en el post request
       await this.http.post(`${this.baseUrl}/register-order`, order).toPromise();
-      await this.http.post(`${this.baseUrl}/tables/order/${order.tableNumber}`, { order_id: order.id }).toPromise();
+      //await this.http.post(`${this.baseUrl}/tables/order/${order.tableNumber}`, { order_id: order.id }).toPromise();
       return true;
     } catch (error: any) {
       console.error('Error durante el registro:', error);

@@ -97,7 +97,7 @@ export class TableFreeComponent implements OnInit {
   async createOrder() {
     const total = this.calculateTotal();
     this.order = {
-      status: 'BUSY',
+      status: 'In progress',
       tableNumber: this.table?.id ?? 0,
       date: this.currentDate.toLocaleDateString(),
       time: this.currentTime,

@@ -3,116 +3,105 @@
         <img src="../../../../assets/images/view-products.jpg" alt="Imagen descriptiva" class="image">
     </div>
     <div class="section title-section">
-      <p class="title">PRODUCTS</p>
-      <button pButton pRipple icon="pi pi-plus" (click)="navigateToRegisterProduct()" class="p-button-rounded add-product-button"></button>
+      <p class="title">ORDERS</p>
     </div>
   
     <div class="section table-section">
         <div class="card">
-            <p-table [value]="products" dataKey="id" editMode="row" scrollable="true"  [scrollHeight]="tableScrollHeight">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="id" pResizableColumn>Id <p-sortIcon field="id"></p-sortIcon></th>
-                        <th pSortableColumn="name" pResizableColumn>Name <p-sortIcon field="name"></p-sortIcon></th>
-                        <th pSortableColumn="price" pResizableColumn>Price <p-sortIcon field="price"></p-sortIcon></th>
-                        <th pSortableColumn="description" pResizableColumn>Description <p-sortIcon field="description"></p-sortIcon></th>
-                        <th pSortableColumn="category" pResizableColumn>Category <p-sortIcon field="category"></p-sortIcon></th>
-                        <th></th> <!-- Columna vacía para los botones de acción -->
-                    </tr>
-                </ng-template>
-  
-                <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
-                    <tr [pEditableRow]="product">
-                        <!-- ID no editable -->
-                        <td>{{ product.id }}</td>
-  
-                        <!-- Name editable -->
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <input pInputText type="text" [(ngModel)]="product.name" />
+            <p-table
+            #dt1
+            [value]="orders"
+            dataKey="id"
+            [rows]="10" 
+            scrollable="true"  
+            [scrollHeight]="tableScrollHeight"
+            [globalFilterFields]="['nroTable', 'status']"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Order ID
+                        </div>
+                    </th>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Nro Table
+                            <p-columnFilter field="tableNumber" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                                <ng-template pTemplate="header">
+                                    <div class="px-3 pt-3 pb-0">
+                                        <span class="font-bold">Table Picker</span>
+                                    </div>
                                 </ng-template>
-                                <ng-template pTemplate="output">
-                                    {{ product.name }}
+                                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                    <p-multiSelect [options]="nroTableOptions" placeholder="Select" (onChange)="filter($event.value)">
+                                        <ng-template let-value pTemplate="item">
+                                            <div class="inline-block">
+                                                <span class="ml-1 mt-1">{{ value }}</span>
+                                            </div>
+                                        </ng-template>
+                                    </p-multiSelect>
                                 </ng-template>
-                            </p-cellEditor>
-                        </td>
-  
-                        <!-- Price editable con validación -->
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <input pInputText type="number" [(ngModel)]="product.price" min="0" />
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Status
+                            <p-columnFilter field="status" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                                <ng-template pTemplate="header">
+                                    <div class="px-3 pt-3 pb-0">
+                                        <span class="font-bold">Status Picker</span>
+                                    </div>
                                 </ng-template>
-                                <ng-template pTemplate="output">
-                                    {{ product.price | currency: 'USD' }}
+                                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                    <p-multiSelect [options]="statusOptions" placeholder="Select" (onChange)="filter($event.value)">
+                                        <ng-template let-value pTemplate="item">
+                                            <div class="inline-block">
+                                                <span class="ml-1 mt-1">{{ value }}</span>
+                                            </div>
+                                        </ng-template>
+                                    </p-multiSelect>
                                 </ng-template>
-                            </p-cellEditor>
-                        </td>
-  
-                        <!-- Description editable -->
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <input pInputText type="text" [(ngModel)]="product.description" />
-                                </ng-template>
-                                <ng-template pTemplate="output">
-                                    {{ product.description }}
-                                </ng-template>
-                            </p-cellEditor>
-                        </td>
-  
-                        <!-- Category editable -->
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <p-dropdown 
-                                        [options]="categories" 
-                                        [(ngModel)]="product.category" 
-                                        optionLabel="label" 
-                                        [style]="{'min-width': '150px'}"
-                                        [placeholder]="product.category" />
-                                </ng-template>
-                                <ng-template pTemplate="output">
-                                    {{ product.category }}
-                                </ng-template>
-                            </p-cellEditor>
-                        </td>
-  
-                        <!-- Columna para íconos de editar y eliminar -->
-                        <td>
-                            <div class="flex align-items-center justify-content-center gap-2">
-                                <!-- Botón para editar -->
-                                <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
-                                    (click)="onRowEditInit(product)" class="p-button-rounded p-button-text"></button>
-                                <!-- Botón para guardar cambios -->
-                                <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
-                                    (click)="onRowEditSave(product)" class="p-button-rounded p-button-text p-button-success"></button>
-                                <!-- Botón para cancelar edición -->
-                                <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
-                                    (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
-                                <!-- Botón para eliminar producto -->
-                                <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
-                                    (click)="showConfirmDialog(product.id)"></button>
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-  
-                <ng-template pTemplate="summary">
-                    <div class="flex align-items-center justify-content-between">
-                        In total there are {{ products ? products.length : 0 }} products.
-                    </div>
-                </ng-template>
-            </p-table>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Creation Date
+                        </div>
+                    </th>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Time
+                        </div>
+                    </th>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            INFO
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-order>
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.tableNumber }}</td>
+                    <td>
+                        <p-tag [value]="order.status" [severity]="getSeverity(order.status)" />
+                    </td>
+                    <td>{{ order.date }}</td>
+                    <td>{{ order.time }}</td>
+                    <td>info</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">No orders found.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
         </div>
     </div>
   </div>
-  
-  <p-dialog [(visible)]="displayConfirmDialog" [modal]="true" header="Delete product" [closable]="true">
-    <app-confirmation-pop-up
-      [subtitle]="'Are you sure you want to proceed?'"
-      (onClose)="closeConfirmDialog()"
-      (onSend)="deleteProduct()">
-    </app-confirmation-pop-up>
-  </p-dialog>

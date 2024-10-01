@@ -16,11 +16,29 @@ export class OrderService {
     try {
       // Simplemente pasa el objeto `product` directamente en el post request
       await this.http.post(`${this.baseUrl}/register-order`, order).toPromise();
+      await this.http.post(`${this.baseUrl}/tables/order/${order.tableNumber}`, { order_id: order.id }).toPromise();
       return true;
     } catch (error: any) {
       console.error('Error durante el registro:', error);
       return false;
     }
+  }
+  async addOrderItems(orderId: string, newItems: any[]): Promise<boolean> {
+    try {
+      await this.http.put(`${this.baseUrl}/orders/order-items/${orderId}`, { new_order_items: newItems }).toPromise();
+      return true;
+    } catch (error: any) {
+      console.error('Error adding order items:', error);
+      return false;
+    }
+  }
+
+  getOrderById(orderId: string): Observable<Order> {
+    return this.http.get<Order>(`${this.baseUrl}/orders/${orderId}`);
+  }
+
+  getOrders(): Observable<Order>{
+    return this.http.get<Order>(`${this.baseUrl}/orders`);
   }
 
 }

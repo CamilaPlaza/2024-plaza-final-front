@@ -3,6 +3,7 @@ import { Order } from 'src/app/models/order';
 import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
+import { OrderService } from 'src/app/services/order_service';
 import { ProductService } from 'src/app/services/product_service';
 
 @Component({
@@ -13,21 +14,7 @@ import { ProductService } from 'src/app/services/product_service';
 export class TableBusyComponent implements OnInit {
   @Input() table: Table = new Table('');
   @Output() close = new EventEmitter<void>();
-
-  ordersExample: Order[] = [
-    new Order('In Process', 3, '2024-09-27', '14:30', '45.00', [
-      { product_id: 4, amount: 1 },
-      { product_id: 5, amount: 1 },
-    ], 1),
-    new Order('Delivered', 5, '2024-09-28', '18:00', '60.00', [
-      { product_id: 1, amount: 2 },
-      { product_id: 2, amount: 2 },
-    ], 2),
-    new Order('Pending', 2, '2024-09-29', '12:00', '35.00', [
-      { product_id: 1, amount: 1 },
-      { product_id: 3, amount: 2 },
-    ], 3),
-  ];
+  ordersExample: Order[] = []
   actualOrder?: Order; 
   orderItems: OrderItem[] = [];
   products : Product[] = [];
@@ -42,7 +29,7 @@ export class TableBusyComponent implements OnInit {
   displayConfirmDialog = false;
   displayCloseTableDialog = false;
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService,  private orderService: OrderService) {}
   ngOnInit() {
     //TO DO: HACER EL GET DE LOS PRODUCTOS
     this.loadProducts();
@@ -61,6 +48,25 @@ export class TableBusyComponent implements OnInit {
     }
     return undefined;
   }
+
+  fetchProductDetailsForOrderItems() {
+  for (const item of this.orderItems) {
+      try {
+          // Fetch product details using the product_id from the order item
+          const product = this.productService.getProductById(item.product_id.toString());
+          if (product) {
+              // Optionally, you can store the fetched product details in a separate array
+              // Here, I'm adding a product field directly to the order item if needed in future
+              // item.productDetails = product; // Uncomment if you want to store product details
+          } else {
+              console.error(`Product not found for ID: ${item.product_id.toString()}`);
+          }
+      } catch (error) {
+          console.error('Error fetching product details:', error);
+      }
+  }
+}
+
 
   loadProducts(): void {
     this.productService.getProducts().subscribe({
@@ -136,7 +142,7 @@ export class TableBusyComponent implements OnInit {
   }
 
   createOrder() {
-    console.log('CREATE ORDER');
+    console.log('ADD ORDER ITEMS');
     const total = this.calculateTotal();
     this.order = {
       status: 'BUSY',
@@ -148,6 +154,36 @@ export class TableBusyComponent implements OnInit {
     };
     console.log('ORDER: ', this.order);
     this.closeConfirmDialog();
+  
+    // Prepare the order items to send to the backend
+    const newItems = this.orderItems.map(item => {
+      // Check if product and product ID are defined
+      if (item.product_id.toString() && item.product_id.toString() !== undefined) {
+        return {
+          product_id: item.product_id.toString(), // Convert product ID to string
+          amount: item.amount
+        };
+      } else {
+        console.error('Product or Product ID is undefined:', item);
+        return null; // Return null if product ID is not valid
+      }
+    }).filter(item => item !== null); // Filter out any null items
+  
+    // Check if order_id is defined
+    if (this.table.order_id) {
+      // Call the service to add new items to the existing order
+      this.orderService.addOrderItems(this.table.order_id.toString(), newItems).then(success => {
+        if (success) {
+          console.log('Order items added successfully');
+          this.closeTable(); // Close the table if the update is successful
+        } else {
+          console.error('Error adding order items.');
+        }
+      });
+    } else {
+      console.error('Order ID is undefined.');
+      // Handle the case where order_id is not defined (e.g., show a message to the user)
+    }
   }
 
   closeTable() {

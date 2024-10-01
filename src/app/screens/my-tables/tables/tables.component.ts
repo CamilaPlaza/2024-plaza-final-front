@@ -11,15 +11,7 @@ export class TablesComponent implements OnInit {
   
   public tableScrollHeight: string='';
 
-  tablesExample: Table[] = [
-    new Table('FREE',1), new Table('FREE',2), new Table('FREE',3), 
-    new Table('BUSY', 4, 1),
-    new Table('FREE', 5), new Table('FREE', 6), new Table('FREE', 7), 
-    new Table('BUSY', 8, 2),
-    new Table('FREE', 9), new Table('FREE', 10), new Table('FREE', 11), new Table('FREE', 12),
-    new Table('FREE', 13), new Table('FREE', 14), new Table('FREE', 15), new Table('FREE', 16),
-    new Table('FREE', 17), new Table('FREE', 18), new Table('FREE', 19), new Table('FREE', 20)
-  ];
+  tablesExample: Table[] = []; 
   tables: Table[] = []; 
   displayModal: boolean = false;
   selectedTable: Table = new Table('');
@@ -65,16 +57,16 @@ export class TablesComponent implements OnInit {
     this.tableService.getTables().subscribe({
       next: (data) => {
         console.log('Tables fetched:', data);
-        if (data && data.message && Array.isArray(data.message.tables)) {
-          this.tables = data.message.tables;
+        // Check if the response is an array
+        if (Array.isArray(data)) {
+            this.tablesExample = data; // Directly assign the data
         } else {
-          console.error('Unexpected data format:', data);
+            console.error('Unexpected data format:', data);
         }
-      },
-      error: (err) => {
+    },
+    error: (err) => {
         console.error('Error fetching tables:', err);
-      }
-    });
+    }})
   }
 
 }

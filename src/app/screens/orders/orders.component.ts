@@ -74,6 +74,7 @@ export class OrdersComponent implements OnInit {
     }
   ];
   
+
   nroTableOptions: number[] = [];
   statusOptions: string[] = [];
   selectedNroTable: number[] = [];

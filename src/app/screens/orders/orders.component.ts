@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product_service';
 import { Order } from 'src/app/models/order';
+import { OrderService } from 'src/app/services/order_service';
 
 @Component({
   selector: 'app-orders',
@@ -11,70 +12,7 @@ import { Order } from 'src/app/models/order';
 export class OrdersComponent implements OnInit {
   
   products: Product[] = [];
-  orders: Order[] = [
-    {
-      id: 1,
-      status: 'Finished',
-      tableNumber: 3,
-      date: '2024-09-29',
-      time: '12:45',
-      total: '25.00',
-      orderItems: [
-        { product_id: 1, amount: 2 },
-        { product_id: 2, amount: 1 }
-      ]
-    },
-    {
-      id: 2,
-      status: 'In Progress',
-      tableNumber: 5,
-      date: '2024-09-30',
-      time: '13:15',
-      total: '15.00',
-      orderItems: [
-        { product_id: 3, amount: 1 },
-        { product_id: 4, amount: 1 }
-      ]
-    },
-    {
-      id: 3,
-      status: 'In Progress',
-      tableNumber: 1,
-      date: '2024-09-30',
-      time: '13:00',
-      total: '12.00',
-      orderItems: [
-        { product_id: 5, amount: 1 }
-      ]
-    },
-    {
-      id: 4,
-      status: 'Finished',
-      tableNumber: 8,
-      date: '2024-09-30',
-      time: '13:30',
-      total: '18.00',
-      orderItems: [
-        { product_id: 6, amount: 1 },
-        { product_id: 7, amount: 1 },
-        { product_id: 8, amount: 1 }
-      ]
-    },
-    {
-      id: 5,
-      status: 'Problem',
-      tableNumber: 2,
-      date: '2024-09-30',
-      time: '12:50',
-      total: '10.00',
-      orderItems: [
-        { product_id: 9, amount: 2 },
-        { product_id: 10, amount: 1 }
-      ]
-    }
-  ];
-  
-
+  orders: Order[] = [];
   nroTableOptions: number[] = [];
   statusOptions: string[] = [];
   selectedNroTable: number[] = [];
@@ -85,7 +23,7 @@ export class OrdersComponent implements OnInit {
 
   public tableScrollHeight: string='';
 
-  constructor(private productService: ProductService) {
+  constructor(private productService: ProductService, private orderService: OrderService) {
     this.filteredOrders = this.orders; 
     this.nroTableOptions = [...new Set(this.orders.map(order => order.tableNumber))];
     this.statusOptions = [...new Set(this.orders.map(order => order.status))];
@@ -93,6 +31,7 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadOrders();
     this.loadProducts();
     this.setScrollHeight();
     this.filterOrdersByDate();
@@ -122,6 +61,22 @@ export class OrdersComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching products:', err);
+      }
+    });
+  }
+
+  loadOrders(): void{
+    this.orderService.getOrders().subscribe({
+      next: (data) => {
+        console.log('Orders fetched:', data);
+        if (data && data && Array.isArray(data)) {
+          this.orders = data;
+        } else {
+          console.error('Unexpected data format:', data);
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching orders:', err);
       }
     });
   }

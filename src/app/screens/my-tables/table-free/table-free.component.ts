@@ -108,13 +108,13 @@ export class TableFreeComponent implements OnInit {
     const response = await this.orderService.onRegister(this.order);
 
       if (response) {
+        console.log(this.order);
         console.log('Order Register successful', response);
+        this.updateTable();
+        this.closeDialog();
       } else {
       }
     } catch (error: any) {
-
-    this.updateTable();
-    this.closeDialog();
   }}
 
   getProductById(productId: number): Product | undefined {

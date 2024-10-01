@@ -94,7 +94,10 @@
               </td>
               <td>{{ order.date }}</td>
               <td>{{ order.time }}</td>
-              <td>info</td>
+              <td>
+                <i class="pi pi-info-circle" (click)="displayInfoDialog(order)" style="cursor: pointer;"></i>
+              </td>
+              
             </tr>
           </ng-template>
   
@@ -109,3 +112,10 @@
     </div>
   </div>
   
+<p-dialog header="Information" [(visible)]="infoDialogVisible" modal="modal" [closable]="true" [dismissableMask]="true">
+  <app-order-info
+  [order]="selectedOrder" 
+  (onClose)="infoDialogVisible = false" 
+  >
+  </app-order-info>
+</p-dialog>

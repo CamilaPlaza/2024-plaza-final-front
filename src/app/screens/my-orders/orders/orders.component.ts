@@ -19,6 +19,8 @@ export class OrdersComponent implements OnInit {
   selectedStatus: string[] = [];
   selectedDate: Date = new Date();
   filteredOrders: Order[] = [];
+  infoDialogVisible = false;
+  selectedOrder!: Order;
 
 
   public tableScrollHeight: string='';
@@ -42,9 +44,9 @@ export class OrdersComponent implements OnInit {
   }
 
   setScrollHeight() {
-    if (window.innerWidth <= 768) { // Móvil
+    if (window.innerWidth <= 768) {
       this.tableScrollHeight = '800px';
-    } else { // Pantallas más grandes
+    } else { 
       this.tableScrollHeight = '400px';
     }
   }
@@ -82,20 +84,23 @@ export class OrdersComponent implements OnInit {
   }
 
   getSeverity(status: string) {
-    // Define aquí la lógica para determinar la severidad según el estado
     if (status === 'In Progress') return 'success';
     if (status === 'Problem') return 'danger';
     if (status === 'Finished') return undefined;
-    return 'info'; // Por defecto
+    return 'info';
   }
 
-  // Método para filtrar órdenes por fecha seleccionada
   filterOrdersByDate(): void {
     const year = this.selectedDate.getFullYear();
     const month = (this.selectedDate.getMonth() + 1).toString().padStart(2, '0'); // Los meses empiezan desde 0
     const day = this.selectedDate.getDate().toString().padStart(2, '0');
     const formattedSelectedDate = `${year}-${month}-${day}`;
     this.filteredOrders = this.orders.filter(order => order.date === formattedSelectedDate);
+  }
+
+  displayInfoDialog(order: Order): void {
+    this.selectedOrder = order; // Asigna la orden seleccionada
+    this.infoDialogVisible = true; // Muestra el diálogo
   }
   
 

@@ -9,6 +9,7 @@ html, body {
     flex-direction: column;
     height: 100vh;
     margin-left: 5%;
+    background-color: #ffffff;
 }
 
 .section {
@@ -33,7 +34,6 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-
     background-color: #7f522e;
     color: #f2f2f2;
     position: relative;
@@ -43,31 +43,51 @@ html, body {
     font-size: 2rem;
     margin: 0;
     flex-grow: 1;
-
     text-align: center;
 }
 
-.add-product-button {
+.export-button {
     position: absolute;
-    right: 4%;
-    background-color: #caa171; 
-    color: #7f522e;
+    right: 2%;
+    background-color: #7f522e; 
+    color: #e2c7b2;
     border: none;
     border-radius: 5px;
-    padding: 0.5rem 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+    padding: 0.6rem 1rem;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
     transition: background-color 0.3s;
+    cursor: pointer;
 }
 
-.add-product-button:hover {
+.export-button:hover {
     background-color: #b58958;
+    color: #59371c;
 }
 
+.calendar-section {
+    background-color: #ffffff;
+    flex: 0.1;
+    margin: 2%;
+    display: flex;
+    align-items: center;
+    gap: 5rem;
+}
 
+::ng-deep .custom-calendar .p-inputtext {
+    height: 2.5rem; /* Ajusta el ancho del input del calendario */
+}
+
+/* Personalizar el ícono del calendario */
+::ng-deep .custom-calendar .p-button {
+    background: none;
+    border: none;
+    color: #7f522e; /* Cambia el color del ícono a marrón */
+}
 
 .table-section {
     flex: 1;
-    background-color: #d0d0d0;
+    background-color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;

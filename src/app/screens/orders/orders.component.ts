@@ -17,7 +17,7 @@ export class OrdersComponent implements OnInit {
       id: 1,
       status: 'Finished',
       tableNumber: 3,
-      date: '2024-09-30',
+      date: '2024-09-29',
       time: '12:45',
       total: '25.00',
       orderItems: [
@@ -108,11 +108,14 @@ export class OrdersComponent implements OnInit {
   statusOptions: string[] = [];
   selectedNroTable: number[] = [];
   selectedStatus: string[] = [];
+  selectedDate: Date = new Date();
+  filteredOrders: Order[] = [];
 
 
   public tableScrollHeight: string='';
 
   constructor(private productService: ProductService, private router: Router) {
+    this.filteredOrders = this.orders; 
     this.nroTableOptions = [...new Set(this.orders.map(order => order.tableNumber))];
     this.statusOptions = [...new Set(this.orders.map(order => order.status))];
     
@@ -121,6 +124,8 @@ export class OrdersComponent implements OnInit {
   ngOnInit(): void {
     this.loadProducts();
     this.setScrollHeight();
+    this.filterOrdersByDate();
+    
     window.addEventListener('resize', () => {
       this.setScrollHeight();
     });
@@ -159,5 +164,15 @@ export class OrdersComponent implements OnInit {
     if (status === 'Finished') return undefined;
     return 'info'; // Por defecto
   }
+
+  // Método para filtrar órdenes por fecha seleccionada
+  filterOrdersByDate(): void {
+    const year = this.selectedDate.getFullYear();
+    const month = (this.selectedDate.getMonth() + 1).toString().padStart(2, '0'); // Los meses empiezan desde 0
+    const day = this.selectedDate.getDate().toString().padStart(2, '0');
+    const formattedSelectedDate = `${year}-${month}-${day}`;
+    this.filteredOrders = this.orders.filter(order => order.date === formattedSelectedDate);
+  }
+  
 
 }

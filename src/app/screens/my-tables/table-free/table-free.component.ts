@@ -88,9 +88,7 @@ export class TableFreeComponent implements OnInit {
 
   calculateTotal() {
     return this.orderItems.reduce((total, item) => {
-      const product = this.products.find(p => p.id === item.product_id);
-
-      
+      const product = this.products.find(p => p.id === item.product_id); 
       return product ? total + item.amount * parseFloat(product.price) : total;
     }, 0);
   }

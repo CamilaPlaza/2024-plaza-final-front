@@ -101,10 +101,17 @@ export class TableBusyComponent implements OnInit {
       this.resetForm();
     }
   }
-
-  getProductById(productId: number): Product | undefined {
-    return this.products.find(product => product.id === productId);
+  
+  getProductById(productId: number | undefined): Product | undefined {
+    if (productId === undefined) {
+      console.warn('Product ID is undefined');
+      return undefined; 
+    }
+  
+    console.log('Product ID to search:', productId);
+    return this.products.find(product => Number(product.id) === productId);
   }
+  
   
 
   removeOrderItem(item: OrderItem) {

@@ -65,7 +65,7 @@ export class TableFreeComponent implements OnInit {
   addOrderItem() {
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
-        product: this.selectedProduct,
+        product_id: this.selectedProduct.id ?? 0,
         amount: this.selectedAmount
       };
       this.orderItems.push(newItem);
@@ -87,8 +87,14 @@ export class TableFreeComponent implements OnInit {
   }
 
   calculateTotal() {
-    return this.orderItems.reduce((total, item) => total + item.amount * parseFloat(item.product.price), 0);
+    return this.orderItems.reduce((total, item) => {
+      const product = this.products.find(p => p.id === item.product_id);
+
+      
+      return product ? total + item.amount * parseFloat(product.price) : total;
+    }, 0);
   }
+
 
   async createOrder() {
     const total = this.calculateTotal();
@@ -112,6 +118,11 @@ export class TableFreeComponent implements OnInit {
     this.updateTable();
     this.closeDialog();
   }}
+
+  getProductById(productId: number): Product | undefined {
+    return this.products.find(product => product.id === productId);
+  }
+  
 
   updateTable(){
     //TO DO: QUE LO UPDATEE

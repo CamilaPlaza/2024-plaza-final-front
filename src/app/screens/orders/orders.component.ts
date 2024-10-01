@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product_service';
-import { Router } from '@angular/router'; 
 import { Order } from 'src/app/models/order';
 
 @Component({
@@ -21,14 +20,8 @@ export class OrdersComponent implements OnInit {
       time: '12:45',
       total: '25.00',
       orderItems: [
-        {
-          product: { id: 1, name: 'Hamburguesa Clásica', description: 'Pan, carne, queso, lechuga, tomate', price: '10.00', category: 'Comida', calories: 500 },
-          amount: 2
-        },
-        {
-          product: { id: 2, name: 'Papas Fritas', description: 'Porción mediana', price: '5.00', category: 'Comida', calories: 300 },
-          amount: 1
-        }
+        { product_id: 1, amount: 2 },
+        { product_id: 2, amount: 1 }
       ]
     },
     {
@@ -39,14 +32,8 @@ export class OrdersComponent implements OnInit {
       time: '13:15',
       total: '15.00',
       orderItems: [
-        {
-          product: { id: 3, name: 'Ensalada César', description: 'Lechuga, pollo, crutones, aderezo', price: '8.00', category: 'Comida', calories: 350 },
-          amount: 1
-        },
-        {
-          product: { id: 4, name: 'Limonada', description: 'Vaso grande', price: '4.00', category: 'Bebida', calories: 100 },
-          amount: 1
-        }
+        { product_id: 3, amount: 1 },
+        { product_id: 4, amount: 1 }
       ]
     },
     {
@@ -57,10 +44,7 @@ export class OrdersComponent implements OnInit {
       time: '13:00',
       total: '12.00',
       orderItems: [
-        {
-          product: { id: 5, name: 'Pizza Margherita', description: 'Mozzarella, albahaca, tomate', price: '12.00', category: 'Comida', calories: 700 },
-          amount: 1
-        }
+        { product_id: 5, amount: 1 }
       ]
     },
     {
@@ -71,18 +55,9 @@ export class OrdersComponent implements OnInit {
       time: '13:30',
       total: '18.00',
       orderItems: [
-        {
-          product: { id: 6, name: 'Sándwich Vegetariano', description: 'Pan integral, vegetales, queso', price: '7.00', category: 'Comida', calories: 400 },
-          amount: 1
-        },
-        {
-          product: { id: 7, name: 'Jugo de Naranja', description: 'Vaso grande', price: '4.00', category: 'Bebida', calories: 120 },
-          amount: 1
-        },
-        {
-          product: { id: 8, name: 'Brownie', description: 'Porción de brownie con nueces', price: '7.00', category: 'Postre', calories: 450 },
-          amount: 1
-        }
+        { product_id: 6, amount: 1 },
+        { product_id: 7, amount: 1 },
+        { product_id: 8, amount: 1 }
       ]
     },
     {
@@ -93,17 +68,12 @@ export class OrdersComponent implements OnInit {
       time: '12:50',
       total: '10.00',
       orderItems: [
-        {
-          product: { id: 9, name: 'Té Helado', description: 'Vaso grande', price: '3.00', category: 'Bebida', calories: 80 },
-          amount: 2
-        },
-        {
-          product: { id: 10, name: 'Bagel con Queso Crema', description: 'Bagel con queso crema', price: '4.00', category: 'Comida', calories: 250 },
-          amount: 1
-        }
+        { product_id: 9, amount: 2 },
+        { product_id: 10, amount: 1 }
       ]
     }
   ];
+  
   nroTableOptions: number[] = [];
   statusOptions: string[] = [];
   selectedNroTable: number[] = [];
@@ -114,7 +84,7 @@ export class OrdersComponent implements OnInit {
 
   public tableScrollHeight: string='';
 
-  constructor(private productService: ProductService, private router: Router) {
+  constructor(private productService: ProductService) {
     this.filteredOrders = this.orders; 
     this.nroTableOptions = [...new Set(this.orders.map(order => order.tableNumber))];
     this.statusOptions = [...new Set(this.orders.map(order => order.status))];
@@ -128,9 +98,7 @@ export class OrdersComponent implements OnInit {
     
     window.addEventListener('resize', () => {
       this.setScrollHeight();
-    });
-  
-  
+    }) 
   }
 
   setScrollHeight() {

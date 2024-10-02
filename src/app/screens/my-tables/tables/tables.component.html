@@ -8,7 +8,7 @@
 
   <div class="section table-section">
     <div class="card table-wrapper">
-      <p-table [value]="tablesExample" dataKey="id" scrollable="true" [scrollHeight]="tableScrollHeight">
+      <p-table [value]="tables" dataKey="id" scrollable="true" [scrollHeight]="tableScrollHeight">
         <ng-template pTemplate="header">
           <tr>
             <th>Id</th>
@@ -27,14 +27,14 @@
 
         <ng-template pTemplate="summary">
           <div class="flex align-items-center justify-content-between">
-            In total there are {{ tablesExample ? tablesExample.length : 0 }} tables
+            In total there are {{ tables ? tables.length : 0 }} tables
           </div>
         </ng-template>
       </p-table>
     </div>
 
     <div class="table-icons">
-      <div *ngFor="let table of tablesExample" class="table-icon" [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY'}" (click)="onTableClick(table)">
+      <div *ngFor="let table of tables" class="table-icon" [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY'}" (click)="onTableClick(table)">
         <i class="fas fa-utensils"></i>
         <span>{{ table.id }}</span>
       </div>

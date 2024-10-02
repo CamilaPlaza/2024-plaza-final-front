@@ -1,4 +1,3 @@
-import { Order } from "./order";
 
 export class Table {
     status: string = '';

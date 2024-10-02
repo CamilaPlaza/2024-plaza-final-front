@@ -11,7 +11,6 @@ export class TablesComponent implements OnInit {
   
   public tableScrollHeight: string='';
 
-  tablesExample: Table[] = []; 
   tables: Table[] = []; 
   displayModal: boolean = false;
   selectedTable: Table = new Table('');
@@ -21,6 +20,7 @@ export class TablesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTables();
+    this.sortTables();
     this.setScrollHeight();
     window.addEventListener('resize', () => {
       this.setScrollHeight();
@@ -30,7 +30,7 @@ export class TablesComponent implements OnInit {
   setScrollHeight() {
     if (window.innerWidth <= 768) { // Móvil
       this.tableScrollHeight = '800px';
-    } else { // Pantallas más grandes
+    } else {
       this.tableScrollHeight = '400px';
     }
   }
@@ -51,6 +51,7 @@ export class TablesComponent implements OnInit {
   // Cerrar el modal
   closeModal() {
     this.displayModal = false;
+    location.reload();
   }
 
   loadTables(): void {
@@ -59,7 +60,7 @@ export class TablesComponent implements OnInit {
         console.log('Tables fetched:', data);
         // Check if the response is an array
         if (Array.isArray(data)) {
-            this.tablesExample = data; // Directly assign the data
+            this.tables = data; // Directly assign the data
         } else {
             console.error('Unexpected data format:', data);
         }
@@ -69,4 +70,8 @@ export class TablesComponent implements OnInit {
     }})
   }
 
+  sortTables() {
+  }
+  
+  
 }

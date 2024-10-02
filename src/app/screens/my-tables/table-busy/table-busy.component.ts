@@ -133,7 +133,7 @@ export class TableBusyComponent implements OnInit {
     }
   
     //console.log('Product ID to search:', productId);
-    return this.products.find(product => Number(product.id) === productId);
+    return this.products.find(product => (product.id) === productId);
   }
   
   
@@ -218,6 +218,7 @@ export class TableBusyComponent implements OnInit {
   closeDialog() {
     console.log('Dialog closed');
     this.wantToAddNewProduct = false;
+    location.reload();
     this.close.emit();
   }
 

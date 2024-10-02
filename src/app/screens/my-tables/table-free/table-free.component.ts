@@ -147,6 +147,7 @@ export class TableFreeComponent implements OnInit {
     console.log('Dialog closed');
     this.orderItems = [];
     this.order = undefined;
+    location.reload();
     this.close.emit();
   }
 }

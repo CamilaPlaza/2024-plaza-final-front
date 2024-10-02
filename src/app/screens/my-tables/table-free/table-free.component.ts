@@ -5,6 +5,7 @@ import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
 import { OrderService } from 'src/app/services/order_service';
 import { ProductService } from 'src/app/services/product_service';
+import { TableService } from 'src/app/services/table_service';
 
 @Component({
   selector: 'app-table-free',
@@ -20,11 +21,11 @@ export class TableFreeComponent implements OnInit {
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
   products : Product[] = [];
-  currentDate: Date = new Date();
   currentTime: string = '';
   order: Order | undefined;
+  currentDate: string = this.formatDate(new Date());
 
-  constructor(private productService: ProductService, private orderService: OrderService) {}
+  constructor(private productService: ProductService, private orderService: OrderService, private tableService: TableService) {}
 
   ngOnInit() {
     //TO DO: HACER EL GET DE LOS PRODUCTOS
@@ -50,8 +51,8 @@ export class TableFreeComponent implements OnInit {
   }
 
   updateCurrentTime() {
-    const hours = this.currentDate.getHours().toString().padStart(2, '0');
-    const minutes = this.currentDate.getMinutes().toString().padStart(2, '0');
+    const hours = new Date().getHours().toString().padStart(2, '0');
+    const minutes = new Date().getMinutes().toString().padStart(2, '0');
     this.currentTime = `${hours}:${minutes}`;
   }
   onProductChange() {
@@ -99,23 +100,34 @@ export class TableFreeComponent implements OnInit {
     this.order = {
       status: 'In progress',
       tableNumber: this.table?.id ?? 0,
-      date: this.currentDate.toLocaleDateString(),
+      date: this.currentDate,
       time: this.currentTime,
       total: total.toString(),
       orderItems: this.orderItems
     }; 
-    try{
-    const response = await this.orderService.onRegister(this.order);
-
-      if (response) {
-        console.log(this.order);
-        console.log('Order Register successful', response);
-        this.updateTable();
-        this.closeDialog();
+    try {
+      const response = await this.orderService.onRegister(this.order); // Aquí se registra la orden
+      if (response && response.order && response.order_id) {  // Asegúrate de que haya un order_id
+          console.log(this.order); // Esta es la orden antes de la respuesta
+          console.log('Order Register successful', response);
+          
+          // Llama a updateTableAndOrder pasando la orden y el order_id
+          await this.tableService.updateTableAndOrder(response.order, response.order_id); // Cambié aquí
+          this.updateTable(); // Actualizas la tabla después de la asociación
+          this.closeDialog(); // Cierra el diálogo si todo sale bien
       } else {
+          console.log('Order registration failed');
       }
-    } catch (error: any) {
+  } catch (error: any) {
+      console.error('Error durante el registro:', error);
   }}
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Mes comienza desde 0
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}` // Formato YYYY-MM-DD
+  }
 
   getProductById(productId: number): Product | undefined {
     return this.products.find(product => product.id === productId);

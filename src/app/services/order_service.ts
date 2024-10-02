@@ -12,17 +12,16 @@ export class OrderService {
   //private baseLocalUrl = 'http://127.0.0.1:8000';
   constructor(private http: HttpClient) { }
 
-  async onRegister(order: Order): Promise<boolean> {
+  async onRegister(order: Order): Promise<any | null> { // Cambia el tipo de retorno a `any`
     try {
-      // Simplemente pasa el objeto `product` directamente en el post request
-      await this.http.post(`${this.baseUrl}/register-order`, order).toPromise();
-      //await this.http.post(`${this.baseUrl}/tables/order/${order.tableNumber}`, { order_id: order.id }).toPromise();
-      return true;
+        const response = await this.http.post(`${this.baseUrl}/register-order`, order).toPromise();
+        console.log("RESPONSE", response); // Imprime la respuesta completa
+        return response;  // Devuelves la respuesta completa
     } catch (error: any) {
-      console.error('Error durante el registro:', error);
-      return false;
+        console.error('Error durante el registro:', error);
+        return null;
     }
-  }
+}
   async addOrderItems(orderId: string, newItems: any[]): Promise<boolean> {
     try {
       await this.http.put(`${this.baseUrl}/orders/order-items/${orderId}`, { new_order_items: newItems }).toPromise();

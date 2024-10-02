@@ -41,31 +41,49 @@ export class TableBusyComponent implements OnInit {
     this.order = this.actualOrder ?? new Order('', 0, '', '', '', []);
   }
 
-  getOrderInformation(){
-    //Hacer un get de todas las orders
+  getOrderInformation() {
+    console.log(this.table)
     if (this.table.order_id) {
-      this.actualOrder = this.ordersExample.find(order => order.id === this.table.order_id);
+      this.orderService.getOrderById(this.table.order_id.toString()).subscribe({
+        next: (order) => {
+          this.actualOrder = order;  // Asigna la orden recibida
+          this.orderItems = this.actualOrder?.orderItems ?? [];
+          this.currentDate = this.actualOrder?.date ?? '';
+          this.currentTime = this.actualOrder?.time ?? '';
+          
+          // Después de obtener la orden, busca los detalles del producto
+          this.fetchProductDetailsForOrderItems();
+        },
+        error: (err) => {
+          console.error('Error fetching order information:', err);
+        }
+      });
     }
-    return undefined;
   }
 
   fetchProductDetailsForOrderItems() {
-  for (const item of this.orderItems) {
-      try {
-          // Fetch product details using the product_id from the order item
-          const product = this.productService.getProductById(item.product_id.toString());
+    const productIdPromises = this.orderItems.map(item => {
+      return this.productService.getProductById(item.product_id.toString()).toPromise()
+        .then(product => {
           if (product) {
-              // Optionally, you can store the fetched product details in a separate array
-              // Here, I'm adding a product field directly to the order item if needed in future
-              // item.productDetails = product; // Uncomment if you want to store product details
+            // Agrega el nombre y el precio al item (puedes modificar el modelo OrderItem si lo deseas)
+            return { ...item, productDetails: product }; // Agrega los detalles del producto
           } else {
-              console.error(`Product not found for ID: ${item.product_id.toString()}`);
+            console.error(`Product not found for ID: ${item.product_id}`);
+            return item; // Devuelve el item original si no se encuentra el producto
           }
-      } catch (error) {
-          console.error('Error fetching product details:', error);
-      }
+        })
+        .catch(error => {
+          console.error(`Error fetching product details for ID ${item.product_id}:`, error);
+          return item; // Devuelve el item original en caso de error
+        });
+    });
+  
+    // Espera a que todas las promesas se resuelvan
+    Promise.all(productIdPromises).then(updatedItems => {
+      this.orderItems = updatedItems; // Actualiza los items con los detalles de los productos
+    });
   }
-}
 
 
   loadProducts(): void {
@@ -110,11 +128,11 @@ export class TableBusyComponent implements OnInit {
   
   getProductById(productId: number | undefined): Product | undefined {
     if (productId === undefined) {
-      console.warn('Product ID is undefined');
+      //console.warn('Product ID is undefined');
       return undefined; 
     }
   
-    console.log('Product ID to search:', productId);
+    //console.log('Product ID to search:', productId);
     return this.products.find(product => Number(product.id) === productId);
   }
   
@@ -136,7 +154,7 @@ export class TableBusyComponent implements OnInit {
   calculateTotal() {
     return this.orderItems.reduce((total, item) => {
       const product = this.products.find(p => p.id === item.product_id);
-      console.log(product);
+      //console.log(product);
       return product ? total + item.amount * parseFloat(product.price) : total;
     }, 0);
   }

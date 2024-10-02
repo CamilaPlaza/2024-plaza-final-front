@@ -15,11 +15,10 @@ import { TableService } from 'src/app/services/table_service';
 export class TableBusyComponent implements OnInit {
   @Input() table: Table = new Table('');
   @Output() close = new EventEmitter<void>();
-  ordersExample: Order[] = []
   actualOrder?: Order; 
+  initialOI: OrderItem[] = [];
   orderItems: OrderItem[] = [];
   products : Product[] = [];
-  initialOrderItems: OrderItem[] = [];
   currentDate: string = '';
   currentTime: string = '';
   order: Order = new Order('', 0, '', '', '', []);
@@ -36,7 +35,6 @@ export class TableBusyComponent implements OnInit {
     this.loadProducts();
     this.getOrderInformation();
     this.orderItems = this.actualOrder?.orderItems ?? [];
-    this.initialOrderItems = JSON.parse(JSON.stringify(this.orderItems));
     this.currentDate = this.actualOrder?.date ?? '';
     this.currentTime = this.actualOrder?.time ?? '';
     this.order = this.actualOrder ?? new Order('', 0, '', '', '', []);
@@ -49,6 +47,7 @@ export class TableBusyComponent implements OnInit {
         next: (order) => {
           this.actualOrder = order; 
           this.orderItems = this.actualOrder?.orderItems ?? [];
+          this.initialOI = JSON.parse(JSON.stringify(order.orderItems));
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
         },
@@ -130,7 +129,7 @@ export class TableBusyComponent implements OnInit {
 
   //UPDATE
   updateOrder() {
-    this.loading = true; // Iniciar el spinner
+    this.loading = true;
     const total = this.calculateTotal().toString(); 
     if (this.table.order_id) {
       this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total)
@@ -160,12 +159,10 @@ export class TableBusyComponent implements OnInit {
       this.orderService.finalizeOrder(this.table.order_id.toString()).subscribe({
         next: () => {
           console.log('Order status updated to FINALIZED');
-  
-          // Close the table using the table service
           this.tableService.closeTable(this.table).subscribe({
             next: () => {
               console.log('Table closed successfully');
-              this.closeDialog(); // Call any dialog close method if necessary
+              this.closeDialog();
             },
             error: (err) => {
               console.error('Error closing table:', err);
@@ -187,26 +184,29 @@ export class TableBusyComponent implements OnInit {
 
   closeDialog() {
     this.wantToAddNewProduct = false;
+    this.displayConfirmDialog = false;
     location.reload();
-    this.close.emit();
+    this.close.emit();  
   }
-
   showConfirmDialog() {
-    if (this.hasChanges()) {
-      this.displayConfirmDialog = true;
-    } else {
+  
+    if (this.areOrderItemsEqual(this.initialOI, this.orderItems)) {
       this.closeDialog();
+    } else {
+      this.displayConfirmDialog = true;
     }
   }
-
-  hasChanges(): boolean {
-    return JSON.stringify(this.orderItems) !== JSON.stringify(this.initialOrderItems);
+  
+  areOrderItemsEqual(items1: OrderItem[] = [], items2: OrderItem[] = []): boolean {
+    if (items1.length !== items2.length) {
+      return false;
+    }
+  
+    return items1.every((item, index) => 
+      item.product_id === items2[index].product_id && item.amount === items2[index].amount
+    );
   }
 
-  closeConfirmDialog() {
-    this.displayConfirmDialog = false;
-    this.closeDialog();
-  }
 
   showCloseTableDialog() {
     this.displayCloseTableDialog = true;

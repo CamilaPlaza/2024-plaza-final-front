@@ -97,6 +97,20 @@ html, body {
     width: 100%;
     height: 100%;
 }
+/* Centrar el contenido de las celdas de la tabla */
+p-table ::ng-deep table {
+    text-align: center;
+}
+
+p-table ::ng-deep th, p-table ::ng-deep td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Centrar los elementos dentro de las celdas */
+p-table ::ng-deep .flex.align-items-center {
+    justify-content: center;
+}
 
 
 

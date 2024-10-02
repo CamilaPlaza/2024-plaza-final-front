@@ -86,7 +86,7 @@
                                   (click)="onRowEditInit(product)" class="p-button-rounded p-button-text"></button>
                               <!-- Botón para guardar cambios -->
                               <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
-                                  (click)="onRowEditSave(product)" class="p-button-rounded p-button-text p-button-success"></button>
+                                  (click)="onRowEditSave(product)" [disabled]="!isProductDataValid(product)" class="p-button-rounded p-button-text p-button-success"></button>
                               <!-- Botón para cancelar edición -->
                               <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
                                   (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"></button>

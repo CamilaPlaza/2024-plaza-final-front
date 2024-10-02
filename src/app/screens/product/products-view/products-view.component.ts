@@ -67,9 +67,6 @@ getCategoryNamesByIds(ids: any): string {
 
   return categoryNames.join(', ');
 }
-
-
-  
   
   updateTempSelectedCategories(productId: number, selectedCategories: Category[]): void {
     this.editingProductCategories[productId] = [...selectedCategories];
@@ -181,6 +178,26 @@ getCategoryNamesByIds(ids: any): string {
       console.error('Product ID is undefined, cannot cancel edit');
     }
   }
+
+  isProductDataValid(product: Product): boolean {
+    if (product.id === undefined) {
+      return false;
+    }
+  
+    const price = Number(product.price);
+    const tempCategories = this.editingProductCategories[product.id];
+  
+    return (
+      !isNaN(price) &&
+      price >= 0 &&
+      !!product.description && // Convertimos el string a booleano
+      tempCategories !== undefined && // Aseguramos que tempCategories esté definido
+      tempCategories.length > 0
+    );
+  }
+  
+  
+
 
   deleteProduct() {
     this.productService.deleteProduct((this.deleteID).toString()).then(success => {

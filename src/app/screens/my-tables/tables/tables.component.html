@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="section image-section">
+    <img src="../../../../assets/images/tables2.jpg" alt="Imagen descriptiva" class="image">
+  </div>
+  <div class="section title-section">
+    <p class="title">MY TABLES</p>
+  </div>
+
+  <div class="section table-section">
+    <div class="card table-wrapper">
+      <p-table [value]="tables" dataKey="id" scrollable="true" [scrollHeight]="tableScrollHeight">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Id</th>
+            <th>Status</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-table let-ri="rowIndex">
+          <tr (click)="onTableClick(table)">
+            <td>{{ table.id }}</td>
+            <td [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY'}">
+              {{ table.status }}
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="summary">
+          <div class="flex align-items-center justify-content-between">
+            In total there are {{ tables ? tables.length : 0 }} tables
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="table-icons">
+      <div *ngFor="let table of tables" class="table-icon" [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY'}" (click)="onTableClick(table)">
+        <i class="fas fa-utensils"></i>
+        <span>{{ table.id }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog class="custom-modal" [(visible)]="displayModal" modal="true" [closable]="false" [responsive]="true">
+  <ng-container *ngIf="selectedComponent === 'FREE'">
+    <app-table-free 
+      [table]="selectedTable" 
+      (close)="displayModal = false">
+    </app-table-free>
+  </ng-container>
+
+  <ng-container *ngIf="selectedComponent === 'BUSY'">
+    <app-table-busy
+      [table]="selectedTable" 
+      (close)="displayModal = false">
+    </app-table-busy>
+  </ng-container>
+</p-dialog>

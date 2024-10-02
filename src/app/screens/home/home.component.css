@@ -1,11 +1,104 @@
-.full-screen-image {
+.home-container {
+    display: grid;
+    width: 95%;
+    margin-left: 5%;
+    
+  }
+
+  .spaces-conteiner{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0.2%;
+    height: 85vh;
+    box-sizing: border-box;
+  }
+  
+  /* Estilos para cada espacio */
+  .space {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; transition: transform 0.3s;
+    }
+
+    .space:hover {
+        transform: translateY(-5px);
+    }
+
+  .overlay {
     position: absolute;
-    top: 0;
+    top: 0; 
     left: 0;
-    height: 100%;
+    right: 0;
+    bottom: 0;
+    color: #7f522e;
+    font-weight: 500;
+    font-size: 1.5rem;
+    text-align: right;
+    text-decoration: none; 
+    padding: 20px; 
+}
+
+  
+  /* Espacios de imágenes */
+  .image-space {
+    background-size: cover;
+    background-position: center;
+  }
+  
+  /* Imágenes específicas */
+  .image1 {
+    background-image: url('../../../assets/images/home3.jpg');
+  }
+  
+  .image2 {
+    background-image: url('../../../assets/images/home5.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .image3 {
+    background-image: url('../../../assets/images/home1.jpeg');
+  }
+
+  .image4 {
+    background-image: url('../../../assets/images/home4.jpeg');
+  }
+  
+  .image5 {
+    background-image: url('../../../assets/images/home2.jpg');
+  }
+
+  .image6 {
+    background-image: url('../../../assets/images/home6.jpeg');
+  }
+  
+  .slogan {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #7f522e;
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
     width: 100%;
-    background-image: url('../../../assets/images/home.jpg'); /* Reemplaza con la ruta a tu imagen */
-    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el contenedor */
-    background-position: center; /* Centra la imagen en el contenedor */
-    background-repeat: no-repeat; /* Evita la repetición de la imagen */
+    font-style: italic;
+}
+
+.image-space .overlay {
+  cursor: pointer;
+}
+
+
+@media (max-width: 600px) {
+    .spaces-conteiner {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        height: 70vh;
+    }
+
+    .space {
+        min-height: 200px; /* Asegúrate de que cada espacio tenga una altura mínima */
+    }
 }

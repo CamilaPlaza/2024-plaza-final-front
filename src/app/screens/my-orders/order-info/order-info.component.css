@@ -1,0 +1,21 @@
+::ng-deep .p-inputtext {
+    border-radius: 10px !important;
+}
+
+::ng-deep .custom .p-button {
+    border-radius: 8px !important;
+}
+
+::ng-deep .custom .p-button {
+    background-color: #ab602f !important;
+    border-color: #ab602f !important;
+}
+
+::ng-deep .custom .p-button:hover {
+    background-color: #894d26 !important;
+    border-color: #894d26 !important;
+}
+
+::ng-deep .custom .p-button:focus {
+    outline: none !important;
+}

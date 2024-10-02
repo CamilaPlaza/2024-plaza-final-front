@@ -1,11 +1,18 @@
 export class Product {
-    product_name: string = '';
+    id?: number;
+    name: string = '';
     description: string = '';
-    product_price: string = '';
+    price: string = '';
+    category: string = '';
+    calories: number;
+
   
-    constructor(product_name: string, description: string, product_price: string) {
-      this.product_name = product_name;
+    constructor(name: string, description: string, price: string, category: string, calories:number, id?: number) {
+      this.id = id;
+      this.name = name;
       this.description = description;
-      this.product_price = product_price;
+      this.price = price;
+      this.category = category;
+      this.calories = calories;
     }
 }

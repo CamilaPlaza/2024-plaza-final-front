@@ -1,0 +1,169 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin-left: 5%;
+}
+
+.section {
+    flex: 1;
+}
+
+.image-section {
+    flex: 0.5;
+    height: 10%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.title-section {
+    flex: 0.15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #7f522e;
+    color: #f2f2f2;
+    position: relative;
+}
+
+.title {
+    font-size: 2rem;
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.table-section {
+    flex: 1;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.card {
+    width: 100%;
+    height: 100%;
+}
+
+.table-wrapper {
+    width: 40%;
+    background-color: white;
+    margin-left: 0;
+}
+
+.p-table {
+    width: 100%;
+}
+
+.status-free {
+    color: #23ae43;
+    font-weight: bold;
+}
+
+.status-busy {
+    color: #c41729;
+    font-weight: bold;
+}
+
+th, td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-icons {
+    padding-left: 15%;
+    padding-right: 15%;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%; 
+    justify-content: center;
+    align-items: center;
+}
+
+.table-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px; /* Ajusta según sea necesario */
+    height: 70px; /* Ajusta según sea necesario */
+    background-color: #23ae43; /* Por defecto, verde para "FREE" */
+    margin: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.table-icon.status-busy {
+    background-color: #c41729; /* Rojo para "BUSY" */
+}
+
+.table-icon i {
+    font-size: 18px;
+    margin-right: 5px;
+    color: white;
+}
+
+::ng-deep .custom-modal .p-dialog {
+    background-color: transparent !important; /* Quita el fondo del diálogo */
+    box-shadow: none !important; /* Quita la sombra alrededor del diálogo */
+}
+
+::ng-deep .custom-modal .p-dialog-content {
+    background-color: transparent !important; /* Quita el fondo del contenido del diálogo */
+}
+
+::ng-deep .custom-modal .p-dialog .p-dialog-header {
+    background-color: transparent !important; /* Quita el fondo del header */
+    border-bottom: none !important; /* Opcional: quita la línea del header */
+}
+
+::ng-deep .custom-modal .p-dialog .p-dialog-footer {
+    background-color: transparent !important; /* Quita el fondo del footer */
+    border-top: none !important; /* Opcional: quita la línea del footer */
+}
+
+
+@media (max-width: 600px) {
+    .container {
+        margin-left: 10%;
+    }
+
+    .table-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .table-wrapper {
+        max-width: 100%;
+        margin: 0;
+        height: 50vh; /* Hace que el scroller comience antes */
+        overflow-y: auto;
+    }
+
+    .table-icons {
+        max-width: 100%;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .table-icon {
+        width: 90px;
+        height: 90px;
+        font-size: 1.2rem;
+    }
+}

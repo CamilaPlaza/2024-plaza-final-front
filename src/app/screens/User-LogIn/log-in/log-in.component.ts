@@ -18,11 +18,15 @@ export class LogInComponent implements OnInit {
   animateForm: boolean = false;
   loading: boolean = false; 
   displayErrorDialog: boolean = false;
+  displayEmailDialog: boolean = false;
+  message: string = '';
 
   
   constructor(private userService: UserService, private router: Router, private messageService: MessageService) {}
   
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    localStorage.removeItem("token");
+  }
 
   async onLogin() {
     this.loading = true;
@@ -72,6 +76,15 @@ export class LogInComponent implements OnInit {
 
   closeErrorDialog() {
     this.displayErrorDialog = false;
+  }
+
+  showEmailDialog( message: string) {
+    this.message = message;
+    this.displayEmailDialog = true;
+  }
+
+  closeEmailDialog() {
+    this.displayEmailDialog = false;
   }
 
 }

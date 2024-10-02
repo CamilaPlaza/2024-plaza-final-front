@@ -1,8 +1,9 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Product } from 'src/app/models/product';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product_service';
+import { CategoryService } from 'src/app/services/category_service';
+import { Category } from 'src/app/models/category';
 
 @Component({
   selector: 'app-register-product',
@@ -14,28 +15,44 @@ export class RegisterProductComponent implements OnInit{
   description: string = '';
   price: string = '';
   product: Product | undefined;
+  categories: Category[] = [];
+  categoryOptions: { label: string; value: string }[] = []; // Cambiar a string
   displayConfirmDialog: boolean = false;
   displayErrorDialog: boolean = false;
   errorSubtitle: string = '';
   loading: boolean = false; 
+  isMobile: boolean = false;
+  selectedCategories: Category[] = [];
+  selectedCategoryIds: string = '';
+  showCategoryPanel = false;
+  showCaloriesPanel = false;
+  totalCaloriesValue?: number;
 
-  constructor(
-    private productService: ProductService,
-    private router: Router
-  ) {}
+  constructor( private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadCategories();
+    this.checkIfMobile();   
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkIfMobile();
+  }
+
+  checkIfMobile() {
+    this.isMobile = window.innerWidth <= 600;
+  }
 
   async onRegister() {
     this.closeConfirmDialog();
     this.loading = true;
     try {
-      this.product = new Product(this.name, this.description, this.price);
-      console.log(this.product);
+      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds, this.totalCaloriesValue ?? 0);
+      console.log('PRODUCT: ', this.product);
       const response = await this.productService.onRegister(this.product);
 
       if (response) {
-
         console.log('Register successful', response);
         this.router.navigate(['/products-view']);
       } else {
@@ -46,10 +63,34 @@ export class RegisterProductComponent implements OnInit{
       this.errorSubtitle = 'An error occurred during registration.';
       this.showErrorDialog();
     } finally {
-      this.loading = false; // Ocultar el spinner cuando finaliza
+      this.loading = false;
     }
   }
 
+  onCategoryChange(event: any): void {
+    this.selectedCategories = event.value; // Asegúrate de que esto se llene correctamente
+  
+    // Aquí asumimos que `event.value` ya contiene los IDs seleccionados como strings
+    console.log('Selected Categories:', this.selectedCategories);
+  
+    // Crear el string de IDs directamente
+    this.selectedCategoryIds = this.selectedCategories.join(', ');
+  
+    console.log('Selected Category IDs:', this.selectedCategoryIds);
+  }
+
+  getSelectedCategoriesLabel(): string {
+    return this.selectedCategories.length > 0 
+      ? this.selectedCategories.map(cat => cat.name).join(', ')
+      : 'Select categories'; 
+  }
+
+  logSelectedCategories() {
+    console.log('Selected Categories: ', this.selectedCategories);
+  }
+  
+
+  //POP UPS
   
   showConfirmDialog() {
     this.displayConfirmDialog = true;
@@ -86,8 +127,55 @@ export class RegisterProductComponent implements OnInit{
       event.preventDefault();
     }
   }
+
+  showCategories() {
+    this.showCategoryPanel = true;
+    this.showCaloriesPanel = false;
+  }
+
+
+  handleCategorySave() {
+    this.showCategoryPanel = false;
+  }
+
+  handleCategoryClose() {
+    this.showCategoryPanel = false;
+  } 
   
+  isFormValid(): boolean {
+    return this.name !== '' && 
+           this.description !== '' &&
+           this.price !== '';
+  }
+
+  showCalories() {
+    this.showCaloriesPanel = true;
+    this.showCategoryPanel = false;
+  }
+
+
+  handleCaloriesSave() {
+    this.showCaloriesPanel = false;
+  }
+
+  handleCaloriesClose() {
+    this.showCaloriesPanel = false;
+  } 
+
+  handleTotalCalories(calories: number) {
+    this.totalCaloriesValue = calories; // Asignar el valor de las calorías recibidas
+    console.log('Total Calories:', this.totalCaloriesValue);
+  }
+
+  loadCategories() {
+    this.categoryService.getCategories().subscribe(response => {
+      this.categories = response.categories;
   
-  
-  
+      this.categoryOptions = this.categories.map((category: Category) => ({
+        label: category.name,
+        value: category.id !== undefined ? category.id.toString() : '' // Manejo de undefined
+      }));
+    });
+  }
+
 }

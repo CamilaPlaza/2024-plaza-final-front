@@ -32,7 +32,9 @@ export class UserRegisterComponent implements OnInit {
   displayErrorDialog: boolean = false;
   maxDate: Date = new Date();
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    localStorage.removeItem("token");
+  }
 
   constructor(
     private userService: UserService,
@@ -49,19 +51,25 @@ export class UserRegisterComponent implements OnInit {
       this.formattedBirthDate = this.datePipe.transform(this.birthDate, 'dd/MM/yyyy') || '';
       console.log(this.formattedBirthDate);
                 
-      const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate)
-      this.router.navigate(['/home']);
+      const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate);
+      console.log(response);
+      if(response){
+        await this.userService.login(this.email, this.password);
+        this.router.navigate(['/home']);
+      }
     
     } catch (error: any) {
       console.error('Register failed', error);
-      this.showErrorDialog();    
+      if(error.code === 'auth/email-already-in-use'){
+        this.showErrorDialog(); 
+      } else{this.showErrorDialog();} 
     } finally {
       this.loading = false;
     }
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.loading = false;
-    }, 2000);
+    }, 2000);*/
 }
 
 

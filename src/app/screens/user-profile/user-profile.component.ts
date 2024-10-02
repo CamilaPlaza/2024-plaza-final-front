@@ -13,12 +13,16 @@ export class UserProfileComponent implements OnInit{
   email: string | null = null;
   name: string | null = null;
   birthday: Date | null = null;
+  displayConfirmDeleteDialog: boolean = false;
+  displayErrorDialog: boolean = false;
+  displayChangePasswordDialog: boolean = false;
 
   constructor(private confirmationService: ConfirmationService,
     private router: Router,
     private userService: UserService,
     private messageService: MessageService,
     ){}
+    
     async ngOnInit(): Promise<void> {
       const user = this.userService.currentUser;
       if (user) {
@@ -26,58 +30,59 @@ export class UserProfileComponent implements OnInit{
   
         (await this.userService.getUserDataFromFirestore(user.uid)).subscribe(
           (userData) => {
-            this.name = userData.name;         // Nombre del usuario desde Firestore
-            this.birthday = userData.birthday; // Cumpleaños del usuario desde Firestore
+            this.name = userData.name;        
+            this.birthday = userData.birthday;
           },
           (error) => {
             console.error('Error fetching user data:', error);
           }
         );
       } else {
-        this.router.navigate(['/']); // Redirigir al login si no está autenticado
+        this.router.navigate(['/']); 
       }
     }
 
   async onDeleteAccount() {
-    this.confirmationService.confirm({
-      message: 'Are you sure that you want to delete your account?',
-      header: 'Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      accept: async () => {
-        this.userService.deleteCurrentUser()
-          .then(() => {
-            console.log('Account deleted successfully');
-            this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted' });
-            setTimeout(() => {
-              this.router.navigate(['/']); // Navegar después de un retraso
-            }, 2000);
-          })
-          .catch(error => {
-            console.error('Error deleting account:', error);
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error ocurred', life: 3000 });
-          });
-      },
-      reject: () => {
-        this.messageService.add({ severity: 'secondary', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-      }
+    this.userService.deleteCurrentUser()
+    .then(() => {
+      console.log('Account deleted successfully');
+      setTimeout(() => {
+        this.router.navigate(['/']); 
+      }, 2000);
+    })
+    .catch(error => {
+      console.error('Error deleting account:', error);
+      this.showErrorDialog();
     });
   }
 
   async changePassword() {
-    this.confirmationService.confirm({
-      message: 'Are you sure that you want to change your password?',
-      header: 'Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      accept: async () => {
-        this.userService.resetPassword(this.email ?? '');
-        this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'A email was send it to you' });
+    this.userService.resetPassword(this.email ?? '');
+  }
 
-      },
-      reject: () => {
-        this.messageService.add({ severity: 'secondary', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-      }
+  showChangePasswordDialog() {
+    this.displayChangePasswordDialog = true;
+  }
 
-    });
+  closeChangePasswordDialog() {
+    this.displayChangePasswordDialog = false;
+  }
+    
+  showConfirmDeleteDialog() {
+    this.displayConfirmDeleteDialog = true;
+  }
+
+  closeConfirmDeleteDialog() {
+    this.displayConfirmDeleteDialog = false;
+  }
+
+  showErrorDialog() {
+    this.closeConfirmDeleteDialog();
+    this.displayErrorDialog = true;
+  }
+
+  closeErrorDialog() {
+    this.displayErrorDialog = false;
   }
 
   

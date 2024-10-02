@@ -1,0 +1,77 @@
+<div class="container-table-free">
+
+  <div *ngIf="loading" class="loading-overlay">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <!-- Título -->
+  <div class="header">
+    <h2 class="table-number">Table: {{ table.id }}</h2>
+    <span class="status">{{ table.status }}</span>
+  </div>
+
+  <div class="body">
+    <div class="subtitle">
+      <div class="date-time-wrapper">
+        <p class="current-date">{{ currentDate | date: 'fullDate' }}</p>
+        <p class="current-time">{{ currentTime }}hs</p>
+      </div>
+    </div>
+
+    <!-- Formulario de la orden -->
+    <div class="order-form">
+      <div class="table-wrapper">
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Amount</th>
+              <th>Price</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of orderItems">
+              <td>{{ getProductById(item.product_id)?.name }}</td>
+              <td>{{ item.amount }}</td>
+              <td>{{ getProductById(item.product_id)?.price | currency }}</td>
+              <td>
+                <button class="remove-button" (click)="removeOrderItem(item)">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="add-product">
+        <label for="product">Product:</label>
+        <select id="product" [(ngModel)]="selectedProduct" (change)="onProductChange()">
+          <option *ngFor="let product of products" [ngValue]="product">{{ product.name }}</option>
+        </select>
+
+        <label for="amount">Amount:</label>
+        <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" (input)="validateForm()" />
+
+        <label for="price">Price:</label>
+        <input id="price" type="text" [value]="selectedProduct?.price" disabled />
+      </div>
+
+      <div class="add-product-button">
+        <button [disabled]="!canAddProduct" (click)="addOrderItem()">Add Product</button>
+      </div>
+    </div>
+
+    <!-- Total -->
+    <div class="total">
+      <p>Total: {{ calculateTotal() | currency }}</p>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="action-buttons">
+      <button pButton label="Create Order" class="create-order-button" (click)="createOrder()" [disabled]="orderItems.length === 0"></button>
+      <button pButton label="Close" class="close-button" (click)="closeDialog()"></button>
+    </div>
+  </div>
+</div>

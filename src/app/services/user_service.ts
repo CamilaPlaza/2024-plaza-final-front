@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { auth } from '../services/firebaseconfig';  // Import Firebase auth
-import { signInWithEmailAndPassword, sendPasswordResetEmail, deleteUser, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, UserCredential, User, onAuthStateChanged, setPersistence, browserSessionPersistence, signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail, deleteUser, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, UserCredential, User, onAuthStateChanged, setPersistence, browserSessionPersistence, signOut, confirmPasswordReset } from 'firebase/auth';
 import { Observable } from 'rxjs';
 
 
@@ -12,7 +12,8 @@ import { Observable } from 'rxjs';
 export class UserService {
   currentUser: User | null = null;
 
-  private baseUrl = 'http://127.0.0.1:8000';  //URL de Backend
+  private baseUrl = 'https://two024-messidepaul-back.onrender.com';  //URL de Backend
+  //private baseLocalUrl = 'http://127.0.0.1:8000';
   idleTime: number = 0;
   maxIdleTime: number = 10 * 60 * 1000; // 10 minutos de inactividad
   idleInterval: any;
@@ -29,7 +30,7 @@ export class UserService {
     });
   }
 
-  async onRegister(email: string, password: string, name: string, birthday: string): Promise<string> {
+  async onRegister(email: string, password: string, name: string, birthday: string): Promise<boolean>{
     try {
 
       // Crear usuario en Firebase Authentication
@@ -46,10 +47,11 @@ export class UserService {
       console.log(this.http.post(`${this.baseUrl}/register/`, data));
       await this.http.post(`${this.baseUrl}/register/`, data).toPromise();
       console.log('Datos adicionales guardados en Firestore');
-      return "true";
+      return true;
     } catch (error: any) {
       console.error('Error durante el registro:', error);
-      return "false";
+      throw error;
+      return false;
     }
   }
   
@@ -65,7 +67,7 @@ export class UserService {
   }
 
   async getUserDataFromFirestore(uid: string): Promise<Observable<any>> {
-    const url = `http://localhost:8000/users/${uid}`; // URL del backend FastAPI
+    const url = `${this.baseUrl}/users/${uid}`; // URL del backend FastAPI
     return this.http.get(url); // Retorna un Observable con los datos del usuario
   }
   
@@ -77,6 +79,9 @@ export class UserService {
       console.error('Error sending password reset email:', error.message);
     }
   }
+
+  async confirmPasswordReset(oobCode: string, newPassword: string) {
+    return confirmPasswordReset(auth, oobCode, newPassword);}
 
   deleteCurrentUser(): Promise<void> {
     const user = auth.currentUser;

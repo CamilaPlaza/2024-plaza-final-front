@@ -1,0 +1,139 @@
+<div class="image-container" [ngClass]="{ 'fadeinright': showPanel, 'fadeoutright': !showPanel }">
+    <div class="category-panel">
+        <div class="panel-header">
+            <div class="title">CATEGORIES</div>
+            <button class="add-new" (click)="showNewCategoryDialog()">+ Add New</button>
+        </div>
+        <div class="panel-body">
+            <p-toast></p-toast>
+            <p-toast></p-toast>
+            <p-table [value]="categories" dataKey="id" editMode="row" [tableStyle]="{'min-width': '100%'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width:40%">Name</th>
+                        <th style="width:40%">Type</th>
+                        <th style="width:20%"></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-category let-editing="editing" let-ri="rowIndex">
+                    <tr [pEditableRow]="category">
+                        <!-- Name column -->
+                        <td>
+                            <p-cellEditor>
+                                <ng-template pTemplate="input">
+                                    <input 
+                                        pInputText 
+                                        type="text" 
+                                        [(ngModel)]="category.name"
+                                        [style.width.px]="140" 
+                                        [disabled]="category.type === 'Default'" />
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    {{ category.name }}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+
+                        <!-- Type column -->
+                        <td>
+                            {{ category.type }}
+                        </td>
+
+                        <!-- Action buttons column -->
+                        <td>
+                            <div class="flex align-items-center justify-content-center gap-2">
+                                <!-- Edit button for custom types only -->
+                                <button 
+                                    *ngIf="!editing && category.type !== 'Default'" 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    pInitEditableRow 
+                                    icon="pi pi-pencil" 
+                                    (click)="onRowEditInit(category)" 
+                                    class="p-button-rounded p-button-text">
+                                </button>
+                        
+                                <!-- Save button when editing -->
+                                <button 
+                                    *ngIf="editing && category.type !== 'Default'" 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    pSaveEditableRow 
+                                    icon="pi pi-check" 
+                                    (click)="showConfirmDialog(category)" 
+                                    class="p-button-rounded p-button-text p-button-success mr-2">
+                                </button>
+                        
+                                <!-- Cancel button when editing -->
+                                <button 
+                                    *ngIf="editing && category.type !== 'Default'" 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    pCancelEditableRow 
+                                    icon="pi pi-times" 
+                                    (click)="onRowEditCancel(category, ri)" 
+                                    class="p-button-rounded p-button-text p-button-danger">
+                                </button>
+                        
+                                <!-- Delete button (tachito) -->
+                                <button 
+                                    *ngIf="category.type !== 'Default'" 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    icon="pi pi-trash" 
+                                    (click)="showDeleteDialog(category)" 
+                                    class="p-button-rounded p-button-text custom-delete-button">
+                                </button>
+                            </div>
+                        </td>
+                        
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="panel-footer">
+            <button class="save-button" (click)="handleSave()">Save</button>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="displayConfirmDialog" [modal]="true" header="Editing category" [closable]="true">
+    <app-confirmation-pop-up
+      [subtitle]="'Are you sure you want to proceed?'"
+      (onClose)="closeConfirmDialog()"
+      (onSend)="onRowEditSave()">
+    </app-confirmation-pop-up>
+  </p-dialog>
+  
+<p-dialog header="New Category" [(visible)]="displayNewCategoryDialog" [modal]="true" [closable]="true">
+    <div class="flex align-items-center mt-2 gap-3 mb-5">
+        <label for="newCategoryName" class="font-semibold w-6rem">Name</label>
+        <input pInputText id="newCategoryName" class="flex-auto" autocomplete="off" [(ngModel)]="newCategoryName" />
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancel" (onClick)="closeNewCategoryDialog()" class="custom-cancel-button"></p-button>
+        <p-button label="Send" (onClick)="onNewCategory()" class="custom-send-button"></p-button>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="displayNoticeDialog" [modal]="true" header="Category Creation" [closable]="true">
+    <app-notice
+      [subtitle]="message"
+      (onClose)="closeNoticeDialog()">
+    </app-notice>
+  </p-dialog>
+
+  <p-dialog [(visible)]="displayDeleteDialog" [modal]="true" header="Confirm Deletion" [closable]="true">
+    <app-confirmation-pop-up
+      [subtitle]="'Are you sure you want to proceed?'"
+      (onClose)="closeDeleteDialog()"
+      (onSend)="onDeleteCategory()">
+    </app-confirmation-pop-up>
+  </p-dialog>
+  
+
+<p-toast></p-toast>

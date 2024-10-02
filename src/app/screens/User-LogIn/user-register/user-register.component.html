@@ -103,11 +103,10 @@
 </p-dialog>
 
 <p-dialog [(visible)]="displayErrorDialog" [modal]="true" header="Error" [closable]="true">
-    <app-error-notice
+    <app-notice
         [subtitle]="'This email already exists'" 
         (onClose)="closeErrorDialog()">
-    </app-error-notice>
+    </app-notice>
 </p-dialog>
-
 
 <p-toast></p-toast>

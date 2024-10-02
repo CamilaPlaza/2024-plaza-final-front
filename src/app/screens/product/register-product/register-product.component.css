@@ -40,7 +40,7 @@ html, body {
 .title {
     margin: 0;
     padding-top: 0px;
-    margin-bottom: 15%;
+    margin-bottom: 5%;
     font-size: 2rem;
     text-align: left;
     width: 100%;
@@ -55,7 +55,7 @@ html, body {
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     width: 100%; 
     max-width: 400px; 
 }
@@ -70,17 +70,17 @@ label {
 
 input {
     width: 100%;
-    height: 60px; /* Ajusta la altura de los inputs */
+    height: 50px;
     padding: 10px;
     border-radius: 30px;
     border: 1px solid #7f522e;
-    background-color: #cbccbc; /* Color de fondo del input */
-    color: #7f522e; /* Color del texto del input */
+    background-color: #cbccbc;
+    color: #7f522e;;
     font-size: 1.2rem;
 }
 
 .btn-save {
-    margin-top: 10%;
+    margin-top: 30%;
     width: 150px;
     height: 45px;
     padding: 10px;
@@ -112,22 +112,176 @@ input {
     z-index: 9999; /* Asegurarse de que esté por encima de todo */
   }
   
-  .loading-overlay p-progressSpinner {
+.loading-overlay p-progressSpinner {
     width: 80px;
     height: 80px;
-  }
+}
+
+.app-categories-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    object-fit: cover;
+    display: block;
+}
+
+.category-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    position: relative;
+}
+
+::ng-deep .category-container .p-multiselect {
+    flex-grow: 1; 
+    height: 50px;
+    min-width: 340px; 
+    border-radius: 10px;
+    border: 1px solid #7f522e;
+    background-color: #cbccbc;
+    color: #7f522e;
+    font-size: 1.2rem;
+}
+
+::ng-deep .category-container .p-multiselect .p-multiselect-label {
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+::ng-deep .category-container .p-multiselect .p-multiselect-item {
+    color: #7f522e;
+}
+
+::ng-deep .category-container .p-multiselect .p-multiselect-item:hover {
+    background-color: #caa171;
+}
+
+
+.category-container button {
+    height: 50px;
+    width: 50px; 
+    border-radius: 50%; 
+    background-color: #56371e6b; 
+    color: white; 
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.category-container button:hover {
+    background-color: #56371e89;
+}
+
+
+.calories-display {
+    flex: 1;
+    height: 50px;
+    width: 320px;
+    border-radius: 10px;
+    border: 1px solid #7f522e;
+    background-color: #cbccbc;
+    color: #7f522e;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.calories {
+    display: flex; 
+    align-items: center;
+}
+
+.calories-display {
+    flex: 1;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid #7f522e;
+    background-color: #cbccbc;
+    color: #7f522e;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.calories button {
+    height: 50px; 
+    width: 50px;
+    border-radius: 50%; 
+    background-color: #56371e6b; 
+    color: white; 
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 10px; 
+}
+
+.calories button:hover {
+    background-color: #56371e89;
+}
+
   
 
 @media (max-width: 600px) {
-    .column-left {
-        width: 100%; /* Ajusta el ancho del contenedor izquierdo */
-    }
-
-    .column-right {
-        display: none; /* Oculta la columna derecha en pantallas pequeñas */
-    }
-
     .container {
         margin-left: 10%;
+    }
+    
+    .column-left {
+        width: 100%;
+        padding: 2%;
+    }
+    
+    .column-right {
+        display: none; 
+    }
+
+
+    .category-panel {
+        margin-left: 5%;
+        position: fixed;
+        top: -100%; 
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        background-color: white;
+        z-index: 1000;
+        transition: top 0.3s ease; 
+    }
+
+ 
+    .category-panel.open {
+        top: 0;
+    }
+
+ 
+    .category-icon {
+        position: relative;
+        cursor: pointer;
+    }
+
+ 
+    .close-panel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.5em;
+        cursor: pointer;
     }
 }

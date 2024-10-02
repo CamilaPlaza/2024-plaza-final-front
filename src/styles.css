@@ -36,3 +36,10 @@
     background-color: #96745b  !important;
   }
   
+  body,
+  p,
+  div,
+  span,
+  .p-component {
+      font-family: 'Rubik Regular', sans-serif;
+  }

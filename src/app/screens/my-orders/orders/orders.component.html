@@ -1,0 +1,124 @@
+<div class="container">
+    <div class="section image-section">
+      <img src="../../../../assets/images/view-products.jpg" alt="Imagen descriptiva" class="image">
+    </div>
+    <div class="section title-section">
+      <p class="title">ORDERS</p>
+    </div>
+  
+    <!-- Añadir filtro de calendario -->
+    <div class="section calendar-section">
+      <p-calendar 
+        [(ngModel)]="selectedDate" 
+        [showIcon]="true" 
+        [showOnFocus]="false" 
+        class="custom-calendar"
+        inputId="buttondisplay"
+        (onSelect)="filterOrdersByDate()">
+      </p-calendar>
+      <app-export-excel [data]="orders"></app-export-excel>
+
+
+    </div>
+  
+    <div class="section table-section">
+      <div class="card">
+        <p-table
+          #dt1
+          [value]="filteredOrders"
+          dataKey="id"
+          [rows]="10"
+          scrollable="true"
+          [scrollHeight]="tableScrollHeight"
+          [globalFilterFields]="['nroTable', 'status']">
+          
+          <!-- Tabla de encabezado -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width:10rem">
+                <div class="flex align-items-center">Order ID</div>
+              </th>
+              <th style="min-width:10rem">
+                <div class="flex align-items-center">
+                  Nro Table
+                  <!-- Filtro existente de Nro Table -->
+                  <p-columnFilter field="tableNumber" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                    <ng-template pTemplate="header">
+                      <div class="px-3 pt-3 pb-0"><span class="font-bold">Table Picker</span></div>
+                    </ng-template>
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                      <p-multiSelect [options]="nroTableOptions" placeholder="Select" (onChange)="filter($event.value)">
+                        <ng-template let-value pTemplate="item">
+                          <div class="inline-block"><span class="ml-1 mt-1">{{ value }}</span></div>
+                        </ng-template>
+                      </p-multiSelect>
+                    </ng-template>
+                  </p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width:10rem">
+                <div class="flex align-items-center">
+                  Status
+                  <!-- Filtro existente de Status -->
+                  <p-columnFilter field="status" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                    <ng-template pTemplate="header">
+                      <div class="px-3 pt-3 pb-0"><span class="font-bold">Status Picker</span></div>
+                    </ng-template>
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                      <p-multiSelect [options]="statusOptions" placeholder="Select" (onChange)="filter($event.value)">
+                        <ng-template let-value pTemplate="item">
+                          <div class="inline-block"><span class="ml-1 mt-1">{{ value }}</span></div>
+                        </ng-template>
+                      </p-multiSelect>
+                    </ng-template>
+                  </p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width:10rem">
+                <div class="flex align-items-center">Creation Date</div>
+              </th>
+              <th style="min-width:10rem">
+                <div class="flex align-items-center">Time</div>
+              </th>
+              <th style="min-width:10rem">
+                <div class="flex align-items-center">INFO</div>
+              </th>
+            </tr>
+          </ng-template>
+  
+          <!-- Cuerpo de la tabla -->
+          <ng-template pTemplate="body" let-order>
+            <tr>
+              <td>{{ order.id }}</td>
+              <td>{{ order.tableNumber }}</td>
+              <td>
+                <p-tag [value]="order.status" [severity]="getSeverity(order.status)"></p-tag>
+              </td>
+              <td>{{ order.date }}</td>
+              <td>{{ order.time }}</td>
+              <td>
+                <i class="pi pi-info-circle" (click)="displayInfoDialog(order)" style="cursor: pointer;"></i>
+              </td>
+              
+            </tr>
+          </ng-template>
+  
+          <!-- Mensaje cuando no hay órdenes -->
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No orders found.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+  
+<p-dialog header="Information" [(visible)]="infoDialogVisible" modal="modal" [closable]="true" [dismissableMask]="true">
+  <app-order-info
+  [order]="selectedOrder" 
+  (onClose)="infoDialogVisible = false" 
+  >
+  </app-order-info>
+</p-dialog>
+

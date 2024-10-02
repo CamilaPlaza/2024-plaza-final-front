@@ -101,7 +101,7 @@
     <app-confirmation-pop-up
       [subtitle]="'Are you sure you want to close this table?'"
       (onClose)="closeCloseTableDialog()"
-      (onSend)="closeTableAndSaveChanges()"
+      (onSend)="closeTable()"
       [cancelLabel]="'No'"
       [sendLabel]="'Yes'">
     </app-confirmation-pop-up>

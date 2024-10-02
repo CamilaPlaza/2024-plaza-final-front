@@ -132,13 +132,12 @@ export class TableBusyComponent implements OnInit {
   updateOrder() {
     this.loading = true; // Iniciar el spinner
     const total = this.calculateTotal().toString(); 
-  
     if (this.table.order_id) {
       this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total)
         .then(success => {
           if (success) {
             console.log('Order items added successfully');
-            this.closeTable(); 
+            this.closeTableAndSaveChanges();
           } else {
             console.error('Error adding order items.');
           }
@@ -183,8 +182,7 @@ export class TableBusyComponent implements OnInit {
   }
 
   closeTableAndSaveChanges() {
-    //this.updateOrder();
-    this.closeTable();
+    this.closeDialog();
   }
 
   closeDialog() {

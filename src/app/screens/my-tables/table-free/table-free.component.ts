@@ -17,6 +17,7 @@ export class TableFreeComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   orderItems: OrderItem[] = [];
+  loading: boolean = false;
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
@@ -96,9 +97,10 @@ export class TableFreeComponent implements OnInit {
 
 
   async createOrder() {
+    this.loading = true;
     const total = this.calculateTotal();
     this.order = {
-      status: 'In progress',
+      status: 'IN PROGRESS',
       tableNumber: this.table?.id ?? 0,
       date: this.currentDate,
       time: this.currentTime,
@@ -120,7 +122,12 @@ export class TableFreeComponent implements OnInit {
       }
   } catch (error: any) {
       console.error('Error durante el registro:', error);
-  }}
+  } finally{
+    this.loading = false; // Detener el spinner
+  }
+
+}
+
 
   formatDate(date: Date): string {
     const year = date.getFullYear();

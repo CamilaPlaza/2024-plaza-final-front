@@ -224,3 +224,17 @@
 ::ng-deep .p-dialog-mask {
   background-color: transparent !important; /* Hace el fondo del overlay transparente */
 }
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 8px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3); /* Fondo semi-transparente */
+  z-index: 9999; /* Asegurarse de que esté por encima de todo */
+}

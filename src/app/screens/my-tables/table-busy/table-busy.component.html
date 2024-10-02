@@ -1,5 +1,9 @@
 <div class="container-table-free">
 
+  <div *ngIf="loading" class="loading-overlay">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
     <div class="header">
       <h2 class="table-number">Table: {{ table.id }}</h2>
       <span class="status">{{ table.status }}</span>
@@ -22,7 +26,7 @@
                 <th>Product</th>
                 <th>Amount</th>
                 <th>Price</th>
-                <th></th>
+                <!--<th></th>-->
               </tr>
             </thead>
             <tbody>
@@ -30,11 +34,11 @@
                 <td>{{ getProductById(item.product_id)?.name }}</td>
                 <td>{{ item.amount }}</td>
                 <td>{{ getProductById(item.product_id)?.price | currency }}</td>
-                <td>
-                  <button class="remove-button" (click)="removeOrderItem(item)">
+                <!-- <td>
+                 <button class="remove-button" (click)="removeOrderItem(item)">
                     <i class="pi pi-trash"></i>
                   </button>
-                </td>
+                </td>-->
               </tr>
               
             </tbody>
@@ -78,16 +82,16 @@
       <!-- Botones de acción -->
       <div class="action-buttons">
         <button pButton label="Close Table" class="create-order-button" (click)="showCloseTableDialog()"></button>
-        <button pButton label="Close" class="close-button" (click)="showConfirmDialog()"></button>
+        <button pButton label="Save" class="close-button" (click)="showConfirmDialog()"></button>
       </div>
     </div>
   </div>
   
   <p-dialog class="white-background-modal" [(visible)]="displayConfirmDialog" [modal]="true" header="Save Changes" [closable]="true">
     <app-confirmation-pop-up
-      [subtitle]="'Do you want to save your changes CLOSE?'"
+      [subtitle]="'Do you want to save your changes?'"
       (onClose)="closeConfirmDialog()"
-      (onSend)="createOrder()"
+      (onSend)="updateOrder()"
       [cancelLabel]="'No'"
       [sendLabel]="'Yes'">
     </app-confirmation-pop-up>

@@ -22,15 +22,22 @@ export class OrderService {
         return null;
     }
 }
-  async addOrderItems(orderId: string, newItems: any[]): Promise<boolean> {
+
+  async addOrderItems(orderId: string, newItems: any[], total: string): Promise<boolean> {
     try {
-      await this.http.put(`${this.baseUrl}/orders/order-items/${orderId}`, { new_order_items: newItems }).toPromise();
+      // Crea un objeto que contenga tanto los nuevos items como el total
+      const body = { new_order_items: newItems, new_order_total: total };
+
+      // Envía el objeto completo como cuerpo de la solicitud
+      await this.http.put(`${this.baseUrl}/orders/order-items/${orderId}`, body).toPromise();
+      
       return true;
     } catch (error: any) {
       console.error('Error adding order items:', error);
       return false;
     }
   }
+
 
   getOrderById(orderId: string): Observable<Order> {
     return this.http.get<Order>(`${this.baseUrl}/orders/${orderId}`);

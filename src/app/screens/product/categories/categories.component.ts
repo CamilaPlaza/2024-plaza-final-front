@@ -125,6 +125,8 @@ export class CategoriesComponent implements OnInit {
     } else {
       console.error('Category ID is undefined');
     }
+    this.closeDeleteDialog();
+
   }
 
   showDeleteDialog(category: any){

@@ -16,7 +16,7 @@ export class RegisterProductComponent implements OnInit{
   price: string = '';
   product: Product | undefined;
   categories: Category[] = [];
-  categoryOptions: { label: string; value: string }[] = []; // Cambiar a string
+  categoryOptions: { label: string; value: string }[] = [];
   displayConfirmDialog: boolean = false;
   displayErrorDialog: boolean = false;
   errorSubtitle: string = '';
@@ -41,7 +41,7 @@ export class RegisterProductComponent implements OnInit{
   }
 
   checkIfMobile() {
-    this.isMobile = window.innerWidth <= 600;
+    this.isMobile = window.innerWidth <= 770;
   }
 
   async onRegister() {
@@ -68,15 +68,8 @@ export class RegisterProductComponent implements OnInit{
   }
 
   onCategoryChange(event: any): void {
-    this.selectedCategories = event.value; // Asegúrate de que esto se llene correctamente
-  
-    // Aquí asumimos que `event.value` ya contiene los IDs seleccionados como strings
-    console.log('Selected Categories:', this.selectedCategories);
-  
-    // Crear el string de IDs directamente
+    this.selectedCategories = event.value;
     this.selectedCategoryIds = this.selectedCategories.join(', ');
-  
-    console.log('Selected Category IDs:', this.selectedCategoryIds);
   }
 
   getSelectedCategoriesLabel(): string {
@@ -135,6 +128,7 @@ export class RegisterProductComponent implements OnInit{
 
 
   handleCategorySave() {
+    this.loadCategories();
     this.showCategoryPanel = false;
   }
 
@@ -143,10 +137,14 @@ export class RegisterProductComponent implements OnInit{
   } 
   
   isFormValid(): boolean {
-    return this.name !== '' && 
-           this.description !== '' &&
-           this.price !== '';
+    return this.name.trim() !== '' && 
+           this.description.trim() !== '' &&
+           this.price !== '' && 
+           parseFloat(this.price) > 0 &&
+           this.selectedCategories.length > 0 &&
+           this.totalCaloriesValue !== undefined;
   }
+  
 
   showCalories() {
     this.showCaloriesPanel = true;

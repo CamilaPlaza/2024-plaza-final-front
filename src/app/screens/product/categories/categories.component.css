@@ -41,7 +41,9 @@
 
 .panel-body {
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.6; 
+  max-height: 400px; /* Ajusta el valor según tus necesidades */
+  overflow-y: auto;
 }
 
 .panel-footer {
@@ -139,7 +141,7 @@ ng::p-cellEditor input {
 
 
 /* Estilos para el panel de categorías en la versión móvil */
-@media (max-width: 600px) {
+@media (max-width: 770px) {
 
   .image-container {
     margin-left: 10%;

@@ -42,11 +42,14 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TableBusyComponent } from './screens/my-tables/table-busy/table-busy.component';
 import { TableFreeComponent } from './screens/my-tables/table-free/table-free.component';
 import { OrderInfoComponent } from './screens/my-orders/order-info/order-info.component';
+import { ExportExcelComponent } from './screens/my-orders/export-excel/export-excel.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     TablesComponent,
+    ExportExcelComponent,
     OrdersComponent,
     OrderInfoComponent,
     TableBusyComponent,

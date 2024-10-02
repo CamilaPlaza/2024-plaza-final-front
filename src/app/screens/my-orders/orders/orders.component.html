@@ -16,7 +16,9 @@
         inputId="buttondisplay"
         (onSelect)="filterOrdersByDate()">
       </p-calendar>
-      <button class="export-button">Export</button>
+      <app-export-excel [data]="orders"></app-export-excel>
+
+
     </div>
   
     <div class="section table-section">
@@ -119,3 +121,4 @@
   >
   </app-order-info>
 </p-dialog>
+

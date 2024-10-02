@@ -5,6 +5,7 @@ import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
 import { OrderService } from 'src/app/services/order_service';
 import { ProductService } from 'src/app/services/product_service';
+import { TableService } from 'src/app/services/table_service';
 
 @Component({
   selector: 'app-table-busy',
@@ -30,7 +31,7 @@ export class TableBusyComponent implements OnInit {
   loading: boolean = false;
   displayCloseTableDialog = false;
 
-  constructor(private productService: ProductService,  private orderService: OrderService) {}
+  constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService) {}
   ngOnInit() {
     this.loadProducts();
     this.getOrderInformation();
@@ -156,13 +157,33 @@ export class TableBusyComponent implements OnInit {
   
 
   closeTable() {
-    this.table.status = 'FREE';
-    this.actualOrder = undefined;
-    this.closeDialog();
+    if (this.table.order_id) {
+      this.orderService.finalizeOrder(this.table.order_id.toString()).subscribe({
+        next: () => {
+          console.log('Order status updated to FINALIZED');
+  
+          // Close the table using the table service
+          this.tableService.closeTable(this.table).subscribe({
+            next: () => {
+              console.log('Table closed successfully');
+              this.closeDialog(); // Call any dialog close method if necessary
+            },
+            error: (err) => {
+              console.error('Error closing table:', err);
+            }
+          });
+        },
+        error: (err) => {
+          console.error('Error finalizing order:', err);
+        }
+      });
+    } else {
+      console.error('Order ID is undefined.');
+    }
   }
 
   closeTableAndSaveChanges() {
-    this.updateOrder();
+    //this.updateOrder();
     this.closeTable();
   }
 

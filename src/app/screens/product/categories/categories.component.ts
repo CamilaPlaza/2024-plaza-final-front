@@ -113,6 +113,7 @@ export class CategoriesComponent implements OnInit {
 }
 
   onDeleteCategory() {
+    this.displayDeleteDialog = false;
     if (this.categoryToDelete.id !== undefined) {
       this.categoryService.deleteCategory(this.categoryToDelete.id.toString()).subscribe(
         () => {
@@ -125,8 +126,6 @@ export class CategoriesComponent implements OnInit {
     } else {
       console.error('Category ID is undefined');
     }
-    this.closeDeleteDialog();
-
   }
 
   showDeleteDialog(category: any){

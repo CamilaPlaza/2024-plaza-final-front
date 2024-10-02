@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from './services/auth_service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'pm-root',
@@ -10,23 +11,24 @@ import { AuthService } from './services/auth_service';
 export class AppComponent {
   showHeader: boolean = true;
   isAuthenticated: boolean | null = null;
+
   constructor(private router: Router, private authService: AuthService) {
-    this.router.events.subscribe(() => {
-      const publicRoutes = ['/', '/user-register', '/user-forgot-password', '/reset-password', '/reset-password'];
-      if (publicRoutes.includes(this.router.url)) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      const publicRoutes = ['/', '/user-register', '/user-forgot-password'];
+      if (publicRoutes.includes(this.router.url) || this.router.url.startsWith('/reset-password')) {
         this.showHeader = false;
       } else {
         this.showHeader = true;
       }
-    });    
+    });
+    
   }
+
   ngOnInit() {
     this.authService.isAuthenticated().then((authStatus) => {
       this.isAuthenticated = authStatus;
     });
   }
-
 }
-
-
-

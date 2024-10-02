@@ -17,6 +17,7 @@
                       <th pSortableColumn="price" pResizableColumn>Price <p-sortIcon field="price"></p-sortIcon></th>
                       <th pSortableColumn="description" pResizableColumn>Description <p-sortIcon field="description"></p-sortIcon></th>
                       <th pSortableColumn="category" pResizableColumn>Category <p-sortIcon field="category"></p-sortIcon></th>
+                      <th pSortableColumn="calories" pResizableColumn>Calories <p-sortIcon field="calories"></p-sortIcon></th>
                       <th></th> <!-- Columna vacía para los botones de acción -->
                   </tr>
               </ng-template>
@@ -70,6 +71,10 @@
                                 {{ getCategoryNamesByIds(product.category) }}
                             </ng-template>
                         </p-cellEditor>
+                    </td>
+
+                    <td>
+                        {{ product.calories }}
                     </td>
 
 

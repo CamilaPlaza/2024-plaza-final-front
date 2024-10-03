@@ -159,6 +159,7 @@ getCategoryNamesByIds(ids: any): string {
     } else {
       console.error('Product ID is undefined, cannot cancel edit');
     }
+    location.reload();
   }
 
   isProductDataValid(product: Product): boolean {
@@ -171,7 +172,7 @@ getCategoryNamesByIds(ids: any): string {
   
     return (
       !isNaN(price) &&
-      price >= 0 &&
+      price > 0 &&
       !!product.description && // Convertimos el string a booleano
       tempCategories !== undefined && // Aseguramos que tempCategories esté definido
       tempCategories.length > 0

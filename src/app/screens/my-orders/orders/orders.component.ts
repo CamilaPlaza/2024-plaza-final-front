@@ -88,9 +88,9 @@ export class OrdersComponent implements OnInit {
   
 
   getSeverity(status: string) {
-    if (status === 'In Progress') return 'success';
-    if (status === 'Problem') return 'danger';
-    if (status === 'Finished') return undefined;
+    if (status === 'IN PROGRESS') return 'success';
+    if (status === 'PROBLEM') return 'danger';
+    if (status === 'FINALIZED') return undefined;
     return 'info';
   }
 

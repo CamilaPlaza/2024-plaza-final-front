@@ -47,4 +47,10 @@ export class OrderService {
     return this.http.get<Order>(`${this.baseUrl}/orders`);
   }
 
+  finalizeOrder(orderId: string): Observable<Order> {
+    const updatedOrder = { status: 'FINALIZED' };  // The updated status
+  
+    // Make a PUT request to update the order status with a body
+    return this.http.put<Order>(`${this.baseUrl}/orders-finalize/${orderId}`, updatedOrder);
+  }
 }

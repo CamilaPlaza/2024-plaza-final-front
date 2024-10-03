@@ -185,7 +185,7 @@
 
   
   /* Estilos para el panel de categorías en la versión móvil */
-  @media (max-width: 600px) {
+  @media (max-width: 770px) {
   
     .image-container {
       margin-left: 10%;

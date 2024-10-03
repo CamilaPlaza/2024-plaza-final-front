@@ -29,6 +29,11 @@ export class TableService {
         console.error('Error durante la actualización de la mesa:', error);
         return false;
     }
-}
+  }
+
+  closeTable(table: Table): Observable<Table> {
+    
+    return this.http.put<Table>(`${this.baseUrl}/close-table/${table.id}`, {status: "FREE", order_id: 0});
+  }
 
 }

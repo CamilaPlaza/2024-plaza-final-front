@@ -34,16 +34,12 @@ export class ProductsViewComponent implements OnInit {
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
         next: (data) => {
-            console.log('Categories fetched:', data);
-            // Access the categories property from the response
             if (data && Array.isArray(data.categories)) {
                 this.categories = data.categories.map(item => ({
                     id: item.id,
                     name: item.name,
                     type: item.type
                 }));
-            } else {
-                console.error('Unexpected data format for categories:', data);
             }
         },
         error: (err) => {
@@ -67,9 +63,6 @@ getCategoryNamesByIds(ids: any): string {
 
   return categoryNames.join(', ');
 }
-
-
-  
   
   updateTempSelectedCategories(productId: number, selectedCategories: Category[]): void {
     this.editingProductCategories[productId] = [...selectedCategories];
@@ -86,7 +79,6 @@ getCategoryNamesByIds(ids: any): string {
   loadProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
-        console.log('Products fetched:', data);
         if (data && Array.isArray(data.products)) {
           this.products = data.products;
         } else {
@@ -100,26 +92,21 @@ getCategoryNamesByIds(ids: any): string {
     });
   }
 
-  onRowEditInit(product: Product) { 
-    console.log('Row edit initialized', product);
+  onRowEditInit(product: Product) {
 
     if (product.id === undefined) {
       console.error('Product ID is undefined');
       return;
     }
-
-    // Store original product state for comparison
     this.originalProductState[product.id] = { ...product };
 
     const categoryIds = product.category.split(',').map(id => id.trim());
-    console.log(this.categories);
     this.editingProductCategories[product.id] = this.categories
       .filter((category: Category) => category.id && categoryIds.includes(category.id.toString()));
   }
 
   async onRowEditSave(product: Product) {
     if (product.id === undefined) {
-      console.error('Product ID is undefined');
       return;
     }
 
@@ -134,8 +121,6 @@ getCategoryNamesByIds(ids: any): string {
       }
     }
 
-    console.log('onRowEditSave called with product CATEGORY:', product.category);
-
     // Validate price
     if (parseFloat(product.price) < 0) {
       console.error('Price cannot be negative');
@@ -146,23 +131,19 @@ getCategoryNamesByIds(ids: any): string {
     const promises: Promise<any>[] = [];
     
     if (product.price !== originalProduct.price) {
-      console.log('Price updated');
       promises.push(this.productService.updateProductPrice(String(product.id), parseFloat(product.price)));
     }
 
     if (product.description !== originalProduct.description) {
-      console.log('Description updated');
       promises.push(this.productService.updateProductDescription(String(product.id), product.description));
     }
 
     if (product.category !== originalProduct.category) {
-      console.log('Categories updated');
       promises.push(this.productService.updateProductCategories(String(product.id), product.category));
     }
 
     try {
       await Promise.all(promises);
-      console.log('Row edit saved', product);
     } catch (error) {
       console.error('Failed to update product', error);
     }
@@ -171,9 +152,7 @@ getCategoryNamesByIds(ids: any): string {
     delete this.originalProductState[product.id];
   }
 
-  onRowEditCancel(product: Product, index: number) {
-    console.log('Row edit cancelled', product, index);
-  
+  onRowEditCancel(product: Product, index: number) {  
     if (product.id !== undefined) {
       delete this.editingProductCategories[product.id];
       delete this.originalProductState[product.id]; // Clear original state on cancel
@@ -182,13 +161,28 @@ getCategoryNamesByIds(ids: any): string {
     }
   }
 
+  isProductDataValid(product: Product): boolean {
+    if (product.id === undefined) {
+      return false;
+    }
+  
+    const price = Number(product.price);
+    const tempCategories = this.editingProductCategories[product.id];
+  
+    return (
+      !isNaN(price) &&
+      price >= 0 &&
+      !!product.description && // Convertimos el string a booleano
+      tempCategories !== undefined && // Aseguramos que tempCategories esté definido
+      tempCategories.length > 0
+    );
+  }
+  
+
   deleteProduct() {
     this.productService.deleteProduct((this.deleteID).toString()).then(success => {
       if (success) {
         this.products = this.products.filter(product => product.id !== this.deleteID);
-        console.log('Product deleted:', this.deleteID);
-      } else {
-        console.error('Failed to delete product:', this.deleteID);
       }
       this.closeConfirmDialog();
     });
@@ -212,7 +206,7 @@ getCategoryNamesByIds(ids: any): string {
   }
 
   navigateToRegisterProduct(): void {
-    this.router.navigate(['/register-product']); // Asegúrate de que esta ruta esté configurada en tu router
+    this.router.navigate(['/register-product']); 
   }
 
   showConfirmDialog(id: number) {

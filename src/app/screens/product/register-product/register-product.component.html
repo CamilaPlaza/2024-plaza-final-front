@@ -64,13 +64,13 @@
           </div>
           
           
-          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text" 
+          <button pButton icon="pi pi-plus" class="p-button-rounded p-button-text" 
                   (click)="showCalories()"></button>
         </div>
       </div>
 
       <div class="card flex justify-content-center">
-        <button (click)="showConfirmDialog()" [disabled]="loading"  class="btn-save">
+        <button (click)="showConfirmDialog()" [disabled]="!isFormValid() || loading"   class="btn-save">
           Save
         </button>
       </div>

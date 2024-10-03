@@ -5,6 +5,7 @@ import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
 import { OrderService } from 'src/app/services/order_service';
 import { ProductService } from 'src/app/services/product_service';
+import { TableService } from 'src/app/services/table_service';
 
 @Component({
   selector: 'app-table-busy',
@@ -14,11 +15,10 @@ import { ProductService } from 'src/app/services/product_service';
 export class TableBusyComponent implements OnInit {
   @Input() table: Table = new Table('');
   @Output() close = new EventEmitter<void>();
-  ordersExample: Order[] = []
   actualOrder?: Order; 
+  initialOI: OrderItem[] = [];
   orderItems: OrderItem[] = [];
   products : Product[] = [];
-  initialOrderItems: OrderItem[] = [];
   currentDate: string = '';
   currentTime: string = '';
   order: Order = new Order('', 0, '', '', '', []);
@@ -30,12 +30,11 @@ export class TableBusyComponent implements OnInit {
   loading: boolean = false;
   displayCloseTableDialog = false;
 
-  constructor(private productService: ProductService,  private orderService: OrderService) {}
+  constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService) {}
   ngOnInit() {
     this.loadProducts();
     this.getOrderInformation();
     this.orderItems = this.actualOrder?.orderItems ?? [];
-    this.initialOrderItems = JSON.parse(JSON.stringify(this.orderItems));
     this.currentDate = this.actualOrder?.date ?? '';
     this.currentTime = this.actualOrder?.time ?? '';
     this.order = this.actualOrder ?? new Order('', 0, '', '', '', []);
@@ -48,6 +47,7 @@ export class TableBusyComponent implements OnInit {
         next: (order) => {
           this.actualOrder = order; 
           this.orderItems = this.actualOrder?.orderItems ?? [];
+          this.initialOI = JSON.parse(JSON.stringify(order.orderItems));
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
         },
@@ -129,15 +129,14 @@ export class TableBusyComponent implements OnInit {
 
   //UPDATE
   updateOrder() {
-    this.loading = true; // Iniciar el spinner
+    this.loading = true;
     const total = this.calculateTotal().toString(); 
-  
     if (this.table.order_id) {
       this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total)
         .then(success => {
           if (success) {
             console.log('Order items added successfully');
-            this.closeTable(); 
+            this.closeTableAndSaveChanges();
           } else {
             console.error('Error adding order items.');
           }
@@ -150,44 +149,65 @@ export class TableBusyComponent implements OnInit {
         });
     } else {
       console.error('Order ID is undefined.');
-      this.loading = false; // Detener el spinner si no hay ID
+      this.closeDialog();
+      this.loading = false;
     }
   }
   
 
   closeTable() {
-    this.table.status = 'FREE';
-    this.actualOrder = undefined;
-    this.closeDialog();
+    if (this.table.order_id) {
+      this.orderService.finalizeOrder(this.table.order_id.toString()).subscribe({
+        next: () => {
+          console.log('Order status updated to FINALIZED');
+          this.tableService.closeTable(this.table).subscribe({
+            next: () => {
+              console.log('Table closed successfully');
+              this.closeDialog();
+            },
+            error: (err) => {
+              console.error('Error closing table:', err);
+            }
+          });
+        },
+        error: (err) => {
+          console.error('Error finalizing order:', err);
+        }
+      });
+    } else {
+      console.error('Order ID is undefined.');
+    }
   }
 
   closeTableAndSaveChanges() {
-    this.updateOrder();
-    this.closeTable();
+    this.closeDialog();
   }
 
   closeDialog() {
     this.wantToAddNewProduct = false;
+    this.displayConfirmDialog = false;
     location.reload();
-    this.close.emit();
+    this.close.emit();  
   }
-
   showConfirmDialog() {
-    if (this.hasChanges()) {
-      this.displayConfirmDialog = true;
-    } else {
+  
+    if (this.areOrderItemsEqual(this.initialOI, this.orderItems)) {
       this.closeDialog();
+    } else {
+      this.displayConfirmDialog = true;
     }
   }
-
-  hasChanges(): boolean {
-    return JSON.stringify(this.orderItems) !== JSON.stringify(this.initialOrderItems);
+  
+  areOrderItemsEqual(items1: OrderItem[] = [], items2: OrderItem[] = []): boolean {
+    if (items1.length !== items2.length) {
+      return false;
+    }
+  
+    return items1.every((item, index) => 
+      item.product_id === items2[index].product_id && item.amount === items2[index].amount
+    );
   }
 
-  closeConfirmDialog() {
-    this.displayConfirmDialog = false;
-    this.closeDialog();
-  }
 
   showCloseTableDialog() {
     this.displayCloseTableDialog = true;

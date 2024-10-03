@@ -113,6 +113,7 @@ export class CategoriesComponent implements OnInit {
 }
 
   onDeleteCategory() {
+    this.displayDeleteDialog = false;
     if (this.categoryToDelete.id !== undefined) {
       this.categoryService.deleteCategory(this.categoryToDelete.id.toString()).subscribe(
         () => {

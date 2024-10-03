@@ -92,7 +92,13 @@ input {
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
-
+.btn-save:disabled {
+    background-color: #ccc; /* Cambia el fondo a un color gris claro */
+    color: #666; /* Cambia el color del texto a un gris más oscuro */
+    cursor: not-allowed; /* Cambia el cursor a una señal de prohibido */
+    opacity: 0.6; /* Añade un efecto de opacidad */
+  }
+  
 .btn-save:hover {
     background-color: #b58958;
     color: #ffffff;
@@ -235,16 +241,30 @@ input {
     background-color: #56371e89;
 }
 
+@media (max-width: 1160px) {
+    .column-left {
+        width: 55%;
+        padding: 2%;
+    }
+}
+
+@media (max-width: 900px) {
+    .column-left {
+        padding: 4%;
+        width: 60%;
+    }
+    
+}
   
 
-@media (max-width: 600px) {
+@media (max-width: 770px) {
     .container {
-        margin-left: 10%;
+        margin-left: 5%;
     }
     
     .column-left {
         width: 100%;
-        padding: 2%;
+        padding: 5%;
     }
     
     .column-right {
@@ -284,4 +304,19 @@ input {
         font-size: 1.5em;
         cursor: pointer;
     }
+}
+
+@media (max-width: 570px) {
+    .container {
+        margin-left: 10%;
+    }
+    
+    .column-left {
+        padding: 5%;
+    }
+
+    ::ng-deep .category-container .p-multiselect {
+        min-width: 250px; /* Ajusta el ancho según tus necesidades */
+    }
+
 }

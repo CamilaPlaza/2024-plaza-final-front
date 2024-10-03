@@ -43,7 +43,7 @@
                     </p-dropdown>
                 
                     <button 
-                        *ngIf="canAddCustomIngredient" 
+                        *ngIf="canAddCustomIngredient && !selectedIngredient" 
                         (click)="addCustomIngredient()" 
                         class="p-button p-component p-button-info" 
                         pTooltip="Create Ingredient" 

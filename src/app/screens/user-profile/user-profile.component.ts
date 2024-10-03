@@ -58,6 +58,10 @@ export class UserProfileComponent implements OnInit{
 
   async changePassword() {
     this.userService.resetPassword(this.email ?? '');
+    this.userService.logOut().then(() => {
+      localStorage.removeItem("token");
+      this.router.navigate(['/']);  // Redirigir al login
+  });
   }
 
   showChangePasswordDialog() {

@@ -68,11 +68,7 @@
           <button (click)="addNewProducts()">Add Products</button>
         </div>
   
-        
       </div>
-  
-  
-      
   
       <!-- Total -->
       <div class="total">
@@ -90,7 +86,7 @@
   <p-dialog class="white-background-modal" [(visible)]="displayConfirmDialog" [modal]="true" header="Save Changes" [closable]="true">
     <app-confirmation-pop-up
       [subtitle]="'Do you want to save your changes?'"
-      (onClose)="closeConfirmDialog()"
+      (onClose)="closeDialog()"
       (onSend)="updateOrder()"
       [cancelLabel]="'No'"
       [sendLabel]="'Yes'">
@@ -101,7 +97,7 @@
     <app-confirmation-pop-up
       [subtitle]="'Are you sure you want to close this table?'"
       (onClose)="closeCloseTableDialog()"
-      (onSend)="closeTableAndSaveChanges()"
+      (onSend)="closeTable()"
       [cancelLabel]="'No'"
       [sendLabel]="'Yes'">
     </app-confirmation-pop-up>

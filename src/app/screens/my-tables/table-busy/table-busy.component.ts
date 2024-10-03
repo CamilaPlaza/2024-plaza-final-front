@@ -149,7 +149,8 @@ export class TableBusyComponent implements OnInit {
         });
     } else {
       console.error('Order ID is undefined.');
-      this.loading = false; // Detener el spinner si no hay ID
+      this.closeDialog();
+      this.loading = false;
     }
   }
   

@@ -241,11 +241,26 @@ input {
     background-color: #56371e89;
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 47.8%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    z-index: 999; /* Asegúrate de que esté por encima de otros elementos */
+  }
+  
+
 @media (max-width: 1160px) {
     .column-left {
         width: 55%;
         padding: 2%;
     }
+
+    .overlay {
+        width: 52.5%;
+      }
 }
 
 @media (max-width: 900px) {
@@ -253,13 +268,19 @@ input {
         padding: 4%;
         width: 60%;
     }
-    
+    .overlay {
+        width: 60%;
+    }
 }
   
 
 @media (max-width: 770px) {
     .container {
         margin-left: 5%;
+    }
+
+    .overlay {
+        width: 0%;
     }
     
     .column-left {
@@ -313,6 +334,10 @@ input {
     
     .column-left {
         padding: 5%;
+    }
+
+    .overlay {
+        width: 0%;
     }
 
     ::ng-deep .category-container .p-multiselect {

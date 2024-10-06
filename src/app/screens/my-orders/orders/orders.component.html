@@ -34,9 +34,6 @@
           <ng-template pTemplate="header">
             <tr>
               <th style="min-width:10rem">
-                <div class="flex align-items-center">Order ID</div>
-              </th>
-              <th style="min-width:10rem">
                 <div class="flex align-items-center">
                   Nro Table
                   <!-- Filtro existente de Nro Table -->
@@ -87,7 +84,6 @@
           <!-- Cuerpo de la tabla -->
           <ng-template pTemplate="body" let-order>
             <tr>
-              <td>{{ order.id }}</td>
               <td>{{ order.tableNumber }}</td>
               <td>
                 <p-tag [value]="order.status" [severity]="getSeverity(order.status)"></p-tag>

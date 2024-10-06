@@ -6,6 +6,8 @@ import { Table } from 'src/app/models/table';
 import { OrderService } from 'src/app/services/order_service';
 import { ProductService } from 'src/app/services/product_service';
 import { TableService } from 'src/app/services/table_service';
+import { CategoryService } from 'src/app/services/category_service';
+import { Category } from 'src/app/models/category';
 
 @Component({
   selector: 'app-table-free',
@@ -15,7 +17,7 @@ import { TableService } from 'src/app/services/table_service';
 export class TableFreeComponent implements OnInit {
   @Input() table: Table = new Table('');
   @Output() close = new EventEmitter<void>();
-
+  categories: Category[] = [];
   orderItems: OrderItem[] = [];
   loading: boolean = false;
   selectedProduct: Product | null = null;
@@ -26,7 +28,7 @@ export class TableFreeComponent implements OnInit {
   order: Order | undefined;
   currentDate: string = this.formatDate(new Date());
 
-  constructor(private productService: ProductService, private orderService: OrderService, private tableService: TableService) {}
+  constructor(private productService: ProductService, private orderService: OrderService, private tableService: TableService,  private categoryService: CategoryService) {}
 
   ngOnInit() {
     //TO DO: HACER EL GET DE LOS PRODUCTOS
@@ -157,4 +159,21 @@ export class TableFreeComponent implements OnInit {
     location.reload();
     this.close.emit();
   }
+
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+        next: (data) => {
+            if (data && Array.isArray(data.categories)) {
+                this.categories = data.categories.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    type: item.type
+                }));
+            }
+        },
+        error: (err) => {
+            console.error('Error fetching categories:', err);
+        }
+    });
+}
 }

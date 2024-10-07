@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
                 tooltip: 'Home'
             },
             {
-                icon: 'fa fa-cutlery',
+                icon: 'fa fa-glass-martini',
                 items: [
                     {
                         label: 'New Product',
@@ -35,12 +35,12 @@ export class HeaderComponent implements OnInit {
                 ]
             },
             {
-                icon: 'pi pi-receipt',
+                icon: 'fa fa-cutlery',
                 routerLink: '/tables',
                 tooltip: 'Tables'
             },
             {
-                icon: 'pi pi-file-check',
+                icon: 'pi pi-receipt',
                 routerLink: '/orders',
                 tooltip: 'Orders'
             },
@@ -63,7 +63,7 @@ export class HeaderComponent implements OnInit {
     logOut() {
         this.userService.logOut().then(() => {
             localStorage.removeItem("token");
-            this.router.navigate(['/']);  // Redirigir al login
+            this.router.navigate(['/']);
         });     
     }
     showConfirmDialog() {

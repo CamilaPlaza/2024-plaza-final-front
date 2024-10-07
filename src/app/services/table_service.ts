@@ -32,8 +32,11 @@ export class TableService {
   }
 
   closeTable(table: Table): Observable<Table> {
-    
-    return this.http.put<Table>(`${this.baseUrl}/close-table/${table.id}`, {status: "FREE", order_id: 0});
+    return this.http.put<Table>(`${this.baseUrl}/close-table/${table.id}`, {status: "FINISHED", order_id: 0});
+  }
+
+  cleanTable(table: Table): Observable<Table> {
+    return this.http.put<Table>(`${this.baseUrl}/clean-table/${table.id}`, {status: "FREE", order_id: 0});
   }
 
 }

@@ -31,7 +31,6 @@ export class TableFreeComponent implements OnInit {
   constructor(private productService: ProductService, private orderService: OrderService, private tableService: TableService,  private categoryService: CategoryService) {}
 
   ngOnInit() {
-    //TO DO: HACER EL GET DE LOS PRODUCTOS
     this.updateCurrentTime();
     this.loadProducts();
   }
@@ -49,7 +48,6 @@ export class TableFreeComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching products:', err);
       }
-      
     });
   }
 
@@ -58,6 +56,7 @@ export class TableFreeComponent implements OnInit {
     const minutes = new Date().getMinutes().toString().padStart(2, '0');
     this.currentTime = `${hours}:${minutes}`;
   }
+
   onProductChange() {
     this.validateForm();
   }

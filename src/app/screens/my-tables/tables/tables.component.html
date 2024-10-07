@@ -19,7 +19,7 @@
         <ng-template pTemplate="body" let-table let-ri="rowIndex">
           <tr (click)="onTableClick(table)">
             <td>{{ table.id }}</td>
-            <td [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY'}">
+            <td [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY', 'status-finished': table.status === 'FINISHED'}">
               {{ table.status }}
             </td>
           </tr>
@@ -34,7 +34,7 @@
     </div>
 
     <div class="table-icons">
-      <div *ngFor="let table of tables" class="table-icon" [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY'}" (click)="onTableClick(table)">
+      <div *ngFor="let table of tables" class="table-icon" [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY', 'status-finished': table.status === 'FINISHED'}" (click)="onTableClick(table)">
         <i class="fas fa-utensils"></i>
         <span>{{ table.id }}</span>
       </div>
@@ -55,5 +55,12 @@
       [table]="selectedTable" 
       (close)="displayModal = false">
     </app-table-busy>
+  </ng-container>
+
+  <ng-container *ngIf="selectedComponent === 'FINISHED'">
+    <app-table-finished
+      [table]="selectedTable" 
+      (close)="displayModal = false">
+    </app-table-finished>
   </ng-container>
 </p-dialog>

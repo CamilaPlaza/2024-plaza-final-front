@@ -43,7 +43,7 @@ import { TableBusyComponent } from './screens/my-tables/table-busy/table-busy.co
 import { TableFreeComponent } from './screens/my-tables/table-free/table-free.component';
 import { OrderInfoComponent } from './screens/my-orders/order-info/order-info.component';
 import { ExportExcelComponent } from './screens/my-orders/export-excel/export-excel.component';
-
+import { TableFinishedComponent } from './screens/my-tables/table-finished/table-finished.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +54,7 @@ import { ExportExcelComponent } from './screens/my-orders/export-excel/export-ex
     OrderInfoComponent,
     TableBusyComponent,
     TableFreeComponent,
+    TableFinishedComponent,
     CaloriesComponent,
     FooterComponent,
     HeaderComponent,

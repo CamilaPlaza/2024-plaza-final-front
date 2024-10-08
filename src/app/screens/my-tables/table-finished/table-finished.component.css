@@ -1,94 +1,19 @@
 .container-table-free {
     background-color: #fff;
-    border-radius: 30px;
-    width: 600px;
+    border-radius: 10px;
+    width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     margin: auto;
     overflow: hidden;
   }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+  .title{
     padding: 15px;
-    background-color: #7f522e;
   }
-  
-  .table-number {
-    font-size: 1.5rem;
-    color: #ffffff;
-    margin: 0;
-  }
-  
-  .status {
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: #ffffff;
-  }
+
   
   .body {
     padding: 20px;
-  }
-  
-  .date-time-wrapper {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .current-date,
-  .current-time {
-    font-size: 1rem;
-    color: #533521;
-  }
-  
-  .order-form {
-    margin-bottom: 20px;
-  }
-  
-  .table-wrapper {
-    max-height: 150px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-  }
-  
-  .product-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .product-table th {
-    background-color: #f5f5f5;
-    padding: 12px;
-    border-bottom: 2px solid #ddd;
-  }
-  
-  .product-table td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .product-table th,
-  .product-table td {
-    border: none;
-  }
-  
-  .product-table tr:hover {
-    background-color: #f9f9f9;
-  }
-  
-  .total {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #533521;
-  }
-  
-  .create-order-button{
-    margin-right: 2%;
   }
   
   .close-button {
@@ -107,6 +32,7 @@
     background-color: #23ae43;
     border: none;
     border-radius: 8px;
+    margin-right: 10%;
     color: #fff;
     padding: 10px 20px;
     font-size: 1rem;
@@ -125,106 +51,9 @@
   }
   
   .action-buttons {
-    text-align: right;
-  }
-  
-  .add-product {
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .add-product label {
-    font-weight: bold;
-    color: #7f522e;
-  }
-  
-  .add-product select {
-    width: 120px; /* Ancho reducido */
-    padding: 8px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    flex: none;
-  }
-  
-  .add-product input[type="number"] {
-    width: 50px;
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-  }
-  
-  .add-product input[type="text"] {
-    width: 80px; /* Tamaño reducido */
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
     text-align: center;
   }
   
-  .add-product-button {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5%; 
-    margin-top: 5%;
-  }
-  
-  .add-product-button button {
-    text-align: center;
-    background-color: #7f522ee0;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    outline: none;
-  }
-  
-  .add-product-button button:hover {
-    background-color: #613d20dd;
-  }
-  
-  
-  .remove-button {
-    background: none;
-    border: none;
-    color: #e74c3c;
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: color 0.3s;
-  }
-  
-  .remove-button:hover {
-    color: #c0392b;
-  }
-  
-  ::ng-deep .white-background-modal .p-dialog {
-    background-color: #ffffff !important; /* Fondo blanco del diálogo */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important; /* Sombra del diálogo */
-}
-
-::ng-deep .white-background-modal .p-dialog-content {
-    background-color: #ffffff !important; /* Fondo blanco del contenido del diálogo */
-}
-
-::ng-deep .white-background-modal .p-dialog .p-dialog-header {
-    background-color: #ffffff !important; /* Fondo blanco del header */
-    border-bottom: 1px solid #ddd !important; /* Opcional: línea en el header */
-}
-
-::ng-deep .white-background-modal .p-dialog .p-dialog-footer {
-    background-color: #ffffff !important; /* Fondo blanco del footer */
-    border-top: 1px solid #ddd !important; /* Opcional: línea en el footer */
-}
-::ng-deep .p-dialog-mask {
-  background-color: transparent !important; /* Hace el fondo del overlay transparente */
-}
-
 .loading-overlay {
   position: fixed;
   top: 0;

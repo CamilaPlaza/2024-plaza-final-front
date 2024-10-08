@@ -3,6 +3,7 @@ import { Order } from 'src/app/models/order';
 import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
+import { CategoryService } from 'src/app/services/category_service';
 import { OrderService } from 'src/app/services/order_service';
 import { ProductService } from 'src/app/services/product_service';
 import { TableService } from 'src/app/services/table_service';
@@ -30,7 +31,7 @@ export class TableBusyComponent implements OnInit {
   loading: boolean = false;
   displayCloseTableDialog = false;
 
-  constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService) {}
+  constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService) {}
   ngOnInit() {
     this.loadProducts();
     this.getOrderInformation();
@@ -207,6 +208,28 @@ export class TableBusyComponent implements OnInit {
       item.product_id === items2[index].product_id && item.amount === items2[index].amount
     );
   }
+
+  getProductsByCategory(categoryId: string): Promise<Product[]> {
+    return this.categoryService.getProductsByCategory(categoryId)
+      /*.then((data) => {
+        console.log('Products fetched for category:', data);
+        if (data && Array.isArray(data)) {
+          return data; // Retorna toda la data de los productos
+        } else {
+          console.error('Unexpected data format:', data);
+          return []; // En caso de formato inesperado, retornamos un array vacío
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching products by category:', err);
+        return []; // En caso de error, retornamos un array vacío
+      })
+      .finally(() => {
+        this.loading = false; // Detener el spinner cuando la carga finaliza
+      });*/
+      //SI NO TE FUNCIONA DESCOMENTA ESO
+    }
+
 
 
   showCloseTableDialog() {

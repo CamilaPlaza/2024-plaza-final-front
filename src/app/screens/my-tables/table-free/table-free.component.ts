@@ -33,6 +33,7 @@ export class TableFreeComponent implements OnInit {
   ngOnInit() {
     this.updateCurrentTime();
     this.loadProducts();
+    this.loadCategories();
   }
 
   loadProducts(): void {
@@ -174,5 +175,25 @@ export class TableFreeComponent implements OnInit {
             console.error('Error fetching categories:', err);
         }
     });
-}
-}
+  }
+  getProductsByCategory(categoryId: string): Promise<Product[]> {
+    return this.categoryService.getProductsByCategory(categoryId)
+      /*.then((data) => {
+        console.log('Products fetched for category:', data);
+        if (data && Array.isArray(data)) {
+          return data; // Retorna toda la data de los productos
+        } else {
+          console.error('Unexpected data format:', data);
+          return []; // En caso de formato inesperado, retornamos un array vacío
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching products by category:', err);
+        return []; // En caso de error, retornamos un array vacío
+      })
+      .finally(() => {
+        this.loading = false; // Detener el spinner cuando la carga finaliza
+      });*/
+      //SI NO TE FUNCIONA DESCOMENTA ESO
+    }
+  }

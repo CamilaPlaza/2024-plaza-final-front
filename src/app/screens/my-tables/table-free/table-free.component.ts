@@ -70,15 +70,13 @@ export class TableFreeComponent implements OnInit {
 
 
   addOrderItem() {
-    console.log('prod selec: ', this.selectedProduct);
-    
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
         product_id: this.selectedProduct.id ?? 0,
-        amount: this.selectedAmount
+        amount: this.selectedAmount,
+        product_name: this.selectedProduct.name,
+        product_price: this.selectedProduct.price
       };
-      console.log('newItem: ', newItem);
-      
       this.orderItems.push(newItem);
       this.resetForm();
     }
@@ -99,7 +97,6 @@ export class TableFreeComponent implements OnInit {
     this.canAddProduct = false;
   }
 
-  // Calcular el total del pedido
   calculateTotal() {
     return this.orderItems.reduce((total, item) => {
       const product = this.products.find(p => p.id === item.product_id);
@@ -107,7 +104,6 @@ export class TableFreeComponent implements OnInit {
     }, 0);
   }
 
-  // Crear la orden
   async createOrder() {
     this.loading = true;
     const total = this.calculateTotal();
@@ -120,54 +116,49 @@ export class TableFreeComponent implements OnInit {
       orderItems: this.orderItems
     };
     try {
-      const response = await this.orderService.onRegister(this.order); // Aquí se registra la orden
+      const response = await this.orderService.onRegister(this.order); 
       if (response && response.order && response.order_id) {
-        console.log(this.order); // Esta es la orden antes de la respuesta
-        console.log('Order Register successful', response);
-        
-        await this.tableService.updateTableAndOrder(response.order, response.order_id); // Cambié aquí
-        this.updateTable(); // Actualizas la tabla después de la asociación
-        this.closeDialog(); // Cierra el diálogo si todo sale bien
+      
+        await this.tableService.updateTableAndOrder(response.order, response.order_id);
+        this.updateTable(); 
+        this.closeDialog(); 
       } else {
         console.log('Order registration failed');
       }
     } catch (error: any) {
       console.error('Error durante el registro:', error);
     } finally {
-      this.loading = false; // Detener el spinner
+      this.loading = false;
     }
   }
 
-  // Formatear la fecha
+  
   formatDate(date: Date): string {
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Mes comienza desde 0
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+    return `${year}-${month}-${day}`; 
   }
 
-  // Obtener producto por ID
+
   getProductById(productId: number): Product | undefined {
     return this.products.find(product => product.id === productId);
   }
 
-  // Actualizar la tabla
+
   updateTable() {
     this.table.status = 'BUSY';
     this.table.order_id = this.order?.id;
-    console.log('Table updated', this.table);
   }
 
-  // Cerrar el diálogo
+
   closeDialog() {
-    console.log('Dialog closed');
     this.orderItems = [];
     this.order = undefined;
     location.reload();
     this.close.emit();
   }
 
-  // Cargar las categorías
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
       next: (data) => {
@@ -185,7 +176,7 @@ export class TableFreeComponent implements OnInit {
     });
   }
 
-  // Filtrar productos por categorías seleccionadas
+  
   filterProductsByCategory() {
     if (this.selectedCategories.length === 0) {
       this.filteredProducts = [];
@@ -198,9 +189,7 @@ export class TableFreeComponent implements OnInit {
   getProductsByCategory(categoryIds: string) {
     this.categoryService.getProductsByCategory(categoryIds)
       .then((data) => {
-        console.log('Products fetched for category:', data);
         if (data && Array.isArray(data)) {
-          console.log('prod filtrados: ', data);
           this.filteredProducts = data;
         } else {
           console.error('Unexpected data format:', data);

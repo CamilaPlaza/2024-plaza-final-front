@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit {
             },
             {
                 icon: 'fa fa-glass-martini',
+                routerLink: '/register-product',
                 items: [
                     {
                         label: 'New Product',
@@ -46,6 +47,7 @@ export class HeaderComponent implements OnInit {
             },
             {
                 icon: 'pi pi-fw pi-user-edit',
+                routerLink: '/user-profile',
                 items: [
                     {
                         label: 'Edit',

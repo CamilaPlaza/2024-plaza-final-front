@@ -44,6 +44,7 @@ import { TableFreeComponent } from './screens/my-tables/table-free/table-free.co
 import { OrderInfoComponent } from './screens/my-orders/order-info/order-info.component';
 import { ExportExcelComponent } from './screens/my-orders/export-excel/export-excel.component';
 import { TableFinishedComponent } from './screens/my-tables/table-finished/table-finished.component';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { TableFinishedComponent } from './screens/my-tables/table-finished/table
     DropdownModule,
     ToastModule,
     ConfirmDialogModule,
+    FileUploadModule,
     TagModule,
     TableModule,
     HttpClientModule,

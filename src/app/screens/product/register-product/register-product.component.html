@@ -20,20 +20,38 @@
           placeholder="Half coffe half milk..."
           name="description" />
       </div>
-      <div class="form-group">
-        <label for="price">Price</label>
-        <input
-          pInputText
-          id="price"
-          type="number"
-          [(ngModel)]="price"
-          placeholder="Enter price"
-          name="product_price"
-          min="0"
-          (input)="onPriceChange($event)"
-          (keypress)="onlyAllowNumbers($event)"
-          required/>
+      
+      <div class="form-group price-cost-container">
+        <div class="price-container">
+          <label for="price">Price</label>
+          <input
+            pInputText
+            id="price"
+            type="number"
+            [(ngModel)]="price"
+            placeholder="Enter price"
+            name="product_price"
+            min="0"
+            (input)="onPriceChange($event)"
+            (keypress)="onlyAllowNumbers($event)"
+            required/>
+        </div>
+        <div class="cost-container">
+          <label for="cost">Cost</label>
+          <input
+            pInputText
+            id="cost"
+            type="number"
+            [(ngModel)]="cost"
+            placeholder="Enter cost"
+            name="product_cost"
+            min="0"
+            (input)="onCostChange($event)"
+            (keypress)="onlyAllowNumbers($event)"
+            required/>
+        </div>
       </div>
+
       <div class="form-group">
         <label for="category">Category</label>
         <div class="category-container">
@@ -48,14 +66,11 @@
             [maxSelectedLabels]="100"
             (onChange)="onCategoryChange($event)">
           </p-multiSelect>
-
-    
             <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text"
                     (click)="showCategories()"></button>
         </div>
       </div>
-
-      
+  
       <div class="form-group">
         <label for="calories">Calories</label>
         <div class="calories">
@@ -63,35 +78,57 @@
             {{ totalCaloriesValue !== undefined ? totalCaloriesValue : 'Add the ingredients' }}
           </div>
           
-          
           <button pButton icon="pi pi-plus" class="p-button-rounded p-button-text" 
                   (click)="showCalories()"></button>
         </div>
       </div>
 
+      <div class="form-group">
+        <label for="image">Image</label>
+      
+        <p-fileUpload 
+          #fileUpload 
+          mode="basic" 
+          chooseLabel="Choose" 
+          accept="image/*" 
+          maxFileSize="1000000"
+          (onSelect)="onImageSelect($event)" 
+          (onClear)="onImageClear(fileUpload)" 
+          [disabled]="fileName !== ''" 
+          [auto]="true"
+          class="custom-file-upload">
+        </p-fileUpload>
+      
+        <div *ngIf="fileName" class="file-details">
+          <span class="file-name">{{ fileName }}</span>
+          <button class="clear-btn" (click)="onImageClear(fileUpload)">X</button>
+        </div>
+      </div>
+      
+      
       <div class="card flex justify-content-center">
         <button (click)="showConfirmDialog()" [disabled]="!isFormValid() || loading"   class="btn-save">
           Save
         </button>
       </div>
-    </form>
-    <div *ngIf="showCategoryPanel || showCaloriesPanel" class="overlay"></div>
+  </form>
+  <div *ngIf="showCategoryPanel || showCaloriesPanel" class="overlay"></div>
 
   </div>
-  <div class="column column-right">
-    <img src="../../../../assets/images/new_product.jpg" alt="Imagen de fondo" class="background-image">
-    <app-categories
-      *ngIf="!isMobile && showCategoryPanel" 
-      (onSave)="handleCategorySave()" 
-      (onClose)="handleCategoryClose()"
-      class="app-categories-overlay">
-    </app-categories>
-    <app-calories
-      *ngIf="!isMobile && showCaloriesPanel" 
-      (onSave)="handleCaloriesSave()" 
-      (onClose)="handleCaloriesClose()"
-      class="app-categories-overlay"
-      (totalCalories)="handleTotalCalories($event)">
+    <div class="column column-right">
+      <img src="../../../../assets/images/new_product.jpg" alt="Imagen de fondo" class="background-image">
+      <app-categories
+        *ngIf="!isMobile && showCategoryPanel" 
+        (onSave)="handleCategorySave()" 
+        (onClose)="handleCategoryClose()"
+        class="app-categories-overlay">
+      </app-categories>
+      <app-calories
+        *ngIf="!isMobile && showCaloriesPanel" 
+        (onSave)="handleCaloriesSave()" 
+        (onClose)="handleCaloriesClose()"
+        class="app-categories-overlay"
+        (totalCalories)="handleTotalCalories($event)">
     </app-calories>
   </div>
 

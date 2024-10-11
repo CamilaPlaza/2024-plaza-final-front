@@ -93,7 +93,9 @@ export class TableBusyComponent implements OnInit {
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
         product_id: this.selectedProduct.id ?? 0,
-        amount: this.selectedAmount
+        amount: this.selectedAmount,
+        product_name: this.selectedProduct.name,
+        product_price: this.selectedProduct.price
       };
       this.orderItems.push(newItem);
       this.resetForm();

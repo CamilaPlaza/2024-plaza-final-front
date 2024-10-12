@@ -1,0 +1,20 @@
+<div class="cart-overlay" *ngIf="isVisible">
+    <div class="cart-container">
+      <h2>Your Cart</h2>
+      <ul>
+        <li *ngFor="let item of orderItems">
+          <div class="cart-item">
+            <span>{{ item.product_name }}</span>
+            <span>{{ item.amount }} x ${{ item.product_price }}</span>
+          </div>
+        </li>
+      </ul>
+  
+      <div class="total-price">
+        <strong>Total: ${{ getTotalPrice() }}</strong>
+      </div>
+  
+      <button (click)="closeCart()" class="close-button">Close</button>
+    </div>
+  </div>
+  

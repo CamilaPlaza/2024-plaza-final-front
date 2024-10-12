@@ -1,1 +1,72 @@
-<p>menu works!</p>
+<div class="conteiner">
+
+    <div class="menu-header">
+        <div class="bar-info">
+            <img src="assets/images/taza.png" alt="Logo del Bar" class="bar-logo">
+            <h1 class="bar-name">C&V BAR</h1>
+        </div>
+        <div class="search-bar">
+            <p-autoComplete [(ngModel)]="searchQuery" [suggestions]="filteredProducts" 
+                            (completeMethod)="searchProducts($event)" field="name" 
+                            placeholder="Search products..." [forceSelection]="false">
+            </p-autoComplete>
+        </div>
+        <div class="cart-container"(click)="toggleCart()">
+            <i class="pi pi-shopping-cart cart-logo"></i>
+            <span class="cart-count">{{ getTotalItemsInCart() }}</span>
+        </div>              
+    </div>
+
+    <div class="menu-categories">
+        <div class="greeting">
+            <h2>Hello! What will you order today?</h2>
+        </div>
+        <div class="category-container">
+            <button (click)="prevPage()" [disabled]="currentIndex === 0" class="nav-button">
+                <i class="pi pi-chevron-left"></i>
+            </button>
+        
+            <div class="category-card" *ngFor="let category of visibleCategories" 
+                [ngClass]="{'selected-category': selectedCategories.includes(category)}"
+                (click)="toggleCategorySelection(category)"
+                [ngStyle]="{'background-color': category.color}">
+                <span class="category-name">{{ category.name }}</span>
+            </div>        
+            <button (click)="nextPage()" [disabled]="currentIndex + itemsPerPage >= categories.length" class="nav-button">
+                <i class="pi pi-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="product-container">
+        <div class="product-card" *ngFor="let product of filteredProducts">        
+            <div class="product-details">            
+                <div class="text-details">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-description">{{ product.description }}</p>
+                </div>
+                <img [src]="product.imageUrl" class="product-image" />    
+            </div>    
+            <div class="product-price">
+                <span>${{ product.price }}</span>
+                <div class="quantity-controls" *ngIf="getProductCount(product.id!) > 0; else addButton">
+                    <button (click)="decrementProduct(product.id!)" class="decrement-button" *ngIf="product.id !== undefined">
+                        <i class="pi pi-minus" style="font-size: 0.9rem"></i> 
+                    </button>
+                    <span>{{ getProductCount(product.id!) }}</span>
+                    <button (click)="incrementProduct(product.id!)" class="increment-button" *ngIf="product.id !== undefined">
+                        <i class="pi pi-plus" style="font-size: 0.9rem"></i> 
+                    </button>
+                </div>    
+                <ng-template #addButton>
+                    <button (click)="addProduct(product.id!)" class="add-product-button" *ngIf="product.id !== undefined">
+                        <i class="pi pi-plus" style="font-size: 0.9rem"></i>
+                    </button>
+                </ng-template>                
+            </div>
+        </div>
+    </div>
+
+</div>
+<app-my-cart [orderItems]="orderItems" [isVisible]="cartVisible"></app-my-cart>
+

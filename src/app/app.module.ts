@@ -47,10 +47,15 @@ import { TableFinishedComponent } from './screens/my-tables/table-finished/table
 import { FileUploadModule } from 'primeng/fileupload';
 import { ChartsComponent } from './screens/charts/charts.component';
 import { ChartModule } from 'primeng/chart';
+import { MenuComponent } from './screens/user-order/menu/menu.component';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { MyCartComponent } from './screens/user-order/my-cart/my-cart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    MenuComponent,
+    MyCartComponent,
     TablesComponent,
     ChartsComponent,
     ExportExcelComponent,
@@ -80,6 +85,7 @@ import { ChartModule } from 'primeng/chart';
     ToastModule,
     ConfirmDialogModule,
     FileUploadModule,
+    AutoCompleteModule,
     TagModule,
     TableModule,
     HttpClientModule,

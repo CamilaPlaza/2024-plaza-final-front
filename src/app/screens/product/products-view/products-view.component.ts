@@ -122,16 +122,16 @@ getCategoryNamesByIds(ids: any): string {
     }
 
     // Validate price
-    if (parseFloat(product.price) < 0) {
+    if (parseFloat(product.price.toString()) < 0) {
       console.error('Price cannot be negative');
       return;
     }
-
+    
     // Update only modified fields
     const promises: Promise<any>[] = [];
     
     if (product.price !== originalProduct.price) {
-      promises.push(this.productService.updateProductPrice(String(product.id), parseFloat(product.price)));
+      promises.push(this.productService.updateProductPrice(String(product.id), product.price));
     }
 
     if (product.description !== originalProduct.description) {

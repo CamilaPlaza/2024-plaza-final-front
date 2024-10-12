@@ -26,7 +26,7 @@ export class ProductService {
     return this.http.get<{ products: Product[]; message: string }>(`${this.baseUrl}/products`);
   }
 
-  async updateProductPrice(productId: string, newPrice: number): Promise<boolean> {
+  async updateProductPrice(productId: string, newPrice: string): Promise<boolean> {
     try {
       await this.http.put(`${this.baseUrl}/products/price/${productId}/${newPrice}`, { new_price: newPrice }).toPromise();
       return true;

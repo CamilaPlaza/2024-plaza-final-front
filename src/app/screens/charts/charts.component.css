@@ -1,3 +1,48 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin-left: 5%;
+}
+
+.section {
+    flex: 1;
+}
+
+.image-section {
+    flex: 0.5;
+    height: 10%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.title-section {
+    flex: 0.15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #7f522e; /* Fondo marrón para la sección del título */
+    color: #f2f2f2;
+}
+
+.title {
+    font-size: 2rem;
+    margin: 0;
+    text-align: center;
+}
+
 :host {
     --light-cream: #e5d4c3;
     --light-tan: #e5c9ae;
@@ -12,43 +57,91 @@
     --text-color: #333;
 }
 
+.all-charts-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 30px 10px 30px;
+    background-color: var(--light-cream); 
+    height: auto; 
+    min-height: 300px; 
+}
+
 .charts-container {
-    display: flex; /* Align charts in a row */
-    justify-content: space-between; /* Space between charts */
-    width: 90%; /* Total width minus the sidebar */
-    margin-left: 7%; /* Margin to separate from the sidebar */
-    margin-right: 5%; /* Margin on the right to prevent it from touching the edge */
-    margin-top: 3%; /* Top margin for spacing */
-    padding: 20px; /* Padding inside the container */
-    background-color: var(--light-cream); /* Background color */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Shadow for the container */
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 3%;
+    padding: 10px;
+    background-color: var(--light-cream); 
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    height: auto; 
+    min-height: 300px; 
 }
-
-.chart-wrapper {
-    flex: 1; /* Each chart takes equal space */
-    margin: 0 2%; /* Horizontal margin for separation, increased for more space */
-    padding: 20px; /* Inner spacing of the wrapper */
-}
-
 
 .chart-title {
-    text-align: center; /* Center the title */
-    color: var(--text-color); /* Text color */
-    margin-bottom: 20px; /* Bottom margin */
-    font-size: 24px; /* Title font size */
-    font-weight: bold; /* Bold text */
+    text-align: center;
+    color: #482919;
+    font-size: 1.2rem;
+    margin-bottom: 10px; /* Ajuste para separar el título del gráfico */
 }
 
+/* Set a fixed height for both charts */
+/* Contenedor de las charts */
+.chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    height: auto;
+    min-height: 300px;
+}
+
+/* Ajusta el ancho de cada gráfica sin afectar la altura */
+.chart-wrapper.category-revenue {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 40%;
+}
+
+.chart-wrapper.monthly-revenue {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 60%;
+}
+
+/* Asegura que ambos gráficos respeten la misma altura */
 .card {
-    background-color: white; /* Card background color */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Strong shadow */
-    padding: 20px; /* Inner spacing of the card */
-    transition: transform 0.3s ease; /* Smooth transition */
+    width: 100%;
+    height: 100%; /* Ajusta la altura de la tarjeta */
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+
+    /* Alineación centrada del contenido */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    flex: 1;
 }
 
 .card:hover {
-    transform: translateY(-5px); /* Elevation effect on hover */
+    transform: translateY(-5px);
 }
 
+.p-chart {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Evita que los gráficos sobresalgan */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -16,4 +16,9 @@ export class ChartService {
     console.log(`Fetching category revenue from: ${endpoint}`);  // Log the URL
     return this.http.get<any>(endpoint);
   }
+  getMonthlyRevenue(): Observable<any>{
+    const endpoint = `${this.baseUrl}/monthly-revenue`;  // Construct the URL
+    console.log(`Fetching category revenue from: ${endpoint}`);  // Log the URL
+    return this.http.get<any>(endpoint);
+  }
 }

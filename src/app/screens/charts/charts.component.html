@@ -1,15 +1,24 @@
-<div class="charts-container"> <!-- Container for both charts -->
-    <div class="chart-wrapper">
-        <h2 class="chart-title">Revenue by Category</h2>
-        <div class="card flex justify-content-center">
-            <p-chart type="pie" [data]="data" [options]="options" class="pie-chart"></p-chart>
-        </div>
+<div class="container">
+    <div class="section image-section">
+        <img src="../../../assets/images/coffee-white-cup-spilling-table-morning-office-table.jpg" alt="Imagen descriptiva" class="image">
     </div>
+    <div class="section title-section">
+      <p class="title">CHARTS</p>
+    </div>
+    <div class="all-charts-container" scrollable="true">
+        <div class="chart-wrapper category-revenue">
+            <h2 class="chart-title">Revenue by Category</h2>
+            <div class="card flex justify-content-center">
+                <p-chart type="pie" [data]="categoryData" [options]="categoryOptions"></p-chart>
+            </div>
+        </div>
 
-    <div class="chart-wrapper">
-        <h2 class="chart-title">Revenue by Category</h2>
-        <div class="card flex justify-content-center">
-            <p-chart type="pie" [data]="data" [options]="options" class="pie-chart"></p-chart>
+        <!-- Make this chart larger -->
+        <div class="chart-wrapper monthly-revenue">
+            <h2 class="chart-title">Monthly Revenue</h2>
+            <div class="card flex justify-content-center">
+                <p-chart type="line" [data]="monthlyData" [options]="monthlyOptions" style="width: 100%; height: 100%;"></p-chart>
+            </div>
         </div>
     </div>
 </div>

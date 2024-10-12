@@ -13,7 +13,7 @@ import { ProductService } from 'src/app/services/product_service';
 })
 export class MenuComponent implements OnInit {
   categories: Category[] = [];
-  colors: string[] = ['#7f522e', '#915728', '#b2682b', '#caa171', '#c39158', '#b37a3a'];
+  colors: string[] = ['#7f522e', '#b37a3a', '#915728', '#c39158', '#b2682b', '#caa171'];
   products : Product[] = [];
   visibleCategories: Category[] = [];
   selectedCategories: Category[] = [];
@@ -23,17 +23,14 @@ export class MenuComponent implements OnInit {
   itemsPerPage: number = 6;
   orderItems: OrderItem[] = [];
   cart: { [key: number]: number } = {};
-
-
+  cartVisible: boolean = false;
 
   constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.loadCategories()
-    this.loadProducts();
-    
+    this.loadProducts(); 
   }
-
   
   loadProducts(): void {
     this.productService.getProducts().subscribe({
@@ -173,7 +170,8 @@ export class MenuComponent implements OnInit {
       });
   }
 
-  
-
+  toggleCart(): void {
+    this.cartVisible = !this.cartVisible;
+  }
 
 }

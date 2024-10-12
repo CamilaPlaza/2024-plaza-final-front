@@ -15,7 +15,7 @@
 .charts-container {
     display: flex; /* Align charts in a row */
     justify-content: space-between; /* Space between charts */
-    width: calc(100% - 5%); /* Total width minus the sidebar */
+    width: 90%; /* Total width minus the sidebar */
     margin-left: 7%; /* Margin to separate from the sidebar */
     margin-right: 5%; /* Margin on the right to prevent it from touching the edge */
     margin-top: 3%; /* Top margin for spacing */
@@ -52,8 +52,3 @@
     transform: translateY(-5px); /* Elevation effect on hover */
 }
 
-/* Additional styles for the chart */
-.pie-chart {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Soft shadow on the chart */
-    border-radius: 10px; /* Rounded corners */
-}

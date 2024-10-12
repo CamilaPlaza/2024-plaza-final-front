@@ -69,11 +69,16 @@ html, body {
 }
 
 .status-free {
-    color: #23ae43;
+    color: #23ae43bb;
     font-weight: bold;
 }
 
 .status-busy {
+    color: #eedc12;
+    font-weight: bold;
+}
+
+.status-finished{
     color: #c41729;
     font-weight: bold;
 }
@@ -99,7 +104,7 @@ th, td {
     justify-content: center;
     width: 70px; /* Ajusta según sea necesario */
     height: 70px; /* Ajusta según sea necesario */
-    background-color: #23ae43; /* Por defecto, verde para "FREE" */
+    background-color: #23ae43bb; /* Por defecto, verde para "FREE" */
     margin: 10px;
     border-radius: 50%;
     cursor: pointer;
@@ -109,7 +114,11 @@ th, td {
 }
 
 .table-icon.status-busy {
-    background-color: #c41729; /* Rojo para "BUSY" */
+    background-color: #eedc12;
+}
+
+.table-icon.status-finished {
+    background-color: #c41729;
 }
 
 .table-icon i {

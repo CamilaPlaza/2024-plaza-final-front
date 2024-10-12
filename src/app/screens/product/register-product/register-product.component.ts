@@ -1,19 +1,27 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product_service';
 import { CategoryService } from 'src/app/services/category_service';
 import { Category } from 'src/app/models/category';
+import { FileUpload } from 'primeng/fileupload';
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 
 @Component({
   selector: 'app-register-product',
   templateUrl: './register-product.component.html',
   styleUrl: './register-product.component.css'
 })
-export class RegisterProductComponent implements OnInit{
+export class RegisterProductComponent implements OnInit {
+  @ViewChild('fileUpload') fileUpload: FileUpload | undefined;
   name: string = '';
   description: string = '';
   price: string = '';
+  cost: string = '';
   product: Product | undefined;
   categories: Category[] = [];
   categoryOptions: { label: string; value: string }[] = [];
@@ -26,13 +34,33 @@ export class RegisterProductComponent implements OnInit{
   selectedCategoryIds: string = '';
   showCategoryPanel = false;
   showCaloriesPanel = false;
-  totalCaloriesValue?: number;
+  totalCaloriesValue?: number; 
+  imageUrl: string = '';
+  fileName: string = '';
+
 
   constructor( private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.loadCategories();
     this.checkIfMobile();   
+  }
+
+  onImageSelect(event: any) {
+    const file = event.files[0]; 
+    this.fileName = file.name;  
+
+    const reader = new FileReader();  
+    reader.onload = (e: any) => {
+      this.imageUrl = e.target.result; 
+    };
+    reader.readAsDataURL(file);  
+  }
+
+  onImageClear(fileUpload: any) {
+    this.fileName = ''; 
+    this.imageUrl = ''; 
+    fileUpload.clear(); 
   }
 
   @HostListener('window:resize', ['$event'])
@@ -48,7 +76,8 @@ export class RegisterProductComponent implements OnInit{
     this.closeConfirmDialog();
     this.loading = true;
     try {
-      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds, this.totalCaloriesValue ?? 0);
+      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds, this.totalCaloriesValue ?? 0, this.cost, this.imageUrl);
+
       console.log('PRODUCT: ', this.product);
       const response = await this.productService.onRegister(this.product);
 
@@ -107,12 +136,25 @@ export class RegisterProductComponent implements OnInit{
     const value = parseFloat(input.value);
   
     if (value < 0) {
-      input.value = '0'; // Establece el valor a 0 si es negativo
-      this.price = '0'; // Asegúrate de actualizar el modelo ngModel
+      input.value = '0';
+      this.price = '0';
     } else {
-      this.price = input.value; // Actualiza el modelo ngModel con el valor válido
+      this.price = input.value;
     }
   }
+
+  onCostChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = parseFloat(input.value);
+  
+    if (value < 0) {
+      input.value = '0';
+      this.cost = '0';
+    } else {
+      this.cost = input.value;
+    }
+  }
+
 
   onlyAllowNumbers(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;

@@ -13,9 +13,9 @@
       <ul>
         <li *ngFor="let item of order.orderItems">
           <p *ngIf="getProductById(item.product_id) as product">
-            <strong>Product:</strong> {{ product.name }} - 
+            <strong>Product:</strong> {{ item.product_name }} - 
             <strong>Amount:</strong> {{ item.amount }} - 
-            <strong>Price:</strong> {{ product.price }}
+            <strong>Price:</strong> {{ item.product_price }}
           </p>
         </li>
       </ul>

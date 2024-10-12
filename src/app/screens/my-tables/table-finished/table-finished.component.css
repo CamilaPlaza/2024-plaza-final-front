@@ -1,0 +1,69 @@
+.container-table-free {
+    background-color: #fff;
+    border-radius: 10px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    margin: auto;
+    overflow: hidden;
+  }
+
+  .title{
+    padding: 15px;
+  }
+
+  
+  .body {
+    padding: 20px;
+  }
+  
+  .close-button {
+    background-color: #7f522e;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    outline: none;
+  }
+  
+  .create-order-button{
+    background-color: #23ae43;
+    border: none;
+    border-radius: 8px;
+    margin-right: 10%;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    outline: none;
+  }
+  
+  .close-button:hover {
+    background-color: #613d20;
+  }
+  
+  
+  .create-order-button:hover {
+    background-color: #1b8734;
+  }
+  
+  .action-buttons {
+    text-align: center;
+  }
+  
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 8px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3); /* Fondo semi-transparente */
+  z-index: 9999; /* Asegurarse de que esté por encima de todo */
+}

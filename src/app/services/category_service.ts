@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Category } from 'src/app/models/category';
 import { Observable } from 'rxjs';
+import { Product } from '../models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,15 @@ export class CategoryService {
   // Eliminar una categoría
   deleteCategory(categoryId: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/categories/${categoryId}`);
+  }
+
+  async getProductsByCategory(categoryId: string): Promise<Product[]> {
+    try {
+      const products = await this.http.get<Product[]>(`${this.baseUrl}/categories/products/${categoryId}`).toPromise();
+      return products || [];
+    } catch (error: any) {
+      console.error('Error fetching products:', error);
+      return [];
+    }
   }
 }

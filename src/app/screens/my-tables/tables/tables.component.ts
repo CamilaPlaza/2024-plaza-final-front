@@ -41,6 +41,9 @@ export class TablesComponent implements OnInit {
     } else if (table.status === 'BUSY') {
       this.selectedComponent = 'BUSY';
       this.displayModal = true;
+    } else if (table.status === 'FINISHED') {
+      this.selectedComponent = 'FINISHED';
+      this.displayModal = true;
     } else {
       console.log('Table is not available.');
     }

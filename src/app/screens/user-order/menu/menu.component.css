@@ -62,6 +62,22 @@
         cursor: pointer;
     }
 
+    .cart-container {
+        position: relative; /* Para posicionar el contador respecto al carrito */
+      }
+      
+      .cart-count {
+        position: absolute;
+        top: -5px; /* Ajusta según sea necesario */
+        right: -10px; /* Ajusta según sea necesario */
+        background-color: red; /* Color de fondo */
+        color: white; /* Color del texto */
+        border-radius: 50%; /* Hace que el contador sea redondo */
+        padding: 0 6px; /* Espaciado horizontal */
+        font-size: 12px; /* Tamaño de fuente */
+      }
+      
+
 /*Menu Categories*/
 
 .menu-categories {

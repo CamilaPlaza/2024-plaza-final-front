@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category } from 'src/app/models/category';
+import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
 import { CategoryService } from 'src/app/services/category_service';
 import { ProductService } from 'src/app/services/product_service';
@@ -12,7 +13,7 @@ import { ProductService } from 'src/app/services/product_service';
 })
 export class MenuComponent implements OnInit {
   categories: Category[] = [];
-  colors: string[] = ['#4281A4', '#035E7B', '#F5E7DE', '#844F39', '#54311A'];
+  colors: string[] = ['#7f522e', '#915728', '#b2682b', '#caa171', '#c39158', '#b37a3a'];
   products : Product[] = [];
   visibleCategories: Category[] = [];
   selectedCategories: Category[] = [];
@@ -20,6 +21,7 @@ export class MenuComponent implements OnInit {
   filteredProducts: Product[] = [];
   currentIndex: number = 0;
   itemsPerPage: number = 6;
+  orderItems: OrderItem[] = [];
   cart: { [key: number]: number } = {};
 
 
@@ -95,10 +97,29 @@ export class MenuComponent implements OnInit {
   }
 
   addProduct(productId: number): void {
-    if (!this.cart[productId]) {
-      this.cart[productId] = 0;
+    const product = this.products.find(p => p.id === productId); // Busca el producto
+    const amount = this.getProductCount(productId) + 1; // Obtiene la cantidad actual y la incrementa
+
+    // Verifica que el producto exista
+    if (product) {
+        const orderItem = this.orderItems.find(item => item.product_id === productId);
+        
+        if (orderItem) {
+            orderItem.amount += 1; // Incrementa la cantidad en el OrderItem si ya existe
+        } else {
+            // Crea un nuevo OrderItem si no existe
+            this.orderItems.push(new OrderItem(productId, 1, product.name, product.price.toString()));
+        }
+
+        this.cart[productId] = (this.cart[productId] || 0) + 1; // Actualiza la cantidad en el carrito
+    } else {
+        console.error('Product not found');
     }
-    this.cart[productId]++;
+}
+
+
+  getTotalItemsInCart(): number {
+    return Object.values(this.cart).reduce((acc, count) => acc + count, 0);
   }
 
 
@@ -135,7 +156,6 @@ export class MenuComponent implements OnInit {
       }
     }
 
-  // Obtener productos por categoría desde el servicio
   getProductsByCategory(categoryIds: string): void {
     this.categoryService.getProductsByCategory(categoryIds)
       .then((data) => {

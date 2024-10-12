@@ -46,6 +46,7 @@ import { ExportExcelComponent } from './screens/my-orders/export-excel/export-ex
 import { TableFinishedComponent } from './screens/my-tables/table-finished/table-finished.component';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ChartsComponent } from './screens/charts/charts.component';
+import { ChartModule } from 'primeng/chart';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { ChartsComponent } from './screens/charts/charts.component';
     AppRoutingModule,
     FloatLabelModule,
     CalendarModule,
-    MenubarModule
+    MenubarModule,
+    ChartModule
 ],
   providers: [ConfirmationService, MessageService, DatePipe],
   bootstrap: [AppComponent]

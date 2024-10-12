@@ -94,21 +94,19 @@ export class MenuComponent implements OnInit {
   }
 
   addProduct(productId: number): void {
-    const product = this.products.find(p => p.id === productId); // Busca el producto
-    const amount = this.getProductCount(productId) + 1; // Obtiene la cantidad actual y la incrementa
-
-    // Verifica que el producto exista
+    const product = this.products.find(p => p.id === productId);
     if (product) {
         const orderItem = this.orderItems.find(item => item.product_id === productId);
+        console.log('orderItem', orderItem);
         
         if (orderItem) {
-            orderItem.amount += 1; // Incrementa la cantidad en el OrderItem si ya existe
+            orderItem.amount += 1;
+            console.log('orderItem', orderItem);
         } else {
-            // Crea un nuevo OrderItem si no existe
             this.orderItems.push(new OrderItem(productId, 1, product.name, product.price.toString()));
+            console.log('orderItemsss', this.orderItems);
         }
-
-        this.cart[productId] = (this.cart[productId] || 0) + 1; // Actualiza la cantidad en el carrito
+        this.cart[productId] = (this.cart[productId] || 0) + 1;
     } else {
         console.error('Product not found');
     }
@@ -119,16 +117,21 @@ export class MenuComponent implements OnInit {
     return Object.values(this.cart).reduce((acc, count) => acc + count, 0);
   }
 
-
-  incrementProduct(productId: number): void {
-    this.cart[productId] = (this.cart[productId] || 0) + 1;
-  }
-
   decrementProduct(productId: number): void {
+    const orderItem = this.orderItems.find(item => item.product_id === productId);
     if (this.cart[productId] > 0) {
-      this.cart[productId]--;
+        this.cart[productId]--;
+        if (orderItem) {
+            orderItem.amount--;
+            if (orderItem.amount === 0) {
+                this.orderItems = this.orderItems.filter(item => item.product_id !== productId);
+            }
+        }
+    } else {
+        console.error('El producto no está en el carrito o la cantidad ya es 0');
     }
   }
+
 
   getProductCount(productId: number): number {
     return this.cart[productId] || 0;

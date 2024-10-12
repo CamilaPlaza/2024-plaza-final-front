@@ -54,7 +54,7 @@
                         <i class="pi pi-minus" style="font-size: 0.9rem"></i> 
                     </button>
                     <span>{{ getProductCount(product.id!) }}</span>
-                    <button (click)="incrementProduct(product.id!)" class="increment-button" *ngIf="product.id !== undefined">
+                    <button (click)="addProduct(product.id!)" class="increment-button" *ngIf="product.id !== undefined">
                         <i class="pi pi-plus" style="font-size: 0.9rem"></i> 
                     </button>
                 </div>    

@@ -212,7 +212,13 @@
     width: 150px;
     height: 100px;
     border-radius: 5px;
+    object-fit: cover;
+    object-position: center;
+    display: block; /* Asegura que no haya espacios adicionales */
+    margin: 0 auto; /* Centra la imagen si es necesario */
+    padding: 0; /* Elimina cualquier relleno */
   }
+  
   
   .text-details {
     margin-top: -10px;

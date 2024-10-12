@@ -3,6 +3,7 @@ import { OrderItem } from "./orderItem";
 export class Order {
   id?: number;
   status: string = ''; 
+  amountOfPeople: number = 0;
   tableNumber: number = 0;
   date: string = '';
   time: string = '';
@@ -16,6 +17,7 @@ export class Order {
     time: string,
     total: string,
     orderItems: OrderItem[],
+    amountOfPeople: number,
     id?: number
   ) {
     this.id = id;
@@ -25,5 +27,6 @@ export class Order {
     this.time = time;
     this.total = total;
     this.orderItems = orderItems;
+    this.amountOfPeople = amountOfPeople;
   }
 }

@@ -58,6 +58,9 @@
           placeholder="Choose Categories" 
           (onChange)="filterProductsByCategory()">
         </p-multiSelect>
+
+        <label for="amountOfPeople">People:</label>
+        <input id="amountOfPeople" type="number" [(ngModel)]="selectedAmountOfPeople" min="1" />
       </div>
 
       <div  *ngIf="selectedCategories.length > 0">

@@ -15,7 +15,7 @@ import { Category } from 'src/app/models/category';
   styleUrls: ['./table-free.component.css']
 })
 export class TableFreeComponent implements OnInit {
-  @Input() table: Table = new Table('');
+  @Input() table: Table = new Table('', 1);
   @Output() close = new EventEmitter<void>();
   searchTerm: string = ''; 
   filteredProducts: Product[] = []; 
@@ -24,6 +24,7 @@ export class TableFreeComponent implements OnInit {
   loading: boolean = false;
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
+  selectedAmountOfPeople: number = 1;
   canAddProduct: boolean = false;
   products: Product[] = [];
   currentTime: string = '';
@@ -45,7 +46,6 @@ export class TableFreeComponent implements OnInit {
     this.loadCategories();
   }
 
-  // Función que carga los productos disponibles
   loadProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
@@ -113,7 +113,8 @@ export class TableFreeComponent implements OnInit {
       date: this.currentDate,
       time: this.currentTime,
       total: total.toString(),
-      orderItems: this.orderItems
+      orderItems: this.orderItems,
+      amountOfPeople: this.selectedAmountOfPeople
     };
     try {
       const response = await this.orderService.onRegister(this.order); 

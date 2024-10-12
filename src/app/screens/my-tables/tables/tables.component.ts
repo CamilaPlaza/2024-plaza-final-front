@@ -12,7 +12,7 @@ export class TablesComponent implements OnInit {
   public tableScrollHeight: string = '';
   tables: Table[] = [];
   displayModal: boolean = false;
-  selectedTable: Table = new Table('');
+  selectedTable: Table = new Table('',1);
   selectedComponent: string = '';
 
   constructor(private tableService: TableService) {}

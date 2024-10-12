@@ -45,11 +45,13 @@ import { OrderInfoComponent } from './screens/my-orders/order-info/order-info.co
 import { ExportExcelComponent } from './screens/my-orders/export-excel/export-excel.component';
 import { TableFinishedComponent } from './screens/my-tables/table-finished/table-finished.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { ChartsComponent } from './screens/charts/charts.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TablesComponent,
+    ChartsComponent,
     ExportExcelComponent,
     OrdersComponent,
     OrderInfoComponent,

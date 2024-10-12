@@ -14,7 +14,7 @@ import { TableService } from 'src/app/services/table_service';
   styleUrls: ['./table-busy.component.css']
 })
 export class TableBusyComponent implements OnInit {
-  @Input() table: Table = new Table('');
+  @Input() table: Table = new Table('',1);
   @Output() close = new EventEmitter<void>();
   actualOrder?: Order; 
   initialOI: OrderItem[] = [];
@@ -22,7 +22,7 @@ export class TableBusyComponent implements OnInit {
   products : Product[] = [];
   currentDate: string = '';
   currentTime: string = '';
-  order: Order = new Order('', 0, '', '', '', []);
+  order: Order = new Order('', 0, '', '', '', [],1);
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
@@ -30,6 +30,7 @@ export class TableBusyComponent implements OnInit {
   displayConfirmDialog = false;
   loading: boolean = false;
   displayCloseTableDialog = false;
+  amountOfPeople: number = 0;
 
   constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService) {}
   ngOnInit() {
@@ -38,7 +39,7 @@ export class TableBusyComponent implements OnInit {
     this.orderItems = this.actualOrder?.orderItems ?? [];
     this.currentDate = this.actualOrder?.date ?? '';
     this.currentTime = this.actualOrder?.time ?? '';
-    this.order = this.actualOrder ?? new Order('', 0, '', '', '', []);
+    this.order = this.actualOrder ?? new Order('', 0, '', '', '', [],1);
   }
 
   getOrderInformation() {
@@ -51,6 +52,8 @@ export class TableBusyComponent implements OnInit {
           this.initialOI = JSON.parse(JSON.stringify(order.orderItems));
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
+          this.amountOfPeople = this.actualOrder.amountOfPeople ?? 0;
+          console.log('amountOfPeople', this.actualOrder.amountOfPeople);
         },
         error: (err) => {
           console.error('Error fetching order information:', err);

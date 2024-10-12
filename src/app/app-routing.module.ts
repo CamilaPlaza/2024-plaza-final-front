@@ -13,6 +13,7 @@ import { AuthGuard } from './services/auth_guard';
 import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
 import { CategoriesComponent } from './screens/product/categories/categories.component';
 import { TablesComponent } from './screens/my-tables/tables/tables.component';
+import { ChartsComponent } from './screens/charts/charts.component';
 import { OrdersComponent } from './screens/my-orders/orders/orders.component';
 
 const routes: Routes = [
@@ -29,6 +30,7 @@ const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent},
   { path: 'tables', component: TablesComponent, canActivate:[AuthGuard]},
   { path: 'orders', component: OrdersComponent, canActivate:[AuthGuard]},
+  { path: 'charts', component: ChartsComponent, canActivate:[AuthGuard]},
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 

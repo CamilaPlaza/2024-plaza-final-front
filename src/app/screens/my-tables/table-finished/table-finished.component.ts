@@ -9,7 +9,7 @@ import { TableService } from 'src/app/services/table_service';
   styleUrl: './table-finished.component.css'
 })
 export class TableFinishedComponent  implements OnInit {
-  @Input() table: Table = new Table('');
+  @Input() table: Table = new Table('',1);
   @Output() close = new EventEmitter<void>();
   displayConfirmDialog = false;
 

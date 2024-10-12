@@ -12,6 +12,7 @@
         <ng-template pTemplate="header">
           <tr>
             <th>Id</th>
+            <th>Capacity</th>
             <th>Status</th>
           </tr>
         </ng-template>
@@ -19,6 +20,7 @@
         <ng-template pTemplate="body" let-table let-ri="rowIndex">
           <tr (click)="onTableClick(table)">
             <td>{{ table.id }}</td>
+            <td>{{ table.capacity}} </td>
             <td [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY', 'status-finished': table.status === 'FINISHED'}">
               {{ table.status }}
             </td>

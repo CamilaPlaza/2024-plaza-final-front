@@ -48,19 +48,22 @@
     <div>
 
       <div class="category-selection">
-        <label for="categories">Select Categories:</label>
-        <p-multiSelect 
-          id="categories" 
-          [options]="categories" 
-          [appendTo]="'body'"
-          [(ngModel)]="selectedCategories" 
-          optionLabel="name" 
-          placeholder="Choose Categories" 
-          (onChange)="filterProductsByCategory()">
-        </p-multiSelect>
-
-        <label for="amountOfPeople">People:</label>
-        <input id="amountOfPeople" type="number" [(ngModel)]="selectedAmountOfPeople" min="1" />
+        <div class="category">
+          <label for="categories">Select Categories:</label>
+          <p-multiSelect 
+            id="categories" 
+            [options]="categories" 
+            [appendTo]="'body'"
+            [(ngModel)]="selectedCategories" 
+            optionLabel="name" 
+            placeholder="Choose Categories" 
+            (onChange)="filterProductsByCategory()">
+          </p-multiSelect>
+        </div>
+        <div class="amountPeople">
+          <label for="amountOfPeople">People:</label>
+          <input id="amountOfPeople" type="number" [title]="'Table capacity: ' + table.capacity" [max]="table.capacity" [(ngModel)]="selectedAmountOfPeople" min="1" />
+        </div>
       </div>
 
       <div  *ngIf="selectedCategories.length > 0">

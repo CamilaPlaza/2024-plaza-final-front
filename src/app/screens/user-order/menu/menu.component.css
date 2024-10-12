@@ -24,7 +24,7 @@
 
 /*Menu Header*/
   .menu-header {
-    overflow-y: auto;
+    overflow-y: visible; 
     display: flex;
     justify-content: space-between;
     align-items: center;

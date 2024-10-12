@@ -69,11 +69,19 @@ export class MenuComponent implements OnInit {
   }
 
   searchProducts(event: any): void {
-    const query = event.query.toLowerCase();
-    this.filteredProducts = this.products.filter(product =>
-      product.name.toLowerCase().includes(query)
-    );
-  }
+    const query = event.query?.toLowerCase() || '';  // Asegúrate de que query no sea undefined o null
+
+    if (query.trim() === '') {
+        // Si no hay texto en la búsqueda, mostrar todos los productos
+        this.filteredProducts = [...this.products];
+    } else {
+        // Si hay texto, filtrar los productos
+        this.filteredProducts = this.products.filter(product =>
+            product.name.toLowerCase().includes(query)
+        );
+    }
+}
+
 
   updateVisibleCategories(): void {
     this.visibleCategories = this.categories.slice(this.currentIndex, this.currentIndex + this.itemsPerPage);

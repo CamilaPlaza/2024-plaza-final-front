@@ -93,6 +93,17 @@
     justify-content: center;
     align-items: center;
     color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+
+  .category-card:hover {
+    transform: scale(1.05);
+  }
+
+  .selected-category {
+    border: 3px solid #7f522e; /* Cambia el color del borde cuando está seleccionada */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
   
   .category-name {

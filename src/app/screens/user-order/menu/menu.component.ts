@@ -15,11 +15,13 @@ export class MenuComponent implements OnInit {
   colors: string[] = ['#4281A4', '#035E7B', '#F5E7DE', '#844F39', '#54311A'];
   products : Product[] = [];
   visibleCategories: Category[] = [];
+  selectedCategories: Category[] = [];
   searchQuery: string = '';
   filteredProducts: Product[] = [];
   currentIndex: number = 0;
   itemsPerPage: number = 6;
-  cart: { [key: number]: number } = {}; // Almacena la cantidad de cada producto en el carrito
+  cart: { [key: number]: number } = {};
+
 
 
   constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
@@ -27,6 +29,7 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
     this.loadCategories()
     this.loadProducts();
+    
   }
 
   
@@ -35,6 +38,7 @@ export class MenuComponent implements OnInit {
       next: (data) => {
         if (data && Array.isArray(data.products)) {
           this.products = data.products;
+          this.filteredProducts = this.products; 
         } else {
           console.error('Unexpected data format:', data);
         }
@@ -110,6 +114,43 @@ export class MenuComponent implements OnInit {
 
   getProductCount(productId: number): number {
     return this.cart[productId] || 0;
+  }
+
+  toggleCategorySelection(category: Category): void {
+    const index = this.selectedCategories.indexOf(category);
+    if (index === -1) {
+      this.selectedCategories.push(category);
+    } else {
+      this.selectedCategories.splice(index, 1);
+    }
+    this.filterProductsByCategory();
+  }
+
+    filterProductsByCategory(): void {
+      if (this.selectedCategories.length === 0) {
+        this.filteredProducts = this.products; 
+      } else {
+        const categoryIds = this.selectedCategories.map(category => category.id).join(', ');
+        this.getProductsByCategory(categoryIds);
+      }
+    }
+
+  // Obtener productos por categoría desde el servicio
+  getProductsByCategory(categoryIds: string): void {
+    this.categoryService.getProductsByCategory(categoryIds)
+      .then((data) => {
+        if (data && Array.isArray(data)) {
+          this.filteredProducts = data;
+          
+      console.log('filteredprod en data',   this.filteredProducts );
+        } else {
+          this.filteredProducts = [];
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching products by category:', err);
+        this.filteredProducts = []; 
+      });
   }
 
   

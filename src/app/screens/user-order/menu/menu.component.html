@@ -26,9 +26,13 @@
             <i class="pi pi-chevron-left"></i>
           </button>
       
-          <div class="category-card" *ngFor="let category of visibleCategories" [ngStyle]="{'background-color': category.color}">
-            <span class="category-name">{{ category.name }}</span>
-          </div>
+          <div class="category-card" *ngFor="let category of visibleCategories" 
+                [ngClass]="{'selected-category': selectedCategories.includes(category)}"
+                (click)="toggleCategorySelection(category)"
+                [ngStyle]="{'background-color': category.color}">
+                <span class="category-name">{{ category.name }}</span>
+            </div>
+
       
           <button (click)="nextPage()" [disabled]="currentIndex + itemsPerPage >= categories.length" class="nav-button">
             <i class="pi pi-chevron-right"></i>
@@ -38,7 +42,7 @@
     </div>
 
     <div class="product-container">
-        <div class="product-card" *ngFor="let product of products">
+        <div class="product-card" *ngFor="let product of filteredProducts">
            
             <div class="product-details">
                 

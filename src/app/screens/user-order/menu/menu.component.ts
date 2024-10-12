@@ -111,7 +111,7 @@ export class MenuComponent implements OnInit {
             orderItem.amount += 1;
             console.log('orderItem', orderItem);
         } else {
-            this.orderItems.push(new OrderItem(productId, 1, product.name, product.price.toString()));
+            this.orderItems.push(new OrderItem(productId, 1, product.name, product.price.toString(), product.imageUrl));
             console.log('orderItemsss', this.orderItems);
         }
         this.cart[productId] = (this.cart[productId] || 0) + 1;

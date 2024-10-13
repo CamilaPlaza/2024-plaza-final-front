@@ -8,7 +8,7 @@ import { Product } from '../models/product';
   providedIn: 'root'
 })
 export class CategoryService {
-  private baseUrl = 'https://two024-messidepaul-back.onrender.com'; // URL base de la API HOSTEADA
+  private baseUrl = 'https://candvbar-back.onrender.com';
   //private baseLocalUrl = 'http://127.0.0.1:8000'; 
 
   constructor(private http: HttpClient) {}

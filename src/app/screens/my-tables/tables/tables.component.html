@@ -4,8 +4,12 @@
   </div>
   <div class="section title-section">
     <p class="title">MY TABLES</p>
+    <div class="notification-bell"  (click)="onNotificationClick()">
+      <i class="pi pi-inbox"></i>
+      <span class="inactive-count">{{ inactiveOrdersCount }}</span>
+    </div>
   </div>
-
+  
   <div class="section table-section">
     <div class="card table-wrapper">
       <p-table [value]="tables" dataKey="id" scrollable="true" [scrollHeight]="tableScrollHeight">
@@ -65,4 +69,11 @@
       (close)="displayModal = false">
     </app-table-finished>
   </ng-container>
+</p-dialog>
+
+<p-dialog class="custom-modal" [(visible)]="displayModal" modal="true" [closable]="false" [responsive]="true">
+  <app-asign-inactive-order 
+    [orders]="inactiveOrders" 
+    (close)="displayModal = false">
+  </app-asign-inactive-order>
 </p-dialog>

@@ -32,17 +32,45 @@ html, body {
     flex: 0.15;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     background-color: #7f522e;
     color: #f2f2f2;
     position: relative;
 }
+
+.notification-bell {
+    position: relative;
+    margin-right: 20px;
+}
+
+.notification-bell .pi {
+    font-size: 24px;
+    color: rgb(255, 255, 255); 
+    cursor: pointer;
+}
+
+.notification-bell .inactive-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #d49969;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;  
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .title {
     font-size: 2rem;
     margin: 0;
     flex-grow: 1;
     text-align: center;
+    margin-left: 10%;
 }
 
 .table-section {
@@ -145,7 +173,6 @@ th, td {
     background-color: transparent !important; /* Quita el fondo del footer */
     border-top: none !important; /* Opcional: quita la línea del footer */
 }
-
 
 @media (max-width: 600px) {
     .title{

@@ -73,7 +73,7 @@ export class OrdersComponent implements OnInit {
         console.log('Orders fetched:', data);
         if (data && Array.isArray(data)) {
           this.orders = data;
-          this.filterOrdersByDate(); // Llama a filterOrdersByDate después de cargar los pedidos
+          this.filterOrdersByDate();
           this.nroTableOptions = [...new Set(this.orders.map(order => order.tableNumber))];
           this.statusOptions = [...new Set(this.orders.map(order => order.status))];
         } else {

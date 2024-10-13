@@ -51,6 +51,7 @@ import { MenuComponent } from './screens/user-order/menu/menu.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MyCartComponent } from './screens/user-order/my-cart/my-cart.component';
 import { CreateOrderComponent } from './screens/user-order/create-order/create-order.component';
+import { AsignInactiveOrderComponent } from './screens/my-tables/asign-inactive-order/asign-inactive-order.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { CreateOrderComponent } from './screens/user-order/create-order/create-o
     TableFinishedComponent,
     CaloriesComponent,
     FooterComponent,
+    AsignInactiveOrderComponent,
     HeaderComponent,
     HomeComponent,
     UserProfileComponent,

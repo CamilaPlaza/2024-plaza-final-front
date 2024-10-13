@@ -1,11 +1,13 @@
 import { TableService } from 'src/app/services/table_service';
 import { Component, OnInit } from '@angular/core';
 import { Table } from 'src/app/models/table';
+import { OrderService } from 'src/app/services/order_service';
+import { Order } from 'src/app/models/order';
 
 @Component({
   selector: 'app-tables',
   templateUrl: './tables.component.html',
-  styleUrls: ['./tables.component.css'] // Corregido 'styleUrl' a 'styleUrls'
+  styleUrls: ['./tables.component.css']
 })
 export class TablesComponent implements OnInit {
 
@@ -14,15 +16,19 @@ export class TablesComponent implements OnInit {
   displayModal: boolean = false;
   selectedTable: Table = new Table('',1);
   selectedComponent: string = '';
+  inactiveOrdersCount: number = 0; 
+  inactiveOrders: Order[] = [];
 
-  constructor(private tableService: TableService) {}
+  constructor(private tableService: TableService, private orderService: OrderService) {}
 
   ngOnInit(): void {
     this.loadTables();
+    this.loadOrders();
     this.setScrollHeight();
     window.addEventListener('resize', () => {
       this.setScrollHeight();
     });
+
   }
 
   setScrollHeight() {
@@ -49,6 +55,10 @@ export class TablesComponent implements OnInit {
     }
   }
 
+  onNotificationClick(): void {
+    this.displayModal = true; 
+  }
+
   closeModal() {
     this.displayModal = false;
     location.reload();
@@ -60,7 +70,7 @@ export class TablesComponent implements OnInit {
         console.log('Tables fetched:', data);
         if (Array.isArray(data)) {
           this.tables = data; 
-          this.sortTables(); // Llama a sortTables después de cargar las mesas
+          this.sortTables();
         } else {
           console.error('Unexpected data format:', data);
         }
@@ -70,12 +80,35 @@ export class TablesComponent implements OnInit {
       }
     });
   }
+
   sortTables() {
     this.tables.sort((a, b) => {
-      const idA = a.id ?? Number.MAX_SAFE_INTEGER; // Si a.id es undefined, asigna un valor grande
-      const idB = b.id ?? Number.MAX_SAFE_INTEGER; // Si b.id es undefined, asigna un valor grande
-      return idA - idB; // Ordena las mesas por id de menor a mayor
+      const idA = a.id ?? Number.MAX_SAFE_INTEGER; 
+      const idB = b.id ?? Number.MAX_SAFE_INTEGER;
+      return idA - idB; 
     });
   }
+
+  loadOrders(): void {
+    this.orderService.getInactiveOrders().subscribe({
+      next: (data) => {
+        console.log('Orders fetched:', data);
+        if (data && Array.isArray(data)) {
+          this.inactiveOrders = data.filter(order => order.status === 'INACTIVE');
+          this.countInactiveOrders();
+        } else {
+          console.error('Unexpected data format:', data);
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching orders:', err);
+      }
+    });
+  }
+
+  countInactiveOrders() {
+    this.inactiveOrdersCount = this.inactiveOrders.length;
+  }
+  
   
 }

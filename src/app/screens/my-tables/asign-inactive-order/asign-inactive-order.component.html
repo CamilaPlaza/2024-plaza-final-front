@@ -1,0 +1,34 @@
+<div class="asign-inactive-order-container">
+    <h3>Asignar Orden Inactiva</h3>
+  
+    <!-- Buscador -->
+    <input
+      type="text"
+      placeholder="Buscar por ID de orden"
+      [(ngModel)]="searchId"
+    />
+  
+    <!-- Lista de órdenes inactivas -->
+    <ul>
+      <li *ngFor="let order of filteredOrders" (click)="selectOrder(order)">
+        {{ order.id }} - {{ order.description }} <!-- Ajusta las propiedades según tu estructura -->
+      </li>
+    </ul>
+  
+    <div *ngIf="selectedOrder">
+      <h4>Seleccionaste la Orden: {{ selectedOrder.id }}</h4>
+  
+      <!-- Selección de mesa -->
+      <label for="tableSelect">Seleccionar Mesa:</label>
+      <select id="tableSelect" [(ngModel)]="selectedTableId">
+        <option *ngFor="let table of tables" [value]="table.id">
+          Mesa {{ table.id }} (Capacidad: {{ table.capacity }})
+        </option>
+      </select>
+  
+      <button (click)="assignTable()">Asignar Mesa</button>
+    </div>
+  
+    <button (click)="close.emit()">Cerrar</button>
+  </div>
+  

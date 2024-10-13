@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class OrderService {
 
-  private baseUrl = 'https://two024-messidepaul-back.onrender.com';  // URL del backend
+  private baseUrl = 'https://candvbar-back.onrender.com';
   //private baseLocalUrl = 'http://127.0.0.1:8000';
   constructor(private http: HttpClient) { }
 
@@ -53,4 +53,9 @@ export class OrderService {
     // Make a PUT request to update the order status with a body
     return this.http.put<Order>(`${this.baseUrl}/orders-finalize/${orderId}`, updatedOrder);
   }
+
+  getInactiveOrders(): Observable<Order>{
+    return this.http.get<Order>(`${this.baseUrl}/orders`);
+  }
+
 }

@@ -35,22 +35,22 @@ export class MenuComponent implements OnInit {
   
   @HostListener('window:resize', ['$event'])
   onResize(event: { target: { innerWidth: number; }; }) {
-    this.updateItemsPerPage(event.target.innerWidth);
+      this.updateItemsPerPage(event.target.innerWidth);
+      this.updateVisibleCategories(); // Actualiza las categorías visibles al cambiar el tamaño
   }
-
-  
 
   private updateItemsPerPage(width: number) {
-    if (width < 768) {
-      this.itemsPerPage = 3;
-    } else if (width < 1024) {
-      this.itemsPerPage = 4;
-    } else if (width < 1340) {
-      this.itemsPerPage = 5;
-    } else { 
-      this.itemsPerPage = 6;
-    }
+      if (width < 768) {
+          this.itemsPerPage = 3;
+      } else if (width < 1024) {
+          this.itemsPerPage = 4;
+      } else if (width < 1340) {
+          this.itemsPerPage = 5;
+      } else { 
+          this.itemsPerPage = 6;
+      }
   }
+
 
   loadProducts(): void {
     this.productService.getProducts().subscribe({
@@ -65,7 +65,6 @@ export class MenuComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching products:', err);
       }
-      
     });
   }
 
@@ -107,9 +106,6 @@ export class MenuComponent implements OnInit {
         this.searchProducts({ query });
     }
   }
-
-
-
   updateVisibleCategories(): void {
     this.visibleCategories = this.categories.slice(this.currentIndex, this.currentIndex + this.itemsPerPage);
   }

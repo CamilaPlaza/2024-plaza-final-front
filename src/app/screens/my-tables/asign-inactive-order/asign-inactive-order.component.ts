@@ -46,5 +46,6 @@ export class AsignInactiveOrderComponent {
   async createOrder(orderId: number, tableId: number) {
     this.orderService.assignOrderToTable(orderId, tableId);
     this.close.emit();
+;
   }
 }

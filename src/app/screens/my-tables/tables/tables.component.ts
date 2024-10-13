@@ -66,6 +66,11 @@ export class TablesComponent implements OnInit {
     location.reload();
   }
 
+  closeModalInactive(){
+    this.displayModalInactive = false;
+    location.reload();
+  }
+
   loadTables(): void {
     this.tableService.getTables().subscribe({
       next: (data) => {

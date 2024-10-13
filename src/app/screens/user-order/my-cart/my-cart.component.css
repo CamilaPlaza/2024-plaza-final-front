@@ -28,6 +28,12 @@
   font-size: 1.5em;
 }
 
+.all-products {
+  max-height: 75%;
+  overflow-y: auto;
+}
+
+
 .cart-item {
   display: flex; 
   align-items: center;
@@ -80,7 +86,6 @@
     border-radius: 5px;
     padding: 5px 8px;
     cursor: pointer;
-    margin: 0 5px;
 }
 
 .decrement-button:hover,
@@ -89,8 +94,13 @@
 }
 
 .quantity-controls button {
-  margin: 0 5px; 
+  margin-right: 5px; 
 }
+
+.quantity-controls span {
+  margin-right: 5px; 
+}
+
 
 .total-price {
   margin-top: 20px;

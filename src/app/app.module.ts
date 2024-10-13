@@ -52,6 +52,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MyCartComponent } from './screens/user-order/my-cart/my-cart.component';
 import { CreateOrderComponent } from './screens/user-order/create-order/create-order.component';
 import { AsignInactiveOrderComponent } from './screens/my-tables/asign-inactive-order/asign-inactive-order.component';
+import { InputIconModule } from 'primeng/inputicon'; 
+
 
 @NgModule({
   declarations: [
@@ -97,6 +99,7 @@ import { AsignInactiveOrderComponent } from './screens/my-tables/asign-inactive-
     FormsModule,
     TieredMenuModule,
     PasswordModule,
+    InputIconModule,
     ProgressSpinnerModule,
     ButtonModule,
     DialogModule,

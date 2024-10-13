@@ -49,7 +49,6 @@ export class TableFreeComponent implements OnInit {
   loadProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
-        console.log('Products fetched:', data);
         if (data && Array.isArray(data.products)) {
           this.products = data.products;
         } else {

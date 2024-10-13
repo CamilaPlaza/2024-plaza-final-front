@@ -71,9 +71,10 @@
   </ng-container>
 </p-dialog>
 
-<p-dialog class="custom-modal" [(visible)]="displayModal" modal="true" [closable]="false" [responsive]="true">
+<p-dialog class="custom-modal" [(visible)]="displayModalInactive" modal="true" [closable]="false" [responsive]="true">
   <app-asign-inactive-order 
     [orders]="inactiveOrders" 
-    (close)="displayModal = false">
+    [freeTables]="freeTables"
+    (close)="displayModalInactive = false">
   </app-asign-inactive-order>
 </p-dialog>

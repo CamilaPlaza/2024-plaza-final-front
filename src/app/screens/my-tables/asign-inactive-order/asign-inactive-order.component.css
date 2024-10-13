@@ -1,34 +1,107 @@
 .asign-inactive-order-container {
-    padding: 20px;
-    max-width: 400px;
-    background-color: white;
-  }
-  
-  input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  
-  li {
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  li:hover {
-    background-color: #f0f0f0;
-  }
-  
-  button {
-    margin-top: 10px;
-    padding: 8px 15px;
-  }
-  
+  padding: 20px;
+  max-width: 3300px; /* Mantiene un ancho máximo */
+  background-color: white;
+  border-radius: 20px;
+  box-sizing: border-box; /* Incluye padding en el ancho total */
+}
+
+.options-orders {
+  max-width: 300px; /* Asegúrate de que no exceda el contenedor */
+}
+
+.selected {
+  background-color: #d3b49bc0;
+
+}.button-container {
+  display: flex;
+  justify-content: space-between; 
+  margin-top: 10px;
+  gap: 10px;
+}
+
+button {
+  padding: 8px 15px;
+}
+
+
+button.p-button-secondary {
+  flex: 0.3;
+  background-color: #e0e0e0; 
+  border: none;
+  color: #333333ce; 
+  transition: background-color 0.3s ease;
+}
+
+button.p-button-secondary:hover {
+  background-color: #cccccc;
+}
+
+button.p-button-success {
+  flex: 0.7; 
+  background-color: #7f522e; 
+  border: none;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+button.p-button-success:hover {
+  background-color: #6d4625; 
+}
+
+.people-column {
+  text-align: right;
+  margin-right: 10%;
+}
+
+.p-dropdown {
+  margin-bottom: 2%;
+  width: 100%; /* Asegúrate de que el dropdown se ajuste al contenedor */
+}
+
+.search-box {
+  position: relative;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  width: 100%; /* Asegúrate de que se ajuste al contenedor */
+}
+
+.search-icon {
+  outline: none;
+  position: absolute;
+  left: 10px;
+  color: #7f522e;
+}
+
+.search-box input {
+  border: none;
+  flex: 1;
+  outline: none;
+  padding: 5px 5px 5px 30px;
+}
+
+.search-box input:focus {
+  border: none; 
+  box-shadow: none; 
+}
+
+.close-button {
+  position: absolute;
+  top: 50px;
+  right: 30px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s ease;
+  outline: none;
+}
+
+.close-button:hover {
+  color: #888; 
+}

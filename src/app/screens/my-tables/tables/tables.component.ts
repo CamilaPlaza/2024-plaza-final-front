@@ -18,6 +18,8 @@ export class TablesComponent implements OnInit {
   selectedComponent: string = '';
   inactiveOrdersCount: number = 0; 
   inactiveOrders: Order[] = [];
+  freeTables: Table[] = [];
+  displayModalInactive: boolean =  false;
 
   constructor(private tableService: TableService, private orderService: OrderService) {}
 
@@ -56,7 +58,7 @@ export class TablesComponent implements OnInit {
   }
 
   onNotificationClick(): void {
-    this.displayModal = true; 
+    this.displayModalInactive = true; 
   }
 
   closeModal() {
@@ -67,10 +69,10 @@ export class TablesComponent implements OnInit {
   loadTables(): void {
     this.tableService.getTables().subscribe({
       next: (data) => {
-        console.log('Tables fetched:', data);
         if (Array.isArray(data)) {
           this.tables = data; 
           this.sortTables();
+          this.freeTables = this.tables.filter(table => table.status === 'FREE');
         } else {
           console.error('Unexpected data format:', data);
         }
@@ -92,7 +94,6 @@ export class TablesComponent implements OnInit {
   loadOrders(): void {
     this.orderService.getInactiveOrders().subscribe({
       next: (data) => {
-        console.log('Orders fetched:', data);
         if (data && Array.isArray(data)) {
           this.inactiveOrders = data.filter(order => order.status === 'INACTIVE');
           this.countInactiveOrders();

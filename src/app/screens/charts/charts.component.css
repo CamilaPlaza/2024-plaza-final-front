@@ -33,7 +33,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #7f522e; /* Fondo marrón para la sección del título */
+    background-color: #7f522e;
     color: #f2f2f2;
 }
 
@@ -57,42 +57,28 @@ html, body {
     --text-color: #333;
 }
 
-.all-charts-container {
+.charts {
+    background-color: var(--light-cream);
     flex: 1;
     overflow-y: auto;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
     width: 100%;
-    padding: 10px 30px 10px 30px;
-    background-color: var(--light-cream); 
-    height: auto; 
-    min-height: 300px; 
 }
 
-.charts-container {
+.all-charts-container {
     display: flex;
     justify-content: space-between;
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-top: 3%;
-    padding: 10px;
-    background-color: var(--light-cream); 
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    height: auto; 
-    min-height: 300px; 
+    padding: 10px 30px;
+    height: auto;
+    margin-bottom: 20px;
 }
 
 .chart-title {
     text-align: center;
     color: #482919;
     font-size: 1.2rem;
-    margin-bottom: 10px; /* Ajuste para separar el título del gráfico */
+    margin-bottom: 10px;
 }
 
-/* Set a fixed height for both charts */
-/* Contenedor de las charts */
 .chart-wrapper {
     display: flex;
     flex-direction: column;
@@ -101,9 +87,9 @@ html, body {
     padding: 10px;
     height: auto;
     min-height: 300px;
+    margin-bottom: 20px;
 }
 
-/* Ajusta el ancho de cada gráfica sin afectar la altura */
 .chart-wrapper.category-revenue {
     flex-grow: 1;
     flex-basis: 0;
@@ -116,21 +102,17 @@ html, body {
     max-width: 60%;
 }
 
-/* Asegura que ambos gráficos respeten la misma altura */
 .card {
     width: 100%;
-    height: 100%; /* Ajusta la altura de la tarjeta */
+    height: 100%;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     padding: 20px;
-
-    /* Alineación centrada del contenido */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
-    flex: 1;
+    justify-content: center;
+    align-items: center;
 }
 
 .card:hover {
@@ -139,9 +121,43 @@ html, body {
 
 .p-chart {
     width: 100%;
-    height: 100%;
-    overflow: hidden; /* Evita que los gráficos sobresalgan */
+    height: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+}
+
+/* Estilos específicos para Average Per Person y Average Per Ticket */
+.per-day-chart .card, .per-person-chart .card {
+    width: 80%; /* Ajusta el ancho como necesites */
+    height: 300px; /* Ajusta la altura como necesites */
+}
+
+.per-day-chart p-chart, .per-person-chart p-chart {
+    height: 100%; /* Asegura que el gráfico ocupe todo el espacio disponible */
+}
+
+.per-person-chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--light-cream);
+}
+
+.per-day-chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--light-cream);
 }

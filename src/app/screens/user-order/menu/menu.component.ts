@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category } from 'src/app/models/category';
 import { OrderItem } from 'src/app/models/orderItem';
@@ -28,10 +28,30 @@ export class MenuComponent implements OnInit {
   constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
+    this.updateItemsPerPage(window.innerWidth);
     this.loadCategories()
     this.loadProducts(); 
   }
   
+  @HostListener('window:resize', ['$event'])
+  onResize(event: { target: { innerWidth: number; }; }) {
+      this.updateItemsPerPage(event.target.innerWidth);
+      this.updateVisibleCategories(); // Actualiza las categorías visibles al cambiar el tamaño
+  }
+
+  private updateItemsPerPage(width: number) {
+      if (width < 768) {
+          this.itemsPerPage = 3;
+      } else if (width < 1024) {
+          this.itemsPerPage = 4;
+      } else if (width < 1340) {
+          this.itemsPerPage = 5;
+      } else { 
+          this.itemsPerPage = 6;
+      }
+  }
+
+
   loadProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
@@ -45,7 +65,6 @@ export class MenuComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching products:', err);
       }
-      
     });
   }
 
@@ -57,7 +76,7 @@ export class MenuComponent implements OnInit {
             id: item.id,
             name: item.name,
             type: item.type,
-            color: this.colors[index % this.colors.length], // Asignar color de la paleta
+            color: this.colors[index % this.colors.length],
           }));
           this.updateVisibleCategories();
         }
@@ -69,12 +88,24 @@ export class MenuComponent implements OnInit {
   }
 
   searchProducts(event: any): void {
-    const query = event.query.toLowerCase();
+    const query = event.query?.toLowerCase() || '';
+    console.log('Searching for:', query);
     this.filteredProducts = this.products.filter(product =>
-      product.name.toLowerCase().includes(query)
+        product.name.toLowerCase().includes(query)
     );
+    console.log('Filtered products:', this.filteredProducts);
   }
 
+
+  onSearchChange(query: string): void {
+    console.log('Search query:', query);
+    if (query.trim() === '') {
+        console.log('Input is empty, showing all products.');
+        this.filteredProducts = [...this.products];
+    } else {
+        this.searchProducts({ query });
+    }
+  }
   updateVisibleCategories(): void {
     this.visibleCategories = this.categories.slice(this.currentIndex, this.currentIndex + this.itemsPerPage);
   }
@@ -94,21 +125,15 @@ export class MenuComponent implements OnInit {
   }
 
   addProduct(productId: number): void {
-    const product = this.products.find(p => p.id === productId); // Busca el producto
-    const amount = this.getProductCount(productId) + 1; // Obtiene la cantidad actual y la incrementa
-
-    // Verifica que el producto exista
+    const product = this.products.find(p => p.id === productId);
     if (product) {
         const orderItem = this.orderItems.find(item => item.product_id === productId);
-        
         if (orderItem) {
-            orderItem.amount += 1; // Incrementa la cantidad en el OrderItem si ya existe
+            orderItem.amount += 1;
         } else {
-            // Crea un nuevo OrderItem si no existe
-            this.orderItems.push(new OrderItem(productId, 1, product.name, product.price.toString()));
+            this.orderItems.push(new OrderItem(productId, 1, product.name, product.price.toString(), product.imageUrl));
         }
-
-        this.cart[productId] = (this.cart[productId] || 0) + 1; // Actualiza la cantidad en el carrito
+        this.cart[productId] = (this.cart[productId] || 0) + 1;
     } else {
         console.error('Product not found');
     }
@@ -119,16 +144,21 @@ export class MenuComponent implements OnInit {
     return Object.values(this.cart).reduce((acc, count) => acc + count, 0);
   }
 
-
-  incrementProduct(productId: number): void {
-    this.cart[productId] = (this.cart[productId] || 0) + 1;
-  }
-
   decrementProduct(productId: number): void {
+    const orderItem = this.orderItems.find(item => item.product_id === productId);
     if (this.cart[productId] > 0) {
-      this.cart[productId]--;
+        this.cart[productId]--;
+        if (orderItem) {
+            orderItem.amount--;
+            if (orderItem.amount === 0) {
+                this.orderItems = this.orderItems.filter(item => item.product_id !== productId);
+            }
+        }
+    } else {
+        console.error('El producto no está en el carrito o la cantidad ya es 0');
     }
   }
+
 
   getProductCount(productId: number): number {
     return this.cart[productId] || 0;
@@ -158,8 +188,6 @@ export class MenuComponent implements OnInit {
       .then((data) => {
         if (data && Array.isArray(data)) {
           this.filteredProducts = data;
-          
-      console.log('filteredprod en data',   this.filteredProducts );
         } else {
           this.filteredProducts = [];
         }
@@ -173,5 +201,14 @@ export class MenuComponent implements OnInit {
   toggleCart(): void {
     this.cartVisible = !this.cartVisible;
   }
+
+  handleCartClosed(updatedOrderItems: OrderItem[]): void {
+    this.orderItems = updatedOrderItems;
+    this.cart = {};
+    for (const item of this.orderItems) {
+      this.cart[item.product_id] = item.amount;
+    }
+  }
+  
 
 }

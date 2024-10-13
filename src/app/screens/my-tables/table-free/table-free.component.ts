@@ -119,7 +119,6 @@ export class TableFreeComponent implements OnInit {
     try {
       const response = await this.orderService.onRegister(this.order); 
       if (response && response.order && response.order_id) {
-      
         await this.tableService.updateTableAndOrder(response.order, response.order_id);
         this.updateTable(); 
         this.closeDialog(); 

@@ -146,7 +146,7 @@ ng::p-cellEditor input {
   .image-container {
     margin-left: 10%;
     position: relative;
-    width: 90%; 
+    width: 200px; 
     height: 100%;
     overflow: hidden;
   }

@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Order } from 'src/app/models/order';
 import { OrderItem } from 'src/app/models/orderItem';
 
 @Component({
@@ -10,14 +11,19 @@ export class MyCartComponent {
   @Input() orderItems: OrderItem[] = [];
   @Input() isVisible: boolean = false;
   @Output() cartClosed: EventEmitter<OrderItem[]> = new EventEmitter();
+  showCreateOrderDialogFlag: boolean = false;
 
   closeCart(): void {
     this.isVisible = false;
     this.cartClosed.emit(this.orderItems);
   }
 
-  createOrder(): void {
-    console.log('Creating order...', this.orderItems);
+  showCreateOrderDialog() {
+    this.showCreateOrderDialogFlag = true;
+  }
+
+  handleOrderCreated(order: Order) {
+    console.log('Order created:', order);
   }
 
   getTotalPrice(): number {

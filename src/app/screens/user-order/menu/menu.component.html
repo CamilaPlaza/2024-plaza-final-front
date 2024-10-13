@@ -68,7 +68,7 @@
     </div>
 
 </div>
-<app-my-cart 
+<app-my-cart *ngIf="orderItems && orderItems.length > 0" 
     [orderItems]="orderItems" 
     [isVisible]="cartVisible" 
     (cartClosed)="handleCartClosed($event)">

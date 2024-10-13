@@ -10,11 +10,11 @@
                   <span class="amount-price">{{ item.amount }} x ${{ item.product_price }}</span>
                   <div class="quantity-controls">
                       <button (click)="decrementProduct(item.product_id)" class="decrement-button">
-                        <i class="pi pi-minus" style="font-size: 0.6rem"></i> 
+                        <i class="pi pi-minus" style="font-size: 0.6rem; font-weight: bold;"></i> 
                       </button>
                       <span>{{ item.amount }}</span>
                       <button (click)="incrementProduct(item.product_id)" class="increment-button">
-                        <i class="pi pi-plus" style="font-size: 0.6rem"></i> 
+                        <i class="pi pi-plus" style="font-size: 0.6rem; font-weight: bold;"></i> 
                       </button>
                   </div>
               </div>
@@ -27,6 +27,12 @@
           <strong>Total: ${{ getTotalPrice() }}</strong>
       </div>
 
-      <button (click)="createOrder()" class="create-order-button">Create Order</button>
+      <button (click)="showCreateOrderDialog()" class="create-order-button">Create Order</button>
   </div>
 </div>
+
+<app-create-order 
+  [isVisible]="showCreateOrderDialogFlag" 
+  (orderCreated)="handleOrderCreated($event)"
+  (closeModal)="showCreateOrderDialogFlag = false">
+</app-create-order>

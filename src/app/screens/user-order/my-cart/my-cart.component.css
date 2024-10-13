@@ -80,8 +80,8 @@
 
 .decrement-button,
 .increment-button {
-    background-color: #7f522e;
-    color: white;
+    color: #7f522e;
+    background-color: #f6f6f6d0;
     border: none;
     border-radius: 5px;
     padding: 5px 8px;
@@ -90,7 +90,7 @@
 
 .decrement-button:hover,
 .increment-button:hover {
-    background-color: #634025; 
+    color: #634025; 
 }
 
 .quantity-controls button {
@@ -109,11 +109,18 @@
 
 .create-order-button {
   margin-top: 20px;
-  background-color: #5cb85c;
+  background-color: #c39158;
   color: white;
   border: none;
   padding: 10px;
   cursor: pointer;
   width: 100%;
   font-size: 1em;
+  border-radius: 20px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.create-order-button:hover {
+  background-color: #b37a3a;
+  color: #fff5e6;
 }

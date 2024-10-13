@@ -50,12 +50,14 @@ import { ChartModule } from 'primeng/chart';
 import { MenuComponent } from './screens/user-order/menu/menu.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MyCartComponent } from './screens/user-order/my-cart/my-cart.component';
+import { CreateOrderComponent } from './screens/user-order/create-order/create-order.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MenuComponent,
     MyCartComponent,
+    CreateOrderComponent,
     TablesComponent,
     ChartsComponent,
     ExportExcelComponent,

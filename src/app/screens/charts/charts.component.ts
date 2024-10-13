@@ -1,3 +1,5 @@
+
+
 import { Component, OnInit } from '@angular/core';
 import { ChartService } from '../../services/chart_service';  // Import the service
 

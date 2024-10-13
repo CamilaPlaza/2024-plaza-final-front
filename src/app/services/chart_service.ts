@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ChartService {
 
-  private baseUrl = 'https://two024-messidepaul-back.onrender.com';  // Replace with your backend URL
+  private baseUrl = 'https://candvbar-back.onrender.com';
 
   constructor(private http: HttpClient) { }
 

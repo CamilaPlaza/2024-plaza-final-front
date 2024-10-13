@@ -1,7 +1,5 @@
 <div class="container">
-    <div class="section image-section">
-        <img src="../../../assets/images/coffee-white-cup-spilling-table-morning-office-table.jpg" alt="Imagen descriptiva" class="image">
-    </div>
+
     <div class="section title-section">
         <p class="title">CHARTS</p>
     </div>
@@ -23,13 +21,13 @@
         <div class="chart-wrapper per-day-chart">
             <h2 class="chart-title">Average Per Person (Daily)</h2>
             <div class="card flex justify-content-center">
-                <p-chart type="line" [data]="averagePerPersonData" [options]="averagePerPersonOptions" style="width: 100%; height: auto;"></p-chart>
+                <p-chart type="line" [data]="averagePerPersonData" [options]="averagePerPersonOptions"></p-chart>
             </div>
         </div>
         <div class="chart-wrapper per-person-chart">
             <h2 class="chart-title">Average Per Ticket (Daily)</h2>
             <div class="card flex justify-content-center">
-                <p-chart type="line" [data]="averagePerTicketData" [options]="averagePerTicketOptions" style="width: 100%; height: auto;"></p-chart>
+                <p-chart type="line" [data]="averagePerTicketData" [options]="averagePerTicketOptions"></p-chart>
             </div>
         </div>
     </div>

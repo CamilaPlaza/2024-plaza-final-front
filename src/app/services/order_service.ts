@@ -57,8 +57,9 @@ export class OrderService {
   getInactiveOrders(): Observable<Order>{
     return this.http.get<Order>(`${this.baseUrl}/orders`);
   }
-  assignOrderToTable(orderId: number, tableId: number):Observable<any>{
-    return this.http.get<any>(`${this.baseUrl}/asign-order-table/${orderId.toString}/${tableId}`)
-  }
+  
+  assignOrderToTable(orderId: number, tableId: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/asign-order-table/${orderId}`, { tableId: tableId });
+}
 
 }

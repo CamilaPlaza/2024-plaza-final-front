@@ -37,16 +37,14 @@ export class AsignInactiveOrderComponent {
   assignTable() {
     if (this.selectedTable && this.selectedOrder) {
       console.log(`Asignando la mesa ${this.selectedTable.id} a la orden ${this.selectedOrder.id}`);
-      this.createOrder(); // Asegúrate de llamar a la función createOrder para completar la asignación
+      this.createOrder(this.selectedOrder.id ?? 0, this.selectedTable.id ?? 0); // Asegúrate de llamar a la función createOrder para completar la asignación
     } else {
       alert('Por favor selecciona una mesa y una orden.');
     }
   }
 
-  async createOrder() {
-
-    //Llamar al metodo que le paso el id de la orden y el id de la mesa.
-   
+  async createOrder(orderId: number, tableId: number) {
+    this.orderService.assignOrderToTable(orderId, tableId);
     this.close.emit();
   }
 }

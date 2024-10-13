@@ -17,7 +17,7 @@ export class ProductsViewComponent implements OnInit {
   displayConfirmDialog: boolean = false;
   deleteID: number = 0;
   editingProductCategories: { [key: number]: Category[] } = {};
-  originalProductState: { [key: number]: Product } = {}; // Store original state
+  originalProductState: { [key: number]: Product } = {};
   public tableScrollHeight: string='';
 
   constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
@@ -41,6 +41,7 @@ export class ProductsViewComponent implements OnInit {
                     type: item.type
                 }));
             }
+            console.log('categories', this.categories);
         },
         error: (err) => {
             console.error('Error fetching categories:', err);
@@ -49,20 +50,23 @@ export class ProductsViewComponent implements OnInit {
 }
 
 
-
 getCategoryNamesByIds(ids: any): string {
-  // Verifica si ids no es una cadena
+  // Verifica si ids no es una cadena o está vacía
   if (typeof ids !== 'string' || !ids) {
     return '';
   }
 
+  // Convierte la cadena de IDs en un array
   const idArray = ids.split(',').map(id => id.trim());
+
+  // Filtra las categorías basándose en la presencia de sus IDs
   const categoryNames = this.categories
     .filter(category => category.id !== undefined && idArray.includes(category.id.toString()))
     .map(category => category.name);
 
   return categoryNames.join(', ');
 }
+
   
   updateTempSelectedCategories(productId: number, selectedCategories: Category[]): void {
     this.editingProductCategories[productId] = [...selectedCategories];

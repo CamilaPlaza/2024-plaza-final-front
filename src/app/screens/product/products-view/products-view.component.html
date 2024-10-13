@@ -24,11 +24,19 @@
                               <div class="px-3 pt-3 pb-0"><span class="font-bold">Category Picker</span></div>
                             </ng-template>
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                              <p-multiSelect [options]="categories" placeholder="Select" (onChange)="filter($event.value)">
-                                <ng-template let-value pTemplate="item">
-                                  <div class="inline-block"><span class="ml-1 mt-1">{{ value.name }}</span></div>
-                                </ng-template>
+                                <p-multiSelect 
+                                    [options]="categories" 
+                                    placeholder="Select" 
+                                    (onChange)="filter($event.value)"
+                                    optionLabel="name"  
+                                    optionValue="id"> 
+                                    <ng-template let-value pTemplate="item">
+                                    <div class="inline-block">
+                                        <span class="ml-1 mt-1">{{ value.name }}</span>
+                                    </div>
+                                    </ng-template>
                               </p-multiSelect>
+                              
                             </ng-template>
                           </p-columnFilter>
                         </div>
@@ -80,6 +88,7 @@
                                     [maxSelectedLabels]="100"
                                     (onChange)="updateTempSelectedCategories(product.id, editingProductCategories[product.id])">
                                 </p-multiSelect>
+
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{ getCategoryNamesByIds(product.category) }}

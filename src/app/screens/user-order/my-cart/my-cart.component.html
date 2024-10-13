@@ -33,6 +33,7 @@
 
 <app-create-order 
   [isVisible]="showCreateOrderDialogFlag" 
-  (orderCreated)="handleOrderCreated($event)"
-  (closeModal)="showCreateOrderDialogFlag = false">
+  [orderItems]="orderItems"
+  [total]="getTotalPrice()"
+  (closeModal)="closeDialog()">
 </app-create-order>

@@ -18,12 +18,14 @@ export class MyCartComponent {
     this.cartClosed.emit(this.orderItems);
   }
 
-  showCreateOrderDialog() {
-    this.showCreateOrderDialogFlag = true;
+  closeDialog(){
+    this.showCreateOrderDialogFlag = false;
+    this.isVisible = false;
+    this.cartClosed.emit([]);
   }
 
-  handleOrderCreated(order: Order) {
-    console.log('Order created:', order);
+  showCreateOrderDialog() {
+    this.showCreateOrderDialogFlag = true;
   }
 
   getTotalPrice(): number {

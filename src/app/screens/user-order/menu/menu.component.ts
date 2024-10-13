@@ -57,7 +57,7 @@ export class MenuComponent implements OnInit {
             id: item.id,
             name: item.name,
             type: item.type,
-            color: this.colors[index % this.colors.length], // Asignar color de la paleta
+            color: this.colors[index % this.colors.length],
           }));
           this.updateVisibleCategories();
         }
@@ -69,13 +69,11 @@ export class MenuComponent implements OnInit {
   }
 
   searchProducts(event: any): void {
-    const query = event.query?.toLowerCase() || '';  // Asegúrate de que query no sea undefined o null
+    const query = event.query?.toLowerCase() || ''; 
 
     if (query.trim() === '') {
-        // Si no hay texto en la búsqueda, mostrar todos los productos
         this.filteredProducts = [...this.products];
     } else {
-        // Si hay texto, filtrar los productos
         this.filteredProducts = this.products.filter(product =>
             product.name.toLowerCase().includes(query)
         );
@@ -105,14 +103,10 @@ export class MenuComponent implements OnInit {
     const product = this.products.find(p => p.id === productId);
     if (product) {
         const orderItem = this.orderItems.find(item => item.product_id === productId);
-        console.log('orderItem', orderItem);
-        
         if (orderItem) {
             orderItem.amount += 1;
-            console.log('orderItem', orderItem);
         } else {
             this.orderItems.push(new OrderItem(productId, 1, product.name, product.price.toString(), product.imageUrl));
-            console.log('orderItemsss', this.orderItems);
         }
         this.cart[productId] = (this.cart[productId] || 0) + 1;
     } else {
@@ -169,8 +163,6 @@ export class MenuComponent implements OnInit {
       .then((data) => {
         if (data && Array.isArray(data)) {
           this.filteredProducts = data;
-          
-      console.log('filteredprod en data',   this.filteredProducts );
         } else {
           this.filteredProducts = [];
         }

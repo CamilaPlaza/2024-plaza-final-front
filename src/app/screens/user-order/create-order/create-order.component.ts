@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Order } from 'src/app/models/order';
+import { OrderItem } from 'src/app/models/orderItem';
+import { OrderService } from 'src/app/services/order_service';
 
 
 @Component({
@@ -11,20 +13,33 @@ export class CreateOrderComponent {
   @Input() isVisible: boolean = false;
   @Output() orderCreated = new EventEmitter<Order>(); 
   @Output() closeModal = new EventEmitter(); 
+  @Input() orderItems: OrderItem[] = [];
+  @Input() total: number = 1;
   amountOfPeople: number = 1; 
 
-  createOrder() {
+  constructor(private orderService: OrderService) { } 
+
+  async createOrder() {
     const newOrder: Order = {
-      status: 'New',
+      status: 'INACTIVE',
       amountOfPeople: this.amountOfPeople,
-      tableNumber: 1, 
+      tableNumber: 0, 
       date: new Date().toISOString().split('T')[0],
       time: new Date().toLocaleTimeString(), 
-      total: '0.00', 
-      orderItems: [] 
+      total: this.total.toString(), 
+      orderItems: this.orderItems
     };
-    this.orderCreated.emit(newOrder);
-    this.isVisible = false; 
+    
+    console.log(newOrder);
+    try {
+      await this.orderService.onRegister(newOrder);
+      console.log('Orden registrada exitosamente');
+    } catch (error) {
+      console.error('Error al crear la orden:', error);
+      // Manejo de errores según sea necesario
+    }
+  
+    this.closeDialog();
   }
 
   closeDialog(){

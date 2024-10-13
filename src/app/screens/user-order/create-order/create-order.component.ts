@@ -17,9 +17,17 @@ export class CreateOrderComponent {
   @Input() total: number = 1;
   amountOfPeople: number = 1; 
 
+  // Nuevas propiedades
+  isLoading: boolean = false; // Estado de carga
+  isNoticeVisible: boolean = false; // Estado del diálogo de notificación
+  noticeMessage: string = ''; // Mensaje para el diálogo de notificación
+
   constructor(private orderService: OrderService) { } 
 
   async createOrder() {
+    this.isVisible = false;
+    this.isLoading = true; // Iniciar carga
+
     const newOrder: Order = {
       status: 'INACTIVE',
       amountOfPeople: this.amountOfPeople,
@@ -34,16 +42,22 @@ export class CreateOrderComponent {
     try {
       await this.orderService.onRegister(newOrder);
       console.log('Orden registrada exitosamente');
+      
+      // Mostrar notificación exitosa
+      this.noticeMessage = 'Order Successfully created';
+      this.isNoticeVisible = true; // Mostrar el diálogo de notificación
     } catch (error) {
       console.error('Error al crear la orden:', error);
-      // Manejo de errores según sea necesario
+      this.noticeMessage = 'An error has occurred. Please try again later.';
+      this.isNoticeVisible = true; // Mostrar el diálogo de notificación en caso de error
+    } finally {
+      this.isLoading = false; // Finalizar carga
     }
-  
-    this.closeDialog();
+
+
   }
 
-  closeDialog(){
+  closeDialog() {
     this.closeModal.emit();
   }
-
 }

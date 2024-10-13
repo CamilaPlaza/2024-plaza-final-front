@@ -19,8 +19,7 @@ export class AsignInactiveOrderComponent {
   selectedTable!: Table;
 
   constructor(
-    private orderService: OrderService,
-    private tableService: TableService
+    private orderService: OrderService
   ) {}
 
   get filteredOrders() {
@@ -44,8 +43,17 @@ export class AsignInactiveOrderComponent {
   }
 
   async createOrder(orderId: number, tableId: number) {
-    this.orderService.assignOrderToTable(orderId, tableId);
-    this.close.emit();
-;
+    this.orderService.assignOrderToTable(orderId, tableId).subscribe({
+      next: (response) => {
+        console.log('Successfully assigned order:', response);
+        this.close.emit();
+      },
+      error: (error) => {
+        console.error('Error during assignment:', error);
+        this.close.emit();
+      }
+    });
   }
+  
+
 }

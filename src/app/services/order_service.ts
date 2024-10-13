@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Order } from '../models/order';
 import { Observable } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +62,15 @@ export class OrderService {
   }
   
   assignOrderToTable(orderId: number, tableId: number): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/asign-order-table/${orderId}`, { tableId: tableId });
-}
-
+    console.log(`Assigning order ${orderId} to table ${tableId}`);
+  
+    return this.http.put<any>(`${this.baseUrl}/asign-order-table/${orderId}/${tableId}`, null).pipe(
+      tap(response => console.log('Response from API:', response)),
+      catchError(error => {
+        console.error('Error assigning order to table:', error);
+        return throwError(error);
+      })
+    );
+  }
+  
 }

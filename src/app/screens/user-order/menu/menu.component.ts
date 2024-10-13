@@ -185,4 +185,13 @@ export class MenuComponent implements OnInit {
     this.cartVisible = !this.cartVisible;
   }
 
+  handleCartClosed(updatedOrderItems: OrderItem[]): void {
+    this.orderItems = updatedOrderItems;
+    this.cart = {};
+    for (const item of this.orderItems) {
+      this.cart[item.product_id] = item.amount;
+    }
+  }
+  
+
 }

@@ -68,5 +68,10 @@
     </div>
 
 </div>
-<app-my-cart [orderItems]="orderItems" [isVisible]="cartVisible"></app-my-cart>
+<app-my-cart 
+    [orderItems]="orderItems" 
+    [isVisible]="cartVisible" 
+    (cartClosed)="handleCartClosed($event)">
+</app-my-cart>
+
 

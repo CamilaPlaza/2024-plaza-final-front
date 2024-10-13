@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category } from 'src/app/models/category';
 import { OrderItem } from 'src/app/models/orderItem';
@@ -28,10 +28,30 @@ export class MenuComponent implements OnInit {
   constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
+    this.updateItemsPerPage(window.innerWidth);
     this.loadCategories()
     this.loadProducts(); 
   }
   
+  @HostListener('window:resize', ['$event'])
+  onResize(event: { target: { innerWidth: number; }; }) {
+    this.updateItemsPerPage(event.target.innerWidth);
+  }
+
+  
+
+  private updateItemsPerPage(width: number) {
+    if (width < 768) {
+      this.itemsPerPage = 3;
+    } else if (width < 1024) {
+      this.itemsPerPage = 4;
+    } else if (width < 1340) {
+      this.itemsPerPage = 5;
+    } else { 
+      this.itemsPerPage = 6;
+    }
+  }
+
   loadProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
@@ -69,16 +89,25 @@ export class MenuComponent implements OnInit {
   }
 
   searchProducts(event: any): void {
-    const query = event.query?.toLowerCase() || ''; 
+    const query = event.query?.toLowerCase() || '';
+    console.log('Searching for:', query);
+    this.filteredProducts = this.products.filter(product =>
+        product.name.toLowerCase().includes(query)
+    );
+    console.log('Filtered products:', this.filteredProducts);
+  }
 
+
+  onSearchChange(query: string): void {
+    console.log('Search query:', query);
     if (query.trim() === '') {
+        console.log('Input is empty, showing all products.');
         this.filteredProducts = [...this.products];
     } else {
-        this.filteredProducts = this.products.filter(product =>
-            product.name.toLowerCase().includes(query)
-        );
+        this.searchProducts({ query });
     }
-}
+  }
+
 
 
   updateVisibleCategories(): void {

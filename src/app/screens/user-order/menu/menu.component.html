@@ -6,10 +6,18 @@
             <h1 class="bar-name">C&V BAR</h1>
         </div>
         <div class="search-bar">
-            <p-autoComplete [(ngModel)]="searchQuery" [suggestions]="filteredProducts" 
-                            (completeMethod)="searchProducts($event)" field="name" 
-                            placeholder="Search products..." [forceSelection]="false">
+            <p-autoComplete 
+                [(ngModel)]="searchQuery" 
+                (ngModelChange)="onSearchChange($event)"
+                [suggestions]="filteredProducts" 
+                (completeMethod)="searchProducts($event)" 
+                field="name" 
+                placeholder="Search products..." 
+                [forceSelection]="false">
             </p-autoComplete>
+
+
+
         </div>
         <div class="cart-container"(click)="toggleCart()">
             <i class="pi pi-shopping-cart cart-logo"></i>

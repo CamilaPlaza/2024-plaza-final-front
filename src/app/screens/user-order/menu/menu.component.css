@@ -124,7 +124,6 @@
   .category-container {
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap;
     gap: 20px;
   }
   
@@ -279,5 +278,69 @@
     background-color: #634025;
   }
 
+  @media (max-width: 768px) { 
+    
+    .menu-categories {
+      margin-left: 2%;
+      margin-right: 2%;
+    }
+
+    .greeting {
+      margin-top: 20%;
+      font-size: 12px;
+    }
   
+    .category-card {
+      height: 50px;
+    }
   
+    .category-name {
+      font-size: 12px;
+    }
+
+    .bar-logo {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
+    
+    .bar-name {
+      font-size: 12px;
+    }
+    
+    .search-bar {
+      max-width: 200px;
+    }
+  
+    ::ng-deep .p-autocomplete input {
+      padding: 5px;
+      font-size: 12px;
+      width: 200px;
+    }
+    
+    ::ng-deep .p-autocomplete-panel {
+      max-width: 200px;
+    }
+    
+    .cart-logo {
+      font-size: 1.5rem;
+    }
+
+  .product-container {
+    grid-template-columns: repeat(1, 1fr);
+    margin-top: 2%;
+    gap: 20px;
+    margin-bottom: 5%;
+    height: 70vh; 
+  }
+  
+  .product-card {
+    height: 180px;
+  }
+  
+  .product-image {
+    width: 130px;
+    height: 80px;
+  }
+
+}

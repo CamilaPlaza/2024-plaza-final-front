@@ -17,6 +17,7 @@ export class AsignInactiveOrderComponent {
   searchId: string = '';
   selectedOrder!: Order; 
   selectedTable!: Table;
+  isLoading: boolean = false;
 
   constructor(
     private orderService: OrderService
@@ -43,13 +44,16 @@ export class AsignInactiveOrderComponent {
   }
 
   async createOrder(orderId: number, tableId: number) {
+    this.isLoading = true; 
     this.orderService.assignOrderToTable(orderId, tableId).subscribe({
       next: (response) => {
         console.log('Successfully assigned order:', response);
+        this.isLoading = false;
         this.close.emit();
       },
       error: (error) => {
         console.error('Error during assignment:', error);
+        this.isLoading = false;
         this.close.emit();
       }
     });

@@ -162,6 +162,7 @@ export class TableBusyComponent implements OnInit {
   
 
   closeTable() {
+    this.loading = true;
     if (this.table.order_id) {
       this.orderService.finalizeOrder(this.table.order_id.toString()).subscribe({
         next: () => {
@@ -169,19 +170,24 @@ export class TableBusyComponent implements OnInit {
           this.tableService.closeTable(this.table).subscribe({
             next: () => {
               console.log('Table closed successfully');
+              this.loading = false;
               this.closeDialog();
+              
             },
             error: (err) => {
               console.error('Error closing table:', err);
+              this.loading = false;
             }
           });
         },
         error: (err) => {
           console.error('Error finalizing order:', err);
+          this.loading = false;
         }
       });
     } else {
       console.error('Order ID is undefined.');
+      this.loading = false;
     }
   }
 

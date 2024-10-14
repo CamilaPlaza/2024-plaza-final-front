@@ -13,7 +13,7 @@ import { ProductService } from 'src/app/services/product_service';
 })
 export class MenuComponent implements OnInit {
   categories: Category[] = [];
-  colors: string[] = ['#7f522e', '#b37a3a', '#915728', '#c39158', '#b2682b', '#caa171'];
+  colors: string[] = ['#7f522e', '#b37a3a'];
   products : Product[] = [];
   visibleCategories: Category[] = [];
   selectedCategories: Category[] = [];

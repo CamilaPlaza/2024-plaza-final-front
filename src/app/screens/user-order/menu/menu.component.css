@@ -130,7 +130,7 @@
   .category-card {
     position: relative;
     width: 150px;
-    height: 80px;
+    height: 60px;
     border-radius: 10px;
     overflow: hidden;
     display: flex;
@@ -146,16 +146,16 @@
   }
 
   .selected-category {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
   }
   
   .category-name {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    justify-content: center;
+    align-items: center;
     font-size: 18px;
     font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   .nav-button {

@@ -1,13 +1,14 @@
 .asign-inactive-order-container {
   padding: 20px;
-  max-width: 3300px; /* Mantiene un ancho máximo */
+  max-width: 330px; /* Mantiene un ancho máximo */
   background-color: white;
   border-radius: 20px;
-  box-sizing: border-box; /* Incluye padding en el ancho total */
+  box-sizing: border-box; 
+  height: auto;
 }
 
 .options-orders {
-  max-width: 300px; /* Asegúrate de que no exceda el contenedor */
+  max-width: 300px;
 }
 
 .selected {
@@ -58,6 +59,14 @@ button.p-button-success:hover {
   margin-bottom: 2%;
   width: 100%; /* Asegúrate de que el dropdown se ajuste al contenedor */
 }
+
+.p-dropdown-panel {
+  max-height: 500px; /* Ajusta la altura máxima según sea necesario */
+  overflow-y: auto; /* Agrega desplazamiento si hay muchas opciones */
+  position: absolute; /* Asegura que las opciones se muestren correctamente */
+  z-index: 1000; /* Asegúrate de que el dropdown se muestre sobre otros elementos */
+}
+
 
 .search-box {
   position: relative;

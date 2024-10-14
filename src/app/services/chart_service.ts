@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 export class ChartService {
 
   private baseUrl = 'https://candvbar-back.onrender.com';
-
   constructor(private http: HttpClient) { }
 
   getCategoryRevenue(): Observable<any> {

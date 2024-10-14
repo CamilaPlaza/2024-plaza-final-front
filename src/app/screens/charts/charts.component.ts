@@ -1,7 +1,6 @@
-
-
 import { Component, OnInit } from '@angular/core';
-import { ChartService } from '../../services/chart_service';  // Import the service
+import { ChartService } from '../../services/chart_service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-charts',
@@ -9,33 +8,39 @@ import { ChartService } from '../../services/chart_service';  // Import the serv
   styleUrls: ['./charts.component.css']
 })
 export class ChartsComponent implements OnInit {
+    selectedYear: string | undefined;
+    selectedMonth: string | undefined;
+    availableYears: string[] = ['2022', '2023', '2024'];
+    availableMonths: string[] = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
     categoryData: any;
     categoryOptions: any;
     monthlyData: any;
     monthlyOptions: any;
-    averagePerPersonData: any;  // New chart data
-    averagePerPersonOptions: any;  // New chart options
-    averagePerTicketData: any;  // New chart data
-    averagePerTicketOptions: any;  // New chart options
-    public scrollHeight: string='';
+    averagePerPersonData: any;
+    averagePerPersonOptions: any;
+    averagePerTicketData: any;
+    averagePerTicketOptions: any;
+    public scrollHeight: string = '';
 
-    constructor(private chartService: ChartService) { }
+    constructor(private chartService: ChartService, private fb: FormBuilder) {
+    }
 
     ngOnInit() {
-        this.loadCategoryRevenue();  // Cargar datos para la gráfica de categoría
-        this.loadMonthlyRevenue();  // Cargar datos para la gráfica mensual
-        this.loadAveragePerPersonData();
-        this.loadAveragePerTicketData();
+        this.loadCategoryRevenue();
+        this.loadMonthlyRevenue();
+        this.loadAveragePerPersonData();  // Load initial data
+        this.loadAveragePerTicketData();  // Load initial data
+
         this.setScrollHeight();
+
         window.addEventListener('resize', () => {
-          this.setScrollHeight();
+            this.setScrollHeight();
         });
 
-        // Obtener el estilo del componente
+        // Estilos del gráfico
         const documentStyle = getComputedStyle(this.getHostElement());
         const textColor = documentStyle.getPropertyValue('--text-color');
 
-        // Opciones de gráficos compartidas (puedes personalizarlas más adelante)
         this.categoryOptions = {
             plugins: {
                 legend: {
@@ -59,21 +64,26 @@ export class ChartsComponent implements OnInit {
         };
     }
 
+    onDateChange(): void {
+
+        // Actualizar los datos de los gráficos en función del año y mes seleccionados
+        this.loadAveragePerPersonData();
+        this.loadAveragePerTicketData();
+    }
+
     getHostElement(): HTMLElement {
         const hostElement = document.querySelector('app-charts');
         if (!hostElement) {
             throw new Error('Host element not found');
         }
-        return hostElement as HTMLElement; // Type assertion
+        return hostElement as HTMLElement;
     }
 
     loadCategoryRevenue() {
         const storedCategoryData = localStorage.getItem('categoryRevenue');
         if (storedCategoryData) {
-            // Si los datos ya están en el local storage, úsalos
             this.categoryData = JSON.parse(storedCategoryData);
         } else {
-            // Si no están en local storage, haz la llamada a la base de datos
             this.chartService.getCategoryRevenue().subscribe(
                 (response) => {
                     if (response && Object.keys(response).length > 0) {
@@ -97,7 +107,6 @@ export class ChartsComponent implements OnInit {
                             ]
                         };
 
-                        // Guardar los datos en el local storage
                         localStorage.setItem('categoryRevenue', JSON.stringify(this.categoryData));
                     } else {
                         console.warn('No revenue data available');
@@ -117,10 +126,8 @@ export class ChartsComponent implements OnInit {
     loadMonthlyRevenue() {
         const storedMonthlyData = localStorage.getItem('monthlyRevenue');
         if (storedMonthlyData) {
-            // Si los datos ya están en el local storage, úsalos
             this.monthlyData = JSON.parse(storedMonthlyData);
         } else {
-            // Si no están en local storage, haz la llamada a la base de datos
             this.chartService.getMonthlyRevenue().subscribe(
                 (response) => {
                     if (response && Object.keys(response).length > 0) {
@@ -180,7 +187,6 @@ export class ChartsComponent implements OnInit {
                             datasets: datasets
                         };
 
-                        // Guardar los datos en el local storage
                         localStorage.setItem('monthlyRevenue', JSON.stringify(this.monthlyData));
                     } else {
                         console.warn('No monthly revenue data available');
@@ -198,31 +204,31 @@ export class ChartsComponent implements OnInit {
     }
 
     loadAveragePerTicketData() {
-      const year = '2024'; // Ejemplo de año, obtén esto dinámicamente según sea necesario
-      const month = '10'; // Ejemplo de mes, obtén esto dinámicamente según sea necesario
+        const year = this.selectedYear ?? '';
+        const month = this.selectedMonth ?? '';
 
-      this.chartService.getAveragePerTicket(year, month).subscribe(data => {
-        console.log(data);
-          this.averagePerTicketData = {
-              labels: Object.keys(data),
-              datasets: [
-                  {
-                      label: 'Average Per Ticket',
-                      data: Object.values(data),
-                      fill: false,
-                      borderColor: '#565656'
-                  }
-              ]
-          };
-      });
-  }
+        this.chartService.getAveragePerTicket(year, month).subscribe(data => {
+            console.log(data);
+            this.averagePerTicketData = {
+                labels: Object.keys(data),
+                datasets: [
+                    {
+                        label: 'Average Per Ticket',
+                        data: Object.values(data),
+                        fill: false,
+                        borderColor: '#565656'
+                    }
+                ]
+            };
+        });
+    }
 
-  loadAveragePerPersonData() {
-        const year = '2024'; // Ejemplo de año, obtén esto dinámicamente según sea necesario
-        const month = '10'; // Ejemplo de mes, obtén esto dinámicamente según sea necesario
+    loadAveragePerPersonData() {
+        const year = this.selectedYear ?? '';
+        const month = this.selectedMonth ?? '';
 
         this.chartService.getAveragePerPerson(year, month).subscribe(data => {
-          console.log(data);
+            console.log(data);
             this.averagePerPersonData = {
                 labels: Object.keys(data),
                 datasets: [

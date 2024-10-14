@@ -18,17 +18,30 @@
                 </div>
             </div>
         </div>
-        <div class="chart-wrapper per-day-chart">
+        <div class="date-selectors">
+            <label for="year">Select Year:</label>
+            <select id="year" [(ngModel)]="selectedYear" (change)="onDateChange()">
+              <option *ngFor="let year of availableYears" [value]="year">{{year}}</option>
+            </select>
+          
+            <label for="month">Select Month:</label>
+            <select id="month" [(ngModel)]="selectedMonth" (change)="onDateChange()">
+              <option *ngFor="let month of availableMonths" [value]="month">{{month}}</option>
+            </select>
+          </div>
+          
+          <div class="chart-wrapper per-day-chart">
             <h2 class="chart-title">Average Per Person (Daily)</h2>
             <div class="card flex justify-content-center">
-                <p-chart type="line" [data]="averagePerPersonData" [options]="averagePerPersonOptions"></p-chart>
+              <p-chart type="line" [data]="averagePerPersonData" [options]="averagePerPersonOptions"></p-chart>
             </div>
-        </div>
-        <div class="chart-wrapper per-person-chart">
+          </div>
+          
+          <div class="chart-wrapper per-person-chart">
             <h2 class="chart-title">Average Per Ticket (Daily)</h2>
             <div class="card flex justify-content-center">
-                <p-chart type="line" [data]="averagePerTicketData" [options]="averagePerTicketOptions"></p-chart>
+              <p-chart type="line" [data]="averagePerTicketData" [options]="averagePerTicketOptions"></p-chart>
             </div>
-        </div>
+          </div>
     </div>
 </div>

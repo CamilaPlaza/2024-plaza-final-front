@@ -30,14 +30,18 @@
             </select>
           </div>
           
-          <div class="chart-wrapper per-day-chart">
+          <div class="chart-wrapper per-day-chart" *ngIf="!noDataMessage">
             <h2 class="chart-title">Average Per Person (Daily)</h2>
             <div class="card flex justify-content-center">
               <p-chart type="line" [data]="averagePerPersonData" [options]="averagePerPersonOptions"></p-chart>
             </div>
           </div>
           
-          <div class="chart-wrapper per-person-chart">
+          <div class="no-data-alert" *ngIf="noDataMessage">
+            {{ noDataMessage }}
+          </div>
+          
+          <div class="chart-wrapper per-person-chart" *ngIf="!noDataMessage">
             <h2 class="chart-title">Average Per Ticket (Daily)</h2>
             <div class="card flex justify-content-center">
               <p-chart type="line" [data]="averagePerTicketData" [options]="averagePerTicketOptions"></p-chart>

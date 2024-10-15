@@ -185,3 +185,76 @@ html, body {
         margin-bottom: 15%;
     }
 }
+
+
+.date-selectors {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: var(--dark-brown);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.date-selectors label {
+    font-size: 1.1rem;
+    color: var(--light-brown);
+    margin-right: 10px;
+}
+
+.date-selectors select {
+    padding: 8px;
+    font-size: 1rem;
+    border: 2px solid var(--brown);
+    border-radius: 5px;
+    margin: 0 15px;
+    background-color: var(--light-cream);
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
+    outline: none;
+}
+
+.date-selectors select:hover {
+    border-color: var(--deep-brown);
+}
+
+.date-selectors select:focus {
+    border-color: var(--dark-brown);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.date-selectors select option {
+    background-color: var(--light-brown);
+    color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+    .date-selectors {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+        width: 100%;
+    }
+
+    .date-selectors label {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .date-selectors select {
+        margin: 0 0 10px 0;
+        width: 100%;
+    }
+}
+
+.no-data-alert {
+    text-align: center;
+    color: red;
+    font-size: 1.2rem;
+    margin-top: 20px;
+}

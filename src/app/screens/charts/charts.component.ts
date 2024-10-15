@@ -20,9 +20,10 @@ export class ChartsComponent implements OnInit {
     averagePerPersonOptions: any;
     averagePerTicketData: any;
     averagePerTicketOptions: any;
+    noDataMessage: string = '';
     public scrollHeight: string = '';
 
-    constructor(private chartService: ChartService, private fb: FormBuilder) {
+    constructor(private chartService: ChartService) {
     }
 
     ngOnInit() {
@@ -30,7 +31,7 @@ export class ChartsComponent implements OnInit {
         this.loadMonthlyRevenue();
         this.loadAveragePerPersonData();  // Load initial data
         this.loadAveragePerTicketData();  // Load initial data
-
+        this.loadDefaultData();
         this.setScrollHeight();
 
         window.addEventListener('resize', () => {
@@ -65,8 +66,6 @@ export class ChartsComponent implements OnInit {
     }
 
     onDateChange(): void {
-
-        // Actualizar los datos de los gráficos en función del año y mes seleccionados
         this.loadAveragePerPersonData();
         this.loadAveragePerTicketData();
     }
@@ -203,29 +202,61 @@ export class ChartsComponent implements OnInit {
         }
     }
 
-    loadAveragePerTicketData() {
-        const year = this.selectedYear ?? '';
-        const month = this.selectedMonth ?? '';
-
-        this.chartService.getAveragePerTicket(year, month).subscribe(data => {
-            console.log(data);
-            this.averagePerTicketData = {
-                labels: Object.keys(data),
-                datasets: [
-                    {
-                        label: 'Average Per Ticket',
-                        data: Object.values(data),
-                        fill: false,
-                        borderColor: '#565656'
-                    }
-                ]
-            };
-        });
-    }
-
     loadAveragePerPersonData() {
         const year = this.selectedYear ?? '';
         const month = this.selectedMonth ?? '';
+    
+        this.chartService.getAveragePerPerson(year, month).subscribe(data => {
+            const total = (Object.values(data) as number[]).reduce((sum, value) => sum + value, 0); // Sumar valores
+        
+            if (total === 0) {
+                this.noDataMessage = "No data available for this year and month.";
+            } else {
+                this.noDataMessage = ''; // Limpiar el mensaje si hay datos
+                this.averagePerPersonData = {
+                    labels: Object.keys(data),
+                    datasets: [
+                        {
+                            label: 'Average Per Person',
+                            data: Object.values(data),
+                            fill: false,
+                            borderColor: '#565656'
+                        }
+                    ]
+                };
+            }
+        });
+    }
+    
+    loadAveragePerTicketData() {
+        const year = this.selectedYear ?? '';
+        const month = this.selectedMonth ?? '';
+    
+        this.chartService.getAveragePerTicket(year, month).subscribe(data => {
+            const total = (Object.values(data) as number[]).reduce((sum, value) => sum + value, 0); // Sumar valores
+    
+            if (total === 0) {
+                this.noDataMessage = "No data available for this year and month.";
+            } else {
+                this.noDataMessage = ''; // Limpiar el mensaje si hay datos
+                this.averagePerTicketData = {
+                    labels: Object.keys(data),
+                    datasets: [
+                        {
+                            label: 'Average Per Ticket',
+                            data: Object.values(data),
+                            fill: false,
+                            borderColor: '#565656'
+                        }
+                    ]
+                };
+            }
+        });
+    }
+
+    loadDefaultData(){
+        const year = "2024"
+        const month = "10"
 
         this.chartService.getAveragePerPerson(year, month).subscribe(data => {
             console.log(data);
@@ -234,6 +265,20 @@ export class ChartsComponent implements OnInit {
                 datasets: [
                     {
                         label: 'Average Per Person',
+                        data: Object.values(data),
+                        fill: false,
+                        borderColor: '#565656'
+                    }
+                ]
+            };
+        });
+        this.chartService.getAveragePerTicket(year, month).subscribe(data => {
+            console.log(data);
+            this.averagePerTicketData = {
+                labels: Object.keys(data),
+                datasets: [
+                    {
+                        label: 'Average Per Ticket',
                         data: Object.values(data),
                         fill: false,
                         borderColor: '#565656'

@@ -14,6 +14,8 @@ export class ProductsViewComponent implements OnInit {
   categories: Category[] = [];
   products : Product[] = [];
   selectedCategories: Category[] = [];
+  filteredProducts: Product[] = [];
+  selectedFilterCategories: string[] = [];
   displayConfirmDialog: boolean = false;
   deleteID: number = 0;
   editingProductCategories: { [key: number]: Category[] } = {};
@@ -56,16 +58,32 @@ getCategoryNamesByIds(ids: any): string {
     return '';
   }
 
+
   // Convierte la cadena de IDs en un array
   const idArray = ids.split(',').map(id => id.trim());
-
   // Filtra las categorías basándose en la presencia de sus IDs
   const categoryNames = this.categories
     .filter(category => category.id !== undefined && idArray.includes(category.id.toString()))
     .map(category => category.name);
-
   return categoryNames.join(', ');
 }
+
+filterByCategory(selectedCategoryIds: string[]): void {
+  this.selectedFilterCategories = selectedCategoryIds;
+
+  if (this.selectedFilterCategories.length === 0) {
+    // Sin filtro, muestra todos los productos
+    this.filteredProducts = [...this.products];
+  } else {
+    // Filtra los productos por las categorías seleccionadas
+    this.filteredProducts = this.products.filter(product => {
+      const productCategories = product.category.split(',').map(id => parseInt(id.trim(), 10));
+      const matches = this.selectedFilterCategories.some(categoryId => productCategories.includes(parseInt(categoryId)));
+      return matches;
+    });
+  }
+}
+
 
   
   updateTempSelectedCategories(productId: number, selectedCategories: Category[]): void {
@@ -85,6 +103,7 @@ getCategoryNamesByIds(ids: any): string {
       next: (data) => {
         if (data && Array.isArray(data.products)) {
           this.products = data.products;
+          this.filteredProducts = [...this.products];
         } else {
           console.error('Unexpected data format:', data);
         }

@@ -158,7 +158,7 @@ export class ChartsComponent implements OnInit {
                         const datasets: { label: string, data: number[], fill: boolean, borderColor: string, tension: number }[] = [];
                         const documentStyle = getComputedStyle(this.getHostElement());
                         const colorKeys = [
-                            'light-cream', 'light-tan', 'beige', 'light-brown', 'medium-brown',
+                            'medium-brown', 'light-cream', 'light-tan', 'beige', 'light-brown', 'medium-brown',
                             'brown', 'dark-brown', 'darker-brown', 'deep-brown', 'deepest-brown'
                         ];
                         const lineColors = colorKeys.map(key => documentStyle.getPropertyValue(`--${key}`));
@@ -172,7 +172,7 @@ export class ChartsComponent implements OnInit {
                                 label: `Revenue ${year}`,
                                 data: revenueData,
                                 fill: false,
-                                borderColor: lineColors[colorIndex % lineColors.length],
+                                borderColor: lineColors[colorIndex],
                                 tension: 0.4
                             });
 
@@ -220,7 +220,8 @@ export class ChartsComponent implements OnInit {
                             label: 'Average Per Person',
                             data: Object.values(data),
                             fill: false,
-                            borderColor: '#565656'
+                            borderColor: '#565656',
+                            tension: 0.4
                         }
                     ]
                 };

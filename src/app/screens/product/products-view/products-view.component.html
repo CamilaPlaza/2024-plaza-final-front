@@ -9,7 +9,7 @@
 
   <div class="section table-section">
       <div class="card">
-          <p-table [value]="products" dataKey="id" editMode="row" scrollable="true"  [scrollHeight]="tableScrollHeight">
+        <p-table [value]="filteredProducts" dataKey="id" editMode="row" scrollable="true" [scrollHeight]="tableScrollHeight">
               <ng-template pTemplate="header">
                   <tr>
                       <th pSortableColumn="name" pResizableColumn>Name <p-sortIcon field="name"></p-sortIcon></th>
@@ -27,7 +27,7 @@
                                 <p-multiSelect 
                                     [options]="categories" 
                                     placeholder="Select" 
-                                    (onChange)="filter($event.value)"
+                                    (onChange)="filterByCategory($event.value)"
                                     optionLabel="name"  
                                     optionValue="id"> 
                                     <ng-template let-value pTemplate="item">

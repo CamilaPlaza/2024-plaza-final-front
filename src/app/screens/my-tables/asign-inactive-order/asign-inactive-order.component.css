@@ -133,3 +133,12 @@ button.p-button-success:hover {
   height: 100px; /* Ajusta el tamaño del spinner */
   z-index: 10001; /* Asegúrate de que esté por encima de la capa oscura */
 }
+
+@media (max-width: 768px) {
+
+  .asign-inactive-order-container {
+    min-height: 600px;
+  }
+  
+
+}

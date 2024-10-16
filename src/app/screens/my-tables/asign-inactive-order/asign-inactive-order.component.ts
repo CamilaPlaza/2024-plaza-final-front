@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TableService } from 'src/app/services/table_service';
 import { Order } from 'src/app/models/order';
 import { OrderService } from 'src/app/services/order_service';
 import { Table } from 'src/app/models/table';

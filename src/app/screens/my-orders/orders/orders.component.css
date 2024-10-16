@@ -104,9 +104,6 @@ p-table {
 
     .image-section {
         flex: 0.2;
-        height: 10%;
-        width: 100%;
-        overflow: hidden;
     }
 
     .container {

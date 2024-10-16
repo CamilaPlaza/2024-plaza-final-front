@@ -92,11 +92,17 @@
                 </ng-template>
             </p-dropdown>
           
-            <label for="amount">Amount:</label>
-            <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" />
-          
-            <label for="price">Price:</label>
-            <input id="price" type="text" [value]="selectedProduct?.price" disabled />
+            <div class="amount-price-wrapper">
+              <div class="amount">
+                <label for="amount">Amount:</label>
+                <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" />
+              </div>
+              <div class="price">
+                <label for="price">Price:</label>
+                <input id="price" type="text" [value]="selectedProduct?.price" disabled />
+              </div>
+            </div>
+            
           </div>
           
           <div class="add-product-button">

@@ -236,8 +236,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.3); /* Fondo semi-transparente */
-  z-index: 9999; /* Asegurarse de que esté por encima de todo */
+  background-color: rgba(0, 0, 0, 0.3); 
+  z-index: 9999;
+}
+
+.add-product {
+  display: flex;
+  flex-direction: row;
+}
+
+.amount-price-wrapper {
+  display: flex; 
+  gap: 10px;
+  margin-top: 10px;
 }
 
 
@@ -247,7 +258,7 @@
     margin-left: 7%;
     width: 300px;
     border-radius: 20px;
-    height: 600px;
+    height: auto;
   }
 
   .body {
@@ -312,33 +323,28 @@
   ::ng-deep .p-dropdown-item {
     padding: 8px;
   }
-  
-  .add-product select {
-    width: 20px; /* Ancho reducido */
-    padding: 8px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    flex: none;
+  /**/
+
+  .add-product {
+    display: flex;
+    flex-direction: column;
   }
-  
-  .add-product input[type="number"] {
-    width: 20px;
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+
+  .amount-price-wrapper {
+    display: flex;
+    gap: 10px; 
+    margin-top: 10px; 
+  }
+
+
+  input[type="number"],
+  input[type="text"] {
+    width: 100%; 
   }
   
   .add-product input[type="text"] {
-    width: 20px; /* Tamaño reducido */
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    text-align: center;
-  }
-
-  /**/
-  
+    width: 50px;
+  }  
   
   .loading-overlay {
     width: 90%;
@@ -346,7 +352,4 @@
     height: 100%;
   }
   
-
-
-
 }

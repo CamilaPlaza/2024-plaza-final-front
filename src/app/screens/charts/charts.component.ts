@@ -22,6 +22,9 @@ export class ChartsComponent implements OnInit {
     averagePerTicketOptions: any;
     noDataMessage: string = '';
     public scrollHeight: string = '';
+    fechaActual = new Date();
+    yearActual = this.fechaActual.getFullYear()
+    monthActual = this.fechaActual.getMonth() + 1
 
     constructor(private chartService: ChartService) {
     }
@@ -29,8 +32,6 @@ export class ChartsComponent implements OnInit {
     ngOnInit() {
         this.loadCategoryRevenue();
         this.loadMonthlyRevenue();
-        this.loadAveragePerPersonData();  // Load initial data
-        this.loadAveragePerTicketData();  // Load initial data
         this.loadDefaultData();
         this.setScrollHeight();
 
@@ -158,25 +159,29 @@ export class ChartsComponent implements OnInit {
                         const datasets: { label: string, data: number[], fill: boolean, borderColor: string, tension: number }[] = [];
                         const documentStyle = getComputedStyle(this.getHostElement());
                         const colorKeys = [
-                            'medium-brown', 'light-cream', 'light-tan', 'beige', 'light-brown', 'medium-brown',
+                            'light-cream', 'medium-brown', 'medium-brown',
                             'brown', 'dark-brown', 'darker-brown', 'deep-brown', 'deepest-brown'
                         ];
                         const lineColors = colorKeys.map(key => documentStyle.getPropertyValue(`--${key}`));
-                        let colorIndex = 0;
 
-                        Object.keys(years).forEach(year => {
+                        Object.keys(years).forEach((year, index) => {
                             const monthsInYear = Object.keys(years[year]).sort((a, b) => parseInt(a) - parseInt(b));
                             const revenueData = monthsInYear.map(month => years[year][month]);
+
+                            let borderColor;
+                            if (index === 0) {
+                                borderColor = lineColors[5]; // color más claro para la primera línea
+                            } else {
+                                borderColor = lineColors[lineColors.length - 1]; // color más oscuro para la segunda línea
+                            }
 
                             datasets.push({
                                 label: `Revenue ${year}`,
                                 data: revenueData,
                                 fill: false,
-                                borderColor: lineColors[colorIndex],
+                                borderColor: borderColor,
                                 tension: 0.4
                             });
-
-                            colorIndex++;
                         });
 
                         const orderedMonthNames = Object.keys(monthNames).sort((a, b) => parseInt(a) - parseInt(b)).map(month => monthNames[month]);
@@ -203,9 +208,9 @@ export class ChartsComponent implements OnInit {
     }
 
     loadAveragePerPersonData() {
-        const year = this.selectedYear ?? '';
-        const month = this.selectedMonth ?? '';
-    
+        const year = this.selectedYear ?? this.yearActual.toString();
+        const month = this.selectedMonth ?? this.monthActual.toString();
+
         this.chartService.getAveragePerPerson(year, month).subscribe(data => {
             const total = (Object.values(data) as number[]).reduce((sum, value) => sum + value, 0); // Sumar valores
         
@@ -230,9 +235,9 @@ export class ChartsComponent implements OnInit {
     }
     
     loadAveragePerTicketData() {
-        const year = this.selectedYear ?? '';
-        const month = this.selectedMonth ?? '';
-    
+        const year = this.selectedYear ?? this.yearActual.toString();
+        const month = this.selectedMonth ?? this.monthActual.toString();
+        
         this.chartService.getAveragePerTicket(year, month).subscribe(data => {
             const total = (Object.values(data) as number[]).reduce((sum, value) => sum + value, 0); // Sumar valores
     
@@ -247,7 +252,8 @@ export class ChartsComponent implements OnInit {
                             label: 'Average Per Ticket',
                             data: Object.values(data),
                             fill: false,
-                            borderColor: '#565656'
+                            borderColor: '#734f38',
+                            tension: 0.4
                         }
                     ]
                 };
@@ -256,8 +262,8 @@ export class ChartsComponent implements OnInit {
     }
 
     loadDefaultData(){
-        const year = "2024"
-        const month = "10"
+        const year = this.yearActual.toString();
+        const month = this.monthActual.toString();
 
         this.chartService.getAveragePerPerson(year, month).subscribe(data => {
             console.log(data);
@@ -268,7 +274,8 @@ export class ChartsComponent implements OnInit {
                         label: 'Average Per Person',
                         data: Object.values(data),
                         fill: false,
-                        borderColor: '#565656'
+                        borderColor: '#734f38',
+                        tension: 0.4
                     }
                 ]
             };
@@ -282,7 +289,8 @@ export class ChartsComponent implements OnInit {
                         label: 'Average Per Ticket',
                         data: Object.values(data),
                         fill: false,
-                        borderColor: '#565656'
+                        borderColor: '#734f38',
+                        tension: 0.4
                     }
                 ]
             };

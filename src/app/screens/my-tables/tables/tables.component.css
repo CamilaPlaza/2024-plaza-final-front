@@ -183,9 +183,8 @@ th, td {
     .title-section {
         flex: 0.05;
     }
-
-    .image-section{
-        display: none;
+    .image-section {
+        flex: 0.2;
     }
 
     .container {

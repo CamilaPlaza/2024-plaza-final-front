@@ -34,7 +34,8 @@
   .date-time-wrapper {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
+    margin-top: -15px;
   }
   
   .current-date,
@@ -48,7 +49,7 @@
   }
   
   .table-wrapper {
-    max-height: 150px;
+    max-height: 130px;
     overflow-y: auto;
     margin-bottom: 20px;
   }
@@ -125,6 +126,7 @@
   }
   
   .action-buttons {
+    margin-top: -40px;
     text-align: right;
   }
   
@@ -250,6 +252,19 @@
   margin-top: 10px;
 }
 
+.category-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  margin: 5px
+}
+
+.category-selection label {
+  font-weight: bold;
+  color: #7f522e;
+}
+
 
 
 @media (max-width: 768px) {
@@ -356,5 +371,9 @@
     margin-left: 7%;
   }
   
-  
+    
+  .action-buttons {
+    margin-top: -10px;
+    text-align: right;
+  }
 }

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Category } from 'src/app/models/category';
 import { Order } from 'src/app/models/order';
 import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
@@ -31,6 +32,9 @@ export class TableBusyComponent implements OnInit {
   loading: boolean = false;
   displayCloseTableDialog = false;
   amountOfPeople: number = 0;
+  categories: Category[] = [];
+  selectedCategories: Array<{ id: any, name: string }> = [];
+  filteredProducts: Product[] = []; 
 
   constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService) {}
   ngOnInit() {
@@ -40,6 +44,34 @@ export class TableBusyComponent implements OnInit {
     this.currentDate = this.actualOrder?.date ?? '';
     this.currentTime = this.actualOrder?.time ?? '';
     this.order = this.actualOrder ?? new Order('', 0, '', '', '', [],1);
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        if (data && Array.isArray(data.categories)) {
+          this.categories = data.categories.map(item => ({
+            id: item.id,
+            name: item.name,
+            type: item.type
+          }));
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching categories:', err);
+      }
+    });
+  }
+
+    
+  filterProductsByCategory() {
+    if (this.selectedCategories.length === 0) {
+      this.filteredProducts = [];
+    } else {
+      const categoryIds = this.selectedCategories.map((category: { id: any; }) => category.id).join(', ');
+      this.getProductsByCategory(categoryIds);
+    }
   }
 
   getOrderInformation() {
@@ -93,6 +125,8 @@ export class TableBusyComponent implements OnInit {
   }
 
   addOrderItem() {
+    console.log(this.selectedProduct);
+    console.log(this.selectedAmount);
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
         product_id: this.selectedProduct.id ?? 0,
@@ -220,26 +254,21 @@ export class TableBusyComponent implements OnInit {
     );
   }
 
-  getProductsByCategory(categoryId: string): Promise<Product[]> {
-    return this.categoryService.getProductsByCategory(categoryId)
-      /*.then((data) => {
-        console.log('Products fetched for category:', data);
+   getProductsByCategory(categoryIds: string) {
+    this.categoryService.getProductsByCategory(categoryIds)
+      .then((data) => {
         if (data && Array.isArray(data)) {
-          return data; // Retorna toda la data de los productos
+          this.filteredProducts = data;
         } else {
           console.error('Unexpected data format:', data);
-          return []; // En caso de formato inesperado, retornamos un array vacío
+          this.filteredProducts = [];
         }
       })
       .catch((err) => {
         console.error('Error fetching products by category:', err);
-        return []; // En caso de error, retornamos un array vacío
+        this.filteredProducts = []; 
       })
-      .finally(() => {
-        this.loading = false; // Detener el spinner cuando la carga finaliza
-      });*/
-      //SI NO TE FUNCIONA DESCOMENTA ESO
-    }
+  }
 
 
 

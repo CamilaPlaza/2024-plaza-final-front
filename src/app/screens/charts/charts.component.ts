@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartService } from '../../services/chart_service';
-import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-charts',
@@ -27,6 +26,8 @@ export class ChartsComponent implements OnInit {
     monthActual = this.fechaActual.getMonth() + 1
 
     constructor(private chartService: ChartService) {
+        this.selectedYear = this.yearActual.toString();
+        this.selectedMonth = this.monthActual.toString();
     }
 
     ngOnInit() {
@@ -124,88 +125,81 @@ export class ChartsComponent implements OnInit {
     }
 
     loadMonthlyRevenue() {
-        const storedMonthlyData = localStorage.getItem('monthlyRevenue');
-        if (storedMonthlyData) {
-            this.monthlyData = JSON.parse(storedMonthlyData);
-        } else {
-            this.chartService.getMonthlyRevenue().subscribe(
-                (response) => {
-                    if (response && Object.keys(response).length > 0) {
-                        const monthNames: { [key: string]: string } = {
-                            "01": "Jan",
-                            "02": "Feb",
-                            "03": "Mar",
-                            "04": "Apr",
-                            "05": "May",
-                            "06": "Jun",
-                            "07": "Jul",
-                            "08": "Aug",
-                            "09": "Sep",
-                            "10": "Oct",
-                            "11": "Nov",
-                            "12": "Dec"
-                        };
+    const storedMonthlyData = localStorage.getItem('monthlyRevenue');
+    if (storedMonthlyData) {
+        this.monthlyData = JSON.parse(storedMonthlyData);
+    } else {
+        this.chartService.getMonthlyRevenue().subscribe(
+            (response) => {
+                if (response && Object.keys(response).length > 0) {
+                    const monthNames: { [key: string]: string } = {
+                        "01": "Jan",
+                        "02": "Feb",
+                        "03": "Mar",
+                        "04": "Apr",
+                        "05": "May",
+                        "06": "Jun",
+                        "07": "Jul",
+                        "08": "Aug",
+                        "09": "Sep",
+                        "10": "Oct",
+                        "11": "Nov",
+                        "12": "Dec"
+                    };
 
-                        const years: { [year: string]: { [month: string]: number } } = {};
+                    const years: { [year: string]: { [month: string]: number } } = {};
 
-                        Object.keys(response).forEach(date => {
-                            const [year, month] = date.split('-');
-                            if (!years[year]) {
-                                years[year] = {};
-                            }
-                            years[year][month] = response[date];
+                    Object.keys(response).forEach(date => {
+                        const [year, month] = date.split('-');
+                        if (!years[year]) {
+                            years[year] = {};
+                        }
+                        years[year][month] = response[date];
+                    });
+
+                    const datasets: { label: string, data: number[], fill: boolean, borderColor: string, tension: number }[] = [];
+                    
+                    // Definir los colores de las líneas
+                    const lineColors = ['#0000FF', '#8B4513']; // Azul y Marrón
+
+                    Object.keys(years).forEach((year, index) => {
+                        const monthsInYear = Object.keys(years[year]).sort((a, b) => parseInt(a) - parseInt(b));
+                        const revenueData = monthsInYear.map(month => years[year][month]);
+
+                        // Asignar el color correspondiente (azul para el primer año, marrón para el segundo)
+                        const borderColor = index === 0 ? lineColors[0] : lineColors[1];
+
+                        datasets.push({
+                            label: `Revenue ${year}`,
+                            data: revenueData,
+                            fill: false,
+                            borderColor: borderColor,
+                            tension: 0.4
                         });
+                    });
 
-                        const datasets: { label: string, data: number[], fill: boolean, borderColor: string, tension: number }[] = [];
-                        const documentStyle = getComputedStyle(this.getHostElement());
-                        const colorKeys = [
-                            'light-cream', 'medium-brown', 'medium-brown',
-                            'brown', 'dark-brown', 'darker-brown', 'deep-brown', 'deepest-brown'
-                        ];
-                        const lineColors = colorKeys.map(key => documentStyle.getPropertyValue(`--${key}`));
+                    const orderedMonthNames = Object.keys(monthNames).sort((a, b) => parseInt(a) - parseInt(b)).map(month => monthNames[month]);
 
-                        Object.keys(years).forEach((year, index) => {
-                            const monthsInYear = Object.keys(years[year]).sort((a, b) => parseInt(a) - parseInt(b));
-                            const revenueData = monthsInYear.map(month => years[year][month]);
+                    this.monthlyData = {
+                        labels: orderedMonthNames,
+                        datasets: datasets
+                    };
 
-                            let borderColor;
-                            if (index === 0) {
-                                borderColor = lineColors[5]; // color más claro para la primera línea
-                            } else {
-                                borderColor = lineColors[lineColors.length - 1]; // color más oscuro para la segunda línea
-                            }
-
-                            datasets.push({
-                                label: `Revenue ${year}`,
-                                data: revenueData,
-                                fill: false,
-                                borderColor: borderColor,
-                                tension: 0.4
-                            });
-                        });
-
-                        const orderedMonthNames = Object.keys(monthNames).sort((a, b) => parseInt(a) - parseInt(b)).map(month => monthNames[month]);
-
-                        this.monthlyData = {
-                            labels: orderedMonthNames,
-                            datasets: datasets
-                        };
-
-                        localStorage.setItem('monthlyRevenue', JSON.stringify(this.monthlyData));
-                    } else {
-                        console.warn('No monthly revenue data available');
-                        this.monthlyData = {
-                            labels: [],
-                            datasets: []
-                        };
-                    }
-                },
-                (error) => {
-                    console.error('Error fetching monthly revenue', error);
+                    localStorage.setItem('monthlyRevenue', JSON.stringify(this.monthlyData));
+                } else {
+                    console.warn('No monthly revenue data available');
+                    this.monthlyData = {
+                        labels: [],
+                        datasets: []
+                    };
                 }
-            );
-        }
+            },
+            (error) => {
+                console.error('Error fetching monthly revenue', error);
+            }
+        );
     }
+}
 
     loadAveragePerPersonData() {
         const year = this.selectedYear ?? this.yearActual.toString();

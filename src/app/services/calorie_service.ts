@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CalorieService {
-  private baseUrl = 'https://two024-ranchoaparte-back.onrender.com';
+  private baseUrl = 'https://candvbar-back.onrender.com';
 
   constructor(private http: HttpClient) {}
 

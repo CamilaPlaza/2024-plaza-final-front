@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Category } from 'src/app/models/category';
 import { Order } from 'src/app/models/order';
 import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
@@ -14,7 +15,7 @@ import { TableService } from 'src/app/services/table_service';
   styleUrls: ['./table-busy.component.css']
 })
 export class TableBusyComponent implements OnInit {
-  @Input() table: Table = new Table('');
+  @Input() table: Table = new Table('',1);
   @Output() close = new EventEmitter<void>();
   actualOrder?: Order; 
   initialOI: OrderItem[] = [];
@@ -22,7 +23,7 @@ export class TableBusyComponent implements OnInit {
   products : Product[] = [];
   currentDate: string = '';
   currentTime: string = '';
-  order: Order = new Order('', 0, '', '', '', []);
+  order: Order = new Order('', 0, '', '', '', [],1);
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
@@ -30,6 +31,10 @@ export class TableBusyComponent implements OnInit {
   displayConfirmDialog = false;
   loading: boolean = false;
   displayCloseTableDialog = false;
+  amountOfPeople: number = 0;
+  categories: Category[] = [];
+  selectedCategories: Array<{ id: any, name: string }> = [];
+  filteredProducts: Product[] = []; 
 
   constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService) {}
   ngOnInit() {
@@ -38,7 +43,35 @@ export class TableBusyComponent implements OnInit {
     this.orderItems = this.actualOrder?.orderItems ?? [];
     this.currentDate = this.actualOrder?.date ?? '';
     this.currentTime = this.actualOrder?.time ?? '';
-    this.order = this.actualOrder ?? new Order('', 0, '', '', '', []);
+    this.order = this.actualOrder ?? new Order('', 0, '', '', '', [],1);
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
+        if (data && Array.isArray(data.categories)) {
+          this.categories = data.categories.map(item => ({
+            id: item.id,
+            name: item.name,
+            type: item.type
+          }));
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching categories:', err);
+      }
+    });
+  }
+
+    
+  filterProductsByCategory() {
+    if (this.selectedCategories.length === 0) {
+      this.filteredProducts = [];
+    } else {
+      const categoryIds = this.selectedCategories.map((category: { id: any; }) => category.id).join(', ');
+      this.getProductsByCategory(categoryIds);
+    }
   }
 
   getOrderInformation() {
@@ -51,6 +84,8 @@ export class TableBusyComponent implements OnInit {
           this.initialOI = JSON.parse(JSON.stringify(order.orderItems));
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
+          this.amountOfPeople = this.actualOrder.amountOfPeople ?? 0;
+          console.log('amountOfPeople', this.actualOrder.amountOfPeople);
         },
         error: (err) => {
           console.error('Error fetching order information:', err);
@@ -90,6 +125,8 @@ export class TableBusyComponent implements OnInit {
   }
 
   addOrderItem() {
+    console.log(this.selectedProduct);
+    console.log(this.selectedAmount);
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
         product_id: this.selectedProduct.id ?? 0,
@@ -159,6 +196,7 @@ export class TableBusyComponent implements OnInit {
   
 
   closeTable() {
+    this.loading = true;
     if (this.table.order_id) {
       this.orderService.finalizeOrder(this.table.order_id.toString()).subscribe({
         next: () => {
@@ -166,19 +204,24 @@ export class TableBusyComponent implements OnInit {
           this.tableService.closeTable(this.table).subscribe({
             next: () => {
               console.log('Table closed successfully');
+              this.loading = false;
               this.closeDialog();
+              
             },
             error: (err) => {
               console.error('Error closing table:', err);
+              this.loading = false;
             }
           });
         },
         error: (err) => {
           console.error('Error finalizing order:', err);
+          this.loading = false;
         }
       });
     } else {
       console.error('Order ID is undefined.');
+      this.loading = false;
     }
   }
 
@@ -211,26 +254,21 @@ export class TableBusyComponent implements OnInit {
     );
   }
 
-  getProductsByCategory(categoryId: string): Promise<Product[]> {
-    return this.categoryService.getProductsByCategory(categoryId)
-      /*.then((data) => {
-        console.log('Products fetched for category:', data);
+   getProductsByCategory(categoryIds: string) {
+    this.categoryService.getProductsByCategory(categoryIds)
+      .then((data) => {
         if (data && Array.isArray(data)) {
-          return data; // Retorna toda la data de los productos
+          this.filteredProducts = data;
         } else {
           console.error('Unexpected data format:', data);
-          return []; // En caso de formato inesperado, retornamos un array vacío
+          this.filteredProducts = [];
         }
       })
       .catch((err) => {
         console.error('Error fetching products by category:', err);
-        return []; // En caso de error, retornamos un array vacío
+        this.filteredProducts = []; 
       })
-      .finally(() => {
-        this.loading = false; // Detener el spinner cuando la carga finaliza
-      });*/
-      //SI NO TE FUNCIONA DESCOMENTA ESO
-    }
+  }
 
 
 

@@ -9,7 +9,7 @@ import { Order } from '../models/order';
 })
 export class TableService {
 
-  private baseUrl = 'https://two024-messidepaul-back.onrender.com';
+  private baseUrl ='https://candvbar-back.onrender.com';
   //private baseLocalUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient) { }
@@ -21,8 +21,6 @@ export class TableService {
   async updateTableAndOrder(order: any, orderId: number): Promise<boolean> { // Acepta el objeto de orden y el order_id
     try {
         console.log(order); // Verificas que tienes la orden completa
-        
-        // Actualizas la mesa con la orden completa (usa `order.tableNumber` y `orderId`)
         await this.http.put(`${this.baseUrl}/tables/order/${order.tableNumber}?order_id=${orderId}`, {}).toPromise();
         return true;
     } catch (error: any) {

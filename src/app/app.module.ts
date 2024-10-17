@@ -45,11 +45,24 @@ import { OrderInfoComponent } from './screens/my-orders/order-info/order-info.co
 import { ExportExcelComponent } from './screens/my-orders/export-excel/export-excel.component';
 import { TableFinishedComponent } from './screens/my-tables/table-finished/table-finished.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { ChartsComponent } from './screens/charts/charts.component';
+import { ChartModule } from 'primeng/chart';
+import { MenuComponent } from './screens/user-order/menu/menu.component';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { MyCartComponent } from './screens/user-order/my-cart/my-cart.component';
+import { CreateOrderComponent } from './screens/user-order/create-order/create-order.component';
+import { AsignInactiveOrderComponent } from './screens/my-tables/asign-inactive-order/asign-inactive-order.component';
+import { InputIconModule } from 'primeng/inputicon'; 
+
 
 @NgModule({
   declarations: [
     AppComponent,
+    MenuComponent,
+    MyCartComponent,
+    CreateOrderComponent,
     TablesComponent,
+    ChartsComponent,
     ExportExcelComponent,
     OrdersComponent,
     OrderInfoComponent,
@@ -58,6 +71,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     TableFinishedComponent,
     CaloriesComponent,
     FooterComponent,
+    AsignInactiveOrderComponent,
     HeaderComponent,
     HomeComponent,
     UserProfileComponent,
@@ -77,6 +91,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     ToastModule,
     ConfirmDialogModule,
     FileUploadModule,
+    AutoCompleteModule,
     TagModule,
     TableModule,
     HttpClientModule,
@@ -84,6 +99,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     FormsModule,
     TieredMenuModule,
     PasswordModule,
+    InputIconModule,
     ProgressSpinnerModule,
     ButtonModule,
     DialogModule,
@@ -93,7 +109,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     AppRoutingModule,
     FloatLabelModule,
     CalendarModule,
-    MenubarModule
+    MenubarModule,
+    ChartModule
 ],
   providers: [ConfirmationService, MessageService, DatePipe],
   bootstrap: [AppComponent]

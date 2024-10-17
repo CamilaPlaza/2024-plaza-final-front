@@ -12,6 +12,10 @@
     <div class="body">
       <div class="subtitle">
         <div class="date-time-wrapper">
+          <p class="capacity">Capacity: {{ table.capacity }}</p>
+          <p>People: {{amountOfPeople}}</p>
+        </div>
+        <div class="date-time-wrapper">
           <p class="current-date">{{ currentDate }}</p>
           <p class="current-time">{{ currentTime }}hs</p>
         </div>
@@ -46,23 +50,66 @@
         </div>
 
         <div *ngIf="wantToAddNewProduct">
-          <div class="add-product">
-            <label for="product">Product:</label>
-            <select id="product" [(ngModel)]="selectedProduct" (change)="onProductChange()">
-              <option *ngFor="let product of products" [ngValue]="product">{{ product.name }}</option>
-            </select>
-    
-            <label for="amount">Amount:</label>
-            <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" (input)="validateForm()" />
-    
-            <label for="price">Price:</label>
-            <input id="price" type="text" [value]="selectedProduct?.price" disabled />
+
+          <div class="category-selection">
+            <div class="category">
+              <label for="categories">Select Categories:</label>
+              <p-multiSelect 
+                id="categories" 
+                [options]="categories" 
+                [appendTo]="'body'"
+                [(ngModel)]="selectedCategories" 
+                optionLabel="name" 
+                placeholder="Choose Categories" 
+                (onChange)="filterProductsByCategory()">
+              </p-multiSelect>
+            </div>
           </div>
+    
+          <div  *ngIf="selectedCategories.length > 0">
+            <div class="add-product">
+                <label for="product">Product:</label>
+                <p-dropdown 
+                    [options]="filteredProducts" 
+                    [(ngModel)]="selectedProduct"
+                    optionLabel="name"
+                    [appendTo]="'body'"
+                    [filter]="true"
+                    filterBy="name"
+                    [showClear]="true"
+                    placeholder="Select a Product">
+                    
+                  <ng-template pTemplate="selectedItem" let-selectedProduct>
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ selectedProduct?.name }}</div>
+                        </div>
+                    </ng-template>
+              
+                    <ng-template let-product pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ product.name }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+              
+                <div class="amount-price-wrapper">
+                  <div class="amount">
+                    <label for="amount">Amount:</label>
+                    <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" />
+                  </div>
+                  <div class="price">
+                    <label for="price">Price:</label>
+                    <input id="price" type="text" [value]="selectedProduct?.price" disabled />
+                  </div>
+                </div>
+                
+              </div>
     
           <div class="add-product-button">
-            <button  [disabled]="!canAddProduct" (click)="addOrderItem()">Add Product</button>
+            <button  [disabled]="validateForm()" (click)="addOrderItem()">Add Product</button>
           </div>
         </div>
+      </div>
 
         <div *ngIf="!wantToAddNewProduct" class="add-product-button">
           <button (click)="addNewProducts()">Add Products</button>

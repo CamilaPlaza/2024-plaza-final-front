@@ -414,7 +414,7 @@ input {
     }
 
     ::ng-deep .category-container .p-multiselect {
-        min-width: 250px; /* Ajusta el ancho según tus necesidades */
+        min-width: 290px; /* Ajusta el ancho según tus necesidades */
     }
 
 }

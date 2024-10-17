@@ -22,6 +22,11 @@ export class HeaderComponent implements OnInit {
                 tooltip: 'Home'
             },
             {
+                icon: 'pi pi-chart-line',
+                routerLink: '/charts',
+                tooltip: 'Charts'
+            },
+            {
                 icon: 'fa fa-glass-martini',
                 routerLink: '/register-product',
                 items: [

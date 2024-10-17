@@ -33,7 +33,7 @@
           <!-- Tabla de encabezado -->
           <ng-template pTemplate="header">
             <tr>
-              <th style="min-width:10rem">
+              <th >
                 <div class="flex align-items-center">
                   Nro Table
                   <!-- Filtro existente de Nro Table -->
@@ -51,7 +51,7 @@
                   </p-columnFilter>
                 </div>
               </th>
-              <th style="min-width:10rem">
+              <th>
                 <div class="flex align-items-center">
                   Status
                   <!-- Filtro existente de Status -->
@@ -69,13 +69,13 @@
                   </p-columnFilter>
                 </div>
               </th>
-              <th style="min-width:10rem">
+              <th class="creation-date" style="min-width:10rem">
                 <div class="flex align-items-center">Creation Date</div>
               </th>
-              <th style="min-width:10rem">
+              <th class="time" style="min-width:10rem">
                 <div class="flex align-items-center">Time</div>
               </th>
-              <th style="min-width:10rem">
+              <th>
                 <div class="flex align-items-center">INFO</div>
               </th>
             </tr>
@@ -88,8 +88,8 @@
               <td>
                 <p-tag [value]="order.status" [severity]="getSeverity(order.status)"></p-tag>
               </td>
-              <td>{{ order.date }}</td>
-              <td>{{ order.time }}</td>
+              <td class="creation-date">{{ order.date }}</td>
+              <td class="time">{{ order.time }}</td>
               <td>
                 <i class="pi pi-info-circle" (click)="displayInfoDialog(order)" style="cursor: pointer;"></i>
               </td>

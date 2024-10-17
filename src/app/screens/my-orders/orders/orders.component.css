@@ -100,9 +100,34 @@ p-table {
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+
+    .image-section {
+        flex: 0.2;
+    }
+
     .container {
         margin-left: 10%;
     }
+
+    .creation-date,
+    .time {
+        display: none;
+    }
+
+  
+    .title-section {
+        flex: 0.1;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    ::ng-deep p-calendar {
+        margin-left: 5%;
+        width: 150px;
+    }
+      
 
 }

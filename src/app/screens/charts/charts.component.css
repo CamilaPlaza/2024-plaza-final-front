@@ -1,0 +1,257 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin-left: 5%;
+}
+
+.section {
+    flex: 1;
+}
+
+.title-section {
+    flex: 0.1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #7f522e;
+    color: #f2f2f2;
+}
+
+.title {
+    font-size: 2rem;
+    margin: 0;
+    text-align: center;
+}
+
+:host {
+    --light-cream: #e5d4c3;
+    --light-tan: #e5c9ae;
+    --beige: #debea2;
+    --light-brown: #d6ab7d;
+    --medium-brown: #b3895d;
+    --brown: #9b744a;
+    --dark-brown: #81583a;
+    --darker-brown: #734f38;
+    --deep-brown: #553725;
+    --deepest-brown: #482919;
+    --text-color: #333;
+}
+
+.charts {
+    background-color: var(--light-cream);
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.all-charts-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    height: auto;
+}
+
+.chart-title {
+    text-align: center;
+    color: #482919;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    height: auto;
+    min-height: 300px;
+}
+
+.chart-wrapper.category-revenue {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 40%;
+}
+
+.chart-wrapper.monthly-revenue {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 60%;
+}
+
+.chart-wrapper.per-day-chart {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+}
+
+.chart-wrapper.per-person-chart {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+}
+
+.card {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Agrega una transición suave */
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Un desplazamiento un poco mayor para mayor impacto */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* Incrementa el sombreado en hover */
+}
+
+.per-day-chart .card, .per-person-chart .card {
+    width: 96%; 
+    height: auto; 
+}
+
+.per-day-chart .card, .per-person-chart .card {
+    width: 96%; 
+    height: auto; 
+}
+
+::ng-deep .per-day-chart p-chart, 
+::ng-deep .per-person-chart p-chart {
+    width: 70%;
+    height: auto;
+}
+
+
+
+.date-selectors {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: var(--dark-brown);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.date-selectors label {
+    font-size: 1.1rem;
+    color: var(--light-cream);
+    margin-right: 10px;
+}
+
+.date-selectors select {
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 10px;
+    margin: 0 15px;
+    background-color: var(--light-cream);
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
+    outline: none;
+}
+
+.date-selectors select:hover {
+    border-color: var(--deep-brown);
+}
+
+.date-selectors select:focus {
+    border-color: var(--dark-brown);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.date-selectors select option {
+    color: var(--text-color);
+}
+
+.no-data-alert {
+    text-align: center;
+    color: rgb(117, 20, 20);
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+
+@media (max-width: 768px) {
+   
+    .container {
+        margin-left: 10%;
+    }
+
+    .title-section {
+        flex: 0.05;
+    }
+    
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .all-charts-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .chart-wrapper.category-revenue,
+    .chart-wrapper.monthly-revenue {
+        max-width: 100%;
+        margin-bottom: 10px; 
+    }
+
+    .chart-wrapper.per-day-chart,
+    .chart-wrapper.per-person-chart {
+        max-width: 100%; 
+        margin-top: -10%; 
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    ::ng-deep .per-day-chart p-chart, 
+    ::ng-deep .per-person-chart p-chart{
+        width: 100%;
+        height: auto;
+    }
+
+    ::ng-deep .category-revenue p-chart {
+        width: 80%;
+        height: auto;
+    }
+
+    .charts{
+        margin-bottom: 15%;
+    }
+
+    .date-selectors {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+        width: 90%;
+    }
+
+    .date-selectors label {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .date-selectors select {
+        margin: 0 0 10px 0;
+        width: 100%;
+    }
+}

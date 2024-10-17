@@ -132,14 +132,24 @@
 .category-selection {
   display: flex;
   align-items: center;
-  margin: 5px;
+  justify-content: space-between;
   margin-bottom: 20px;
+  margin: 5px
 }
 
 .category-selection label {
   font-weight: bold;
   color: #7f522e;
 }
+
+
+.amountPeople input[type="number"] {
+  width: 70px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
 
 .add-product {
   justify-content: center;
@@ -226,6 +236,120 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.3); /* Fondo semi-transparente */
-  z-index: 9999; /* Asegurarse de que esté por encima de todo */
+  background-color: rgba(0, 0, 0, 0.3); 
+  z-index: 9999;
+}
+
+.add-product {
+  display: flex;
+  flex-direction: row;
+}
+
+.amount-price-wrapper {
+  display: flex; 
+  gap: 10px;
+  margin-top: 10px;
+}
+
+
+@media (max-width: 768px) {
+
+  .container-table-free {
+    margin-left: 7%;
+    width: 300px;
+    border-radius: 20px;
+    height: auto;
+  }
+
+  .body {
+    padding: 15px;
+  }
+  
+  .header {
+    padding: 10px;
+  }
+  
+  .table-number {
+    font-size: 1.2rem;
+  }
+  
+  .status {
+    font-size: 1rem;
+  }
+  
+  .date-time-wrapper {
+    margin-bottom: 10px;
+  }
+  
+  .order-form {
+    margin-bottom: 10px;
+  }
+
+  .total {
+    font-size: 1.2rem;
+    margin-top: -5px;
+    margin-bottom: -5px;
+  }
+  
+  
+  .amountPeople {
+    margin: 8px;
+  }
+
+  /*REVISAR*/
+
+  ::ng-deep .p-multiselect {
+    width: 150px;
+  }
+
+  ::ng-deep .p-multiselect-panel {
+    max-width: 150px; 
+    font-size: 0.9rem; 
+  }
+
+  ::ng-deep .p-multiselect-item {
+    padding: 8px;
+  }
+
+  ::ng-deep .p-dropdown {
+    width: 150px;
+  }
+
+  ::ng-deep .p-dropdown-panel {
+    max-width: 150px; 
+    font-size: 0.9rem; 
+  }
+
+  ::ng-deep .p-dropdown-item {
+    padding: 8px;
+  }
+  /**/
+
+  .add-product {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .amount-price-wrapper {
+    display: flex;
+    gap: 10px; 
+    margin-top: 10px; 
+  }
+
+
+  input[type="number"],
+  input[type="text"] {
+    width: 100%; 
+  }
+  
+  .add-product input[type="text"] {
+    width: 50px;
+  }  
+  
+  .loading-overlay {
+    width: 90%;
+    margin-left: 10%;
+    height: 100%;
+  }
+  
 }

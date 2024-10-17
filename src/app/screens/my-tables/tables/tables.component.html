@@ -4,14 +4,19 @@
   </div>
   <div class="section title-section">
     <p class="title">MY TABLES</p>
+    <div class="notification-bell"  (click)="onNotificationClick()">
+      <i class="pi pi-inbox"></i>
+      <span class="inactive-count">{{ inactiveOrdersCount }}</span>
+    </div>
   </div>
-
+  
   <div class="section table-section">
     <div class="card table-wrapper">
       <p-table [value]="tables" dataKey="id" scrollable="true" [scrollHeight]="tableScrollHeight">
         <ng-template pTemplate="header">
           <tr>
             <th>Id</th>
+            <th>Capacity</th>
             <th>Status</th>
           </tr>
         </ng-template>
@@ -19,6 +24,7 @@
         <ng-template pTemplate="body" let-table let-ri="rowIndex">
           <tr (click)="onTableClick(table)">
             <td>{{ table.id }}</td>
+            <td>{{ table.capacity}} </td>
             <td [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY', 'status-finished': table.status === 'FINISHED'}">
               {{ table.status }}
             </td>
@@ -63,4 +69,12 @@
       (close)="displayModal = false">
     </app-table-finished>
   </ng-container>
+</p-dialog>
+
+<p-dialog class="custom-modal" [(visible)]="displayModalInactive" modal="true" [closable]="false" [responsive]="true">
+  <app-asign-inactive-order 
+    [orders]="inactiveOrders" 
+    [freeTables]="freeTables"
+    (close)="closeModalInactive()">
+  </app-asign-inactive-order>
 </p-dialog>

@@ -1,0 +1,39 @@
+<div class="cart-overlay" *ngIf="isVisible">
+  <div class="cart-container">
+      <div class="close-icon" (click)="closeCart()">✖</div>
+      <h2>Your Cart</h2>
+      <div class="all-products">
+        <div *ngFor="let item of orderItems">
+          <div class="cart-item">
+              <div class="item-details">
+                  <span class="product-name">{{ item.product_name }}</span>
+                  <span class="amount-price">{{ item.amount }} x ${{ item.product_price }}</span>
+                  <div class="quantity-controls">
+                      <button (click)="decrementProduct(item.product_id)" class="decrement-button">
+                        <i class="pi pi-minus" style="font-size: 0.6rem; font-weight: bold;"></i> 
+                      </button>
+                      <span>{{ item.amount }}</span>
+                      <button (click)="incrementProduct(item.product_id)" class="increment-button">
+                        <i class="pi pi-plus" style="font-size: 0.6rem; font-weight: bold;"></i> 
+                      </button>
+                  </div>
+              </div>
+              <img [src]="item.product_imageUrl" alt="{{ item.product_name }}" class="product-image" />
+          </div>
+        </div>
+      </div>
+      
+      <div class="total-price">
+          <strong>Total: ${{ getTotalPrice() }}</strong>
+      </div>
+
+      <button (click)="showCreateOrderDialog()" class="create-order-button">Create Order</button>
+  </div>
+</div>
+
+<app-create-order 
+  [isVisible]="showCreateOrderDialogFlag" 
+  [orderItems]="orderItems"
+  [total]="getTotalPrice()"
+  (closeModal)="closeDialog()">
+</app-create-order>

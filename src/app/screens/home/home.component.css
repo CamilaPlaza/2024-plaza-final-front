@@ -91,19 +91,28 @@
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .spaces-conteiner {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
+        grid-template-columns: repeat(1, 1fr);
         height: 70vh;
     }
 
     .space {
-      min-height: 200px; /* Asegúrate de que cada espacio tenga una altura mínima */
+      min-height: 200px;
     }
 
+    .image1, .image3, .image5 {
+      display: none;
+  }
+
     .slogan{
-      font-size: 1.5rem;
-      margin-top: 20%;
+      font-size: 1.2rem;
+      margin-top: 10%;
     }
+
+    .overlay {
+      font-weight: 600;
+      font-size: 1.3rem
+  }
+  
 }

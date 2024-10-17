@@ -9,7 +9,7 @@
 
   <div class="section table-section">
       <div class="card">
-          <p-table [value]="products" dataKey="id" editMode="row" scrollable="true"  [scrollHeight]="tableScrollHeight">
+        <p-table [value]="filteredProducts" dataKey="id" editMode="row" scrollable="true" [scrollHeight]="tableScrollHeight">
               <ng-template pTemplate="header">
                   <tr>
                       <th pSortableColumn="name" pResizableColumn>Name <p-sortIcon field="name"></p-sortIcon></th>
@@ -24,17 +24,26 @@
                               <div class="px-3 pt-3 pb-0"><span class="font-bold">Category Picker</span></div>
                             </ng-template>
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                              <p-multiSelect [options]="categories" placeholder="Select" (onChange)="filter($event.value)">
-                                <ng-template let-value pTemplate="item">
-                                  <div class="inline-block"><span class="ml-1 mt-1">{{ value.name }}</span></div>
-                                </ng-template>
+                                <p-multiSelect 
+                                    [options]="categories" 
+                                    placeholder="Select" 
+                                    (onChange)="filterByCategory($event.value)"
+                                    optionLabel="name"  
+                                    optionValue="id"> 
+                                    <ng-template let-value pTemplate="item">
+                                    <div class="inline-block">
+                                        <span class="ml-1 mt-1">{{ value.name }}</span>
+                                    </div>
+                                    </ng-template>
                               </p-multiSelect>
+                              
                             </ng-template>
                           </p-columnFilter>
                         </div>
                       </th>
+                      <th class=" align-items-center">Image</th>
                       <th pSortableColumn="calories" pResizableColumn>Calories <p-sortIcon field="calories"></p-sortIcon></th>
-                      <th></th> <!-- Columna vacía para los botones de acción -->
+                      <th></th>
                   </tr>
               </ng-template>
 
@@ -79,11 +88,16 @@
                                     [maxSelectedLabels]="100"
                                     (onChange)="updateTempSelectedCategories(product.id, editingProductCategories[product.id])">
                                 </p-multiSelect>
+
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{ getCategoryNamesByIds(product.category) }}
                             </ng-template>
                         </p-cellEditor>
+                    </td>
+
+                    <td>
+                        <img [src]="product.imageUrl" [alt]="product.name" width="100" height="70" class="shadow-4" />
                     </td>
 
                     <td>

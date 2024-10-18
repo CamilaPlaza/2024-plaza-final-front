@@ -176,7 +176,6 @@ export class TableBusyComponent implements OnInit {
         .then(success => {
           if (success) {
             console.log('Order items added successfully');
-            this.closeTableAndSaveChanges();
           } else {
             console.error('Error adding order items.');
           }
@@ -186,47 +185,61 @@ export class TableBusyComponent implements OnInit {
         })
         .finally(() => {
           this.loading = false;
+          this.closeDialog();
         });
     } else {
       console.error('Order ID is undefined.');
-      this.closeDialog();
       this.loading = false;
     }
   }
-  
 
-  closeTable() {
+  closeAndUpdateOrder() {
     this.loading = true;
+    const total = this.calculateTotal().toString(); 
+
+    //UPDATE ORDER
+
     if (this.table.order_id) {
-      this.orderService.finalizeOrder(this.table.order_id.toString()).subscribe({
-        next: () => {
-          console.log('Order status updated to FINALIZED');
-          this.tableService.closeTable(this.table).subscribe({
-            next: () => {
-              console.log('Table closed successfully');
-              this.loading = false;
-              this.closeDialog();
-              
-            },
-            error: (err) => {
-              console.error('Error closing table:', err);
-              this.loading = false;
+      this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total)
+        .then(success => {
+          if (success) {
+
+            //CLOSE TABLE
+
+            if (this.table.order_id) {
+              this.orderService.finalizeOrder(this.table.order_id.toString()).subscribe({
+                next: () => {
+                  console.log('Order status updated to FINALIZED');
+                  this.tableService.closeTable(this.table).subscribe({
+                    next: () => {
+                      console.log('Table closed successfully');
+                      this.loading = false;
+                      this.closeDialog();
+                    },
+                    error: (err) => {
+                      console.error('Error closing table:', err);
+                    }
+                  });
+                },
+                error: (err) => {
+                  console.error('Error finalizing order:', err);
+                }
+              });
+            } else {
+              console.error('Order ID is undefined.');
             }
-          });
-        },
-        error: (err) => {
-          console.error('Error finalizing order:', err);
-          this.loading = false;
-        }
-      });
+          
+          } else {
+            console.error('Error adding order items.');
+          }
+        })
+        .catch(error => {
+          console.error('Error adding order items:', error);
+        })
     } else {
       console.error('Order ID is undefined.');
       this.loading = false;
     }
-  }
-
-  closeTableAndSaveChanges() {
-    this.closeDialog();
   }
 
   closeDialog() {
@@ -235,6 +248,7 @@ export class TableBusyComponent implements OnInit {
     location.reload();
     this.close.emit();  
   }
+
   showConfirmDialog() {
   
     if (this.areOrderItemsEqual(this.initialOI, this.orderItems)) {

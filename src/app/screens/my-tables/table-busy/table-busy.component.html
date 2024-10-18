@@ -144,7 +144,7 @@
     <app-confirmation-pop-up
       [subtitle]="'Are you sure you want to close this table?'"
       (onClose)="closeCloseTableDialog()"
-      (onSend)="closeTable()"
+      (onSend)="closeAndUpdateOrder()"
       [cancelLabel]="'No'"
       [sendLabel]="'Yes'">
     </app-confirmation-pop-up>

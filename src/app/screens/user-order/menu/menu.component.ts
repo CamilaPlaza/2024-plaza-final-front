@@ -208,7 +208,7 @@ export class MenuComponent implements OnInit {
     for (const item of this.orderItems) {
       this.cart[item.product_id] = item.amount;
     }
+    this.cartVisible = false;
   }
   
-
 }

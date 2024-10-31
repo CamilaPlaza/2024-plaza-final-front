@@ -1,0 +1,64 @@
+<p-card styleClass="goals-container">
+    <ng-template pTemplate="header">
+      <div class="header">
+        <h1>Goals</h1>
+      </div>
+    </ng-template>
+  
+    <!-- Storage Card -->
+    <p-card styleClass="storage-card">
+      <div class="storage-goals">
+        <div *ngFor="let goal of goals" class="goal-item">
+          <div class="goal-icon" [style.background-color]="goal.color">
+            <i [class]="goal.icon"></i>
+          </div>
+          <div class="goal-info">
+            <span>{{goal.title}}</span>
+            <p-progressBar 
+              [value]="goal.progress"
+              [showValue]="true"
+              [style]="{'height': '0.5rem'}"
+            ></p-progressBar>
+          </div>
+        </div>
+      </div>
+      
+      <div class="storage-bar">
+        <div class="progress-text">
+          <span>Storage</span>
+          <span>{{totalStorage.used}}%</span>
+          <span>{{totalStorage.total}}</span>
+        </div>
+        <p-progressBar 
+          [value]="totalStorage.used"
+          [style]="{'height': '0.5rem'}"
+          styleClass="custom-progress-bar"
+        ></p-progressBar>
+      </div>
+    </p-card>
+  
+    <!-- Add Goal Button -->
+    <p-speedDial 
+      [model]="menuItems" 
+      direction="right"
+      styleClass="add-goal-button"
+    ></p-speedDial>
+  
+    <!-- Water Sales Goals -->
+    <div class="water-goals p-grid">
+      <div *ngFor="let goal of waterGoals" class="p-col-12 p-md-4">
+        <p-card styleClass="water-goal-card">
+          <div class="dollar-icon">
+            <i class="pi pi-dollar"></i>
+          </div>
+          <h3>{{goal.title}}</h3>
+          <p>{{goal.description}}</p>
+          <p-knob
+            [readonly]="true"
+            [size]="150"
+            [strokeWidth]="5"
+          ></p-knob>
+        </p-card>
+      </div>
+    </div>
+  </p-card>

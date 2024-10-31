@@ -1,50 +1,48 @@
-<p-card styleClass="goals-container">
-    <ng-template pTemplate="header">
-      <div class="header">
-        <h1>Goals</h1>
-      </div>
-    </ng-template>
+<div class="goals-container">
+    <div class="section title-section">
+        <p class="title">GOALS</p>
+    </div>
+
+    <div class="avarage-goals">
+        <p-meterGroup [value]="goals" labelPosition="start">
+            <ng-template pTemplate="label">
+                <div class="flex flex-wrap gap-3">
+                    <ng-container *ngFor="let goal of goals">
+                        <p-card class="goal-card flex-1 border-round-lg">
+                            <div class="flex justify-content-between gap-5">
+                                <div class="flex flex-column gap-1">
+                                    <span class="text-secondary text-sm">{{ goal.title }}</span>
+                                    <span class="font-bold text-lg">{{ goal.progress }}%</span>
+                                </div>
+                                <span class="icon-container w-3rem h-3rem border-circle inline-flex justify-content-center align-items-center text-center"
+                                    [style]="{ 'background-color': goal.color, color: '#ffffff' }">
+                                    <i [class]="goal.icon"></i>
+                                </span>
+                            </div>
+                        </p-card>
+                    </ng-container>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="meter" let-value let-class="class" let-width="size">
+                <span [class]="class" [style]="{ background: 'linear-gradient(to right, ' + value.color + ', ' + value.color + ')', width: progressWidth(value.progress) + '%' }"
+                pTooltip="{{ value.title }}" 
+                tooltipPosition="top"
+                ></span>
+            </ng-template>
+            <ng-template pTemplate="start" let-totalPercent="totalPercent">
+                <div class="flex justify-content-between mt-3 mb-2 relative">
+                    <span>Total Goals</span>
+                    <span class="font-medium">100%</span>
+                </div>
+            </ng-template>
+        </p-meterGroup>
+    </div>
+    
+    
   
-    <!-- Storage Card -->
-    <p-card styleClass="storage-card">
-      <div class="storage-goals">
-        <div *ngFor="let goal of goals" class="goal-item">
-          <div class="goal-icon" [style.background-color]="goal.color">
-            <i [class]="goal.icon"></i>
-          </div>
-          <div class="goal-info">
-            <span>{{goal.title}}</span>
-            <p-progressBar 
-              [value]="goal.progress"
-              [showValue]="true"
-              [style]="{'height': '0.5rem'}"
-            ></p-progressBar>
-          </div>
-        </div>
-      </div>
-      
-      <div class="storage-bar">
-        <div class="progress-text">
-          <span>Storage</span>
-          <span>{{totalStorage.used}}%</span>
-          <span>{{totalStorage.total}}</span>
-        </div>
-        <p-progressBar 
-          [value]="totalStorage.used"
-          [style]="{'height': '0.5rem'}"
-          styleClass="custom-progress-bar"
-        ></p-progressBar>
-      </div>
-    </p-card>
-  
-    <!-- Add Goal Button -->
-    <p-speedDial 
-      [model]="menuItems" 
-      direction="right"
-      styleClass="add-goal-button"
-    ></p-speedDial>
-  
-    <!-- Water Sales Goals -->
+
+   <!--
+
     <div class="water-goals p-grid">
       <div *ngFor="let goal of waterGoals" class="p-col-12 p-md-4">
         <p-card styleClass="water-goal-card">
@@ -53,12 +51,13 @@
           </div>
           <h3>{{goal.title}}</h3>
           <p>{{goal.description}}</p>
-          <p-knob
+          <p-knob 
+          [(ngModel)]="goal.progress"
             [readonly]="true"
             [size]="150"
             [strokeWidth]="5"
           ></p-knob>
         </p-card>
       </div>
-    </div>
-  </p-card>
+    </div>--> 
+  </div>

@@ -58,6 +58,7 @@ import { KnobModule } from 'primeng/knob';
 import { CardModule } from 'primeng/card';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SpeedDialModule } from 'primeng/speeddial';
+import { MeterGroupModule } from 'primeng/metergroup';
 
 @NgModule({
   declarations: [
@@ -119,7 +120,8 @@ import { SpeedDialModule } from 'primeng/speeddial';
     FloatLabelModule,
     CalendarModule,
     MenubarModule,
-    ChartModule
+    ChartModule,
+    MeterGroupModule
 ],
   providers: [ConfirmationService, MessageService, DatePipe],
   bootstrap: [AppComponent]

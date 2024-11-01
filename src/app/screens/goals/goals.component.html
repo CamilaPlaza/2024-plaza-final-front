@@ -1,4 +1,4 @@
-<div class="goals-container">
+<div class="container">
     <div class="section title-section">
         <p class="title">GOALS</p>
     </div>
@@ -47,12 +47,14 @@
                         </div>
                     </div>
                 </ng-template>
+
                 <ng-template pTemplate="meter" let-value let-class="class" let-width="size">
-                    <span [class]="class" [style]="{ background: 'linear-gradient(to right, ' + value.color + ', ' + value.color + ')', width: progressWidth(value.progress) + '%' }"
+                    <span [class]="class + ' progress-line'"  [style]="{ background: 'linear-gradient(to right, ' + value.color + ', ' + value.color + ')', width: progressWidth(value.progress) + '%'}"
                         pTooltip="{{ value.title }}" 
                         tooltipPosition="top">
                     </span>
                 </ng-template>
+
                 <ng-template pTemplate="start" let-totalPercent="totalPercent">
                     <div class="flex justify-content-between mt-3 mb-2 relative">
                         <span>Total Goals</span>
@@ -62,4 +64,19 @@
             </p-meterGroup>
         </div>
     </div>
+
+    <div class="each-goal-content">
+        <div *ngFor="let goal of visibleGoals" class="each-goal-card">
+            <div class="each-goal-header">
+                <span class="each-goal-icon" [style.backgroundColor]="goal.color">
+                    <i [class]="goal.icon"></i>
+                </span>
+            </div>
+            <h3>{{ goal.title }}</h3>
+            <p>{{ goal.description }}</p>
+            <p-knob [(ngModel)]="goal.progress" [strokeWidth]="5"  [showValue]="true" class="progress-knob"></p-knob>
+        </div>
+    </div>
+
+
 </div>

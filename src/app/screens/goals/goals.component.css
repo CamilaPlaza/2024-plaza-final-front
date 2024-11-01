@@ -9,14 +9,30 @@ html, body {
     flex-direction: column;
     height: 100vh;
     margin-left: 5%;
+    background-image: url('../../../assets/images/goals.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.737);
 }
 
 .section {
-    flex: 1;
+    flex: 0.15;
+    position: relative;
+    z-index: 2;
 }
 
 .title-section {
-    padding: 0.8%;
+    padding: 0%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,7 +48,6 @@ html, body {
 
 .avarage-goals{
     margin-top: 1%;
-    margin-left: 7%;
     margin-right: 2%;
 }
 
@@ -41,6 +56,7 @@ html, body {
 }
 
 .goals-content {
+    z-index: 2;
     padding: 3%;
     display: flex;
     align-items: stretch;
@@ -129,3 +145,50 @@ html, body {
     color: #ccc;
     cursor: not-allowed;
   }
+
+
+  /*EACH GOAL*/
+  .each-goal-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    background-image: url('/path/to/your/background-image.png'); /* Ruta de tu imagen */
+    background-size: cover;
+    background-position: center;
+    opacity: 0.9; /* Controla la transparencia del fondo */
+    border-radius: 10px;
+}
+
+.each-goal-card {
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con transparencia */
+    padding: 1.5rem;
+    border-radius: 15px;
+    text-align: center;
+    width: 250px;
+    height: 300px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.each-goal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.each-goal-icon {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: #fff;
+}
+
+.progress-knob {
+    margin-top: 1rem;
+    font-size: 1.5rem;
+}

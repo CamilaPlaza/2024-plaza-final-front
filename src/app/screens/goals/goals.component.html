@@ -1,63 +1,58 @@
 <div class="goals-container">
     <div class="section title-section">
-        <p class="title">GOALS</p>
+      <p class="title">GOALS</p>
     </div>
-
-    <div class="avarage-goals">
-        <p-meterGroup [value]="goals" labelPosition="start">
-            <ng-template pTemplate="label">
-                <div class="flex flex-wrap gap-3">
-                    <ng-container *ngFor="let goal of goals">
-                        <p-card class="goal-card flex-1 border-round-lg">
-                            <div class="flex justify-content-between gap-5">
-                                <div class="flex flex-column gap-1">
-                                    <span class="text-secondary text-sm">{{ goal.title }}</span>
-                                    <span class="font-bold text-lg">{{ goal.progress }}%</span>
-                                </div>
-                                <span class="icon-container w-3rem h-3rem border-circle inline-flex justify-content-center align-items-center text-center"
-                                    [style]="{ 'background-color': goal.color, color: '#ffffff' }">
-                                    <i [class]="goal.icon"></i>
-                                </span>
-                            </div>
-                        </p-card>
-                    </ng-container>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="meter" let-value let-class="class" let-width="size">
-                <span [class]="class" [style]="{ background: 'linear-gradient(to right, ' + value.color + ', ' + value.color + ')', width: progressWidth(value.progress) + '%' }"
-                pTooltip="{{ value.title }}" 
-                tooltipPosition="top"
-                ></span>
-            </ng-template>
-            <ng-template pTemplate="start" let-totalPercent="totalPercent">
-                <div class="flex justify-content-between mt-3 mb-2 relative">
-                    <span>Total Goals</span>
-                    <span class="font-medium">100%</span>
-                </div>
-            </ng-template>
-        </p-meterGroup>
-    </div>
-    
-    
   
-
-   <!--
-
-    <div class="water-goals p-grid">
-      <div *ngFor="let goal of waterGoals" class="p-col-12 p-md-4">
-        <p-card styleClass="water-goal-card">
-          <div class="dollar-icon">
-            <i class="pi pi-dollar"></i>
-          </div>
-          <h3>{{goal.title}}</h3>
-          <p>{{goal.description}}</p>
-          <p-knob 
-          [(ngModel)]="goal.progress"
-            [readonly]="true"
-            [size]="150"
-            [strokeWidth]="5"
-          ></p-knob>
-        </p-card>
+    <div class="goals-content">
+      <div class="avarage-goals">
+        <p-meterGroup [value]="goals" labelPosition="start">
+          <ng-template pTemplate="label">
+            <div class="flex flex-wrap gap-3">
+              <ng-container *ngFor="let goal of goals">
+                <p-card class="goal-card flex-1 border-round-lg">
+                  <div class="flex justify-content-between gap-5">
+                    <div class="flex flex-column gap-1">
+                      <span class="text-secondary text-sm">{{ goal.title }}</span>
+                      <span class="font-bold text-lg">{{ goal.progress }}%</span>
+                    </div>
+                    <span class="icon-container w-3rem h-3rem border-circle inline-flex justify-content-center align-items-center text-center"
+                      [style]="{ 'background-color': goal.color, color: '#ffffff' }">
+                      <i [class]="goal.icon"></i>
+                    </span>
+                  </div>
+                </p-card>
+              </ng-container>
+              <div class="add-goal-button">
+                <button (click)="addNewGoal()" class="p-button p-button-raised p-button-primary small-button">Add New Goal</button>
+                <p-calendar class="calendar-button"
+                  [(ngModel)]="selectedDate" 
+                  [iconDisplay]="'input'" 
+                  [showIcon]="true" 
+                  view="month" 
+                  dateFormat="dd/mm/yy" 
+                  [readonlyInput]="true"
+                >
+                  <ng-template pTemplate="inputicon" let-clickCallBack="clickCallBack">
+                    <i class="pi pi-calendar pointer-events-none" (click)="clickCallBack($event)"></i>
+                  </ng-template>
+                </p-calendar>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="meter" let-value let-class="class" let-width="size">
+            <span [class]="class" [style]="{ background: 'linear-gradient(to right, ' + value.color + ', ' + value.color + ')', width: progressWidth(value.progress) + '%' }"
+              pTooltip="{{ value.title }}" 
+              tooltipPosition="top">
+            </span>
+          </ng-template>
+          <ng-template pTemplate="start" let-totalPercent="totalPercent">
+            <div class="flex justify-content-between mt-3 mb-2 relative">
+              <span>Total Goals</span>
+              <span class="font-medium">100%</span>
+            </div>
+          </ng-template>
+        </p-meterGroup>
       </div>
-    </div>--> 
+    </div>
   </div>
+  

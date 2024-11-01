@@ -31,10 +31,77 @@ html, body {
 }
 
 .avarage-goals{
-    margin-left: 5%;
-    padding: 3%;
+    margin-top: 1%;
+    margin-left: 7%;
+    margin-right: 2%;
 }
 
 ::ng-deep .goal-card .p-card {
     border-radius: 15px !important;
+}
+
+.goals-content {
+    padding: 3%;
+    display: flex;
+    align-items: stretch;
+}
+
+.avarage-goals {
+    flex-basis: 100%;
+}
+
+.add-goal-button {
+    margin-left: 2%;
+    flex-basis: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 1rem;
+}
+
+.small-button {
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.calendar-button {
+    width: 100%;
+    cursor: pointer;
+}
+
+::ng-deep .add-goal-button .p-button {
+    height: 3rem;
+    font-size: 1.1rem;
+    background-color: #7f522e !important; 
+    color: white !important; 
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    border: none;
+}
+
+::ng-deep .calendar-button .p-calendar {
+    height: 2.8rem;
+    font-size: 2rem;    
+}
+
+::ng-deep .calendar-button .p-calendar .p-datepicker-trigger {
+    color: #7f522e !important;
+    background-color: transparent !important;
+}
+
+::ng-deep .calendar-button .p-calendar .p-datepicker-trigger-icon {
+    font-size: 1rem !important;
+    color: #7f522e !important;
+}
+
+.p-scrollpanel {
+    overflow: auto;
+}
+
+.scroll-panel {
+    max-height: 400px;
+    width: 100%;
+    overflow: auto; /* Asegúrate de permitir el desplazamiento */
 }

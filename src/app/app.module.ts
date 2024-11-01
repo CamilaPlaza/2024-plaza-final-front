@@ -59,6 +59,9 @@ import { CardModule } from 'primeng/card';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { MeterGroupModule } from 'primeng/metergroup';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+
+
 
 @NgModule({
   declarations: [
@@ -93,6 +96,7 @@ import { MeterGroupModule } from 'primeng/metergroup';
   ],
   imports: [
     BrowserModule,
+    ScrollPanelModule,
     KnobModule,
     CardModule,
     ProgressBarModule,

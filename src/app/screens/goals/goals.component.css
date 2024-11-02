@@ -26,7 +26,7 @@ html, body {
 }
 
 .section {
-    flex: 0.15;
+    flex: 0.08;
     position: relative;
     z-index: 2;
 }
@@ -40,20 +40,15 @@ html, body {
     color: #f2f2f2;
 }
 
+/*colors: string[] = ['#7f522e', '#b37a3a'];
+*/
+
 .title {
     font-size: 2rem;
     margin: 0;
     text-align: center;
 }
 
-.avarage-goals{
-    margin-top: 1%;
-    margin-right: 2%;
-}
-
-::ng-deep .goal-card .p-card {
-    border-radius: 15px !important;
-}
 
 .goals-content {
     z-index: 2;
@@ -61,16 +56,7 @@ html, body {
     display: flex;
     align-items: stretch;
 }
-.goals-content {
-    overflow-x: auto; /* Permite el scroll horizontal */
-    white-space: nowrap; /* Evita que los elementos se envuelvan en la siguiente línea */
-}
 
-.goal-card {
-    display: inline-block; /* Permite que las tarjetas se alineen horizontalmente */
-    width: 150px; /* Establece un ancho fijo para cada tarjeta */
-    margin-right: 15px; /* Espaciado entre tarjetas */
-}
 
 .avarage-goals {
     flex-basis: 100%;
@@ -84,6 +70,7 @@ html, body {
     align-items: center;
     justify-content: start;
     gap: 1rem;
+    margin-top: 2%;
 }
 
 .small-button {
@@ -99,12 +86,18 @@ html, body {
 ::ng-deep .add-goal-button .p-button {
     height: 3rem;
     font-size: 1.1rem;
-    background-color: #7f522e !important; 
+    background-color: #98653b !important; 
     color: white !important; 
     display: flex;
     align-items: center;
     justify-content: center; 
     border: none;
+    transition: background-color 0.3s ease;
+}
+
+
+::ng-deep .add-goal-button .p-button:hover {
+    background-color: #825530 !important;
 }
 
 ::ng-deep .calendar-button .p-calendar {
@@ -112,15 +105,15 @@ html, body {
     font-size: 2rem;    
 }
 
-::ng-deep .calendar-button .p-calendar .p-datepicker-trigger {
-    color: #7f522e !important;
-    background-color: transparent !important;
+.chart-container {
+    width: 80%;
+    margin: 0 auto;
 }
 
-::ng-deep .calendar-button .p-calendar .p-datepicker-trigger-icon {
-    font-size: 1rem !important;
-    color: #7f522e !important;
+.chart-container p-chart {
+    width: 100%;
 }
+
 
 .p-scrollpanel {
     overflow: auto;
@@ -149,6 +142,7 @@ html, body {
 
   /*EACH GOAL*/
   .each-goal-content {
+    margin-bottom: 3%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -189,6 +183,12 @@ html, body {
 }
 
 .progress-knob {
-    margin-top: 1rem;
     font-size: 1.5rem;
+}
+
+.goals-section {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 100vh;
+    z-index: 2;
 }

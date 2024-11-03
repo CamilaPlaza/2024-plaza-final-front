@@ -1,6 +1,7 @@
 .popup-content {
     width: 100%;
     background-color: #fff;
+    padding: 20px;
 }
 
 .subtitle {
@@ -8,87 +9,71 @@
     color: #666;
     text-align: center;
     margin-bottom: 10px;
+    margin-top:-20px
 }
 
 .goal-type-selection {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
     margin-bottom: 10px;
+    margin-top: 20px;
 }
 
 .goal-type-button {
     background-color: #7f522e;
     color: #fff;
     border: none;
-    padding: 20px 35px;
-    font-size: 1rem;
+    padding: 12px 30px;
+    font-size: 0.8rem;
     cursor: pointer;
     border-radius: 10px;
     transition: background-color 0.3s;
     font-size: 18px;
-    margin-bottom: 10px;
 }
 
 .goal-type-button:hover {
     background-color: #5a3a21;
 }
 
-.goal-form,
-.additional-options {
-    margin-top: 30px;
+.goal-form {
+    margin-top: 20px;
     display: flex;
     flex-direction: row;
     gap: 15px;
+    margin-bottom: 10px;
 }
 
-.goal-form-row,
-.additional-options-row {
+.goal-form-row {
     display: flex;
-    gap: 15px;
-    align-items: left;
+    align-items: center;
     width: 100%;
 }
 
-.additional-options label {
+.goal-label {
     font-weight: bold;
     color: #333;
-    flex: 1; /* Este flex ayuda a ocupar el espacio necesario */
-    white-space: nowrap; 
-    min-width: 120px;
-}
-
-.category-label {
-    font-weight: bold;
-    color: #333;
-    flex: 1;
+    min-width: 120px; 
     white-space: nowrap;
-    min-width: 120px; /* Ancho mínimo para Category */
 }
 
-.final-gain-label {
+.goal-label-date {
     font-weight: bold;
     color: #333;
-    flex: 1;
-    max-width: 100px;
+    min-width: 50px; 
+    white-space: nowrap;
+    margin-left: 12%;
 }
 
-.target-amount-input {
-    width: 70px !important;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    margin-left: 0;
-}
-
+.goal-input, 
+.target-amount-input, 
 .gain-amount-input {
-    width: 100px !important;
+    flex: 1; 
     padding: 10px;
-    border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
 }
+
 .confirm-button {
     display: flex;
     justify-content: center;
@@ -110,13 +95,10 @@
     background-color: #218838;
 }
 
-.chart-container {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
 p-colorPicker,
 p-dropdown {
-    width: 100%;
+    flex: 1; 
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
 }

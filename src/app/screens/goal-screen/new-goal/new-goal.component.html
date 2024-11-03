@@ -1,46 +1,75 @@
 <div class="popup-content">
     <p class="subtitle">Choose what this new goal is for</p>
 
-    <!-- Opciones de tipo de meta -->
-    <div class="goal-type-selection">
-        <button (click)="selectGoalType('category')" class="goal-type-button">Category</button>
-        <button (click)="selectGoalType('finalGain')" class="goal-type-button">Final Gain</button>
-    </div>
+    <div class="form">
 
-    <!-- Campos para "Category" -->
-    <div *ngIf="selectedGoalType === 'category'" class="goal-form">
+        <div class="goal-form">
+            <div class="goal-form-row">
+                <label for="goalTitle" class="goal-label">Title:</label>
+                <input type="text" id="goalTitle" class="goal-input" [(ngModel)]="goalTitle" placeholder="Enter goal title" />
+            </div>
+            <div class="goal-form-row">
+                <label for="goalDeadline" class="goal-label-date">For:</label>
+
+                <p-calendar class="calendar-button"
+                [(ngModel)]="goalDeadline" 
+                [iconDisplay]="'input'" 
+                [showIcon]="true" 
+                view="month" 
+                dateFormat="mm/yy"
+                appendTo="body"/>
+                
+            </div>
+        </div>
+
         <div class="goal-form-row">
-            <label for="categoryDropdown" class="category-label">Select Category:</label>
-            <p-dropdown [options]="categories" [(ngModel)]="selectedCategory" placeholder="Choose a category"></p-dropdown>
+            <label for="goalDescription" class="goal-label">Description:</label>
+            <input type="text" id="goalDescription" class="goal-input" [(ngModel)]="goalDescription" placeholder="Enter goal description" />
         </div>
-        <div class="goal-form-row">
-            <label for="categoryAmount" class="category-label">Target Amount:</label>
-            <input type="number" id="categoryAmount" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target amount" />
-        </div>
-    </div>
+    
 
-    <!-- Campos para "Final Gain" -->
-    <div *ngIf="selectedGoalType === 'finalGain'" class="goal-form">
-        <label for="finalGainAmount" class="final-gain-label">Target Gain Amount:</label>
-        <input type="number" id="finalGainAmount"  class="gain-amount-input" [(ngModel)]="targetGainAmount" placeholder="Enter target gain amount" />
-    </div>
+        <div class="goal-type-selection">
+            <button (click)="selectGoalType('category')" class="goal-type-button">Category</button>
+            <button (click)="selectGoalType('finalGain')" class="goal-type-button">Final Gain</button>
+        </div>
+    
+        <!-- Campos para "Category" -->
+        <div *ngIf="selectedGoalType === 'category'" class="goal-form">
+            <div class="goal-form-row">
+                <label for="categoryDropdown" class="category-label">Select Category:</label>
+                <p-dropdown [options]="categories" [(ngModel)]="selectedCategory" placeholder="Choose a category"></p-dropdown>
+            </div>
+            <div class="goal-form-row">
+                <label for="categoryAmount" class="category-label">Target Amount:</label>
+                <input type="number" id="categoryAmount" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target amount" />
+            </div>
+        </div>
+    
+        <!-- Campos para "Final Gain" -->
+        <div *ngIf="selectedGoalType === 'finalGain'" class="goal-form">
+            <label for="finalGainAmount" class="final-gain-label">Target Gain Amount:</label>
+            <input type="number" id="finalGainAmount" class="gain-amount-input" [(ngModel)]="targetGainAmount" placeholder="Enter target gain amount" />
+        </div>
+    
 
-    <!-- Selección de color e icono -->
-    <div *ngIf="selectedGoalType" class="additional-options">
-        <div class="additional-options-row">
-            <label>Select Color:</label>
-            <p-colorPicker [(ngModel)]="goalColor"></p-colorPicker>
+        <div *ngIf="selectedGoalType" class="goal-form">
+            <div class="goal-form-row">
+                <label>Select Color:</label>
+                <p-colorPicker [(ngModel)]="goalColor"></p-colorPicker>
+            </div>
+            <div class="goal-form-row">
+                <label>Select Icon:</label>
+                <p-dropdown [options]="icons" [(ngModel)]="selectedIcon" placeholder="Choose an icon">
+                    <ng-template let-icon pTemplate="item">
+                        <i [class]="'pi ' + icon.value"></i>
+                        <span>{{ icon.label }}</span>
+                    </ng-template>
+                </p-dropdown>
+            </div>
         </div>
-        <div class="additional-options-row">
-            <label>Select Icon:</label>
-            <p-dropdown [options]="icons" [(ngModel)]="selectedIcon" placeholder="Choose an icon">
-                <ng-template let-icon pTemplate="item">
-                    <i [class]="'pi ' + icon.value"></i>
-                    <span>{{ icon.label }}</span>
-                </ng-template>
-            </p-dropdown>
-        </div>
+
     </div>
+    
 
     <!-- Botón de confirmación -->
     <div *ngIf="selectedGoalType" class="confirm-button">

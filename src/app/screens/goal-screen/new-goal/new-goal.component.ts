@@ -14,6 +14,9 @@ export class NewGoalComponent {
   targetGainAmount: number= 0;
   goalColor: string = '';
   selectedIcon: string= '';
+  goalTitle: string = '';
+  goalDescription: string = '';
+  goalDeadline: string = '';
 
   categories = [
     { label: 'Category 1', value: 'category1' },

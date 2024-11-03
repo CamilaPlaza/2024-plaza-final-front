@@ -29,14 +29,23 @@
                                         <i class="pi pi-calendar pointer-events-none" (click)="clickCallBack($event)"></i>
                                     </ng-template>
                                 </p-calendar>
+                                <div class="days-remaining-block">
+                                    <span style="font-weight: bold;">{{ getDaysRemainingInMonth() }} days</span> left in the month
+                                  </div>
+                                  
                             </div>
                         </div>
                     </ng-template>
                     
                     <ng-template class="progress-line" pTemplate="meter" let-value let-class="class" let-width="size">
-                        <span [class]="class + ' progress-line'"  [style]="{ background: 'linear-gradient(to right, ' + value.color + ', ' + value.color + ')', width: progressWidth(value.progress) + '%'}"
-                            pTooltip="{{ value.title }}" 
-                            tooltipPosition="top">
+                        <span [class]="class + ' progress-line'"  
+                        [style]="{
+                            background: 'linear-gradient(to right, ' + getProgressColor(value.progress) + ', ' + getProgressColor(value.progress) + ')',
+                            width: progressWidth(value.progress) + '%'
+                          }"
+                          pTooltip="{{ value.title }}" 
+                          tooltipPosition="top">
+                          
                         </span>
                     </ng-template>
     

@@ -131,4 +131,39 @@ export class GoalsComponent implements OnInit {
     }
   }
 
+  getDaysRemainingInMonth(): number {
+    const today = new Date();
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    return (lastDayOfMonth.getDate() - today.getDate());
+  }
+
+  getProgressColor(progress: number): string {
+    const today = new Date();
+    const dayOfMonth = today.getDate();
+  
+    if (dayOfMonth >= 1 && dayOfMonth <= 10) {
+      return 'green'; // Siempre verde entre el día 1 y 10
+    } else if (dayOfMonth >= 11 && dayOfMonth <= 20) {
+      // Lógica entre el día 11 y 20
+      if (progress > 40) {
+        return 'green';
+      } else if (progress > 20) {
+        return 'orange';
+      } else {
+        return 'red';
+      }
+    } else {
+      // Lógica entre el día 21 y el último día del mes
+      if (progress > 80) {
+        return 'green';
+      } else if (progress > 50) {
+        return 'orange';
+      } else {
+        return 'red';
+      }
+    }
+  }
+  
+  
+
 }

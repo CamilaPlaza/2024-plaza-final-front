@@ -10,12 +10,13 @@ import { ChartModule } from 'primeng/chart';
 })
 export class GoalsComponent implements OnInit {
   goals: Goal[] = [
-    new Goal('Learn TypeScript', 'Complete the TypeScript course on Udemy', 80, 'blue', 'pi pi-graduation-cap', '01/11/2024', 1),
-    new Goal('Read Books', 'Read 12 books this year  at least please', 50, 'orange', 'pi pi-book', '01/11/2024', 3),
-    new Goal('Get Fit', 'Exercise at least 4 times a week', 20, 'red', 'pi pi-gym', '01/11/2024', 4),
-    new Goal('Travel', 'Visit 3 new countries this year', 30, 'purple', 'pi pi-plane', '01/11/2024', 5),
-    new Goal('Learn Love', 'Complete the TypeScript course on Udemy', 40, 'blue', 'pi pi-love', '01/11/2024', 1)
+    new Goal('Learn TypeScript', 'Complete the TypeScript course on Udemy', 100, 80, 'blue', 'pi pi-graduation-cap', '01/11/2024', 1),
+    new Goal('Read Books', 'Read 12 books this year  at least please', 100, 50, 'orange', 'pi pi-book', '01/11/2024', 3),
+    new Goal('Get Fit', 'Exercise at least 4 times a week', 50, 30, 'red', 'pi pi-gym', '01/11/2024', 4),
+    new Goal('Travel', 'Visit 3 new countries this year', 80, 20, 'purple', 'pi pi-plane', '01/11/2024', 5),
+    new Goal('Learn Love', 'Complete the TypeScript course on Udemy', 100, 15, 'blue', 'pi pi-love', '01/11/2024', 1)
   ];
+  totalProgress: number = 0;
   visibleGoals: Goal[] = [];
   currentIndex: number = 0;
   itemsPerPage: number = 4;
@@ -30,6 +31,8 @@ export class GoalsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.calculateProgressValues();
+    this.totalProgress = this.goals.reduce((acc, item) => acc + item.actualIncome, 0);
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color');
@@ -38,10 +41,10 @@ export class GoalsComponent implements OnInit {
       labels: this.goals.map(goal => goal.title),
       datasets: [
           {
-              label: 'Progress',
+              label: '% Progress',
               backgroundColor: this.goals.map(goal => goal.color),
               borderColor: this.goals.map(goal => goal.color), 
-              data: this.goals.map(goal => goal.progress)
+              data: this.goals.map(goal => (goal.actualIncome/goal.expectedIncome)*100)
           }
       ]
     };
@@ -83,6 +86,14 @@ export class GoalsComponent implements OnInit {
       }
     };
   }
+
+  calculateProgressValues() {
+    this.goals.forEach(goal => {
+      goal.progressValue = (goal.actualIncome/goal.expectedIncome)*100; 
+    });
+  }
+
+
 
   addNewGoal(): void {
     console.log('Adding new goal');
@@ -138,9 +149,12 @@ export class GoalsComponent implements OnInit {
     return (lastDayOfMonth.getDate() - today.getDate());
   }
 
-  getProgressColor(progress: number): string {
+  getProgressColor(): string {
     const today = new Date();
     const dayOfMonth = today.getDate();
+    const totalExpectedIncome = this.goals.reduce((acc, item) => acc + item.expectedIncome, 0);
+    const progress = (this.totalProgress/totalExpectedIncome)*100;
+
   
     if (dayOfMonth >= 1 && dayOfMonth <= 10) {
       return 'green'; // Siempre verde entre el día 1 y 10

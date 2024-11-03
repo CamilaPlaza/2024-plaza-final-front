@@ -53,7 +53,7 @@ import { MyCartComponent } from './screens/user-order/my-cart/my-cart.component'
 import { CreateOrderComponent } from './screens/user-order/create-order/create-order.component';
 import { AsignInactiveOrderComponent } from './screens/my-tables/asign-inactive-order/asign-inactive-order.component';
 import { InputIconModule } from 'primeng/inputicon'; 
-import { GoalsComponent } from './screens/goal-screen/goals/goals.component';
+import { GoalsComponent } from './screens/goals/goals.component';
 import { KnobModule } from 'primeng/knob';
 import { CardModule } from 'primeng/card';
 import { ProgressBarModule } from 'primeng/progressbar';

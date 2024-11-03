@@ -73,4 +73,23 @@ export class ProductService {
     return this.http.get<Product>(`${this.baseUrl}/products/${productId}`);
 }
 
+  async updateNewStock(productId: string, newStock: string): Promise<boolean> {
+  try {
+    await this.http.put(`${this.baseUrl}/update-stock/${productId}/${newStock}`, { stock: newStock }).toPromise();
+    return true;
+  } catch (error: any) {
+    console.error('Error durante la actualización del stock:', error);
+    return false;
+  }
+}
+  async updateLowerStock(productId: string, consumed: string): Promise<boolean> {
+  try {
+    await this.http.put(`${this.baseUrl}/lower-stock/${productId}/${consumed}`, { stock: consumed }).toPromise();
+    return true;
+  } catch (error: any) {
+    console.error('Error durante la actualización del stock:', error);
+    return false;
+  }
+}
+
 }

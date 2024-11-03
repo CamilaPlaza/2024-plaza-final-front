@@ -23,6 +23,7 @@ export class GoalsComponent implements OnInit {
   data: any;
   options: any;
   colors: string[] = ['#7f522e', '#b37a3a'];
+  displayDialog: boolean = false;
 
   constructor() { 
     this.visibleGoals = this.goals.slice(0, 4);
@@ -164,6 +165,14 @@ export class GoalsComponent implements OnInit {
     }
   }
   
+  openDialog() {
+    this.displayDialog = true;
+  }
+
+  onGoalAdded(newGoal: any) {
+    this.goals.push(newGoal);
+    this.displayDialog = false;
+  }
   
 
 }

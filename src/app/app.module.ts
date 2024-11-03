@@ -61,7 +61,7 @@ import { SpeedDialModule } from 'primeng/speeddial';
 import { MeterGroupModule } from 'primeng/metergroup';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NewGoalComponent } from './screens/goal-screen/new-goal/new-goal.component';
-
+import { ColorPickerModule } from 'primeng/colorpicker';
 
 @NgModule({
   declarations: [
@@ -109,6 +109,7 @@ import { NewGoalComponent } from './screens/goal-screen/new-goal/new-goal.compon
     AutoCompleteModule,
     TagModule,
     TableModule,
+    ColorPickerModule,
     HttpClientModule,
     MultiSelectModule,
     FormsModule,

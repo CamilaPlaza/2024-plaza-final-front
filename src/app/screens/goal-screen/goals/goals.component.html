@@ -17,7 +17,7 @@
                            
     
                             <div class="add-goal-button">
-                                <button (click)="addNewGoal()" class="p-button p-button-raised p-button-primary small-button">Add New Goal</button>
+                                <button (click)="openDialog()"  class="p-button p-button-raised p-button-primary small-button">Add New Goal</button>
                                 <p-calendar class="calendar-button"
                                     [(ngModel)]="selectedDate" 
                                     [iconDisplay]="'input'" 
@@ -81,8 +81,8 @@
         </div>
 
     </div>
-
-   
-
-
 </div>
+
+<p-dialog header="Add New Goal" [(visible)]="displayDialog" [modal]="true" [closable]="true" [style]="{width: '50vw'}">
+    <app-new-goal (goalAdded)="onGoalAdded($event)"></app-new-goal>
+</p-dialog>

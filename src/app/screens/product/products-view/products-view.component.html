@@ -7,14 +7,15 @@
     <button pButton pRipple icon="pi pi-plus" (click)="navigateToRegisterProduct()" class="p-button-rounded add-product-button">
         <span class="button-text">Add Product</span>
     </button>
-    <button pButton pRipple icon="pi pi-plus" (click)="navigateToRegisterProduct()" class="p-button-rounded update-stock-button">
+    <button *ngIf="selectedProduct" pButton pRipple icon="pi pi-plus" (click)="navigateToRegisterProduct()" class="p-button-rounded update-stock-button">
         <span class="button-text">Update Stock</span>
     </button>
   </div>
 
   <div class="section table-section">
       <div class="card">
-        <p-table [value]="filteredProducts" dataKey="id" editMode="row" scrollable="true" [scrollHeight]="tableScrollHeight">
+        <p-table [value]="filteredProducts" dataKey="id" editMode="row" scrollable="true" selectionMode="single" 
+        [(selection)]="selectedProduct" [scrollHeight]="tableScrollHeight">
               <ng-template pTemplate="header">
                   <tr>
                       <th pSortableColumn="name" pResizableColumn>Name <p-sortIcon field="name"></p-sortIcon></th>
@@ -54,7 +55,7 @@
               </ng-template>
 
               <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
-                  <tr [pEditableRow]="product">
+                  <tr [pEditableRow]="product" [pSelectableRow]="product">
                       <!-- Name NO editable -->
                       <td>{{ product.name }}</td>
 

@@ -108,6 +108,11 @@ html, body {
 }
 
 
+.p-highlight {
+    background-color: #e9cdab !important; 
+    color: #7f522e; 
+}
+
 
 p-table {
     width: 100%;

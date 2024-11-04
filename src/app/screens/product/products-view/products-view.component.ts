@@ -20,6 +20,7 @@ export class ProductsViewComponent implements OnInit {
   deleteID: number = 0;
   editingProductCategories: { [key: number]: Category[] } = {};
   originalProductState: { [key: number]: Product } = {};
+  selectedProduct!: Product;
   public tableScrollHeight: string='';
 
   constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}

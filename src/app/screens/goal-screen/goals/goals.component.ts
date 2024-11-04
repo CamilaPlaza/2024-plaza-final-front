@@ -12,9 +12,9 @@ export class GoalsComponent implements OnInit {
   goals: Goal[] = [
     new Goal('Learn TypeScript', 'Complete the TypeScript course on Udemy', 100, 80, 'blue', 'pi pi-graduation-cap', '01/11/2024', 1),
     new Goal('Read Books', 'Read 12 books this year  at least please', 100, 50, 'orange', 'pi pi-book', '01/11/2024', 3),
-    new Goal('Get Fit', 'Exercise at least 4 times a week', 50, 30, 'red', 'pi pi-gym', '01/11/2024', 4),
-    new Goal('Travel', 'Visit 3 new countries this year', 80, 20, 'purple', 'pi pi-plane', '01/11/2024', 5),
-    new Goal('Learn Love', 'Complete the TypeScript course on Udemy', 100, 15, 'blue', 'pi pi-love', '01/11/2024', 1)
+    new Goal('Get Fit', 'Exercise at least 4 times a week', 50, 30, 'red', 'pi pi-dollar', '01/11/2024', 4),
+    new Goal('Travel', 'Visit 3 new countries this year', 80, 20, 'purple', 'pi pi-dollar', '01/11/2024', 5),
+    new Goal('Learn Love', 'Complete the TypeScript course on Udemy', 100, 15, 'blue', 'pi pi-book', '01/11/2024', 1)
   ];
   totalProgress: number = 0;
   visibleGoals: Goal[] = [];
@@ -91,12 +91,6 @@ export class GoalsComponent implements OnInit {
     this.goals.forEach(goal => {
       goal.progressValue = (goal.actualIncome/goal.expectedIncome)*100; 
     });
-  }
-
-
-
-  addNewGoal(): void {
-    console.log('Adding new goal');
   }
 
   progressWidth(progress: number) {
@@ -185,6 +179,7 @@ export class GoalsComponent implements OnInit {
 
   onGoalAdded(newGoal: any) {
     this.goals.push(newGoal);
+    console.log(newGoal);
     this.displayDialog = false;
   }
   

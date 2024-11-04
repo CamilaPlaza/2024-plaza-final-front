@@ -18,9 +18,9 @@ export class NewGoalComponent implements OnInit  {
   selectedIcon: string= '';
   goalTitle: string = '';
   goalDescription: string = '';
-  goalDeadline: string = '';
+  goalDeadline: Date = new Date();
   categories: Category[] = [];
-
+  minDate: Date = new Date();
   icons = [
     { label: 'Briefcase', value: 'pi-briefcase' },
     { label: 'Bullseye', value: 'pi-bullseye' },
@@ -37,16 +37,18 @@ export class NewGoalComponent implements OnInit  {
 
   ngOnInit() {
     this.loadCategories();
+    const today = new Date();
+    this.minDate = new Date(today.getFullYear(), today.getMonth(), 1);
   }
 
   addTotalGainGoal() {
-    const newGoal = new Goal(this.goalTitle, this.goalDescription, this.targetAmount, 0, this.goalColor, this.selectedIcon, this.goalDeadline);
+    const newGoal = new Goal(this.goalTitle, this.goalDescription, this.targetAmount, 0, this.goalColor, 'pi ' + this.selectedIcon, this.formatDeadline(this.goalDeadline));
     console.log(newGoal);
     this.goalAdded.emit(newGoal);
   }
 
   addCategoryGoal(){
-    const newGoal = new Goal(this.goalTitle, this.goalDescription, this.targetAmount, 0, this.goalColor, this.selectedIcon, this.goalDeadline, this.selectedCategory);
+    const newGoal = new Goal(this.goalTitle, this.goalDescription, this.targetAmount, 0, this.goalColor, 'pi ' +  this.selectedIcon, this.formatDeadline(this.goalDeadline), this.selectedCategory.id);
     console.log(newGoal);
     this.goalAdded.emit(newGoal);
   }
@@ -59,6 +61,16 @@ export class NewGoalComponent implements OnInit  {
       this.addTotalGainGoal();
     }
   }
+
+  formatDeadline(date: Date): string {
+    if (!date) return '';
+    
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const year = date.getFullYear().toString().slice(-2);
+    
+    return `${month}/${year}`;
+  }
+  
 
   selectGoalType(type: string) {
     this.selectedGoalType = type;

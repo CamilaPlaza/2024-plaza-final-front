@@ -37,8 +37,8 @@
 }
 
 .goal-type-button.selected {
-    background-color: #5a3a21; /* Cambia a un color distinto o más oscuro */
-    border: 2px solid #333; /* Opcional: Agrega un borde */
+    background-color: #5a3a21;
+    border: 2px solid #333; 
 }
 
 .goal-form {

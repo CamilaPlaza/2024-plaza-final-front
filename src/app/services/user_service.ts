@@ -30,7 +30,7 @@ export class UserService {
     });
   }
 
-  async onRegister(email: string, password: string, name: string, birthday: string): Promise<boolean>{
+  async onRegister(email: string, password: string, name: string, birthday: string, imageUrl: string): Promise<boolean>{
     try {
 
       // Crear usuario en Firebase Authentication
@@ -42,7 +42,8 @@ export class UserService {
       const data = {
         uid: firebaseUser.uid,
         name: name,
-        birthday: birthday
+        birthday: birthday,
+        imageUrl: imageUrl
       };
       console.log(this.http.post(`${this.baseUrl}/register/`, data));
       await this.http.post(`${this.baseUrl}/register/`, data).toPromise();

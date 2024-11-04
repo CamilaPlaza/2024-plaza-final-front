@@ -18,6 +18,8 @@ export class UserRegisterComponent implements OnInit {
   password: string = '';
   birthDate!: Date;
   user: UserData | undefined;
+  fileName: string = '';
+  imageUrl: string = '';
   isMobile: boolean = window.innerWidth <= 800;
   loading: boolean = false;
   animateForm: boolean = false;
@@ -45,13 +47,13 @@ export class UserRegisterComponent implements OnInit {
 
   async onRegister() {
     try {
-      //CHEQUEO DE SI SALE BIEN
       this.closeConfirmDialog();
       this.loading = true;
       this.formattedBirthDate = this.datePipe.transform(this.birthDate, 'dd/MM/yyyy') || '';
+
       console.log(this.formattedBirthDate);
                 
-      const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate);
+      const response = await this.userService.onRegister(this.email, this.password, this.name, this.formattedBirthDate, this.imageUrl);
       console.log(response);
       if(response){
         await this.userService.login(this.email, this.password);
@@ -66,12 +68,24 @@ export class UserRegisterComponent implements OnInit {
     } finally {
       this.loading = false;
     }
+  }
 
-    /*setTimeout(() => {
-      this.loading = false;
-    }, 2000);*/
-}
+  onImageSelect(event: any) {
+    const file = event.files[0]; 
+    this.fileName = file.name;  
 
+    const reader = new FileReader();  
+    reader.onload = (e: any) => {
+      this.imageUrl = e.target.result; 
+    };
+    reader.readAsDataURL(file);  
+  }
+
+  onImageClear(fileUpload: any) {
+    this.fileName = ''; 
+    this.imageUrl = ''; 
+    fileUpload.clear(); 
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {

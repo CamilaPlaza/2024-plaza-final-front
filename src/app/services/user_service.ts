@@ -148,5 +148,9 @@ logOut(){
     return this.http.get(`${this.baseUrl}/ranking`);
   }
 
+  getRewards(levelId: string): Observable<any>{
+    const url = `${this.baseUrl}/rewards/${levelId}`;
+    return this.http.get(url); 
+  }
 }
 

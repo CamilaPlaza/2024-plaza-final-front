@@ -13,7 +13,8 @@ export class UserProfileComponent implements OnInit{
   email: string | null = null;
   name: string | null = null;
   birthday: Date | null = null;
-  level: string | null = null;
+  levelName: string | null = null;
+  levelId: string | null = null;
   displayConfirmDeleteDialog: boolean = false;
   displayErrorDialog: boolean = false;
   displayChangePasswordDialog: boolean = false;
@@ -21,12 +22,8 @@ export class UserProfileComponent implements OnInit{
   selectedReward: any;
   responsiveOptions: any[] | undefined;
   loading: boolean = true;
-  rewards = [
-    { name: 'Reward 1', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT1' },
-    { name: 'Reward 2', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT2' },
-    { name: 'Reward 3', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT3' },
-  ];
   ranking: any[] = [];
+  rewards: any;
   
 
   constructor(private confirmationService: ConfirmationService,
@@ -44,8 +41,21 @@ export class UserProfileComponent implements OnInit{
           (userData) => {
             this.name = userData.name;        
             this.birthday = userData.birthday;
-            this.level = userData.level;
-          },
+            this.levelName = userData.level.name;
+            this.levelId = userData.level.id;
+            if(this.levelId){
+              this.userService.getRewards(this.levelId).subscribe(
+                (rewardsData) => {
+                  this.rewards = rewardsData; // Asignar los datos de recompensas a la variable
+                },
+                (error) => {
+                  console.error('Error fetching rewards data:', error);
+                }
+              );
+            }
+            else {
+            console.warn('Level ID is null, cannot fetch rewards.');
+          }},
           (error) => {
             console.error('Error fetching user data:', error);
           }
@@ -59,6 +69,7 @@ export class UserProfileComponent implements OnInit{
             console.error('Error fetching ranking data:', error);
           }
         );
+        
       } else {
         this.router.navigate(['/']); 
       }

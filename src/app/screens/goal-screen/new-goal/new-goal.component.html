@@ -36,37 +36,40 @@
         <!-- Campos para "Category" -->
         <div *ngIf="selectedGoalType === 'category'" class="goal-form">
             <div class="goal-form-row">
-                <label for="categoryDropdown" class="category-label">Select Category:</label>
+                <label for="categoryDropdown" class="category-label">Category:</label>
                 <p-dropdown [options]="categories" [(ngModel)]="selectedCategory" placeholder="Choose a category"></p-dropdown>
             </div>
             <div class="goal-form-row">
-                <label for="categoryAmount" class="category-label">Target Amount:</label>
+                <label for="categoryAmount" class="category-label-amount">Target Amount:</label>
                 <input type="number" id="categoryAmount" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target amount" />
             </div>
         </div>
     
         <!-- Campos para "Final Gain" -->
         <div *ngIf="selectedGoalType === 'finalGain'" class="goal-form">
-            <label for="finalGainAmount" class="final-gain-label">Target Gain Amount:</label>
-            <input type="number" id="finalGainAmount" class="gain-amount-input" [(ngModel)]="targetGainAmount" placeholder="Enter target gain amount" />
+            <div class="goal-form-row">
+                <label for="finalGainAmount" class="category-label-final-gain">Target Amount:</label>
+                <input type="number" id="finalGainAmount" class="target-amount-input" [(ngModel)]="targetGainAmount" placeholder="Enter target gain amount" />
+            </div>
         </div>
     
 
         <div *ngIf="selectedGoalType" class="goal-form">
             <div class="goal-form-row">
                 <label>Select Color:</label>
-                <p-colorPicker [(ngModel)]="goalColor"></p-colorPicker>
+                <p-colorPicker appendTo="body" [(ngModel)]="goalColor"></p-colorPicker>
             </div>
             <div class="goal-form-row">
-                <label>Select Icon:</label>
-                <p-dropdown [options]="icons" [(ngModel)]="selectedIcon" placeholder="Choose an icon">
+                <label class="goal-label-icon">Select Icon:</label>
+                <p-dropdown class="icon-dropdown" [options]="icons" appendTo="body" [(ngModel)]="selectedIcon" placeholder="Choose an icon">
                     <ng-template let-icon pTemplate="item">
                         <i [class]="'pi ' + icon.value"></i>
-                        <span>{{ icon.label }}</span>
+                        <span> - {{ icon.label }}</span>
                     </ng-template>
                 </p-dropdown>
             </div>
         </div>
+        
 
     </div>
     

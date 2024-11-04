@@ -10,8 +10,8 @@ export class NewGoalComponent {
   @Output() goalAdded = new EventEmitter<any>();
   selectedGoalType: string = ''; // Valor inicial
   selectedCategory: any;
-  targetAmount: number = 0;
-  targetGainAmount: number= 0;
+  targetAmount!: number;
+  targetGainAmount!: number;
   goalColor: string = '';
   selectedIcon: string= '';
   goalTitle: string = '';

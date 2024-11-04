@@ -72,19 +72,41 @@
     padding: 10px;
     border-radius: 5px;
     font-size: 1rem;
+    border: 1px solid #ccc;
+}
+
+.goal-input:focus {
+    border-color: #aaa;
+    outline: none; 
+}
+
+
+.category-label-amount{
+    margin-right: 3%;
+    white-space: nowrap;
+}
+
+.goal-label-icon{
+    margin-left: 1%;
+    margin-right: 5%;
+    white-space: nowrap;
+}
+
+.category-label-final-gain{
+    margin-right: 2%;
 }
 
 .confirm-button {
     display: flex;
-    justify-content: center;
+    justify-content: right;
     margin-top: 20px;
 }
 
 .confirm-button button {
-    background-color: #28a745;
+    background-color: #966237;
     color: #fff;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 50px;
     font-size: 1rem;
     cursor: pointer;
     border-radius: 5px;
@@ -92,7 +114,7 @@
 }
 
 .confirm-button button:hover {
-    background-color: #218838;
+    background-color: #885e3c;
 }
 
 p-colorPicker,
@@ -101,4 +123,13 @@ p-dropdown {
     padding: 10px;
     border-radius: 5px;
     font-size: 1rem;
+}
+
+
+::ng-deep .icon-dropdown .p-dropdown-panel {
+    min-width: 180px;
+}
+
+::ng-deep .icon-dropdown .p-dropdown-label {
+    min-width: 180px;
 }

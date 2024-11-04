@@ -13,27 +13,20 @@ export class UserProfileComponent implements OnInit{
   email: string | null = null;
   name: string | null = null;
   birthday: Date | null = null;
+  level: string | null = null;
   displayConfirmDeleteDialog: boolean = false;
   displayErrorDialog: boolean = false;
   displayChangePasswordDialog: boolean = false;
   displayDiscountDialog = false;
   selectedReward: any;
   responsiveOptions: any[] | undefined;
-  userName = 'John Doe'; 
-  userLevel = 'Croissant';
   loading: boolean = true;
-  users = [
-    { name: 'Amy Elsner', image: '../../../assets/images/goals.jpg', points: 120 },
-    { name: 'Anna Fali', image: '../../../assets/images/goals.jpg', points: 95 },
-    { name: 'Asiya Javayant', image: '../../../assets/images/goals.jpg', points: 110 },
-    { name: 'Bernardo Dominic', image: '../../../assets/images/goals.jpg', points: 80 },
-    { name: 'Elwin Sharvill', image: '../../../assets/images/goals.jpg', points: 130 }
-  ];
   rewards = [
     { name: 'Reward 1', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT1' },
     { name: 'Reward 2', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT2' },
     { name: 'Reward 3', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT3' },
   ];
+  ranking: any[] = [];
   
 
   constructor(private confirmationService: ConfirmationService,
@@ -51,14 +44,25 @@ export class UserProfileComponent implements OnInit{
           (userData) => {
             this.name = userData.name;        
             this.birthday = userData.birthday;
+            this.level = userData.level;
           },
           (error) => {
             console.error('Error fetching user data:', error);
           }
         );
+        this.userService.getRanking().subscribe(
+          (rankingData) => {
+            this.ranking = rankingData;
+            console.log(rankingData);
+          },
+          (error) => {
+            console.error('Error fetching ranking data:', error);
+          }
+        );
       } else {
         this.router.navigate(['/']); 
       }
+  
       this.responsiveOptions = [
         {
             breakpoint: '1400px',

@@ -105,6 +105,24 @@ html, body {
     color: #5d3a1e;
     font-weight: 600;
 }
+.ranking-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #5d3a1e;
+}
+.table-container .name-column {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between the image and name */
+  }
+  
+  .table-container .user-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Makes the image circular */
+  }
 
 /* Fondo desenfocado */
 .blurred-background {

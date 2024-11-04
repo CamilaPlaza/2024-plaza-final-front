@@ -21,6 +21,14 @@ export class UserProfileComponent implements OnInit{
   responsiveOptions: any[] | undefined;
   userName = 'John Doe'; 
   userLevel = 'Croissant';
+  loading: boolean = true;
+  users = [
+    { name: 'Amy Elsner', image: '../../../assets/images/goals.jpg', points: 120 },
+    { name: 'Anna Fali', image: '../../../assets/images/goals.jpg', points: 95 },
+    { name: 'Asiya Javayant', image: '../../../assets/images/goals.jpg', points: 110 },
+    { name: 'Bernardo Dominic', image: '../../../assets/images/goals.jpg', points: 80 },
+    { name: 'Elwin Sharvill', image: '../../../assets/images/goals.jpg', points: 130 }
+  ];
   rewards = [
     { name: 'Reward 1', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT1' },
     { name: 'Reward 2', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT2' },
@@ -68,6 +76,7 @@ export class UserProfileComponent implements OnInit{
             numScroll: 1
         }
     ];
+    this.loading = false;
     }
     
 

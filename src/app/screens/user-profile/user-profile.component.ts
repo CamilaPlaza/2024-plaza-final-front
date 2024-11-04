@@ -16,6 +16,17 @@ export class UserProfileComponent implements OnInit{
   displayConfirmDeleteDialog: boolean = false;
   displayErrorDialog: boolean = false;
   displayChangePasswordDialog: boolean = false;
+  displayDiscountDialog = false;
+  selectedReward: any;
+  responsiveOptions: any[] | undefined;
+  userName = 'John Doe'; 
+  userLevel = 'Croissant';
+  rewards = [
+    { name: 'Reward 1', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT1' },
+    { name: 'Reward 2', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT2' },
+    { name: 'Reward 3', imageUrl: '../../../assets/images/goals.jpg', discountCode: 'DISCOUNT3' },
+  ];
+  
 
   constructor(private confirmationService: ConfirmationService,
     private router: Router,
@@ -40,7 +51,25 @@ export class UserProfileComponent implements OnInit{
       } else {
         this.router.navigate(['/']); 
       }
+      this.responsiveOptions = [
+        {
+            breakpoint: '1400px',
+            numVisible: 3,
+            numScroll: 3
+        },
+        {
+            breakpoint: '1220px',
+            numVisible: 2,
+            numScroll: 2
+        },
+        {
+            breakpoint: '1100px',
+            numVisible: 1,
+            numScroll: 1
+        }
+    ];
     }
+    
 
   async onDeleteAccount() {
     this.userService.deleteCurrentUser()
@@ -89,5 +118,9 @@ export class UserProfileComponent implements OnInit{
     this.displayErrorDialog = false;
   }
 
+  showDiscountCode(reward: any) {
+    this.selectedReward = reward;
+    this.displayDiscountDialog = true;
+  }
   
 }

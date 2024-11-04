@@ -62,6 +62,7 @@ import { MeterGroupModule } from 'primeng/metergroup';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NewGoalComponent } from './screens/goal-screen/new-goal/new-goal.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { CarouselModule } from 'primeng/carousel';
 
 @NgModule({
   declarations: [
@@ -127,7 +128,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
     CalendarModule,
     MenubarModule,
     ChartModule,
-    MeterGroupModule
+    MeterGroupModule,
+    CarouselModule
 ],
   providers: [ConfirmationService, MessageService, DatePipe],
   bootstrap: [AppComponent]

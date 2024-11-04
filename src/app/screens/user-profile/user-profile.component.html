@@ -29,8 +29,44 @@
     
     <!-- Nueva estructura del contenedor derecho -->
     <div class="column column-right">
-        <div class="blurred-background"></div> <!-- Fondo desenfocado -->
-        <img src="../../../assets/images/user.jpg" alt="Imagen de perfil del usuario" class="profile-image">
+      <div class="right-top-section">
+        <h1 class="rewards-title">C&V Rewards</h1> <!-- Title for C&V Rewards -->
+        <div class="user-info">
+          <h2>{{ userName }}</h2>
+          <p>Level: {{ userLevel }}</p>
+        </div>
+        <div class="card">
+          <p-carousel 
+              [value]="rewards" 
+              [numVisible]="3" 
+              [numScroll]="1" 
+              [responsiveOptions]="responsiveOptions">
+                  <ng-template let-reward pTemplate="item">
+                      <div class="reward-box border-1 surface-border border-round m-2 p-3" (click)="showDiscountCode(reward)">
+                          <div class="mb-3">
+                              <div class="relative mx-auto">
+                                  <img 
+                                      src="{{ reward.imageUrl }}" 
+                                      [alt]="reward.name" 
+                                      class="w-full border-round" />
+                              </div>
+                          </div>
+                          <div class="mb-3 font-medium text-center">
+                              {{ reward.name }}
+                          </div>
+                      </div>
+                  </ng-template>
+          </p-carousel>
+      </div>
+      <p-dialog [(visible)]="displayDiscountDialog" [modal]="true" header="Discount Code" [closable]="true">
+          <div class="text-center">
+              <h3>{{ selectedReward?.name }}</h3>
+              <p>Use code <strong>{{ selectedReward?.discountCode }}</strong> for a discount!</p>
+          </div>
+      </p-dialog>
+      </div>
+      <div class="right-bottom-section">
+      </div>
     </div>
 
 </div>

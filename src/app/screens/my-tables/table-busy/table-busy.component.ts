@@ -8,6 +8,8 @@ import { CategoryService } from 'src/app/services/category_service';
 import { OrderService } from 'src/app/services/order_service';
 import { ProductService } from 'src/app/services/product_service';
 import { TableService } from 'src/app/services/table_service';
+import { UserService } from 'src/app/services/user_service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-table-busy',
@@ -23,7 +25,8 @@ export class TableBusyComponent implements OnInit {
   products : Product[] = [];
   currentDate: string = '';
   currentTime: string = '';
-  order: Order = new Order('', 0, '', '', '', [],1);
+  employee: string = '';
+  order: Order = new Order('', 0, '', '', '', [],1, '') ;
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
@@ -35,17 +38,18 @@ export class TableBusyComponent implements OnInit {
   categories: Category[] = [];
   selectedCategories: Array<{ id: any, name: string }> = [];
   filteredProducts: Product[] = []; 
+  user: any | null;
 
-  constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService) {}
-  ngOnInit() {
+  constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService, private userService: UserService) {}
+  async ngOnInit() {
     this.loadProducts();
     this.getOrderInformation();
     this.orderItems = this.actualOrder?.orderItems ?? [];
     this.currentDate = this.actualOrder?.date ?? '';
     this.currentTime = this.actualOrder?.time ?? '';
-    this.order = this.actualOrder ?? new Order('', 0, '', '', '', [],1);
+    this.order = this.actualOrder ?? new Order('', 0, '', '', '', [],1, '');
     this.loadCategories();
-  }
+}
 
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
@@ -74,18 +78,29 @@ export class TableBusyComponent implements OnInit {
     }
   }
 
-  getOrderInformation() {
-    console.log(this.table)
+  async getOrderInformation() {
+    console.log(this.table);
     if (this.table.order_id) {
       this.orderService.getOrderById(this.table.order_id.toString()).subscribe({
-        next: (order) => {
-          this.actualOrder = order; 
+        next: async (order) => {
+          this.actualOrder = order;
           this.orderItems = this.actualOrder?.orderItems ?? [];
           this.initialOI = JSON.parse(JSON.stringify(order.orderItems));
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
           this.amountOfPeople = this.actualOrder.amountOfPeople ?? 0;
           console.log('amountOfPeople', this.actualOrder.amountOfPeople);
+  
+          // Obtiene el nombre del empleado basado en el ID usando await para la promesa
+          if (this.actualOrder.employee) {
+            try {
+              const userData = await firstValueFrom(await this.userService.getUserDataFromFirestore(this.actualOrder.employee));
+              this.employee = userData?.name ?? 'Unknown Employee';
+              console.log('Employee Name:', this.employee);
+            } catch (err) {
+              console.error('Error fetching employee data:', err);
+            }
+          }
         },
         error: (err) => {
           console.error('Error fetching order information:', err);
@@ -93,7 +108,6 @@ export class TableBusyComponent implements OnInit {
       });
     }
   }
-
   
   loadProducts(): void {
     this.productService.getProducts().subscribe({

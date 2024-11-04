@@ -46,7 +46,8 @@ export class CreateOrderComponent {
       date: new Date().toISOString().split('T')[0],
       time: new Date().toLocaleTimeString(), 
       total: this.total.toString(), 
-      orderItems: this.orderItems
+      orderItems: this.orderItems,
+      employee: ''
     };
   
     try {

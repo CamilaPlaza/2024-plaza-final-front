@@ -8,6 +8,7 @@ import { ProductService } from 'src/app/services/product_service';
 import { TableService } from 'src/app/services/table_service';
 import { CategoryService } from 'src/app/services/category_service';
 import { Category } from 'src/app/models/category';
+import { UserService } from 'src/app/services/user_service';
 
 @Component({
   selector: 'app-table-free',
@@ -30,6 +31,8 @@ export class TableFreeComponent implements OnInit {
   currentTime: string = '';
   order: Order | undefined;
   currentDate: string = this.formatDate(new Date());
+  user: any | null
+  uid: string = '';
   
   selectedCategories: Array<{ id: any, name: string }> = [];
 
@@ -37,13 +40,25 @@ export class TableFreeComponent implements OnInit {
     private productService: ProductService,
     private orderService: OrderService,
     private tableService: TableService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private userService: UserService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.updateCurrentTime();
     this.loadProducts();
     this.loadCategories();
+    const user = this.userService.currentUser;
+    if (user) {
+      const userData =  (await this.userService.getUserDataFromFirestore(user.uid)).toPromise();
+      if (userData) {
+        this.user = userData;
+        this.uid = user.uid;
+        console.log(this.user);
+      } else {
+        console.error('Error fetching user points data.');
+      }
+  }
   }
 
   loadProducts(): void {
@@ -113,7 +128,8 @@ export class TableFreeComponent implements OnInit {
       time: this.currentTime,
       total: total.toString(),
       orderItems: this.orderItems,
-      amountOfPeople: this.selectedAmountOfPeople
+      amountOfPeople: this.selectedAmountOfPeople,
+      employee: this.uid
     };
     try {
       const response = await this.orderService.onRegister(this.order); 

@@ -11,7 +11,7 @@ import { CategoryService } from 'src/app/services/category_service';
 })
 export class NewGoalComponent implements OnInit  {
   @Output() goalAdded = new EventEmitter<any>();
-  selectedGoalType: string = ''; // Valor inicial
+  selectedGoalType: string = '';
   selectedCategory: any;
   targetAmount!: number;
   goalColor: string = '#ffffff';
@@ -60,6 +60,15 @@ export class NewGoalComponent implements OnInit  {
     else{
       this.addTotalGainGoal();
     }
+    this.selectedGoalType = '';
+    this.selectedCategory = null;
+    this.targetAmount = 0;
+    this.goalColor = '#ffffff';
+    this.selectedIcon = '';
+    this.goalTitle = '';
+    this.goalDescription = '';
+    this.goalDeadline = new Date();
+
   }
 
   formatDeadline(date: Date): string {
@@ -92,5 +101,19 @@ export class NewGoalComponent implements OnInit  {
       }
     });
   }
+
+  onTargetAmountChange() {
+    if (this.targetAmount <= 0 || this.targetAmount == null) {
+      this.targetAmount = 1;
+    }
+ }
+
+
+isFormValid(): boolean {
+  return this.goalTitle && this.goalDeadline && this.goalDescription && this.goalColor && this.selectedIcon &&
+         this.targetAmount > 0 &&
+         ((this.selectedGoalType === 'category' && this.selectedCategory) || 
+          this.selectedGoalType === 'finalGain');
+}
 
 }

@@ -47,7 +47,7 @@
             </div>
             <div class="goal-form-row">
                 <label for="categoryAmount" class="category-label-amount">Target Amount:</label>
-                <input type="number" id="categoryAmount" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target amount" />
+                <input type="number" id="categoryAmount" (change)="onTargetAmountChange()"  min="1" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target amount" />
             </div>
         </div>
     
@@ -55,7 +55,7 @@
         <div *ngIf="selectedGoalType === 'finalGain'" class="goal-form">
             <div class="goal-form-row">
                 <label for="finalGainAmount" class="category-label-final-gain">Target Amount:</label>
-                <input type="number" id="finalGainAmount" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target gain amount" />
+                <input type="number"  (change)="onTargetAmountChange()"  min="1" id="finalGainAmount" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target gain amount" />
             </div>
         </div>
     
@@ -82,6 +82,6 @@
 
     <!-- Botón de confirmación -->
     <div *ngIf="selectedGoalType" class="confirm-button">
-        <button pButton type="button" label="Add Goal" (click)="addGoal()"></button>
+        <button pButton type="button" label="Add Goal" (click)="addGoal()" [disabled]="!isFormValid()"></button>
     </div>
 </div>

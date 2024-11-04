@@ -63,6 +63,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NewGoalComponent } from './screens/goal-screen/new-goal/new-goal.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CarouselModule } from 'primeng/carousel';
+import { UpdateStockComponent } from './screens/product/update-stock/update-stock.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { CarouselModule } from 'primeng/carousel';
     NewGoalComponent,
     OrdersComponent,
     OrderInfoComponent,
+    UpdateStockComponent,
     TableBusyComponent,
     TableFreeComponent,
     TableFinishedComponent,

@@ -47,19 +47,52 @@ html, body {
 
 .add-product-button {
     position: absolute;
-    right: 4%;
+    right: 2%;
     background-color: #caa171; 
     color: #7f522e;
     border: none;
     border-radius: 5px;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.4rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
     transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
 
 .add-product-button:hover {
     background-color: #b58958;
 }
+
+.add-product-button .button-text {
+    margin-left: 8%;
+  }
+
+.update-stock-button {
+    position: absolute;
+    right: 13%;
+    background-color: #caa171; 
+    color: #7f522e;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1.4rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.update-stock-button:hover {
+    background-color: #b58958;
+}
+
+.update-stock-button .button-text {
+    margin-left: 8%;
+  }
+
 
 .table-section {
     flex: 1;

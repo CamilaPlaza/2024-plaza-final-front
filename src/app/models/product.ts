@@ -6,9 +6,10 @@ export class Product {
   category: string = '';
   calories: number = 0;
   cost: string = '';
+  stock: string = '';
   imageUrl?: string;
   
-    constructor(name: string, description: string, price: string, category: string, calories: number, cost: string, imagerl?: string, id?: number) {
+    constructor(name: string, description: string, price: string, category: string, calories: number, cost: string, stock: string, imagerl?: string, id?: number) {
       this.id = id;
       this.name = name;
       this.description = description;
@@ -16,6 +17,7 @@ export class Product {
       this.category = category;
       this.calories = calories;
       this.cost = cost;
+      this.stock = stock;
       this.imageUrl = imagerl;
     }
 }

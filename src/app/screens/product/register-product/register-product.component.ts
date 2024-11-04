@@ -22,6 +22,7 @@ export class RegisterProductComponent implements OnInit {
   description: string = '';
   price: string = '';
   cost: string = '';
+  stock: string = '';
   product: Product | undefined;
   categories: Category[] = [];
   categoryOptions: { label: string; value: string }[] = [];
@@ -76,7 +77,7 @@ export class RegisterProductComponent implements OnInit {
     this.closeConfirmDialog();
     this.loading = true;
     try {
-      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds, this.totalCaloriesValue ?? 0, this.cost, this.imageUrl);
+      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds, this.totalCaloriesValue ?? 0, this.cost, this.stock, this.imageUrl);
 
       console.log('PRODUCT: ', this.product);
       const response = await this.productService.onRegister(this.product);
@@ -129,6 +130,19 @@ export class RegisterProductComponent implements OnInit {
 
   closeErrorDialog() {
     this.displayErrorDialog = false;
+  }
+
+  
+  onStockChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = parseFloat(input.value);
+  
+    if (value < 0) {
+      input.value = '0';
+      this.stock = '0';
+    } else {
+      this.stock = input.value;
+    }
   }
 
   onPriceChange(event: Event) {

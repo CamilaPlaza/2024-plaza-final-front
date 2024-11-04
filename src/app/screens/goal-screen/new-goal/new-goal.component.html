@@ -29,15 +29,20 @@
     
 
         <div class="goal-type-selection">
-            <button (click)="selectGoalType('category')" class="goal-type-button">Category</button>
-            <button (click)="selectGoalType('finalGain')" class="goal-type-button">Final Gain</button>
+            <button (click)="selectGoalType('category')" [class.selected]="selectedGoalType === 'category'"  class="goal-type-button">Category</button>
+            <button (click)="selectGoalType('finalGain')" [class.selected]="selectedGoalType === 'finalGain'" class="goal-type-button">Final Gain</button>
         </div>
     
         <!-- Campos para "Category" -->
         <div *ngIf="selectedGoalType === 'category'" class="goal-form">
             <div class="goal-form-row">
                 <label for="categoryDropdown" class="category-label">Category:</label>
-                <p-dropdown [options]="categories" [(ngModel)]="selectedCategory" placeholder="Choose a category"></p-dropdown>
+                <p-dropdown 
+                    [options]="categories" 
+                    [(ngModel)]="selectedCategory" 
+                    placeholder="Choose a category"
+                    optionLabel="name" >
+                </p-dropdown>
             </div>
             <div class="goal-form-row">
                 <label for="categoryAmount" class="category-label-amount">Target Amount:</label>
@@ -49,7 +54,7 @@
         <div *ngIf="selectedGoalType === 'finalGain'" class="goal-form">
             <div class="goal-form-row">
                 <label for="finalGainAmount" class="category-label-final-gain">Target Amount:</label>
-                <input type="number" id="finalGainAmount" class="target-amount-input" [(ngModel)]="targetGainAmount" placeholder="Enter target gain amount" />
+                <input type="number" id="finalGainAmount" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target gain amount" />
             </div>
         </div>
     
@@ -57,7 +62,7 @@
         <div *ngIf="selectedGoalType" class="goal-form">
             <div class="goal-form-row">
                 <label>Select Color:</label>
-                <p-colorPicker appendTo="body" [(ngModel)]="goalColor"></p-colorPicker>
+                <input class="color-input"  [(colorPicker)]="goalColor" [style.background]="goalColor" />
             </div>
             <div class="goal-form-row">
                 <label class="goal-label-icon">Select Icon:</label>

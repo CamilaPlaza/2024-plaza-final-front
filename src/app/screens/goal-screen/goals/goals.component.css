@@ -9,7 +9,7 @@ html, body {
     flex-direction: column;
     height: 100vh;
     margin-left: 5%;
-    background-image: url('../../../assets/images/goals.jpg');
+    background-image: url('../../../../assets/images/goals.jpg');
     background-size: cover;
     background-position: center;
     position: relative;
@@ -161,10 +161,6 @@ html, body {
     align-items: center;
     gap: 1.5rem;
     padding: 2rem;
-    background-image: url('/path/to/your/background-image.png'); /* Ruta de tu imagen */
-    background-size: cover;
-    background-position: center;
-    opacity: 0.9; /* Controla la transparencia del fondo */
     border-radius: 10px;
 }
 

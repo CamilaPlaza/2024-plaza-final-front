@@ -28,9 +28,13 @@
     </div>
     
     <!-- Nueva estructura del contenedor derecho -->
-    <div class="column column-right">
-      <div class="right-top-section">
-        <h1 class="rewards-title">C&V Rewards</h1> <!-- Title for C&V Rewards -->
+      <div class="column-right">
+          <div class="right-top-section">
+              <div class="mug-icon-container">
+                  <i class="fa-solid fa-mug-hot mug-icon"></i>
+                  <p>{{currentMonthlyPoints}}</p>
+              </div>
+              <h1 class="rewards-title">C&V Rewards</h1>
         <div class="user-info">
           <h2>{{ name }}</h2>
           <p>Level: {{ levelName }}</p>

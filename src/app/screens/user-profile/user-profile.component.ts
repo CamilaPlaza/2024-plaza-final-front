@@ -27,6 +27,7 @@ export class UserProfileComponent implements OnInit {
   displayChangePasswordDialog: boolean = false;
   displayDiscountDialog = false;
   selectedReward: any;
+  displayInfoPointsDialog = false;
   responsiveOptions: any[] | undefined;
   loading: boolean = true;
   ranking: any[] = [];
@@ -185,6 +186,12 @@ export class UserProfileComponent implements OnInit {
   showConfirmDeleteDialog() {
     this.displayConfirmDeleteDialog = true;
   }
+
+  
+  showInfoPointsDialog() {
+    this.displayInfoPointsDialog = true;
+  }
+
 
   closeConfirmDeleteDialog() {
     this.displayConfirmDeleteDialog = false;

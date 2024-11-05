@@ -64,6 +64,7 @@ import { NewGoalComponent } from './screens/goal-screen/new-goal/new-goal.compon
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CarouselModule } from 'primeng/carousel';
 import { UpdateStockComponent } from './screens/product/update-stock/update-stock.component';
+import { InfoPointsComponent } from './screens/info-points/info-points.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { UpdateStockComponent } from './screens/product/update-stock/update-stoc
     CreateOrderComponent,
     TablesComponent,
     ChartsComponent,
+    InfoPointsComponent,
     ExportExcelComponent,
     NewGoalComponent,
     OrdersComponent,

@@ -23,7 +23,7 @@
         <div class="button-group">
             <button (click)="showChangePasswordDialog()" class="btn">Change Password</button>
             <button (click)="showConfirmDeleteDialog()" class="btn">Delete Account</button>
-            <button class="btn">C&V's Points Program</button>
+            <button (click)="showInfoPointsDialog()" class="btn">C&V's Points Program</button>
         </div>
     </div>
     
@@ -155,3 +155,7 @@
   </p-dialog>
   
   <p-toast></p-toast>
+
+  <p-dialog  [(visible)]="displayInfoPointsDialog" [modal]="true" header="Information" [closable]="true">
+    <app-info-points></app-info-points>
+  </p-dialog>

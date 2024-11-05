@@ -266,6 +266,16 @@
 }
 
 
+.disabled-option {
+  color: gray;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.out-of-stock {
+  font-size: 0.9em;
+  color: red;
+}
 
 @media (max-width: 768px) {
 

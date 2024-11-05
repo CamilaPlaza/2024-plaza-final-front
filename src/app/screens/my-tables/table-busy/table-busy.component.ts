@@ -125,9 +125,6 @@ export class TableBusyComponent implements OnInit {
     });
   }
 
-  onProductChange() {
-    this.validateForm();
-  }
 
   validateForm() {
     this.canAddProduct = !!this.selectedProduct && this.selectedAmount > 0;
@@ -280,11 +277,14 @@ export class TableBusyComponent implements OnInit {
     );
   }
 
-   getProductsByCategory(categoryIds: string) {
+  getProductsByCategory(categoryIds: string) {
     this.categoryService.getProductsByCategory(categoryIds)
       .then((data) => {
         if (data && Array.isArray(data)) {
-          this.filteredProducts = data;
+          this.filteredProducts = data.map(product => ({
+            ...product,
+            disabled: product.stock === '0'  // Si stock es '0', deshabilitar
+          }));
         } else {
           console.error('Unexpected data format:', data);
           this.filteredProducts = [];
@@ -293,7 +293,17 @@ export class TableBusyComponent implements OnInit {
       .catch((err) => {
         console.error('Error fetching products by category:', err);
         this.filteredProducts = []; 
-      })
+      });
+  }
+  
+  onProductChange(event: any) {
+    const selectedProduct = event.value;
+    
+    // Verifica si el producto seleccionado está deshabilitado
+    if (selectedProduct?.disabled) {
+      // Si está deshabilitado, cancela la selección
+      this.selectedProduct = null;
+    }
   }
 
   showCloseTableDialog() {

@@ -152,4 +152,25 @@ p-table {
         display: none;
     }
 
+    
+    .add-product-button {
+        position: absolute;
+        right: 2%;
+        padding: 0.5rem 0.6rem;
+    }
+
+
+    .update-stock-button {
+        right: 13%;
+        padding: 0.5rem 0.6rem;
+    }
+
+    .button-text {
+        display: none; 
+    }
+
+    ::ng-deep .p-dialog {
+        left: 5% !important;
+    }
+
 }

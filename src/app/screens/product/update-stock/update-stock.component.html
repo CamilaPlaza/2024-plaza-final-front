@@ -1,1 +1,39 @@
-<p>update-stock works!</p>
+<div class="container" *ngIf="product">
+    <span class="p-text-secondary block information">Please complete how much stock you purchased for {{product.name}}.</span>
+    <div class="flex info-stock ">
+        <label for="email" class="font-semibold name-stock">{{product.name}} Stock</label>
+        <input 
+            pInputText
+            id="stock" 
+            type="number"
+            [(ngModel)]="stock"
+            placeholder="Purchased stock"
+            min="0"
+            class="flex-auto"
+            (input)="onStockChange($event)"
+            (keypress)="onlyAllowNumbers($event)"/>
+    </div>
+
+    <div class="descriprion">
+        <div class="text-cost">Cost per unit: {{ product.cost | currency }}</div>
+        <div class="text-cost">Total replacement cost of stock: {{ totalCost | currency }}</div>
+    </div>
+
+    <div class="flex buttons justify-content-end gap-2">
+        <p-button label="Cancel" (onClick)="closeDialog()" class="custom-cancel-button"></p-button>
+        <p-button label="Update" (onClick)="openConfirmationPopup()" class="custom-send-button"></p-button>
+    </div>
+
+</div>
+
+<div *ngIf="loading" class="loading-overlay">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
+<p-dialog [(visible)]="displayConfirmDialog" [modal]="true" header="Update product stock" [closable]="true">
+    <app-confirmation-pop-up
+      [subtitle]="'Are you sure you want to proceed?'"
+      (onClose)="displayConfirmDialog = false"
+      (onSend)="onUpdateStock()">
+    </app-confirmation-pop-up>
+</p-dialog>

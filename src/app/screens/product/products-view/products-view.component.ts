@@ -21,6 +21,9 @@ export class ProductsViewComponent implements OnInit {
   editingProductCategories: { [key: number]: Category[] } = {};
   originalProductState: { [key: number]: Product } = {};
   selectedProduct!: Product;
+  dialogNoticeError: boolean = false;
+  dialogNoticeSuccess: boolean = false;
+  displayUpdateStockDialog: boolean = false;
   public tableScrollHeight: string='';
 
   constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
@@ -239,7 +242,19 @@ filterByCategory(selectedCategoryIds: string[]): void {
     this.displayConfirmDialog = true;
   }
 
+  showUpdateStockDialog() {
+    console.log(this.selectedProduct);
+    this.displayUpdateStockDialog = true;
+  }
+
   closeConfirmDialog() {
     this.displayConfirmDialog = false;
   }
+
+  successUpdate(){
+    location.reload();
+    this.dialogNoticeSuccess = false; 
+    this.displayUpdateStockDialog = false;
+  }
+
 }

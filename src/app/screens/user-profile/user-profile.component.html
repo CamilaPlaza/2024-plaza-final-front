@@ -23,7 +23,7 @@
         <div class="button-group">
             <button (click)="showChangePasswordDialog()" class="btn">Change Password</button>
             <button (click)="showConfirmDeleteDialog()" class="btn">Delete Account</button>
-            <button class="btn">Help</button>
+            <button class="btn">C&V's Points Program</button>
         </div>
     </div>
     
@@ -34,6 +34,19 @@
         <div class="user-info">
           <h2>{{ name }}</h2>
           <p>Level: {{ levelName }}</p>
+          
+          <p *ngIf="isTopLevel && !achievedMonthlyPointsMessage">
+            You are at the top level! {{ pointsNeededToMaintain }} points left to maintain this level.
+          </p>
+          <p *ngIf="!isTopLevel && nextLevelData">
+            C&V's points needed to upgrade to {{ nextLevelData.name }}: {{ pointsToNextLevel }}.
+          </p>
+          <p *ngIf="achievedMonthlyPointsMessage">
+            {{ achievedMonthlyPointsMessage }}
+          </p>
+          
+          
+          <p *ngIf="!nextLevelData && !isTopLevel">Loading next level data...</p>
         </div>
         <div class="card">
           <p-carousel 

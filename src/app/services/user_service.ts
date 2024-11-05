@@ -152,5 +152,20 @@ logOut(){
     const url = `${this.baseUrl}/rewards/${levelId}`;
     return this.http.get(url); 
   }
+
+  checkUserLevel(employee: string){
+    const url = `${this.baseUrl}/check-level/${employee}`; 
+    return this.http.get(url); 
+  }
+
+  getTopLevelStatus(levelId: string): Observable<{ isTopLevel: boolean }> {
+    return this.http.get<{ isTopLevel: boolean }>(`${this.baseUrl}/top-level-status/${levelId}`);
+  }
+  
+  resetMonthlyPoints(){
+    const url = `${this.baseUrl}/reset-monthly-points`; 
+    return this.http.get(url); 
+  }
+
 }
 

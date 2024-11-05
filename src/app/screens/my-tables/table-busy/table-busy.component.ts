@@ -234,7 +234,11 @@ export class TableBusyComponent implements OnInit {
       // Finalizar la orden
       await this.orderService.finalizeOrder(this.table.order_id.toString()).toPromise();
       console.log('Order status updated to FINALIZED');
-  
+      if (this.actualOrder && this.actualOrder.employee) {
+        await this.userService.checkUserLevel(this.actualOrder.employee);
+    } else {
+        console.error("Employee information is missing in the current order.");
+    }
       // Cerrar la mesa
       await this.tableService.closeTable(this.table).toPromise();
       console.log('Table closed successfully');

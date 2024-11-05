@@ -82,7 +82,6 @@ export class TableFreeComponent implements OnInit {
     this.currentTime = `${hours}:${minutes}`;
   }
 
-
   addOrderItem() {
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
@@ -95,7 +94,6 @@ export class TableFreeComponent implements OnInit {
       this.resetForm();
     }
   }
-
   
   removeOrderItem(item: OrderItem) {
     const index = this.orderItems.indexOf(item);
@@ -103,7 +101,6 @@ export class TableFreeComponent implements OnInit {
       this.orderItems.splice(index, 1);
     }
   }
-
   
   resetForm() {
     this.selectedProduct = null;
@@ -131,12 +128,16 @@ export class TableFreeComponent implements OnInit {
       amountOfPeople: this.selectedAmountOfPeople,
       employee: this.uid
     };
+  
     try {
-      const response = await this.orderService.onRegister(this.order); 
+      const response = await this.orderService.onRegister(this.order);
+  
       if (response && response.order && response.order_id) {
+      
+        await this.updateProductsStock();
         await this.tableService.updateTableAndOrder(response.order, response.order_id);
-        this.updateTable(); 
-        this.closeDialog(); 
+        this.updateTable();
+        this.closeDialog();
       } else {
         console.log('Order registration failed');
       }
@@ -146,6 +147,7 @@ export class TableFreeComponent implements OnInit {
       this.loading = false;
     }
   }
+  
 
   
   formatDate(date: Date): string {
@@ -215,5 +217,20 @@ export class TableFreeComponent implements OnInit {
         console.error('Error fetching products by category:', err);
         this.filteredProducts = []; 
       })
+  }
+
+  async updateProductsStock() {
+    try {
+      const updatePromises = this.orderItems.map(orderItem => 
+        this.productService.updateLowerStock(
+          orderItem.product_id?.toString() ?? '',
+          orderItem.amount.toString()
+        )
+      );
+      const responses = await Promise.all(updatePromises);
+      console.log('All updates successful', responses);
+    } catch (error) {
+      console.error('One or more updates failed', error);
+    }
   }
 }

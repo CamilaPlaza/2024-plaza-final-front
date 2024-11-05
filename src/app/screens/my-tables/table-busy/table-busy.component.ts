@@ -39,6 +39,7 @@ export class TableBusyComponent implements OnInit {
   selectedCategories: Array<{ id: any, name: string }> = [];
   filteredProducts: Product[] = []; 
   user: any | null;
+  newOrderItems: OrderItem[] = [];
 
   constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService, private userService: UserService) {}
   async ngOnInit() {
@@ -89,9 +90,7 @@ export class TableBusyComponent implements OnInit {
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
           this.amountOfPeople = this.actualOrder.amountOfPeople ?? 0;
-          console.log('amountOfPeople', this.actualOrder.amountOfPeople);
-  
-          // Obtiene el nombre del empleado basado en el ID usando await para la promesa
+
           if (this.actualOrder.employee) {
             try {
               const userData = await firstValueFrom(await this.userService.getUserDataFromFirestore(this.actualOrder.employee));
@@ -149,6 +148,7 @@ export class TableBusyComponent implements OnInit {
         product_price: this.selectedProduct.price
       };
       this.orderItems.push(newItem);
+      this.newOrderItems.push(newItem);
       this.resetForm();
     }
   }
@@ -182,79 +182,73 @@ export class TableBusyComponent implements OnInit {
   }
 
   //UPDATE
-  updateOrder() {
+  async updateOrder() {
     this.loading = true;
-    const total = this.calculateTotal().toString(); 
+    const total = this.calculateTotal().toString();
+  
     if (this.table.order_id) {
-      this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total)
-        .then(success => {
-          if (success) {
-            console.log('Order items added successfully');
-          } else {
-            console.error('Error adding order items.');
-          }
-        })
-        .catch(error => {
-          console.error('Error adding order items:', error);
-        })
-        .finally(() => {
-          this.loading = false;
-          this.closeDialog();
-        });
-    } else {
-      console.error('Order ID is undefined.');
-      this.loading = false;
-    }
-  }
-
-  closeAndUpdateOrder() {
-    this.loading = true;
-    const total = this.calculateTotal().toString(); 
-
-    //UPDATE ORDER
-
-    if (this.table.order_id) {
-      this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total)
-        .then(success => {
-          if (success) {
-
-            //CLOSE TABLE
-
-            if (this.table.order_id) {
-              this.orderService.finalizeOrder(this.table.order_id.toString()).subscribe({
-                next: () => {
-                  console.log('Order status updated to FINALIZED');
-                  this.tableService.closeTable(this.table).subscribe({
-                    next: () => {
-                      console.log('Table closed successfully');
-                      this.loading = false;
-                      this.closeDialog();
-                    },
-                    error: (err) => {
-                      console.error('Error closing table:', err);
-                    }
-                  });
-                },
-                error: (err) => {
-                  console.error('Error finalizing order:', err);
-                }
-              });
-            } else {
-              console.error('Order ID is undefined.');
-            }
+      try {
+        const success = await this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total);
+  
+        if (success) {
           
-          } else {
-            console.error('Error adding order items.');
-          }
-        })
-        .catch(error => {
-          console.error('Error adding order items:', error);
-        })
+          await this.updateProductsStock();
+          console.log('Order items added and stock updated successfully');
+        } else {
+          console.error('Error adding order items.');
+        }
+      } catch (error) {
+        console.error('Error adding order items:', error);
+      } finally {
+        // Finaliza la carga y cierra el diálogo
+        this.loading = false;
+        this.closeDialog();
+      }
     } else {
       console.error('Order ID is undefined.');
       this.loading = false;
     }
   }
+  
+
+  async closeAndUpdateOrder() {
+    this.loading = true;
+    const total = this.calculateTotal().toString();
+  
+    if (!this.table.order_id) {
+      console.error('Order ID is undefined.');
+      this.loading = false;
+      return;
+    }
+  
+    try {
+      // Agregar los elementos de la orden
+      const success = await this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total);
+      if (!success) {
+        console.error('Error adding order items.');
+        return;
+      }
+
+      await this.updateProductsStock();
+  
+      // Finalizar la orden
+      await this.orderService.finalizeOrder(this.table.order_id.toString()).toPromise();
+      console.log('Order status updated to FINALIZED');
+  
+      // Cerrar la mesa
+      await this.tableService.closeTable(this.table).toPromise();
+      console.log('Table closed successfully');
+  
+      // Cierra el diálogo
+      this.closeDialog();
+  
+    } catch (error) {
+      console.error('An error occurred:', error);
+    } finally {
+      this.loading = false;
+    }
+  }
+  
 
   closeDialog() {
     this.wantToAddNewProduct = false;
@@ -298,8 +292,6 @@ export class TableBusyComponent implements OnInit {
       })
   }
 
-
-
   showCloseTableDialog() {
     this.displayCloseTableDialog = true;
   }
@@ -307,5 +299,21 @@ export class TableBusyComponent implements OnInit {
   closeCloseTableDialog() {
     this.displayCloseTableDialog = false;
   }
+
+  async updateProductsStock() {
+    try {
+      const updatePromises = this.newOrderItems.map(orderItem => 
+        this.productService.updateLowerStock(
+          orderItem.product_id?.toString() ?? '',
+          orderItem.amount.toString()
+        )
+      );
+      const responses = await Promise.all(updatePromises);
+      console.log('All updates successful', responses);
+    } catch (error) {
+      console.error('One or more updates failed', error);
+    }
+  }
+
 }
  

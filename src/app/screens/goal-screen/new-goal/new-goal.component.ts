@@ -39,7 +39,8 @@ export class NewGoalComponent implements OnInit  {
   ngOnInit() {
     this.loadCategories();
     const today = new Date();
-    this.minDate = new Date(today.getFullYear(), today.getMonth(), 1);
+    this.minDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    this.goalDeadline = this.minDate;
   }
 
   async addTotalGainGoal() {

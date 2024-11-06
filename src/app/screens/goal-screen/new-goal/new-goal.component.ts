@@ -23,6 +23,7 @@ export class NewGoalComponent implements OnInit  {
   categories: Category[] = [];
   minDate: Date = new Date();
   isFormComplete: boolean = false;
+  goals: Goal[] = [];
   icons = [
     { label: 'Briefcase', value: 'pi-briefcase' },
     { label: 'Bullseye', value: 'pi-bullseye' },
@@ -125,23 +126,45 @@ export class NewGoalComponent implements OnInit  {
   selectGoalType(type: string) {
     this.selectedGoalType = type;
   }
-
   loadCategories(): void {
-    this.categoryService.getCategories().subscribe({
-      next: (data) => {
-        if (data && Array.isArray(data.categories)) {
-          this.categories = data.categories.map(item => ({
-            id: item.id,
-            name: item.name,
-            type: item.type
-          }));
-        }
+    const month = (this.goalDeadline.getMonth() + 1).toString();  // Los meses empiezan desde 0
+    const year = (this.goalDeadline.getFullYear().toString()).slice(-2); // Año completo, por ejemplo "2024"
+    console.log('Mes seleccionado:', month);
+    console.log('Año seleccionado:', year);
+  
+    // Obtener las metas para el mes y año seleccionados
+    this.goalService.getGoals(month, year).subscribe(
+      (goals: Goal[]) => {
+        this.goals = goals;  // Asignamos los datos una vez que el Observable se resuelve
+        console.log("Metas obtenidas:", this.goals);
+  
+        // Obtener los IDs de las categorías que ya tienen metas asignadas
+        const categoryIdsWithGoals = goals.map((goal: Goal) => goal.categoryId?.toString());  // Asegúrate de que sean strings
+        console.log('Categorías con metas asignadas:', categoryIdsWithGoals);
+  
+        // Llamar al servicio para obtener las categorías disponibles
+        this.categoryService.getCategories().subscribe({
+          next: (categoryData) => {
+            console.log('Datos de categorías recibidos:', categoryData);
+  
+            if (categoryData && Array.isArray(categoryData.categories)) {
+              // Filtrar las categorías que no tienen metas asignadas
+              this.categories = categoryData.categories.filter(category => {
+                // Comprobar si la categoría no tiene metas asignadas (comparamos ids)
+                return categoryIdsWithGoals && !categoryIdsWithGoals.includes(category.id?.toString());
+              });
+              console.log('Categorías disponibles (sin metas asignadas):', this.categories);
+            } else {
+              console.error('Error: Los datos de categorías no son un array:', categoryData);
+            }
+          },
+          error: (err) => {
+            console.error('Error al obtener las categorías:', err);
+          }
+        });
       },
-      error: (err) => {
-        console.error('Error fetching categories:', err);
-      }
-    });
-  }
+    )};
+
 
   onTargetAmountChange() {
     if (this.targetAmount <= 0 || this.targetAmount == null) {

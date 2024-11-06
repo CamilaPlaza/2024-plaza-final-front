@@ -3,8 +3,9 @@
       <img src="../../../../assets/images/view-products.jpg" alt="Imagen descriptiva" class="image">
   </div>
   <div class="section title-section">
-    <i class="pi pi-bell notification-icon" (click)="showAlertStockDialog()">
-        <span *ngIf="lowStockCount > 0" class="notification-count">{{ lowStockCount }}</span></i>
+    <i *ngIf="lowStockCount > 0" class="pi pi-bell notification-icon" (click)="showAlertStockDialog()">
+        <span class="notification-count">{{ lowStockCount }}</span>
+    </i>
     <p class="title">PRODUCTS</p>
     <button pButton pRipple icon="pi pi-plus" (click)="navigateToRegisterProduct()" class="p-button-rounded add-product-button">
         <span class="button-text">Add Product</span>
@@ -171,6 +172,10 @@
     <app-notice [subtitle]="'Something went wrong'" (onClose)="dialogNoticeError = false; displayUpdateStockDialog = false"></app-notice>
 </p-dialog>
 
-<p-dialog [(visible)]="alertStockDialog" header="Attention Required" [modal]="true" >
-    <app-alert-stock [outOfStockProducts] = "lowStockProducts" (onClose)="closeAlertStockDialog()"></app-alert-stock>
+<p-dialog [(visible)]="alertStockDialog" [modal]="true">
+    <ng-template pTemplate="header">
+        <i class="pi pi-exclamation-triangle" style="color: red; font-size: 1.5rem;"></i>
+        <h2>Attention Required</h2>
+    </ng-template>
+    <app-alert-stock [outOfStockProducts]="lowStockProducts" (onClose)="closeAlertStockDialog()"></app-alert-stock>
 </p-dialog>

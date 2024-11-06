@@ -21,19 +21,33 @@
     margin-top: 8%;
 }
 
+.information{
+    margin-bottom: 5%;
+}
+
 .p-table {
+    justify-content: center;
+    align-items: center;
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
 }
 
 .p-table th, .p-table td {
-    padding: 8px;
-    text-align: left;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .p-table th {
     background-color: #f4f4f4;
+}
+
+.table-container {
+    max-height: 180px;
+    overflow-y: auto;
+   
 }
 
 
@@ -42,24 +56,6 @@
     .container {
         width: 300px;
         height: auto;
-    }
-
-    .info-stock {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px; 
-    }
-
-    input {
-        width: 100%;
-    }
-
-    .buttons {
-        gap: 10px; 
-    }
-
-    .buttons .p-button {
-        width: 100%;
     }
 
 }

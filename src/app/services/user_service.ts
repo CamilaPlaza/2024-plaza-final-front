@@ -13,7 +13,7 @@ export class UserService {
   currentUser: User | null = null;
 
   private baseUrl = 'https://cv-bar-back.onrender.com';
-  //private baseLocalUrl = 'http://127.0.0.1:8000';
+  //private baseUrl = 'http://127.0.0.1:8000';
   idleTime: number = 0;
   maxIdleTime: number = 10 * 60 * 1000; // 10 minutos de inactividad
   idleInterval: any;
@@ -153,9 +153,8 @@ logOut(){
     return this.http.get(url); 
   }
 
-  checkUserLevel(employee: string){
-    const url = `${this.baseUrl}/check-level/${employee}`; 
-    return this.http.get(url); 
+  checkUserLevel(employee: string): Observable<any>{
+    return this.http.get(`${this.baseUrl}/check-level/${employee}`);
   }
 
   getTopLevelStatus(levelId: string): Observable<{ isTopLevel: boolean }> {

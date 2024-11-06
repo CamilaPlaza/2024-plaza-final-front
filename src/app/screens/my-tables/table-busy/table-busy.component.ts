@@ -90,7 +90,6 @@ export class TableBusyComponent implements OnInit {
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
           this.amountOfPeople = this.actualOrder.amountOfPeople ?? 0;
-
           if (this.actualOrder.employee) {
             try {
               const userData = await firstValueFrom(await this.userService.getUserDataFromFirestore(this.actualOrder.employee));
@@ -231,17 +230,22 @@ export class TableBusyComponent implements OnInit {
       // Finalizar la orden
       await this.orderService.finalizeOrder(this.table.order_id.toString()).toPromise();
       console.log('Order status updated to FINALIZED');
-      if (this.actualOrder && this.actualOrder.employee) {
-        await this.userService.checkUserLevel(this.actualOrder.employee);
-    } else {
-        console.error("Employee information is missing in the current order.");
-    }
+      this.userService.checkUserLevel(this.actualOrder?.employee ?? '').subscribe({
+        next: (response) => {
+            console.log('User level checked successfully:', response);
+        },
+        error: (error) => {
+            console.error('Error checking user level:', error);
+        }
+    });
+        
       // Cerrar la mesa
       await this.tableService.closeTable(this.table).toPromise();
       console.log('Table closed successfully');
   
       // Cierra el diálogo
       this.closeDialog();
+    
   
     } catch (error) {
       console.error('An error occurred:', error);

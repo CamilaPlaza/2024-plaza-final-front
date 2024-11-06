@@ -27,18 +27,17 @@
         </div>
     </div>
     
-    <!-- Nueva estructura del contenedor derecho -->
-      <div class="column-right">
-          <div class="right-top-section">
-              <div class="mug-icon-container">
-                  <i class="fa-solid fa-mug-hot mug-icon mr-2"></i>
-                  <p>{{currentMonthlyPoints}}</p>
-              </div>
-              <h1 class="rewards-title">C&V Rewards</h1>
+    <div class="column-right">
+      <div class="right-top-section">
+        <div class="mug-icon-container">
+            <i class="fa-solid fa-mug-hot mug-icon mr-2"></i>
+            <p>{{currentMonthlyPoints}}</p>
+        </div>
+        <h1 class="rewards-title">C&V Rewards</h1>
         <div class="user-info">
           <h2>{{ name }}</h2>
           <p>Level: {{ levelName }}</p>
-          
+                
           <p *ngIf="isTopLevel && !achievedMonthlyPointsMessage">
             You are at the top level! {{ pointsNeededToMaintain }} points left to maintain this level.
           </p>
@@ -48,52 +47,50 @@
           <p *ngIf="achievedMonthlyPointsMessage">
             {{ achievedMonthlyPointsMessage }}
           </p>
-          
-          
           <p *ngIf="!nextLevelData && !isTopLevel">Loading next level data...</p>
+
         </div>
+
         <div class="card">
           <p-carousel 
-              [value]="rewards" 
-              [numVisible]="3" 
-              [numScroll]="1" 
-              [responsiveOptions]="responsiveOptions">
-                  <ng-template let-reward pTemplate="item">
-                      <div class="reward-box border-1 surface-border border-round m-2 p-3" (click)="showDiscountCode(reward)">
-                          <div class="mb-3">
-                              <div class="relative mx-auto">
-                                  <img 
-                                      src="{{ reward.imageUrl }}" 
-                                      [alt]="reward.name" 
-                                      class="w-full border-round" />
-                              </div>
-                          </div>
-                          <div class="mb-3 font-medium text-center">
-                              {{ reward.name }}
-                          </div>
-                      </div>
-                  </ng-template>
+          [value]="rewards" 
+          [numVisible]="3" 
+          [numScroll]="1" 
+          [responsiveOptions]="responsiveOptions">
+            <ng-template let-reward pTemplate="item">
+              <div class="reward-box border-1 surface-border border-round m-2 p-3" (click)="showDiscountCode(reward)">
+                <div class="mb-3">
+                  <div class="relative mx-auto">
+                    <img src="{{ reward.imageUrl }}" [alt]="reward.name" class="w-full border-round" />
+                  </div>
+                </div>
+                <div class="mb-3 font-medium text-center">
+                  {{ reward.name }}
+                </div>
+              </div>
+            </ng-template>
           </p-carousel>
-      </div>
-      <p-dialog [(visible)]="displayDiscountDialog" [modal]="true" header="{{selectedReward?.name}}" [closable]="true" class="discount-dialog">
-        <div class="discount-dialog-content">
+        </div>
+
+        <p-dialog [(visible)]="displayDiscountDialog" [modal]="true" header="{{selectedReward?.name}}" [closable]="true" class="discount-dialog">
+          <div class="discount-dialog-content">
             <p *ngIf="selectedReward?.description" class="discount-description">{{ selectedReward?.description }}</p>
             <p class="discount-code">Use code <strong>{{ selectedReward?.code }}</strong> for a discount!</p>
-        </div>
-    </p-dialog>
+          </div>
+        </p-dialog>
       </div>
+          
       <div class="right-bottom-section">
         <h2 class="ranking-title">Employee Monthly Ranking</h2>
         <div class="table-container">
           <p-table
-            #dt2
-            [value]="ranking" 
-            dataKey="name" 
-            [loading]="loading"
-            [scrollable]="true"
-            scrollHeight="400px"
-            class="user-table"
-          >
+          #dt2
+          [value]="ranking" 
+          dataKey="name" 
+          [loading]="loading"
+          [scrollable]="true"
+          scrollHeight="400px"
+          class="user-table">
             <ng-template pTemplate="header">
               <tr>
                 <th>Rank</th>
@@ -103,20 +100,12 @@
             </ng-template>
             <ng-template pTemplate="body" let-user let-i="rowIndex">
               <tr>
-                <!-- Rank column showing 1, 2, 3, etc. based on row index -->
                 <td>{{ i + 1 }}</td>
-      
-                <!-- Name and Image column -->
                 <td class="name-column">
-                  <img 
-                    [alt]="user.name" 
-                    [src]="user.imageUrl" 
-                    class="user-image" />
+                  <img [alt]="user.name" [src]="user.imageUrl" class="user-image" />
                   <span>{{ user.name }}</span>
                 </td>
-      
-                <!-- Points column -->
-                <td>{{ user.monthlyPoints }}</td> <!-- Use monthlyPoints from ranking data -->
+                <td>{{ user.monthlyPoints }}</td> 
               </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
@@ -127,7 +116,9 @@
           </p-table>
         </div>
       </div>
+
     </div>
+
 </div>
 
 <p-dialog [(visible)]="displayConfirmDeleteDialog" [modal]="true" header="Delete Account" [closable]="true">

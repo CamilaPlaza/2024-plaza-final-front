@@ -73,7 +73,7 @@
                     </div>
                     <h3>{{ goal.title }}</h3>
                     <p>{{ goal.description }}</p>
-                    <p>{{ goal.actualIncome }}/{{ goal.expectedIncome }}</p>
+                    <p>{{ goal.actualIncome }}/{{ goal.expectedIncome }} $</p>
                     <p-knob [(ngModel)]="goal.progressValue"  valueTemplate="{value}%"  readonly="true" [strokeWidth]="6"  [showValue]="true" class="progress-knob"></p-knob>
                 </div>
                 <button (click)="nextPage()" [disabled]="currentIndex + itemsPerPage >= goals.length" class="nav-button">

@@ -54,7 +54,7 @@ export class GoalsComponent implements OnInit {
               label: '% Progress',
               backgroundColor: this.goals.map(goal => goal.color),
               borderColor: this.goals.map(goal => goal.color),
-              data: this.goals.map(goal => (goal.actualIncome / goal.expectedIncome) * 100)
+              data: this.goals.map(goal => Math.min((goal.actualIncome / goal.expectedIncome) * 100, 100))
             }
           ]
         };
@@ -113,11 +113,13 @@ export class GoalsComponent implements OnInit {
 
   calculateProgressValues() {
     this.goals.forEach(goal => {
-      goal.progressValue = (goal.actualIncome/goal.expectedIncome)*100; 
+      const progress = (goal.actualIncome / goal.expectedIncome) * 100;
+      goal.progressValue = progress >= 100 ? 100 : parseFloat(progress.toFixed(2));
     });
   }
 
   progressWidth(progress: number) {
+    // Cap the progress at 100 before dividing
     return progress / this.goals.length;
   }
 

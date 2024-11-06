@@ -312,10 +312,10 @@
         }
 
         ::ng-deep .discount-dialog .p-dialog {
-            max-width: 90vw; /* Limita el ancho en pantallas pequeñas */
-            width: 300px; /* Ancho por defecto en pantallas grandes */
-            max-height: 80vh; /* Limita el alto en pantallas pequeñas */
-            height: auto; /* Ajuste automático de altura */
+            max-width: 90vw;
+            width: 300px;
+            max-height: 80vh; 
+            height: auto;
         }
         
         ::ng-deep .discount-dialog .p-dialog-content {

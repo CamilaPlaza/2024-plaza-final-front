@@ -202,4 +202,11 @@ th, td {
     .notification-bell .inactive-count {
         font-size: 10px;  
     }
+
+    ::ng-deep .custom-modal .p-dialog {
+        position: absolute !important;
+        margin-left: 10% !important; /* Ajusta este valor según lo que necesites */
+        transform: none !important; /* Quita el centrado */
+      }
+      
 }

@@ -146,10 +146,31 @@ button.p-button-success:hover {
 
 
 @media (max-width: 768px) {
-  .asign-inactive-order-container {
-    min-height: 600px;
-  }
+
+  
   .content-container {
-    flex-direction: column; /* Para pantallas más pequeñas, usa una columna */
+    flex-direction: column;
+  }
+
+  .orders-list,
+  .order-details {
+    max-width: 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .search-box {
+    padding: 5px;
+  }
+
+  .discount-dialog-content {
+    padding: 10px;
   }
 }

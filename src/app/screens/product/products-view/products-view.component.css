@@ -218,4 +218,7 @@ p-table {
         left: 5% !important;
     }
 
+    .notification-icon {
+        margin-left: 5%;
+      }
 }

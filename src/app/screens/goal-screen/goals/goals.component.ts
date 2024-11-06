@@ -27,10 +27,13 @@ export class GoalsComponent implements OnInit {
 
   ngOnInit(): void {
     const date = new Date();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensure two-digit month
-    const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
-  
-    // Subscribe to the Observable and handle the response
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    this.getGoals(month, year);    
+  }
+
+  getGoals(month: string, year: string){
+
     this.goalService.getGoals(month, year).subscribe(
       (goals: Goal[]) => {
         this.goals = goals;  // Assign the data once the Observable resolves
@@ -97,6 +100,14 @@ export class GoalsComponent implements OnInit {
         console.error('Error fetching goals:', error);  // Error handling
       }
     );
+
+
+  }
+
+  onDateChange(event: any){
+    const month = String(this.selectedDate.getMonth() + 1).padStart(2, '0');
+    const year = String(this.selectedDate.getFullYear()).slice(-2);
+    this.getGoals(month, year);   
   }
   
 

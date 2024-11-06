@@ -1,20 +1,43 @@
 .asign-inactive-order-container {
-  padding: 20px;
-  max-width: 330px; /* Mantiene un ancho máximo */
-  background-color: white;
-  border-radius: 20px;
-  box-sizing: border-box; 
+  padding: 10px;
   height: auto;
+  display: flex;
+  flex-direction: column;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-.options-orders {
-  max-width: 300px;
+.content-container {
+  display: flex;
+  gap: 20px;
+  border: none;
+}
+
+.orders-list {
+  flex: 1;
+  padding: 10px;
+}
+
+.order-details {
+  flex: 1;
+  max-width: 50%;
+  overflow-y: auto;
 }
 
 .selected {
   background-color: #d3b49bc0;
+}
 
-}.button-container {
+.people-column {
+  text-align: right;
+  margin-right: 10%;
+}
+
+.p-dropdown {
+  margin-bottom: 2%;
+}
+
+.button-container {
   display: flex;
   justify-content: space-between; 
   margin-top: 10px;
@@ -24,7 +47,6 @@
 button {
   padding: 8px 15px;
 }
-
 
 button.p-button-secondary {
   flex: 0.3;
@@ -50,24 +72,6 @@ button.p-button-success:hover {
   background-color: #6d4625; 
 }
 
-.people-column {
-  text-align: right;
-  margin-right: 10%;
-}
-
-.p-dropdown {
-  margin-bottom: 2%;
-  width: 100%; /* Asegúrate de que el dropdown se ajuste al contenedor */
-}
-
-.p-dropdown-panel {
-  max-height: 500px; /* Ajusta la altura máxima según sea necesario */
-  overflow-y: auto; /* Agrega desplazamiento si hay muchas opciones */
-  position: absolute; /* Asegura que las opciones se muestren correctamente */
-  z-index: 1000; /* Asegúrate de que el dropdown se muestre sobre otros elementos */
-}
-
-
 .search-box {
   position: relative;
   margin-bottom: 10px;
@@ -76,7 +80,7 @@ button.p-button-success:hover {
   display: flex;
   align-items: center;
   padding: 8px;
-  width: 100%; /* Asegúrate de que se ajuste al contenedor */
+  width: 100%;
 }
 
 .search-icon {
@@ -125,7 +129,7 @@ button.p-button-success:hover {
   display: flex; /* Centrar el contenido */
   align-items: center; /* Centrar verticalmente */
   justify-content: center; /* Centrar horizontalmente */
-  z-index: 10000; /* Asegúrate de que esté por encima de otros elementos */
+  z-index: 100; /* Asegúrate de que esté por encima de otros elementos */
 }
 
 .custom-spinner {
@@ -134,11 +138,18 @@ button.p-button-success:hover {
   z-index: 10001; /* Asegúrate de que esté por encima de la capa oscura */
 }
 
-@media (max-width: 768px) {
+.disabled {
+  background-color: #f2f2f2;
+  color: #ccc;
+  cursor: not-allowed;
+}
 
+
+@media (max-width: 768px) {
   .asign-inactive-order-container {
     min-height: 600px;
   }
-  
-
+  .content-container {
+    flex-direction: column; /* Para pantallas más pequeñas, usa una columna */
+  }
 }

@@ -37,7 +37,6 @@ export class OrderService {
     }
   }
 
-
   getOrderById(orderId: string): Observable<Order> {
     return this.http.get<Order>(`${this.baseUrl}/orders/${orderId}`);
   }

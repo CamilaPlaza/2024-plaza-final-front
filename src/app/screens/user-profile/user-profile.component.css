@@ -1,264 +1,304 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    display: flex;
-    height: 100vh;
-    margin-left: 5%;
-}
-
-.column {
-    display: flex;
-    color: #ffffff;
-}
-
-.column-left {
-    width: 45%;
-    background-color: #7f522e;
-    padding: 5%;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-}
-
-.column-right {
-    width: 55%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 0;
-    height: 100vh;
-}
-
-.right-top-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #5d3a1e;
-    padding: 20px;
-    color: #ffffff;
-    text-align: center;
-    position: relative;
-}
-
-.right-bottom-section {
-    flex: 1;
-    background-color: #e5d4c3;
-    padding: 20px;
-    overflow-x: auto;
-}
-
-.mug-icon-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #caa171;
-    border-radius: 20px;
-    width: auto;
-    padding: 10px;
-    height: 50px;
-    position: absolute; 
-    top: 20px;
-    left: 20px; 
-    z-index: 2; 
-}
-
-.mug-icon {
-    font-size: 1.5rem;
-    color: #fff;
-}
-  
-  .rewards-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #fff;
-    padding-bottom: 10px;
-    position: absolute;
-    right: 30px;
-    top: 10px;
-  }
-
-.user-info {
-    color: #ffffff;
-    margin-top: 6%;
-}
-
-.user-info p {
-    font-size: 1.2rem;
-    margin-top: 5px;
-}
-
-/*Reward BOX*/
-
-.carousel{
-    margin-top: 3%;
-}
-
-.card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.reward-box {
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    background-color: #e5d4c3; 
-    border: 1px solid #caa171; 
-    border-radius: 5px; 
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
-    padding: 15px;
-    text-align: center;
-    width:  calc(100% - 30px);
-    max-width: 300px; 
-    height: 250px;
-    margin: 0 15px 15px 15px;
-    transform-origin: center; 
-}
-
-.reward-box:hover {
-    transform: scale(1.01);
-    overflow: visible;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.reward-image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 150px; 
-    overflow: hidden;
-}
-
-.reward-box img {
-    max-width: 100%; 
-    height: 100%;
-    object-fit: cover; 
-}
-
-.reward-name {
-    color: #7f522e; 
-    font-weight: bold; 
-    margin-top: 10px;
-    font-size: 1.2rem;
-}
-
-.reward-box .font-medium {
-    font-size: 1.2rem;
-    color: #5d3a1e;
-    font-weight: 600;
-}
-
-.discount-dialog-content {
-    padding: 15px;
-    text-align: center;
-    background-color: #e5d4c3;
-}
-
-/*Ranking Global*/
-
-.ranking-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    text-align: center;
-    color: #5d3a1e;
-}
-
-.table-container .name-column {
-    display: flex;
-    align-items: center;
-    gap: 8px; 
-  }
-  
-  .table-container .user-image {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%; 
-    object-fit: cover;
-  }
-
-
-.title {
-    margin: 0;
-    padding-top: 0px;
-    margin-bottom: 10%;
-    font-size: 2rem;
-    text-align: left;
-    width: 100%;
-}
-
-.profile-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.info-group {
-    margin-bottom: 25px;
-}
-
-label {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #ffffff;
-    margin-bottom: 5px;
-    display: block;
-}
-
-
-/* Botones */
-.button-group {
-    margin-top: 20px;
-}
-
-.btn {
-    background-color: #caa171;
-    color: #7f522e;
-    border: none;
-    padding: 10px 20px;
-    margin: 5px 0;
-    border-radius: 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    width: 100%;
-}
-
-.btn:hover {
-    background-color: #b58958;
-    color: #ffffff;
-}
-:host ::ng-deep .p-toast,
-:host ::ng-deep .p-confirmDialog {
-    max-width: 300px;
-    width: auto;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-@media (max-width: 600px) {
-    .column-left {
-        width: 100%; /* Ajusta el ancho del contenedor izquierdo */
-    }
-
-    .column-right {
-        display: none; /* Oculta la columna derecha en pantallas pequeñas */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
     }
 
     .container {
-        margin-left: 10%;
+        display: flex;
+        height: 100vh;
+        margin-left: 5%;
     }
+
+    .column {
+        display: flex;
+        color: #ffffff;
+    }
+
+    .column-left {
+        width: 45%;
+        background-color: #7f522e;
+        padding: 5%;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+
     .column-right {
-        display: block;
-        width: 100%;
+        width: 55%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0;
+        height: 100vh;
     }
 
     .right-top-section {
+        flex: 1;
+        display: flex;
         flex-direction: column;
-        gap: 10px;
+        align-items: center;
+        background-color: #5d3a1e;
+        padding: 20px;
+        color: #ffffff;
+        text-align: center;
+        position: relative;
     }
-}
+
+    .right-bottom-section {
+        flex: 1;
+        background-color: #e5d4c3;
+        padding: 20px;
+        overflow-x: auto;
+    }
+
+    .mug-icon-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #caa171;
+        border-radius: 20px;
+        width: auto;
+        padding: 10px;
+        height: 50px;
+        position: absolute; 
+        top: 20px;
+        left: 20px; 
+        z-index: 2; 
+    }
+
+    .mug-icon {
+        font-size: 1.5rem;
+        color: #fff;
+    }
+    
+    .rewards-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #fff;
+        padding-bottom: 10px;
+        position: absolute;
+        right: 30px;
+        top: 10px;
+    }
+
+    .user-info {
+        color: #ffffff;
+        margin-top: 6%;
+    }
+
+    .user-info p {
+        font-size: 1.2rem;
+        margin-top: 5px;
+    }
+
+    /*Reward BOX*/
+
+    .carousel{
+        margin-top: 3%;
+    }
+
+    .card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .reward-box {
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+        background-color: #e5d4c3; 
+        border: 1px solid #caa171; 
+        border-radius: 5px; 
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+        padding: 15px;
+        text-align: center;
+        width:  calc(100% - 30px);
+        max-width: 300px; 
+        height: 250px;
+        margin: 0 15px 15px 15px;
+        transform-origin: center; 
+    }
+
+    .reward-box:hover {
+        transform: scale(1.01);
+        overflow: visible;
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .reward-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 150px; 
+        overflow: hidden;
+    }
+
+    .reward-box img {
+        max-width: 100%; 
+        height: 100%;
+        object-fit: cover; 
+    }
+
+    .reward-name {
+        color: #7f522e; 
+        font-weight: bold; 
+        margin-top: 10px;
+        font-size: 1.2rem;
+    }
+
+    .reward-box .font-medium {
+        font-size: 1.2rem;
+        color: #5d3a1e;
+        font-weight: 600;
+    }
+
+    .discount-dialog-content {
+        padding: 15px;
+        text-align: center;
+        background-color: #e5d4c3;
+    }
+
+    /*Ranking Global*/
+
+    .ranking-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        text-align: center;
+        color: #5d3a1e;
+    }
+
+    .table-container .name-column {
+        display: flex;
+        align-items: center;
+        gap: 8px; 
+    }
+    
+    .table-container .user-image {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%; 
+        object-fit: cover;
+    }
+
+
+    .title {
+        margin: 0;
+        padding-top: 0px;
+        margin-bottom: 10%;
+        font-size: 2rem;
+        text-align: left;
+        width: 100%;
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-group {
+        margin-bottom: 25px;
+    }
+
+    label {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #ffffff;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+
+    /* Botones */
+    .button-group {
+        margin-top: 20px;
+    }
+
+    .btn {
+        background-color: #caa171;
+        color: #7f522e;
+        border: none;
+        padding: 10px 20px;
+        margin: 5px 0;
+        border-radius: 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .btn:hover {
+        background-color: #b58958;
+        color: #ffffff;
+    }
+    :host ::ng-deep .p-toast,
+    :host ::ng-deep .p-confirmDialog {
+        max-width: 300px;
+        width: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+
+    @media (max-width: 768px) {
+
+        .container {
+            flex-direction: column; 
+            height: auto;
+            margin-left: 10%;
+        }
+
+        .column-left,
+        .column-right {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .column-right {
+            margin-top: 2px;
+        }
+
+        .right-top-section {
+            padding: 10px;
+            width: 100%;
+        }
+
+        .user-info{
+            margin-top: 25%;
+            margin-bottom: 5%;
+        }
+
+        .carousel {
+            width: 100%;
+            margin: 0 auto;
+            margin-left: 38%;
+        }
+
+        .reward-box img {
+            max-width: 100%; 
+            height: auto;
+            object-fit: contain;
+        }
+
+        .right-bottom-section {
+            padding: 10px; 
+        }
+
+
+        .reward-box {
+            width: 50%; 
+            height: 250px;
+            margin: 0 0px 0px 0px;
+        }
+
+        .rewards-title,
+        .ranking-title {
+            font-size: 1.3rem;
+        }
+
+        .table-container .user-image {
+            width: 25px;
+            height: 25px;
+        }
+    }

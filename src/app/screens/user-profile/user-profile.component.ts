@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener  } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user_service';
 import { LevelService } from 'src/app/services/level_service';
@@ -16,6 +16,7 @@ export class UserProfileComponent implements OnInit {
   birthday: Date | null = null;
   levelName: string | null = null;
   levelId: string | null = null;
+  isMobile: boolean = false; 
   currentGlobalPoints: number = 0;
   currentMonthlyPoints: number = 0;
   pointsToNextLevel: string | null = null;
@@ -43,6 +44,7 @@ export class UserProfileComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.checkScreenSize();
     const today = new Date();
     if(today.getDate() === 1){
       await this.userService.resetMonthlyPoints();
@@ -92,6 +94,15 @@ export class UserProfileComponent implements OnInit {
     } else {
       this.router.navigate(['/']);
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768;
   }
   
   private fetchNextLevelData(): void {

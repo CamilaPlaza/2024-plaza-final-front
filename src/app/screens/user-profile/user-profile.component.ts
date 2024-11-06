@@ -12,9 +12,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 export class UserProfileComponent implements OnInit {
   
   email: string | null = null;
-  name: string | null = null;
+  name: string = '';
   birthday: Date | null = null;
-  levelName: string | null = null;
+  levelName: string = '';
   levelId: string | null = null;
   isMobile: boolean = false; 
   currentGlobalPoints: number = 0;
@@ -36,10 +36,8 @@ export class UserProfileComponent implements OnInit {
   achievedMonthlyPointsMessage: string | null = null;
 
   constructor(
-    private confirmationService: ConfirmationService,
     private router: Router,
     private userService: UserService,
-    private messageService: MessageService,
     private levelService: LevelService
   ) {}
 

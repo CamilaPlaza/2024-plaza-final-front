@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-info-points',
@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './info-points.component.css'
 })
 export class InfoPointsComponent {
+  @Input() name: string = '';
+  @Input() levelName: string = '';
 
 }

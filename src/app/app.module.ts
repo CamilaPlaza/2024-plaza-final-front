@@ -66,6 +66,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { UpdateStockComponent } from './screens/product/update-stock/update-stock.component';
 import { InfoPointsComponent } from './screens/info-points/info-points.component';
 import { AlertStockComponent } from './screens/product/alert-stock/alert-stock.component';
+import { SplitterModule } from 'primeng/splitter';
 
 @NgModule({
   declarations: [
@@ -114,6 +115,7 @@ import { AlertStockComponent } from './screens/product/alert-stock/alert-stock.c
     ConfirmDialogModule,
     FileUploadModule,
     AutoCompleteModule,
+    SplitterModule,
     TagModule,
     TableModule,
     ColorPickerModule,

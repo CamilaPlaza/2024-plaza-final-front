@@ -74,7 +74,7 @@
             </div>
             
       
-            <p-dialog [(visible)]="displayDiscountDialog" [modal]="true" header="{{selectedReward?.name}}" [closable]="true" class="discount-dialog">
+            <p-dialog [(visible)]="displayDiscountDialog" [modal]="true" header="{{selectedReward?.name}}" [closable]="true" [responsive]="true" class="discount-dialog">
               <div class="discount-dialog-content">
                 <p *ngIf="selectedReward?.description" class="discount-description">{{ selectedReward?.description }}</p>
                 <p class="discount-code">Use code <strong>{{ selectedReward?.code }}</strong> for a discount!</p>

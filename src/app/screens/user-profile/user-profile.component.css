@@ -310,4 +310,17 @@
             width: 25px;
             height: 25px;
         }
+
+        ::ng-deep .discount-dialog .p-dialog {
+            max-width: 90vw; /* Limita el ancho en pantallas pequeñas */
+            width: 300px; /* Ancho por defecto en pantallas grandes */
+            max-height: 80vh; /* Limita el alto en pantallas pequeñas */
+            height: auto; /* Ajuste automático de altura */
+        }
+        
+        ::ng-deep .discount-dialog .p-dialog-content {
+            padding: 20px;
+            text-align: center;
+        }
+        
     }

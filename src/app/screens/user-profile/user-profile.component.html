@@ -53,7 +53,7 @@
               <p *ngIf="!nextLevelData && !isTopLevel">Loading next level data...</p>
             </div>
       
-            <div class="card">
+            <div class="card carousel">
               <p-carousel
                 [value]="rewards"
                 [numVisible]="3"
@@ -61,19 +61,18 @@
                 [responsiveOptions]="responsiveOptions"
                 [showIndicators]="false">
                 <ng-template let-reward pTemplate="item">
-                  <div class="reward-box border-1 surface-border border-round m-2 p-3" (click)="showDiscountCode(reward)">
-                    <div class="mb-3">
-                      <div class="relative mx-auto">
-                        <img src="{{ reward.imageUrl }}" [alt]="reward.name" class="w-full border-round" />
-                      </div>
+                  <div class="reward-box" (click)="showDiscountCode(reward)">
+                    <div class="reward-image-container">
+                      <img src="{{ reward.imageUrl }}" [alt]="reward.name" />
                     </div>
-                    <div class="mb-3 font-medium text-center">
+                    <div class="reward-name">
                       {{ reward.name }}
                     </div>
                   </div>
                 </ng-template>
               </p-carousel>
             </div>
+            
       
             <p-dialog [(visible)]="displayDiscountDialog" [modal]="true" header="{{selectedReward?.name}}" [closable]="true" class="discount-dialog">
               <div class="discount-dialog-content">

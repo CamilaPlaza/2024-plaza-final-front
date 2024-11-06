@@ -22,6 +22,7 @@ export class NewGoalComponent implements OnInit  {
   goalDeadline: Date = new Date();
   categories: Category[] = [];
   minDate: Date = new Date();
+  isFormComplete: boolean = false;
   icons = [
     { label: 'Briefcase', value: 'pi-briefcase' },
     { label: 'Bullseye', value: 'pi-bullseye' },
@@ -41,6 +42,15 @@ export class NewGoalComponent implements OnInit  {
     const today = new Date();
     this.minDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
     this.goalDeadline = this.minDate;
+  }
+
+  checkFormComplete() {
+    this.isFormComplete = !!this.goalTitle && !!this.goalDeadline && !!this.goalDescription;
+  }
+
+  onDateChange(event: any){
+    this.loadCategories();
+    this.selectedCategory = null;
   }
 
   async addTotalGainGoal() {

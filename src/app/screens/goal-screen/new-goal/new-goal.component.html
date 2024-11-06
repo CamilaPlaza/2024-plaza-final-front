@@ -18,24 +18,25 @@
                 view="month" 
                 dateFormat="mm/yy"
                 appendTo="body"
-                [minDate]="minDate"/>
+                [minDate]="minDate"
+                (ngModelChange)="onDateChange($event)"/>
                 
             </div>
         </div>
 
         <div class="goal-form-row">
             <label for="goalDescription" class="goal-label">Description:</label>
-            <input type="text" id="goalDescription" class="goal-input" [(ngModel)]="goalDescription" placeholder="Enter goal description" />
+            <input type="text" id="goalDescription" class="goal-input" [(ngModel)]="goalDescription" (input)="checkFormComplete()" placeholder="Enter goal description" />
         </div>
     
 
         <div class="goal-type-selection">
-            <button (click)="selectGoalType('category')" [class.selected]="selectedGoalType === 'category'"  class="goal-type-button">Category</button>
-            <button (click)="selectGoalType('finalGain')" [class.selected]="selectedGoalType === 'finalGain'" class="goal-type-button">Final Gain</button>
+            <button (click)="selectGoalType('category')" [disabled]="!isFormComplete" [class.selected]="selectedGoalType === 'category'"  class="goal-type-button">Category</button>
+            <button (click)="selectGoalType('finalGain')" [disabled]="!isFormComplete" [class.selected]="selectedGoalType === 'finalGain'" class="goal-type-button">Final Gain</button>
         </div>
     
         <!-- Campos para "Category" -->
-        <div *ngIf="selectedGoalType === 'category'" class="goal-form">
+        <div *ngIf="selectedGoalType === 'category' && isFormComplete" class="goal-form">
             <div class="goal-form-row">
                 <label for="categoryDropdown" class="category-label">Category:</label>
                 <p-dropdown 
@@ -52,7 +53,7 @@
         </div>
     
         <!-- Campos para "Final Gain" -->
-        <div *ngIf="selectedGoalType === 'finalGain'" class="goal-form">
+        <div *ngIf="selectedGoalType === 'finalGain' && isFormComplete" class="goal-form">
             <div class="goal-form-row">
                 <label for="finalGainAmount" class="category-label-final-gain">Target Amount:</label>
                 <input type="number"  (change)="onTargetAmountChange()"  min="1" id="finalGainAmount" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target gain amount" />
@@ -60,7 +61,7 @@
         </div>
     
 
-        <div *ngIf="selectedGoalType" class="goal-form">
+        <div *ngIf="selectedGoalType && isFormComplete" class="goal-form">
             <div class="goal-form-row">
                 <label>Select Color:</label>
                 <input class="color-input"  [(colorPicker)]="goalColor" [style.background]="goalColor" />

@@ -85,59 +85,72 @@ export class AsignInactiveOrderComponent implements OnInit {
     }
   }
 
-  // Función que verifica la disponibilidad y actualiza el estado del item
   checkProductAvailability(item: any, product: Product): void {
     if (product.stock >= item.amount) {
       item.disabled = false;
     } else {
       item.disabled = true;
-      // Si el producto se deshabilita, lo agregamos a la lista
       this.disabledProductIds.push(item.product_id);
     }
   }
 
-  // Función para asignar la orden a una mesa
   assignTable() {
+    this.isLoading = true;
     if (this.selectedTable && this.selectedOrder) {
       console.log(`Asignando la mesa ${this.selectedTable.id} a la orden ${this.selectedOrder.id}`);
-
-      // Primero, eliminar los productos deshabilitados
       this.deleteDisabledItemsAndAssignOrder();
     } else {
       alert('Por favor selecciona una mesa y una orden.');
     }
   }
 
-  // Elimina los productos deshabilitados y luego asigna la orden a la mesa
-  deleteDisabledItemsAndAssignOrder() {
+  
+  async deleteDisabledItemsAndAssignOrder() {
     if (this.disabledProductIds.length > 0) {
-      console.log('Eliminando productos deshabilitados:', this.disabledProductIds);
       
       const selectedOrderId = this.selectedOrder.id ?? '0';
-      console.log('ID de la orden seleccionada:', selectedOrderId);
       this.orderService.deleteOrderItems(selectedOrderId.toString(), this.disabledProductIds).subscribe({
-        next: (response) => {
-          console.log('Productos deshabilitados eliminados:', response);
-          this.createOrder(this.selectedOrder.id ?? 0, this.selectedTable.id ?? 0);
+        next: async (response) => {
+         console.log(response);
+          await this.updateProductsStock(); 
+          await this.createOrder(this.selectedOrder.id ?? 0, this.selectedTable.id ?? 0);
         },
         error: (error) => {
           console.error('Error al eliminar productos deshabilitados:', error);
         }
       });
     } else {
-      console.log('No hay productos deshabilitados. Asignando orden directamente.');
+      await this.updateProductsStock();
       this.createOrder(this.selectedOrder.id ?? 0, this.selectedTable.id ?? 0);
     }
   }
 
+  async updateProductsStock() {
+    try {
+      const availableItems = this.selectedOrder.orderItems.filter(
+        orderItem => !this.disabledProductIds.includes(orderItem.product_id.toString())
+      );
+      const updatePromises = availableItems.map(orderItem => 
+        this.productService.updateLowerStock(
+          orderItem.product_id?.toString() ?? '',
+          orderItem.amount.toString()
+        )
+      );
+  
+      const responses = await Promise.all(updatePromises);
+      console.log('All updates successful', responses);
+    } catch (error) {
+      console.error('One or more updates failed', error);
+    }
+  }
+  
+
   // Función para crear la orden
   async createOrder(orderId: number, tableId: number) {
-    this.isLoading = true;this.orderService.assignEmployeeToOrder(orderId, this.uid).subscribe(
+    this.orderService.assignEmployeeToOrder(orderId, this.uid).subscribe(
       (response) => {
-          console.log('Employee assigned to order:', response);
           this.orderService.assignOrderToTable(orderId, tableId).subscribe({
-            next: (response) => {
-              console.log('Orden asignada correctamente:', response);
+            next: async (response) => {
               this.isLoading = false;
               this.close.emit();
             },

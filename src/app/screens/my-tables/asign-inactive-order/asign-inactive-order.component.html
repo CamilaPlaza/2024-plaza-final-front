@@ -36,7 +36,7 @@
       <p-table [value]="selectedOrder.orderItems" [scrollable]="true" scrollHeight="200px">
         <ng-template pTemplate="header">
           <tr>
-            <th>Product Name</th>
+            <th>Product</th>
             <th>Amount</th>
             <th>Available Stock</th>
           </tr>
@@ -84,3 +84,6 @@
 
 
 
+<div *ngIf="isLoading" class="overlay">
+  <p-progressSpinner styleClass="custom-spinner" [animationDuration]="'0.5'"></p-progressSpinner>
+</div>

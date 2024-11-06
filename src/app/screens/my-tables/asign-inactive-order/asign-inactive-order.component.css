@@ -129,7 +129,7 @@ button.p-button-success:hover {
   display: flex; /* Centrar el contenido */
   align-items: center; /* Centrar verticalmente */
   justify-content: center; /* Centrar horizontalmente */
-  z-index: 100; /* Asegúrate de que esté por encima de otros elementos */
+  z-index: 10000; /* Asegúrate de que esté por encima de otros elementos */
 }
 
 .custom-spinner {

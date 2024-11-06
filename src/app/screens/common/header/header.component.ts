@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
             },
             {
                 icon: 'fa fa-glass-martini',
-                routerLink: '/register-product',
+                routerLink: '/products-view',
                 items: [
                     {
                         label: 'New Product',

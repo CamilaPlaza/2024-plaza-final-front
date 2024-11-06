@@ -269,10 +269,19 @@
             margin-bottom: 5%;
         }
 
-        .carousel {
+        :host ::ng-deep .carousel {
+            margin-top: 3%;
+            display: block;
             width: 100%;
-            margin: 0 auto;
-            margin-left: 38%;
+        }
+    
+        :host ::ng-deep .reward-box {
+            width: calc(100% - 10px);
+            height: 250px;
+        }
+    
+        :host ::ng-deep .reward-box .reward-name {
+            font-size: 1rem;
         }
 
         .reward-box img {
@@ -287,9 +296,9 @@
 
 
         .reward-box {
-            width: 50%; 
+            width: 95%; 
             height: 250px;
-            margin: 0 0px 0px 0px;
+            margin: 0 15px 15px 15px;
         }
 
         .rewards-title,

@@ -165,7 +165,7 @@
 }
 
 .add-product select {
-  width: 120px; /* Ancho reducido */
+  width: 110px; /* Ancho reducido */
   padding: 8px;
   font-size: 1rem;
   border-radius: 8px;
@@ -174,7 +174,7 @@
 }
 
 .add-product input[type="number"] {
-  width: 50px;
+  width: 80px;
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #ddd;

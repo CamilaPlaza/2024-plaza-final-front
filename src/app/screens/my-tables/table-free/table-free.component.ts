@@ -233,6 +233,7 @@ export class TableFreeComponent implements OnInit {
   }
   
   
+  
 
   async updateProductsStock() {
     try {
@@ -248,4 +249,18 @@ export class TableFreeComponent implements OnInit {
       console.error('One or more updates failed', error);
     }
   }
+
+  validateAmount() {
+    const maxStock = Number(this.selectedProduct?.stock) || 1;
+    const enteredAmount = Number(this.selectedAmount);
+  
+    if (enteredAmount > maxStock) {
+      this.selectedAmount = maxStock;
+    } else if (enteredAmount < 1) {
+      this.selectedAmount = 1;
+    } else {
+      this.selectedAmount = enteredAmount;
+    }
+  }
+
 }

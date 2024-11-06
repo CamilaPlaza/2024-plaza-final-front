@@ -97,13 +97,10 @@
               </ng-template>
             </p-dropdown>
           
-          
-
-          
             <div class="amount-price-wrapper">
               <div class="amount">
                 <label for="amount">Amount:</label>
-                <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" [max]="selectedProduct?.stock || 1" [title]="'Maximum stock: ' + (selectedProduct?.stock || 0)"/>
+                <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" (blur)="validateAmount()"  [max]="selectedProduct?.stock || 1" [title]="'Maximum stock: ' + (selectedProduct?.stock || 0)"/>
               </div>
               <div class="price">
                 <label for="price">Price:</label>

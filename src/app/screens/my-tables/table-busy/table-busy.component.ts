@@ -306,6 +306,21 @@ export class TableBusyComponent implements OnInit {
     }
   }
 
+  validateAmount() {
+    const maxStock = Number(this.selectedProduct?.stock) || 1;
+    const enteredAmount = Number(this.selectedAmount);
+  
+    // Asegura que no se pueda poner más del stock disponible ni menos de 1
+    if (enteredAmount > maxStock) {
+      this.selectedAmount = maxStock;
+    } else if (enteredAmount < 1) {
+      this.selectedAmount = 1;
+    } else {
+      this.selectedAmount = enteredAmount;
+    }
+  }
+  
+
   showCloseTableDialog() {
     this.displayCloseTableDialog = true;
   }

@@ -66,5 +66,13 @@ export class OrderService {
       })
     );
   }
-  
+
+  deleteOrderItems(orderId: string, orderItems: string[]) {
+    return this.http.delete(`${this.baseUrl}/delete-order-item/`, {
+      body: {
+        order_id: orderId,
+        order_items: orderItems
+      }
+    });
+  }
 }

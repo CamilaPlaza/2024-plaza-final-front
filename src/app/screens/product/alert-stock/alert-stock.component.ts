@@ -13,5 +13,4 @@ export class AlertStockComponent {
   closeDialog() {
     this.onClose.emit();
   }
-
 }

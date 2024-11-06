@@ -128,8 +128,7 @@ p-table {
   .low-stock-row {
     color: red;
   }
-
-  
+ 
   .notification-count {
     position: absolute;
     top: -5px;

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ChartService {
 
-  private baseUrl = 'https://candvbar-back.onrender.com';
+  private baseUrl = 'https://cv-bar-back.onrender.com';
   constructor(private http: HttpClient) { }
 
   getCategoryRevenue(): Observable<any> {

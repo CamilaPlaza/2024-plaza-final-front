@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 export class UserService {
   currentUser: User | null = null;
 
-  private baseUrl = 'https://candvbar-back.onrender.com';
+  private baseUrl = 'https://cv-bar-back.onrender.com';
   //private baseLocalUrl = 'http://127.0.0.1:8000';
   idleTime: number = 0;
   maxIdleTime: number = 10 * 60 * 1000; // 10 minutos de inactividad

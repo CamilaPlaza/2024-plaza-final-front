@@ -3,6 +3,8 @@
       <img src="../../../../assets/images/view-products.jpg" alt="Imagen descriptiva" class="image">
   </div>
   <div class="section title-section">
+    <i class="pi pi-bell notification-icon" (click)="showAlertStockDialog()">
+        <span *ngIf="lowStockCount > 0" class="notification-count">{{ lowStockCount }}</span></i>
     <p class="title">PRODUCTS</p>
     <button pButton pRipple icon="pi pi-plus" (click)="navigateToRegisterProduct()" class="p-button-rounded add-product-button">
         <span class="button-text">Add Product</span>
@@ -15,7 +17,7 @@
   <div class="section table-section">
       <div class="card">
         <p-table [value]="filteredProducts" dataKey="id" editMode="row" scrollable="true" selectionMode="single" 
-        [(selection)]="selectedProduct" [scrollHeight]="tableScrollHeight">
+        [(selection)]="selectedProduct"  [scrollHeight]="tableScrollHeight">
               <ng-template pTemplate="header">
                   <tr>
                       <th pSortableColumn="name" pResizableColumn>Name <p-sortIcon field="name"></p-sortIcon></th>
@@ -55,7 +57,7 @@
               </ng-template>
 
               <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
-                  <tr [pEditableRow]="product" [pSelectableRow]="product">
+                  <tr [pEditableRow]="product" [pSelectableRow]="product"   [ngClass]="{'low-stock-row': isLowStock(product.stock)}">
                       <!-- Name NO editable -->
                       <td>{{ product.name }}</td>
 
@@ -167,4 +169,8 @@
 
 <p-dialog [(visible)]="dialogNoticeError" header="Update product stock"  [modal]="true" >
     <app-notice [subtitle]="'Something went wrong'" (onClose)="dialogNoticeError = false; displayUpdateStockDialog = false"></app-notice>
+</p-dialog>
+
+<p-dialog [(visible)]="alertStockDialog" header="Attention Required" [modal]="true" >
+    <app-alert-stock [outOfStockProducts] = "lowStockProducts" (onClose)="closeAlertStockDialog()"></app-alert-stock>
 </p-dialog>

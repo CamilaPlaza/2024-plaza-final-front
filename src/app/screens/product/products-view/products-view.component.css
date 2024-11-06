@@ -118,6 +118,52 @@ p-table {
     width: 100%;
 }
 
+.notification-icon {
+    font-size: 1.2rem;
+    margin-left: 1.5%;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .low-stock-row {
+    color: red;
+  }
+
+  
+  .notification-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.6rem;
+    padding: 0.2rem 0.3rem;
+  }
+
+  @keyframes shake {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-2px);
+    }
+    50% {
+      transform: translateX(2px);
+    }
+    75% {
+      transform: translateX(-2px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .notification-icon {
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  
 
 @media (max-width: 768px) {
     .container {

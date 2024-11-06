@@ -1,0 +1,65 @@
+::ng-deep .p-button {
+    border-radius: 8px !important;
+}
+
+::ng-deep .custom-cancel-button .p-button {
+    background-color: #533521c7 !important;
+    border-color: #533521c7 !important;
+}
+
+::ng-deep .custom-cancel-button .p-button:hover {
+    background-color: #533521da !important;
+    border-color: #533521da !important;
+}
+
+
+.container{
+    padding: 10px;
+}
+
+.buttons{
+    margin-top: 8%;
+}
+
+.p-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.p-table th, .p-table td {
+    padding: 8px;
+    text-align: left;
+}
+
+.p-table th {
+    background-color: #f4f4f4;
+}
+
+
+@media (max-width: 768px) {
+
+    .container {
+        width: 300px;
+        height: auto;
+    }
+
+    .info-stock {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px; 
+    }
+
+    input {
+        width: 100%;
+    }
+
+    .buttons {
+        gap: 10px; 
+    }
+
+    .buttons .p-button {
+        width: 100%;
+    }
+
+}

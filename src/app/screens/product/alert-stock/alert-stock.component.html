@@ -1,0 +1,24 @@
+<div class="container">
+    <span class="p-text-secondary block information">Warning: You are about to run out of stock for these products!</span>
+
+    <div class="description">
+        <table class="p-table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Current Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let product of outOfStockProducts">
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.stock }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex buttons justify-content-end gap-2">
+        <p-button label="Close" (onClick)="closeDialog()" class="custom-cancel-button"></p-button>
+    </div>
+</div>

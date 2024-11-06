@@ -65,6 +65,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { CarouselModule } from 'primeng/carousel';
 import { UpdateStockComponent } from './screens/product/update-stock/update-stock.component';
 import { InfoPointsComponent } from './screens/info-points/info-points.component';
+import { AlertStockComponent } from './screens/product/alert-stock/alert-stock.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { InfoPointsComponent } from './screens/info-points/info-points.component
     GoalsComponent,
     MenuComponent,
     MyCartComponent,
+    AlertStockComponent,
     CreateOrderComponent,
     TablesComponent,
     ChartsComponent,

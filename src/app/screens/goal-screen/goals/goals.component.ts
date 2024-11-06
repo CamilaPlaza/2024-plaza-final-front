@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Goal } from 'src/app/models/goal';
 import { CalendarMonthChangeEvent, CalendarYearChangeEvent } from 'primeng/calendar';
 import { ChartModule } from 'primeng/chart';
+import { GoalService } from 'src/app/services/goal_service';
 
 @Component({
   selector: 'app-goals',
@@ -9,13 +10,7 @@ import { ChartModule } from 'primeng/chart';
   styleUrls: ['./goals.component.css']
 })
 export class GoalsComponent implements OnInit {
-  goals: Goal[] = [
-    new Goal('Learn TypeScript', 'Complete the TypeScript course on Udemy', 100, 80, 'blue', 'pi pi-graduation-cap', '01/11/2024', 1),
-    new Goal('Read Books', 'Read 12 books this year  at least please', 100, 50, 'orange', 'pi pi-book', '01/11/2024', 3),
-    new Goal('Get Fit', 'Exercise at least 4 times a week', 50, 30, 'red', 'pi pi-dollar', '01/11/2024', 4),
-    new Goal('Travel', 'Visit 3 new countries this year', 80, 20, 'purple', 'pi pi-dollar', '01/11/2024', 5),
-    new Goal('Learn Love', 'Complete the TypeScript course on Udemy', 100, 15, 'blue', 'pi pi-book', '01/11/2024', 1)
-  ];
+  goals: Goal[] = [];
   totalProgress: number = 0;
   visibleGoals: Goal[] = [];
   currentIndex: number = 0;
@@ -26,66 +21,84 @@ export class GoalsComponent implements OnInit {
   colors: string[] = ['#7f522e', '#b37a3a'];
   displayDialog: boolean = false;
 
-  constructor() { 
+  constructor(private goalService: GoalService) { 
     this.visibleGoals = this.goals.slice(0, 4);
   }
 
   ngOnInit(): void {
-    this.calculateProgressValues();
-    this.totalProgress = this.goals.reduce((acc, item) => acc + item.actualIncome, 0);
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    this.data = {
-      labels: this.goals.map(goal => goal.title),
-      datasets: [
-          {
+    const date = new Date();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensure two-digit month
+    const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
+  
+    // Subscribe to the Observable and handle the response
+    this.goalService.getGoals(month, year).subscribe(
+      (goals: Goal[]) => {
+        this.goals = goals;  // Assign the data once the Observable resolves
+        this.visibleGoals = this.goals.slice(0, this.itemsPerPage); // Set the first few goals to visible
+  
+        this.calculateProgressValues();
+        this.totalProgress = this.goals.reduce((acc, item) => acc + item.actualIncome, 0);
+  
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+        const textColorSecondary = documentStyle.getPropertyValue('--text-color');
+        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+  
+        this.data = {
+          labels: this.goals.map(goal => goal.title),
+          datasets: [
+            {
               label: '% Progress',
               backgroundColor: this.goals.map(goal => goal.color),
-              borderColor: this.goals.map(goal => goal.color), 
-              data: this.goals.map(goal => (goal.actualIncome/goal.expectedIncome)*100)
-          }
-      ]
-    };
-
-    this.options = {
-      indexAxis: 'y',
-      maintainAspectRatio: false,
-      aspectRatio: 1.2,
-      plugins: {
-          legend: {
+              borderColor: this.goals.map(goal => goal.color),
+              data: this.goals.map(goal => (goal.actualIncome / goal.expectedIncome) * 100)
+            }
+          ]
+        };
+  
+        this.options = {
+          indexAxis: 'y',
+          maintainAspectRatio: false,
+          aspectRatio: 1.2,
+          plugins: {
+            legend: {
               labels: {
-                  color: textColor
+                color: textColor
               }
-          }
-      },
-      scales: {
-          x: {
+            }
+          },
+          scales: {
+            x: {
               max: 100,
               ticks: {
-                  color: textColorSecondary,
-                  font: {
-                      weight: 500
-                  }
+                color: textColorSecondary,
+                font: {
+                  weight: 500
+                }
               },
               grid: {
-                  color: surfaceBorder,
-                  drawBorder: false
+                color: surfaceBorder,
+                drawBorder: false
               }
-          },
-          y: {
+            },
+            y: {
               ticks: {
-                  color: textColorSecondary
+                color: textColorSecondary
               },
               grid: {
-                  color: surfaceBorder,
-                  drawBorder: false
+                color: surfaceBorder,
+                drawBorder: false
               }
+            }
           }
+        };
+      },
+      (error) => {
+        console.error('Error fetching goals:', error);  // Error handling
       }
-    };
+    );
   }
+  
 
   calculateProgressValues() {
     this.goals.forEach(goal => {

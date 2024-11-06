@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { Goal } from 'src/app/models/goal';
 import { CategoryService } from 'src/app/services/category_service';
+import { GoalService } from 'src/app/services/goal_service';
 
 
 @Component({
@@ -33,7 +34,7 @@ export class NewGoalComponent implements OnInit  {
     { label: 'Star', value: 'pi-star' },
   ];
 
-  constructor(private categoryService: CategoryService){}
+  constructor(private categoryService: CategoryService, private goalService: GoalService){}
 
   ngOnInit() {
     this.loadCategories();
@@ -41,17 +42,46 @@ export class NewGoalComponent implements OnInit  {
     this.minDate = new Date(today.getFullYear(), today.getMonth(), 1);
   }
 
-  addTotalGainGoal() {
-    const newGoal = new Goal(this.goalTitle, this.goalDescription, this.targetAmount, 0, this.goalColor, 'pi ' + this.selectedIcon, this.formatDeadline(this.goalDeadline));
+  async addTotalGainGoal() {
+    const newGoal = new Goal(this.goalTitle, this.goalDescription, this.targetAmount, 0, this.goalColor, 'pi ' + this.selectedIcon, this.formatDeadline(this.goalDeadline), this.selectedCategory?.id ?? null);
     console.log(newGoal);
-    this.goalAdded.emit(newGoal);
+    const response = await this.goalService.createGoal(newGoal);
+
+    if (response) {
+        // Si la respuesta es válida, emitimos el evento
+        this.goalAdded.emit(newGoal);
+    } else {
+        // Manejo de errores si la creación falla
+        console.error("Failed to create goal");
+        // Puedes agregar aquí lógica adicional si deseas mostrar un mensaje de error al usuario
+    }
   }
 
-  addCategoryGoal(){
-    const newGoal = new Goal(this.goalTitle, this.goalDescription, this.targetAmount, 0, this.goalColor, 'pi ' +  this.selectedIcon, this.formatDeadline(this.goalDeadline), this.selectedCategory.id);
+  async addCategoryGoal() {
+    const newGoal = new Goal(
+        this.goalTitle, 
+        this.goalDescription, 
+        this.targetAmount, 
+        0, 
+        this.goalColor, 
+        'pi ' + this.selectedIcon, 
+        this.formatDeadline(this.goalDeadline), 
+        this.selectedCategory?.id // Usamos `?.` para evitar errores si no hay categoría seleccionada
+    );
     console.log(newGoal);
-    this.goalAdded.emit(newGoal);
-  }
+
+    // Llamada al servicio para crear el objetivo
+    const response = await this.goalService.createGoal(newGoal);
+
+    if (response) {
+        // Si la respuesta es válida, emitimos el evento
+        this.goalAdded.emit(newGoal);
+    } else {
+        // Manejo de errores si la creación falla
+        console.error("Failed to create goal");
+        // Puedes agregar aquí lógica adicional si deseas mostrar un mensaje de error al usuario
+    }
+}
 
   addGoal(){
     if (this.selectedGoalType == 'category'){

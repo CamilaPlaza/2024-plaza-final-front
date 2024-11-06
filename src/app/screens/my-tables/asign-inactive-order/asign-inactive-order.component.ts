@@ -4,6 +4,7 @@ import { OrderService } from 'src/app/services/order_service';
 import { Table } from 'src/app/models/table';
 import { ProductService } from 'src/app/services/product_service';
 import { Product } from 'src/app/models/product';
+import { UserService } from 'src/app/services/user_service';
 
 @Component({
   selector: 'app-asign-inactive-order',
@@ -24,15 +25,27 @@ export class AsignInactiveOrderComponent implements OnInit {
 
   // Lista para almacenar los product_ids deshabilitados
   disabledProductIds: string[] = [];
+  user: any | null
+  uid: string = '';
 
   constructor(
-    private orderService: OrderService, private productService: ProductService) {}
+    private orderService: OrderService, private userService: UserService, private productService: ProductService) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     if (this.selectedOrder) {
       this.loadProductStocks();
     }
-  }
+    const user = this.userService.currentUser;
+    if (user) {
+      const userData =  (await this.userService.getUserDataFromFirestore(user.uid)).toPromise();
+      if (userData) {
+        this.user = userData;
+        this.uid = user.uid;
+        console.log(this.user);
+      } else {
+        console.error('Error fetching user points data.');
+      }
+  }}
 
   get filteredOrders() {
     return this.orders.filter(order => order.id.includes(this.searchId));
@@ -119,7 +132,15 @@ export class AsignInactiveOrderComponent implements OnInit {
 
   // Función para crear la orden
   async createOrder(orderId: number, tableId: number) {
-    this.isLoading = true; 
+    this.isLoading = true;
+    this.orderService.assignEmployeeToOrder(orderId, this.user).subscribe(
+      (response) => {
+          console.log('Employee assigned to order:', response);
+      },
+      (error) => {
+          console.error('Error assigning employee:', error);
+      }
+  );
     this.orderService.assignOrderToTable(orderId, tableId).subscribe({
       next: (response) => {
         console.log('Orden asignada correctamente:', response);

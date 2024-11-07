@@ -242,8 +242,8 @@ html, body {
 
     .days-remaining-block {
         width: 100%;
-        height: 80%;
-        padding: 0;
+        height: 100%;
+        padding: 0.2;
     }
 
     .progress-line {
@@ -270,5 +270,17 @@ html, body {
     .goals-section {
         height: auto;
         max-height: none;
+    }
+
+    ::ng-deep .new-goal-dialog .p-dialog-content {
+        padding: 20px;
+        text-align: center;
+    }
+
+    ::ng-deep .new-goal-dialog  .p-dialog {
+        margin-left: 10%;
+        max-width: 100vw;
+        width: 350px;
+        height: auto;
     }
 }

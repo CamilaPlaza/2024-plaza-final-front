@@ -40,15 +40,11 @@ html, body {
     color: #f2f2f2;
 }
 
-/*colors: string[] = ['#7f522e', '#b37a3a'];
-*/
-
 .title {
     font-size: 2rem;
     margin: 0;
     text-align: center;
 }
-
 
 .goals-content {
     z-index: 2;
@@ -56,7 +52,6 @@ html, body {
     display: flex;
     align-items: stretch;
 }
-
 
 .avarage-goals {
     flex-basis: 100%;
@@ -202,3 +197,78 @@ html, body {
     z-index: 2;
 }
 
+@media (max-width: 768px) {
+    .container {
+        margin-left: 12%;
+    }
+
+    .section {
+        flex: 0.05;
+    }
+
+    .title {
+        font-size: 1.3rem;
+    }
+
+    .goals-content {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .chart-container {
+        width: 100%;
+        margin: 0;
+    }
+
+    .add-goal-button {
+        width: 100%;
+        margin-left: 0;
+        flex-basis: auto;
+    }
+
+    .small-button {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+    }
+
+    .calendar-button {
+        width: 100%;
+    }
+
+    ::ng-deep .calendar-button .p-calendar {
+        width: 100%;  
+    }
+
+    .days-remaining-block {
+        width: 100%;
+        height: 80%;
+        padding: 0;
+    }
+
+    .progress-line {
+        width: 100%
+    }
+
+    .each-goal-content {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 1rem;
+        height: auto;
+    }
+
+    .each-goal-card {
+        width: 100%;
+        height: auto;
+        margin-bottom: 2rem; 
+    }
+
+    .nav-button {
+        display: none;
+    }
+
+    .goals-section {
+        height: auto;
+        max-height: none;
+    }
+}

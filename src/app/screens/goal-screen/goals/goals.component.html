@@ -32,9 +32,9 @@
                                 </p-calendar>
                                 <div class="days-remaining-block" [ngStyle]="{'background-color': getProgressColor()}">
                                     <span style="font-weight: bold;">{{ getDaysRemainingInMonth() }} days</span> left in the month
-                                  </div>
-                                  
+                                </div>
                             </div>
+
                         </div>
                     </ng-template>
                     
@@ -60,7 +60,7 @@
             </div>
         </div>
     
-        <div class="each-goal-content">
+        <div class="each-goal-content" >
             <div class="flex flex-wrap gap-2">
                 <button (click)="prevPage()" [disabled]="currentIndex === 0" class="nav-button">
                     <i class="pi pi-chevron-left"></i>

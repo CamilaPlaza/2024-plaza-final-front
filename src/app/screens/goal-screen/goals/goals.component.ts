@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener   } from '@angular/core';
 import { Goal } from 'src/app/models/goal';
 import { CalendarMonthChangeEvent, CalendarYearChangeEvent } from 'primeng/calendar';
-import { ChartModule } from 'primeng/chart';
 import { GoalService } from 'src/app/services/goal_service';
 
 @Component({
@@ -18,11 +17,12 @@ export class GoalsComponent implements OnInit {
   selectedDate: Date = new Date();  
   data: any;
   options: any;
+  isMobile: boolean = false;
   colors: string[] = ['#7f522e', '#b37a3a'];
   displayDialog: boolean = false;
 
   constructor(private goalService: GoalService) { 
-    this.visibleGoals = this.goals.slice(0, 4);
+    this.checkIfMobile();
   }
 
   ngOnInit(): void {
@@ -31,13 +31,34 @@ export class GoalsComponent implements OnInit {
     const year = String(date.getFullYear()).slice(-2);
     this.getGoals(month, year);    
   }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkIfMobile();
+    this.updateVisibleGoals();
+  }
+
+  checkIfMobile() {
+    this.isMobile = window.innerWidth <= 768;
+  }
+
+  updateVisibleGoals() {
+    if (this.isMobile) {
+      this.visibleGoals = this.goals;
+      this.itemsPerPage = 1;
+    } else {
+      this.visibleGoals = this.goals.slice(0, 4);
+      this.itemsPerPage = 4;
+    }
+  }
+
 
   getGoals(month: string, year: string){
 
     this.goalService.getGoals(month, year).subscribe(
       (goals: Goal[]) => {
-        this.goals = goals;  // Assign the data once the Observable resolves
-        this.visibleGoals = this.goals.slice(0, this.itemsPerPage); // Set the first few goals to visible
+        this.goals = goals; 
+        this.visibleGoals = this.goals.slice(0, this.itemsPerPage);
+        this.updateVisibleGoals();
   
         this.calculateProgressValues();
         this.totalProgress = this.goals.reduce((acc, item) => acc + item.actualIncome, 0);
@@ -208,6 +229,7 @@ export class GoalsComponent implements OnInit {
     console.log(newGoal);
     this.displayDialog = false;
   }
+  
   
 
 }

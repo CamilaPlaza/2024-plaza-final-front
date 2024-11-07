@@ -11,7 +11,7 @@ import { throwError } from 'rxjs';
 })
 export class OrderService {
 
-  private baseUrl = 'https://cv-bar-back.onrender.com';
+  private baseUrl = 'https://candv-back.onrender.com';
   //private baseLocalUrl = 'http://127.0.0.1:8000';
   constructor(private http: HttpClient) { }
 

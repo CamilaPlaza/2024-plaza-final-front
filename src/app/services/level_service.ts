@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 
 export class LevelService {
-private baseUrl = 'https://cv-bar-back.onrender.com';
+private baseUrl = 'https://candv-back.onrender.com';
   constructor(private http: HttpClient) { }
 
   getLevel(levelId: string):Observable<string>{

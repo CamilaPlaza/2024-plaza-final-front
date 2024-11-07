@@ -35,6 +35,7 @@ export class NewGoalComponent implements OnInit  {
     { label: 'Receipt', value: 'pi-receipt' },
     { label: 'Star', value: 'pi-star' },
   ];
+  hasFinalGainGoal: boolean = false;
 
   constructor(private categoryService: CategoryService, private goalService: GoalService){}
 
@@ -127,43 +128,31 @@ export class NewGoalComponent implements OnInit  {
     this.selectedGoalType = type;
   }
   loadCategories(): void {
-    const month = (this.goalDeadline.getMonth() + 1).toString();  // Los meses empiezan desde 0
-    const year = (this.goalDeadline.getFullYear().toString()).slice(-2); // Año completo, por ejemplo "2024"
-    console.log('Mes seleccionado:', month);
-    console.log('Año seleccionado:', year);
+    const month = (this.goalDeadline.getMonth() + 1).toString(); 
+    const year = (this.goalDeadline.getFullYear().toString()).slice(-2); 
   
-    // Obtener las metas para el mes y año seleccionados
-    this.goalService.getGoals(month, year).subscribe(
-      (goals: Goal[]) => {
-        this.goals = goals;  // Asignamos los datos una vez que el Observable se resuelve
-        console.log("Metas obtenidas:", this.goals);
+    this.goalService.getGoals(month, year).subscribe((goals: Goal[]) => {
+      this.goals = goals;
+      
+      // Check if there is already a final gain goal (categoryId = null)
+      this.hasFinalGainGoal = goals.some(goal => goal.categoryId === null);
+      console.log('Is there a final gain goal for this period?', this.hasFinalGainGoal);
   
-        // Obtener los IDs de las categorías que ya tienen metas asignadas
-        const categoryIdsWithGoals = goals.map((goal: Goal) => goal.categoryId?.toString());  // Asegúrate de que sean strings
-        console.log('Categorías con metas asignadas:', categoryIdsWithGoals);
-  
-        // Llamar al servicio para obtener las categorías disponibles
-        this.categoryService.getCategories().subscribe({
-          next: (categoryData) => {
-            console.log('Datos de categorías recibidos:', categoryData);
-  
-            if (categoryData && Array.isArray(categoryData.categories)) {
-              // Filtrar las categorías que no tienen metas asignadas
-              this.categories = categoryData.categories.filter(category => {
-                // Comprobar si la categoría no tiene metas asignadas (comparamos ids)
-                return categoryIdsWithGoals && !categoryIdsWithGoals.includes(category.id?.toString());
-              });
-              console.log('Categorías disponibles (sin metas asignadas):', this.categories);
-            } else {
-              console.error('Error: Los datos de categorías no son un array:', categoryData);
-            }
-          },
-          error: (err) => {
-            console.error('Error al obtener las categorías:', err);
+      const categoryIdsWithGoals = goals.map(goal => goal.categoryId?.toString());
+      this.categoryService.getCategories().subscribe({
+        next: (categoryData) => {
+          if (categoryData && Array.isArray(categoryData.categories)) {
+            this.categories = categoryData.categories.filter(category => 
+              !categoryIdsWithGoals.includes(category.id?.toString())
+            );
           }
-        });
-      },
-    )};
+        },
+        error: (err) => {
+          console.error('Error loading categories:', err);
+        }
+      });
+    });
+  }
 
 
   onTargetAmountChange() {
@@ -173,11 +162,11 @@ export class NewGoalComponent implements OnInit  {
  }
 
 
-isFormValid(): boolean {
+ isFormValid(): boolean {
   return this.goalTitle && this.goalDeadline && this.goalDescription && this.goalColor && this.selectedIcon &&
          this.targetAmount > 0 &&
          ((this.selectedGoalType === 'category' && this.selectedCategory) || 
-          this.selectedGoalType === 'finalGain');
+          (this.selectedGoalType === 'finalGain' && !this.hasFinalGainGoal));
 }
 
 }

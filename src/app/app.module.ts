@@ -53,19 +53,37 @@ import { MyCartComponent } from './screens/user-order/my-cart/my-cart.component'
 import { CreateOrderComponent } from './screens/user-order/create-order/create-order.component';
 import { AsignInactiveOrderComponent } from './screens/my-tables/asign-inactive-order/asign-inactive-order.component';
 import { InputIconModule } from 'primeng/inputicon'; 
-
+import { GoalsComponent } from './screens/goal-screen/goals/goals.component';
+import { KnobModule } from 'primeng/knob';
+import { CardModule } from 'primeng/card';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { SpeedDialModule } from 'primeng/speeddial';
+import { MeterGroupModule } from 'primeng/metergroup';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { NewGoalComponent } from './screens/goal-screen/new-goal/new-goal.component';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { CarouselModule } from 'primeng/carousel';
+import { UpdateStockComponent } from './screens/product/update-stock/update-stock.component';
+import { InfoPointsComponent } from './screens/info-points/info-points.component';
+import { AlertStockComponent } from './screens/product/alert-stock/alert-stock.component';
+import { SplitterModule } from 'primeng/splitter';
 
 @NgModule({
   declarations: [
     AppComponent,
+    GoalsComponent,
     MenuComponent,
     MyCartComponent,
+    AlertStockComponent,
     CreateOrderComponent,
     TablesComponent,
     ChartsComponent,
+    InfoPointsComponent,
     ExportExcelComponent,
+    NewGoalComponent,
     OrdersComponent,
     OrderInfoComponent,
+    UpdateStockComponent,
     TableBusyComponent,
     TableFreeComponent,
     TableFinishedComponent,
@@ -87,13 +105,20 @@ import { InputIconModule } from 'primeng/inputicon';
   ],
   imports: [
     BrowserModule,
+    ScrollPanelModule,
+    KnobModule,
+    CardModule,
+    ProgressBarModule,
+    SpeedDialModule,
     DropdownModule,
     ToastModule,
     ConfirmDialogModule,
     FileUploadModule,
     AutoCompleteModule,
+    SplitterModule,
     TagModule,
     TableModule,
+    ColorPickerModule,
     HttpClientModule,
     MultiSelectModule,
     FormsModule,
@@ -110,7 +135,9 @@ import { InputIconModule } from 'primeng/inputicon';
     FloatLabelModule,
     CalendarModule,
     MenubarModule,
-    ChartModule
+    ChartModule,
+    MeterGroupModule,
+    CarouselModule
 ],
   providers: [ConfirmationService, MessageService, DatePipe],
   bootstrap: [AppComponent]

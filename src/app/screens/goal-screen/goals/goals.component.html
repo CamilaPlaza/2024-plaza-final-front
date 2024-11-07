@@ -1,0 +1,90 @@
+<div class="container">
+    <div class="section title-section">
+        <p class="title">GOALS</p>
+    </div>
+
+    <div class="goals-section">
+
+        <div class="goals-content">
+            <div class="avarage-goals">
+                <p-meterGroup [value]="goals" labelPosition="start">
+                    <ng-template pTemplate="label">
+                        <div class="flex flex-wrap gap-3">
+    
+                            <div class="chart-container">
+                                <p-chart type="bar" [data]="data" [options]="options" />
+                            </div>
+                           
+    
+                            <div class="add-goal-button">
+                                <button (click)="openDialog()"  class="p-button p-button-raised p-button-primary small-button">Add New Goal</button>
+                                <p-calendar class="calendar-button"
+                                    [(ngModel)]="selectedDate" 
+                                    [iconDisplay]="'input'" 
+                                    [showIcon]="true" 
+                                    view="month" 
+                                    dateFormat="mm/yy" 
+                                    [readonlyInput]="true"
+                                    (ngModelChange)="onDateChange($event)">
+                                    <ng-template pTemplate="inputicon" let-clickCallBack="clickCallBack">
+                                        <i class="pi pi-calendar pointer-events-none" (click)="clickCallBack($event)"></i>
+                                    </ng-template>
+                                </p-calendar>
+                                <div class="days-remaining-block" [ngStyle]="{'background-color': getProgressColor()}">
+                                    <span style="font-weight: bold;">{{ getDaysRemainingInMonth() }} days</span> left in the month
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-template>
+                    
+                    <ng-template class="progress-line" pTemplate="meter" let-value let-class="class" let-width="size">
+                        <span [class]="class + ' progress-line'"  
+                        [style]="{
+                            background: 'linear-gradient(to right, ' + value.color + ', ' + value.color + ')',
+                            width: (value.actualIncome/totalIncomeExpected)*100 + '%'
+                          }"
+                          pTooltip="{{ value.title }}" 
+                          tooltipPosition="top">
+                          
+                        </span>
+                    </ng-template>
+    
+                    <ng-template pTemplate="start" let-totalPercent="totalPercent">
+                        <div class="flex justify-content-between mt-3 mb-2 relative">
+                            <span>Total Goals</span>
+                            <span class="font-medium">100%</span>
+                        </div>
+                    </ng-template>
+                </p-meterGroup>
+            </div>
+        </div>
+    
+        <div class="each-goal-content" >
+            <div class="flex flex-wrap gap-2">
+                <button (click)="prevPage()" [disabled]="currentIndex === 0" class="nav-button">
+                    <i class="pi pi-chevron-left"></i>
+                </button>
+                <div *ngFor="let goal of visibleGoals" class="each-goal-card">
+                    <div class="each-goal-header">
+                        <span class="each-goal-icon" [style.backgroundColor]="goal.color">
+                            <i [class]="goal.icon"></i>
+                        </span>
+                    </div>
+                    <h3>{{ goal.title }}</h3>
+                    <p>{{ goal.description }}</p>
+                    <p>{{ goal.actualIncome }}/{{ goal.expectedIncome }} $</p>
+                    <p-knob [(ngModel)]="goal.progressValue"  valueTemplate="{value}%"  readonly="true" [strokeWidth]="6"  [showValue]="true" class="progress-knob"></p-knob>
+                </div>
+                <button (click)="nextPage()" [disabled]="currentIndex + itemsPerPage >= goals.length" class="nav-button">
+                    <i class="pi pi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<p-dialog header="Add New Goal" class="new-goal-dialog" [(visible)]="displayDialog" [modal]="true" [closable]="true">
+    <app-new-goal (goalAdded)="onGoalAdded($event)"></app-new-goal>
+</p-dialog>

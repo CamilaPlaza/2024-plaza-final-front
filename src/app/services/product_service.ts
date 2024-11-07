@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ProductService {
 
-  private baseUrl = 'https://candvbar-back.onrender.com';
+  private baseUrl = 'https://candv-back.onrender.com';
   //private baseLocalUrl = 'http://127.0.0.1:8000';
   constructor(private http: HttpClient) { }
 
@@ -71,6 +71,25 @@ export class ProductService {
 
   getProductById(productId: string): Observable<Product> {
     return this.http.get<Product>(`${this.baseUrl}/products/${productId}`);
+  }
+
+  async updateNewStock(productId: string, newStock: string): Promise<boolean> {
+  try {
+    await this.http.put(`${this.baseUrl}/update-stock/${productId}/${newStock}`, { stock: newStock }).toPromise();
+    return true;
+  } catch (error: any) {
+    console.error('Error durante la actualización del stock:', error);
+    return false;
+  }
+}
+  async updateLowerStock(productId: string, consumed: string): Promise<boolean> {
+  try {
+    await this.http.put(`${this.baseUrl}/lower-stock/${productId}/${consumed}`, { stock: consumed }).toPromise();
+    return true;
+  } catch (error: any) {
+    console.error('Error durante la actualización del stock:', error);
+    return false;
+  }
 }
 
 }

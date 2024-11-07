@@ -75,6 +75,10 @@
         </div>
     </div>
 
+    <button class="floating-button" (click)="toggleCart()">
+        <i class="pi pi-file-check"></i> Create Order
+    </button>    
+
 </div>
 <app-my-cart *ngIf="orderItems && orderItems.length > 0" 
     [orderItems]="orderItems" 

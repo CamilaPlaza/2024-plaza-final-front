@@ -20,6 +20,13 @@ export class ProductsViewComponent implements OnInit {
   deleteID: number = 0;
   editingProductCategories: { [key: number]: Category[] } = {};
   originalProductState: { [key: number]: Product } = {};
+  selectedProduct!: Product;
+  dialogNoticeError: boolean = false;
+  dialogNoticeSuccess: boolean = false;
+  displayUpdateStockDialog: boolean = false;
+  lowStockProducts: any[] = [];
+  lowStockCount: number = 0; 
+  alertStockDialog: boolean = false;
   public tableScrollHeight: string='';
 
   constructor(private productService: ProductService, private router: Router, private categoryService: CategoryService) {}
@@ -53,15 +60,10 @@ export class ProductsViewComponent implements OnInit {
 
 
 getCategoryNamesByIds(ids: any): string {
-  // Verifica si ids no es una cadena o está vacía
   if (typeof ids !== 'string' || !ids) {
     return '';
   }
-
-
-  // Convierte la cadena de IDs en un array
   const idArray = ids.split(',').map(id => id.trim());
-  // Filtra las categorías basándose en la presencia de sus IDs
   const categoryNames = this.categories
     .filter(category => category.id !== undefined && idArray.includes(category.id.toString()))
     .map(category => category.name);
@@ -72,10 +74,8 @@ filterByCategory(selectedCategoryIds: string[]): void {
   this.selectedFilterCategories = selectedCategoryIds;
 
   if (this.selectedFilterCategories.length === 0) {
-    // Sin filtro, muestra todos los productos
     this.filteredProducts = [...this.products];
   } else {
-    // Filtra los productos por las categorías seleccionadas
     this.filteredProducts = this.products.filter(product => {
       const productCategories = product.category.split(',').map(id => parseInt(id.trim(), 10));
       const matches = this.selectedFilterCategories.some(categoryId => productCategories.includes(parseInt(categoryId)));
@@ -84,8 +84,6 @@ filterByCategory(selectedCategoryIds: string[]): void {
   }
 }
 
-
-  
   updateTempSelectedCategories(productId: number, selectedCategories: Category[]): void {
     this.editingProductCategories[productId] = [...selectedCategories];
   }
@@ -104,6 +102,7 @@ filterByCategory(selectedCategoryIds: string[]): void {
         if (data && Array.isArray(data.products)) {
           this.products = data.products;
           this.filteredProducts = [...this.products];
+          this.filterLowStockProducts();
         } else {
           console.error('Unexpected data format:', data);
         }
@@ -113,6 +112,27 @@ filterByCategory(selectedCategoryIds: string[]): void {
       }
       
     });
+  }
+
+  filterLowStockProducts() {
+    this.lowStockProducts = this.filteredProducts.filter(product => {
+      const stock = parseInt(product.stock, 10);
+      return stock < 50;
+    });
+    this.lowStockCount = this.lowStockProducts.length; 
+    if(this.lowStockCount > 0){ this.showAlertStockDialog(); }
+  }
+
+  isLowStock(stock: string): boolean {
+    return parseInt(stock, 10) < 50;
+  }
+
+  showAlertStockDialog(){
+    this.alertStockDialog = true;
+  }
+
+  closeAlertStockDialog(){
+    this.alertStockDialog = false;
   }
 
   onRowEditInit(product: Product) {
@@ -238,7 +258,19 @@ filterByCategory(selectedCategoryIds: string[]): void {
     this.displayConfirmDialog = true;
   }
 
+  showUpdateStockDialog() {
+    console.log(this.selectedProduct);
+    this.displayUpdateStockDialog = true;
+  }
+
   closeConfirmDialog() {
     this.displayConfirmDialog = false;
   }
+
+  successUpdate(){
+    location.reload();
+    this.dialogNoticeSuccess = false; 
+    this.displayUpdateStockDialog = false;
+  }
+
 }

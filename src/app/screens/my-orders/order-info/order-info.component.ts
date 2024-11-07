@@ -11,9 +11,8 @@ import { ProductService } from 'src/app/services/product_service';
   styleUrl: './order-info.component.css'
 })
 export class OrderInfoComponent implements OnInit  {
-  @Input() order: Order = new Order('',0,'','','', [],1);
+  @Input() order: Order = new Order('',0,'','','', [], 1, '');
   products : Product[] = [];
-  
   @Output() onClose = new EventEmitter<void>();
   @Output() onSend = new EventEmitter<void>();
 

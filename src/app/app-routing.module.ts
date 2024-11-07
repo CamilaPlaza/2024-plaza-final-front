@@ -16,6 +16,7 @@ import { TablesComponent } from './screens/my-tables/tables/tables.component';
 import { ChartsComponent } from './screens/charts/charts.component';
 import { OrdersComponent } from './screens/my-orders/orders/orders.component';
 import { MenuComponent } from './screens/user-order/menu/menu.component';
+import { GoalsComponent } from './screens/goal-screen/goals/goals.component';
 
 const routes: Routes = [
   { path: '', component: LogInComponent},
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'tables', component: TablesComponent, canActivate:[AuthGuard]},
   { path: 'orders', component: OrdersComponent, canActivate:[AuthGuard]},
   { path: 'charts', component: ChartsComponent, canActivate:[AuthGuard]},
+  { path: 'goals', component: GoalsComponent, canActivate:[AuthGuard]},
   { path: 'menu-order', component: MenuComponent},
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

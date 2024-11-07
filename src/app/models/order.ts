@@ -9,6 +9,7 @@ export class Order {
   time: string = '';
   total: string = '';
   orderItems: OrderItem[] = [];
+  employee: string = '';
 
   constructor(
     status: string,
@@ -18,7 +19,8 @@ export class Order {
     total: string,
     orderItems: OrderItem[],
     amountOfPeople: number,
-    id?: number
+    employee: string,
+    id?: number,
   ) {
     this.id = id;
     this.status = status;
@@ -28,5 +30,6 @@ export class Order {
     this.total = total;
     this.orderItems = orderItems;
     this.amountOfPeople = amountOfPeople;
+    this.employee = employee;
   }
 }

@@ -143,21 +143,22 @@
     color: #7f522e;
   }
   
-  .add-product select {
-    width: 120px; /* Ancho reducido */
-    padding: 8px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    flex: none;
-  }
-  
-  .add-product input[type="number"] {
-    width: 50px;
-    padding: 8px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-  }
+ 
+.add-product select {
+  width: 110px; /* Ancho reducido */
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  flex: none;
+}
+
+.add-product input[type="number"] {
+  width: 80px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
   
   .add-product input[type="text"] {
     width: 80px; /* Tamaño reducido */
@@ -266,11 +267,39 @@
 }
 
 
+.disabled-option {
+  color: gray;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.out-of-stock {
+  font-size: 0.9em;
+  color: red;
+}
+
+::ng-deep .custom-modal .p-dialog {
+  background-color: transparent; /* Quita el fondo del diálogo */
+  box-shadow: none; /* Quita la sombra alrededor del diálogo */
+}
+
+::ng-deep .custom-modal .p-dialog-content {
+  background-color: transparent; /* Quita el fondo del contenido del diálogo */
+}
+
+::ng-deep .custom-modal .p-dialog .p-dialog-header {
+  background-color: transparent ; /* Quita el fondo del header */
+  border-bottom: none ; /* Opcional: quita la línea del header */
+}
+
+::ng-deep .custom-modal .p-dialog .p-dialog-footer {
+  background-color: transparent ; /* Quita el fondo del footer */
+  border-top: none ; /* Opcional: quita la línea del footer */
+}
 
 @media (max-width: 768px) {
 
   .container-table-free {
-    margin-left: 3%;
     width: 300px;
     border-radius: 20px;
     height: auto;

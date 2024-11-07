@@ -11,7 +11,7 @@ import { throwError } from 'rxjs';
 })
 export class OrderService {
 
-  private baseUrl = 'https://candvbar-back.onrender.com';
+  private baseUrl = 'https://candv-back.onrender.com';
   //private baseLocalUrl = 'http://127.0.0.1:8000';
   constructor(private http: HttpClient) { }
 
@@ -36,7 +36,6 @@ export class OrderService {
       return false;
     }
   }
-
 
   getOrderById(orderId: string): Observable<Order> {
     return this.http.get<Order>(`${this.baseUrl}/orders/${orderId}`);
@@ -66,5 +65,14 @@ export class OrderService {
       })
     );
   }
-  
+
+  assignEmployeeToOrder(orderId: number, uid: string){
+    return this.http.put<any>(`${this.baseUrl}/assign-order-employee/${orderId}/${uid}`, {});
+  }
+  deleteOrderItems(orderId: string, orderItems: string[]) {
+    return this.http.delete(`${this.baseUrl}/delete-order-item/${orderId}`, {
+      body: orderItems 
+    });
+  }
+
 }

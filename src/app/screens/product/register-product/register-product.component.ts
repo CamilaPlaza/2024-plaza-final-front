@@ -22,6 +22,7 @@ export class RegisterProductComponent implements OnInit {
   description: string = '';
   price: string = '';
   cost: string = '';
+  stock: string = '';
   product: Product | undefined;
   categories: Category[] = [];
   categoryOptions: { label: string; value: string }[] = [];
@@ -76,7 +77,7 @@ export class RegisterProductComponent implements OnInit {
     this.closeConfirmDialog();
     this.loading = true;
     try {
-      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds, this.totalCaloriesValue ?? 0, this.cost, this.imageUrl);
+      this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds, this.totalCaloriesValue ?? 0, this.cost, this.stock, this.imageUrl);
 
       console.log('PRODUCT: ', this.product);
       const response = await this.productService.onRegister(this.product);
@@ -131,6 +132,19 @@ export class RegisterProductComponent implements OnInit {
     this.displayErrorDialog = false;
   }
 
+  
+  onStockChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = parseFloat(input.value);
+  
+    if (value < 0) {
+      input.value = '0';
+      this.stock = '0';
+    } else {
+      this.stock = input.value;
+    }
+  }
+
   onPriceChange(event: Event) {
     const input = event.target as HTMLInputElement;
     const value = parseFloat(input.value);
@@ -141,6 +155,10 @@ export class RegisterProductComponent implements OnInit {
     } else {
       this.price = input.value;
     }
+
+    if(this.cost != ''  ){
+      this.onCostChange(event);
+    }
   }
 
   onCostChange(event: Event) {
@@ -150,10 +168,14 @@ export class RegisterProductComponent implements OnInit {
     if (value < 0) {
       input.value = '0';
       this.cost = '0';
+    } else if (value >= Number(this.price)) {
+      input.value = (Number(this.price) - 1).toString();
+      this.cost = (Number(this.price) - 1).toString();
     } else {
       this.cost = input.value;
     }
   }
+  
 
 
   onlyAllowNumbers(event: KeyboardEvent) {

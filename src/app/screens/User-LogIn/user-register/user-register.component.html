@@ -80,6 +80,31 @@
                             </p-floatLabel>
                         </div>
                     </div>
+
+                    <div class="form-input">
+                        <div class="card flex justify-content-center">
+
+                            <p-fileUpload 
+                                #fileUpload 
+                                mode="basic" 
+                                chooseLabel="Profile Image" 
+                                accept="image/*" 
+                                maxFileSize="1000000"
+                                (onSelect)="onImageSelect($event)" 
+                                (onClear)="onImageClear(fileUpload)" 
+                                [disabled]="fileName !== ''" 
+                                [auto]="true"
+                                class="custom-file-upload">
+                            </p-fileUpload>
+
+                            <div *ngIf="fileName" class="file-details">
+                                <span class="file-name">{{ fileName }}</span>
+                                <i (click)="onImageClear(fileUpload)" class="pi pi-trash clear-btn"></i>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
             
                     <!-- Botón de Enviar -->
                     <div class="form-button">

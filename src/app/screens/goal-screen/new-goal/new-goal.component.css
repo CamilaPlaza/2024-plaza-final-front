@@ -1,0 +1,220 @@
+.popup-content {
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top:-20px
+}
+
+.goal-type-selection {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.goal-type-button {
+    background-color: #7f522e;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+    font-size: 18px;
+}
+
+.goal-type-button:hover {
+    background-color: #5a3a21;
+}
+
+.goal-type-button.selected {
+    background-color: #5a3a21;
+    border: 2px solid #333; 
+}
+
+.goal-type-button:disabled {
+    background-color: #cccccc; /* fondo gris para botones deshabilitados */
+    color: #666666; /* texto gris claro para botones deshabilitados */
+    cursor: not-allowed; /* cambia el cursor para indicar que está deshabilitado */
+}
+
+.goal-type-button:not(:disabled):hover {
+    background-color: #0056b3; /* color de fondo al hacer hover en botones habilitados */
+    color: white;
+}
+
+.goal-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.goal-form-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.goal-label {
+    font-weight: bold;
+    color: #333;
+    min-width: 120px; 
+    white-space: nowrap;
+}
+
+.goal-label-date {
+    font-weight: bold;
+    color: #333;
+    min-width: 50px; 
+    white-space: nowrap;
+    margin-left: 12%;
+}
+
+.goal-input, 
+.target-amount-input, 
+.gain-amount-input {
+    flex: 1; 
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+}
+
+.goal-input:focus {
+    border-color: #aaa;
+    outline: none; 
+}
+
+
+.category-label-amount{
+    margin-right: 3%;
+    white-space: nowrap;
+}
+
+.goal-label-icon{
+    margin-left: 1%;
+    margin-right: 5%;
+    white-space: nowrap;
+}
+
+.category-label-final-gain{
+    margin-right: 2%;
+}
+
+.confirm-button {
+    display: flex;
+    justify-content: right;
+    margin-top: 20px;
+}
+
+.confirm-button button {
+    background-color: #966237;
+    color: #fff;
+    border: none;
+    padding: 12px 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.confirm-button button:hover {
+    background-color: #885e3c;
+}
+
+p-colorPicker,
+p-dropdown {
+    flex: 1; 
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+
+::ng-deep .icon-dropdown .p-dropdown-panel {
+    min-width: 180px;
+}
+
+::ng-deep .icon-dropdown .p-dropdown-label {
+    min-width: 180px;
+}
+
+
+.color-input {
+    width: 30px; 
+    height: 30px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    padding: 0;
+    margin-left: 10px;
+    transition: transform 0.2s; 
+}
+
+.color-input:hover {
+    transform: scale(1.1); 
+}
+
+@media (max-width: 768px) {
+    .popup-content {
+        padding: 10px;
+    }
+
+    .goal-form {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 0;
+    }
+
+    .goal-type-selection {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .goal-form-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .goal-label, 
+    .goal-label-date,
+    .category-label-amount,
+    .category-label-final-gain,
+    .goal-label-icon {
+        min-width: unset;
+        margin: 0;
+        padding: 5px 0;
+        font-size: 0.9rem;
+    }
+
+    .goal-input,
+    .target-amount-input,
+    .gain-amount-input,
+    .color-input,
+    p-dropdown,
+    p-colorPicker {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .confirm-button {
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    .confirm-button button {
+        width: 100%;
+    }
+}

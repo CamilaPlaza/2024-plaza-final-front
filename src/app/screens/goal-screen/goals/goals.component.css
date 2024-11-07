@@ -1,0 +1,286 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin-left: 5%;
+    background-image: url('../../../../assets/images/goals.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.737);
+}
+
+.section {
+    flex: 0.08;
+    position: relative;
+    z-index: 2;
+}
+
+.title-section {
+    padding: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #7f522e;
+    color: #f2f2f2;
+}
+
+.title {
+    font-size: 2rem;
+    margin: 0;
+    text-align: center;
+}
+
+.goals-content {
+    z-index: 2;
+    padding: 3%;
+    display: flex;
+    align-items: stretch;
+}
+
+.avarage-goals {
+    flex-basis: 100%;
+}
+
+.add-goal-button {
+    margin-left: 2%;
+    flex-basis: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 1rem;
+    margin-top: 2%;
+}
+
+.small-button {
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.calendar-button {
+    width: 100%;
+    cursor: pointer;
+}
+
+::ng-deep .add-goal-button .p-button {
+    height: 3rem;
+    font-size: 1.1rem;
+    background-color: #98653b !important; 
+    color: white !important; 
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+
+::ng-deep .add-goal-button .p-button:hover {
+    background-color: #825530 !important;
+}
+
+::ng-deep .calendar-button .p-calendar {
+    height: 2.8rem;
+    font-size: 2rem;    
+}
+
+.days-remaining-block {
+    height: 5rem;
+    font-size: 1.2rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    border-radius: 10px;
+    gap: 0.3rem; 
+  }
+  
+
+.chart-container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.chart-container p-chart {
+    width: 100%;
+}
+
+
+.p-scrollpanel {
+    overflow: auto;
+}
+
+.scroll-panel {
+    max-height: 400px;
+    width: 100%;
+    overflow: auto;
+}
+
+.nav-button {
+    background-color: transparent;
+    border: none;
+    color: #7f522e;
+    font-size: 24px;
+    cursor: pointer;
+    align-self: center;
+  }
+  
+  .nav-button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+  }
+
+
+  /*EACH GOAL*/
+  .each-goal-content {
+    margin-bottom: 3%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.each-goal-card {
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con transparencia */
+    padding: 1.5rem;
+    border-radius: 15px;
+    text-align: center;
+    width: 250px;
+    height: 350px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.each-goal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.each-goal-icon {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: #fff;
+}
+
+.progress-knob {
+    font-size: 1.5rem;
+}
+
+.goals-section {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 100vh;
+    z-index: 2;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin-left: 12%;
+    }
+
+    .section {
+        flex: 0.05;
+    }
+
+    .title {
+        font-size: 1.3rem;
+    }
+
+    .goals-content {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .chart-container {
+        width: 100%;
+        margin: 0;
+    }
+
+    .add-goal-button {
+        width: 100%;
+        margin-left: 0;
+        flex-basis: auto;
+    }
+
+    .small-button {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+    }
+
+    .calendar-button {
+        width: 100%;
+    }
+
+    ::ng-deep .calendar-button .p-calendar {
+        width: 100%;  
+    }
+
+    .days-remaining-block {
+        width: 100%;
+        height: 100%;
+        padding: 0.2;
+    }
+
+    .progress-line {
+        width: 100%
+    }
+
+    .each-goal-content {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 1rem;
+        height: auto;
+    }
+
+    .each-goal-card {
+        width: 100%;
+        height: auto;
+        margin-bottom: 2rem; 
+    }
+
+    .nav-button {
+        display: none;
+    }
+
+    .goals-section {
+        height: auto;
+        max-height: none;
+    }
+
+    ::ng-deep .new-goal-dialog .p-dialog-content {
+        padding: 20px;
+        text-align: center;
+    }
+
+    ::ng-deep .new-goal-dialog  .p-dialog {
+        margin-left: 10%;
+        max-width: 100vw;
+        width: 350px;
+        height: auto;
+    }
+}

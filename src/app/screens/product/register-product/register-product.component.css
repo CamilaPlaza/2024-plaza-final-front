@@ -190,7 +190,7 @@ input {
 .calories-display {
     flex: 1;
     height: 50px;
-    width: 320px;
+    width: 100%;
     border-radius: 10px;
     border: 1px solid #7f522e;
     background-color: #cbccbc;
@@ -254,14 +254,14 @@ input {
 
 .price-cost-container {
     display: flex;
-    gap: 20px; /* Espacio entre los dos campos */
+    gap: 20px; 
   }
   
   .price-container, .cost-container {
-    flex: 1; /* Ambos contenedores toman el mismo espacio */
+    flex: 1; 
   }
   
-  /* Ajustar el input y el label a tamaño completo */
+  
   .price-container input, .cost-container input {
     width: 100%;
   }
@@ -271,6 +271,25 @@ input {
     margin-bottom: 5px;
   }
 
+  
+.amount-calories-container {
+    display: flex;
+    gap: 20px; 
+  }
+  
+  .amount-container, .calories-container {
+    flex: 1; 
+  }
+  
+  
+  .amount-container input, .calories-container {
+    width: 100%;
+  }
+  
+  .amount-container label, .calories-container label {
+    display: block;
+    margin-bottom: 5px;
+  }
   /*ESTILOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO*/
 
     .file-details {

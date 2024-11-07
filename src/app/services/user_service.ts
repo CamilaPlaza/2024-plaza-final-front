@@ -12,8 +12,8 @@ import { Observable } from 'rxjs';
 export class UserService {
   currentUser: User | null = null;
 
-  private baseUrl = 'https://candvbar-back.onrender.com';
-  //private baseLocalUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'https://candv-back.onrender.com';
+  //private baseUrl = 'http://127.0.0.1:8000';
   idleTime: number = 0;
   maxIdleTime: number = 10 * 60 * 1000; // 10 minutos de inactividad
   idleInterval: any;
@@ -30,7 +30,7 @@ export class UserService {
     });
   }
 
-  async onRegister(email: string, password: string, name: string, birthday: string): Promise<boolean>{
+  async onRegister(email: string, password: string, name: string, birthday: string, imageUrl: string): Promise<boolean>{
     try {
 
       // Crear usuario en Firebase Authentication
@@ -42,7 +42,8 @@ export class UserService {
       const data = {
         uid: firebaseUser.uid,
         name: name,
-        birthday: birthday
+        birthday: birthday,
+        imageUrl: imageUrl
       };
       console.log(this.http.post(`${this.baseUrl}/register/`, data));
       await this.http.post(`${this.baseUrl}/register/`, data).toPromise();
@@ -142,6 +143,27 @@ logOut(){
         this.startSessionTimer();    // Inicia el temporizador de sesión fija
       }
     });
+  }
+  getRanking(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/ranking`);
+  }
+
+  getRewards(levelId: string): Observable<any>{
+    const url = `${this.baseUrl}/rewards/${levelId}`;
+    return this.http.get(url); 
+  }
+
+  checkUserLevel(employee: string): Observable<any>{
+    return this.http.get(`${this.baseUrl}/check-level/${employee}`);
+  }
+
+  getTopLevelStatus(levelId: string): Observable<{ isTopLevel: boolean }> {
+    return this.http.get<{ isTopLevel: boolean }>(`${this.baseUrl}/top-level-status/${levelId}`);
+  }
+  
+  resetMonthlyPoints(){
+    const url = `${this.baseUrl}/reset-monthly-points`; 
+    return this.http.get(url); 
   }
 
 }

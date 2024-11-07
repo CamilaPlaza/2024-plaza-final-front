@@ -96,7 +96,7 @@
 /* Estilos formulario */
 
 .form-input {
-    margin-bottom: 7%;
+    margin-bottom: 3%;
 }
 /* Estilos para los inputs dentro de .form-input */
 ::ng-deep .form-input input {
@@ -156,6 +156,7 @@
     font-family: Arial, sans-serif !important; /* O la fuente que estés usando */
 }
 
+
 .valid {
     color: green;
     font-weight: 600;
@@ -184,6 +185,81 @@
     z-index: 2;
     font-family: 'Arial', sans-serif;
 }
+
+
+/*HOLAAAAAAAAAAAAAA*/
+.file-details {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  /* Style for the file name */
+  .file-name {
+    font-size: 14px;
+    margin-right: 10px;
+  }
+  
+  /* Style for the clear button (X) */
+  .clear-btn {
+    background-color: transparent;
+    border: none;
+    color: #f44336;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .clear-btn:hover {
+    color: white;
+    background-color: #d32f2f;
+  }
+
+  
+::ng-deep .form-input .p-fileupload-choose  {
+    width: 300px;
+    padding: 10px;
+    border-radius: 30px  !important; 
+    border: 1px solid #af9375;
+    background-color: #af9375;
+    color: #fff;
+    font-size: 18px;
+    box-sizing: border-box;
+}
+
+  ::ng-deep .p-fileupload-choose:hover {
+    background-color: #bbac93; /* Background color on hover */
+  }
+
+  ::ng-deep .custom-file-upload .p-button-label {
+    color: #fff;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: left;
+}
+
+  
+  .custom-file-upload[disabled] {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  /* Style for image preview */
+  .image-preview {
+    margin-top: 10px;
+  }
+  
+  .preview-image {
+    max-width: 100%; 
+    height: auto; 
+    border-radius: 4px; 
+    border: 1px solid #cbccbc; 
+  }
+
+
+
 
 @media (max-width: 920px) {
     ::ng-deep .form-input input {

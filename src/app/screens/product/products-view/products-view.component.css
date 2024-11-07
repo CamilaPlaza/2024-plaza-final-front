@@ -47,19 +47,52 @@ html, body {
 
 .add-product-button {
     position: absolute;
-    right: 4%;
+    right: 2%;
     background-color: #caa171; 
     color: #7f522e;
     border: none;
     border-radius: 5px;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.4rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
     transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
 
 .add-product-button:hover {
     background-color: #b58958;
 }
+
+.add-product-button .button-text {
+    margin-left: 8%;
+  }
+
+.update-stock-button {
+    position: absolute;
+    right: 13%;
+    background-color: #caa171; 
+    color: #7f522e;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1.4rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.update-stock-button:hover {
+    background-color: #b58958;
+}
+
+.update-stock-button .button-text {
+    margin-left: 8%;
+  }
+
 
 .table-section {
     flex: 1;
@@ -75,11 +108,61 @@ html, body {
 }
 
 
+.p-highlight {
+    background-color: #e9cdab !important; 
+    color: #7f522e; 
+}
+
 
 p-table {
     width: 100%;
 }
 
+.notification-icon {
+    font-size: 1.2rem;
+    margin-left: 1.5%;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .low-stock-row {
+    color: red;
+  }
+ 
+  .notification-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.6rem;
+    padding: 0.2rem 0.3rem;
+  }
+
+  @keyframes shake {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-2px);
+    }
+    50% {
+      transform: translateX(2px);
+    }
+    75% {
+      transform: translateX(-2px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .notification-icon {
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  
 
 @media (max-width: 768px) {
     .container {
@@ -114,4 +197,28 @@ p-table {
         display: none;
     }
 
+    
+    .add-product-button {
+        position: absolute;
+        right: 2%;
+        padding: 0.5rem 0.6rem;
+    }
+
+
+    .update-stock-button {
+        right: 13%;
+        padding: 0.5rem 0.6rem;
+    }
+
+    .button-text {
+        display: none; 
+    }
+
+    ::ng-deep .p-dialog {
+        left: 5% !important;
+    }
+
+    .notification-icon {
+        margin-left: 5%;
+      }
 }

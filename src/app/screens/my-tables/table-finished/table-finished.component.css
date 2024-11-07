@@ -1,13 +1,13 @@
 .container-table-free {
     background-color: #fff;
-    border-radius: 10px;
     width: 100%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     margin: auto;
     overflow: hidden;
   }
 
   .title{
+    margin-top: -10px;
+    font-size: 1rem;
     padding: 15px;
   }
 
@@ -86,3 +86,4 @@
   height: 100px; /* Ajusta el tamaño del spinner */
   z-index: 10001; /* Asegúrate de que esté por encima de la capa oscura */
 }
+

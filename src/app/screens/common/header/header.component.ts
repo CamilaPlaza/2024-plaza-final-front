@@ -23,12 +23,21 @@ export class HeaderComponent implements OnInit {
             },
             {
                 icon: 'pi pi-chart-line',
-                routerLink: '/charts',
-                tooltip: 'Charts'
+                routerLink: '/goals',
+                items: [
+                    {
+                        label: 'Goals',
+                        routerLink: '/goals'
+                    },
+                    {
+                        label: 'Charts',
+                        routerLink: '/charts'
+                    }
+                ]
             },
             {
                 icon: 'fa fa-glass-martini',
-                routerLink: '/register-product',
+                routerLink: '/products-view',
                 items: [
                     {
                         label: 'New Product',

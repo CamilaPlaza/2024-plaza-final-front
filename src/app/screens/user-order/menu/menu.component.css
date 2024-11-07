@@ -278,6 +278,33 @@
     background-color: #634025;
   }
 
+  .floating-button {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background-color: #7f522ed8; 
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 16px;
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000; 
+  }
+
+  .floating-button i {
+      font-size: 1.2rem;
+  }
+
+  .floating-button:hover {
+      background-color: #744a29d8;
+  }
+
+
   @media (max-width: 1220px) { 
     .product-container {
       grid-template-columns: repeat(2, 1fr);

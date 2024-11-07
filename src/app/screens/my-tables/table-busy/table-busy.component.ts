@@ -8,6 +8,8 @@ import { CategoryService } from 'src/app/services/category_service';
 import { OrderService } from 'src/app/services/order_service';
 import { ProductService } from 'src/app/services/product_service';
 import { TableService } from 'src/app/services/table_service';
+import { UserService } from 'src/app/services/user_service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-table-busy',
@@ -23,7 +25,8 @@ export class TableBusyComponent implements OnInit {
   products : Product[] = [];
   currentDate: string = '';
   currentTime: string = '';
-  order: Order = new Order('', 0, '', '', '', [],1);
+  employee: string = '';
+  order: Order = new Order('', 0, '', '', '', [],1, '') ;
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
@@ -35,17 +38,19 @@ export class TableBusyComponent implements OnInit {
   categories: Category[] = [];
   selectedCategories: Array<{ id: any, name: string }> = [];
   filteredProducts: Product[] = []; 
+  user: any | null;
+  newOrderItems: OrderItem[] = [];
 
-  constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService) {}
-  ngOnInit() {
+  constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService, private userService: UserService) {}
+  async ngOnInit() {
     this.loadProducts();
     this.getOrderInformation();
     this.orderItems = this.actualOrder?.orderItems ?? [];
     this.currentDate = this.actualOrder?.date ?? '';
     this.currentTime = this.actualOrder?.time ?? '';
-    this.order = this.actualOrder ?? new Order('', 0, '', '', '', [],1);
+    this.order = this.actualOrder ?? new Order('', 0, '', '', '', [],1, '');
     this.loadCategories();
-  }
+}
 
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
@@ -74,18 +79,26 @@ export class TableBusyComponent implements OnInit {
     }
   }
 
-  getOrderInformation() {
-    console.log(this.table)
+  async getOrderInformation() {
+    console.log(this.table);
     if (this.table.order_id) {
       this.orderService.getOrderById(this.table.order_id.toString()).subscribe({
-        next: (order) => {
-          this.actualOrder = order; 
+        next: async (order) => {
+          this.actualOrder = order;
           this.orderItems = this.actualOrder?.orderItems ?? [];
           this.initialOI = JSON.parse(JSON.stringify(order.orderItems));
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
           this.amountOfPeople = this.actualOrder.amountOfPeople ?? 0;
-          console.log('amountOfPeople', this.actualOrder.amountOfPeople);
+          if (this.actualOrder.employee) {
+            try {
+              const userData = await firstValueFrom(await this.userService.getUserDataFromFirestore(this.actualOrder.employee));
+              this.employee = userData?.name ?? 'Unknown Employee';
+              console.log('Employee Name:', this.employee);
+            } catch (err) {
+              console.error('Error fetching employee data:', err);
+            }
+          }
         },
         error: (err) => {
           console.error('Error fetching order information:', err);
@@ -93,7 +106,6 @@ export class TableBusyComponent implements OnInit {
       });
     }
   }
-
   
   loadProducts(): void {
     this.productService.getProducts().subscribe({
@@ -112,9 +124,6 @@ export class TableBusyComponent implements OnInit {
     });
   }
 
-  onProductChange() {
-    this.validateForm();
-  }
 
   validateForm() {
     this.canAddProduct = !!this.selectedProduct && this.selectedAmount > 0;
@@ -135,6 +144,7 @@ export class TableBusyComponent implements OnInit {
         product_price: this.selectedProduct.price
       };
       this.orderItems.push(newItem);
+      this.newOrderItems.push(newItem);
       this.resetForm();
     }
   }
@@ -168,66 +178,82 @@ export class TableBusyComponent implements OnInit {
   }
 
   //UPDATE
-  updateOrder() {
+  async updateOrder() {
     this.loading = true;
-    const total = this.calculateTotal().toString(); 
+    const total = this.calculateTotal().toString();
+  
     if (this.table.order_id) {
-      this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total)
-        .then(success => {
-          if (success) {
-            console.log('Order items added successfully');
-            this.closeTableAndSaveChanges();
-          } else {
-            console.error('Error adding order items.');
-          }
-        })
-        .catch(error => {
-          console.error('Error adding order items:', error);
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      try {
+        const success = await this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total);
+  
+        if (success) {
+          
+          await this.updateProductsStock();
+          console.log('Order items added and stock updated successfully');
+        } else {
+          console.error('Error adding order items.');
+        }
+      } catch (error) {
+        console.error('Error adding order items:', error);
+      } finally {
+        // Finaliza la carga y cierra el diálogo
+        this.loading = false;
+        this.closeDialog();
+      }
     } else {
       console.error('Order ID is undefined.');
-      this.closeDialog();
       this.loading = false;
     }
   }
   
 
-  closeTable() {
+  async closeAndUpdateOrder() {
     this.loading = true;
-    if (this.table.order_id) {
-      this.orderService.finalizeOrder(this.table.order_id.toString()).subscribe({
-        next: () => {
-          console.log('Order status updated to FINALIZED');
-          this.tableService.closeTable(this.table).subscribe({
-            next: () => {
-              console.log('Table closed successfully');
-              this.loading = false;
-              this.closeDialog();
-              
-            },
-            error: (err) => {
-              console.error('Error closing table:', err);
-              this.loading = false;
-            }
-          });
-        },
-        error: (err) => {
-          console.error('Error finalizing order:', err);
-          this.loading = false;
-        }
-      });
-    } else {
+    const total = this.calculateTotal().toString();
+  
+    if (!this.table.order_id) {
       console.error('Order ID is undefined.');
+      this.loading = false;
+      return;
+    }
+  
+    try {
+      // Agregar los elementos de la orden
+      const success = await this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total);
+      if (!success) {
+        console.error('Error adding order items.');
+        return;
+      }
+
+      await this.updateProductsStock();
+  
+      // Finalizar la orden
+      await this.orderService.finalizeOrder(this.table.order_id.toString()).toPromise();
+      console.log('Order status updated to FINALIZED');
+      this.userService.checkUserLevel(this.actualOrder?.employee ?? '').subscribe({
+        next: (response) => {
+            console.log('User level checked successfully:', response);
+        },
+        error: (error) => {
+            console.error('Error checking user level:', error);
+        }
+    });
+        
+      // Cerrar la mesa
+      await this.tableService.closeTable(this.table).toPromise();
+      console.log('Table closed successfully');
+  
+      // Cierra el diálogo
+      this.closeDialog();
+    
+  
+    } catch (error) {
+      console.error('An error occurred:', error);
+    } finally {
       this.loading = false;
     }
   }
-
-  closeTableAndSaveChanges() {
-    this.closeDialog();
-  }
+  
 
   closeDialog() {
     this.wantToAddNewProduct = false;
@@ -235,6 +261,7 @@ export class TableBusyComponent implements OnInit {
     location.reload();
     this.close.emit();  
   }
+
   showConfirmDialog() {
   
     if (this.areOrderItemsEqual(this.initialOI, this.orderItems)) {
@@ -254,11 +281,14 @@ export class TableBusyComponent implements OnInit {
     );
   }
 
-   getProductsByCategory(categoryIds: string) {
+  getProductsByCategory(categoryIds: string) {
     this.categoryService.getProductsByCategory(categoryIds)
       .then((data) => {
         if (data && Array.isArray(data)) {
-          this.filteredProducts = data;
+          this.filteredProducts = data.map(product => ({
+            ...product,
+            disabled: product.stock === '0'  // Si stock es '0', deshabilitar
+          }));
         } else {
           console.error('Unexpected data format:', data);
           this.filteredProducts = [];
@@ -267,10 +297,33 @@ export class TableBusyComponent implements OnInit {
       .catch((err) => {
         console.error('Error fetching products by category:', err);
         this.filteredProducts = []; 
-      })
+      });
+  }
+  
+  onProductChange(event: any) {
+    const selectedProduct = event.value;
+    
+    // Verifica si el producto seleccionado está deshabilitado
+    if (selectedProduct?.disabled) {
+      // Si está deshabilitado, cancela la selección
+      this.selectedProduct = null;
+    }
   }
 
-
+  validateAmount() {
+    const maxStock = Number(this.selectedProduct?.stock) || 1;
+    const enteredAmount = Number(this.selectedAmount);
+  
+    // Asegura que no se pueda poner más del stock disponible ni menos de 1
+    if (enteredAmount > maxStock) {
+      this.selectedAmount = maxStock;
+    } else if (enteredAmount < 1) {
+      this.selectedAmount = 1;
+    } else {
+      this.selectedAmount = enteredAmount;
+    }
+  }
+  
 
   showCloseTableDialog() {
     this.displayCloseTableDialog = true;
@@ -279,5 +332,21 @@ export class TableBusyComponent implements OnInit {
   closeCloseTableDialog() {
     this.displayCloseTableDialog = false;
   }
+
+  async updateProductsStock() {
+    try {
+      const updatePromises = this.newOrderItems.map(orderItem => 
+        this.productService.updateLowerStock(
+          orderItem.product_id?.toString() ?? '',
+          orderItem.amount.toString()
+        )
+      );
+      const responses = await Promise.all(updatePromises);
+      console.log('All updates successful', responses);
+    } catch (error) {
+      console.error('One or more updates failed', error);
+    }
+  }
+
 }
  

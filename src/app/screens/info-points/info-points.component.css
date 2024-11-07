@@ -1,0 +1,31 @@
+.container {
+    height: auto;
+  }
+
+  h3 {
+    color: #7f522e;
+    font-size: 24px;
+  }
+
+  .level-program {
+    margin-top: 20px;
+  }
+
+  .level-program h3 {
+    font-size: 20px;
+    color: #7f522e;
+  }
+
+  .level-program ul {
+    padding-left: 0;
+    margin-left: 5%;
+  }
+
+  .level-program li {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 768px) {
+
+  }

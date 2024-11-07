@@ -20,6 +20,7 @@ export class GoalsComponent implements OnInit {
   isMobile: boolean = false;
   colors: string[] = ['#7f522e', '#b37a3a'];
   displayDialog: boolean = false;
+  totalIncomeExpected: number = 0;
 
   constructor(private goalService: GoalService) { 
     this.checkIfMobile();
@@ -62,6 +63,7 @@ export class GoalsComponent implements OnInit {
   
         this.calculateProgressValues();
         this.totalProgress = this.goals.reduce((acc, item) => acc + item.actualIncome, 0);
+        this.totalIncomeExpected = this.goals.reduce((acc, item) => acc + item.expectedIncome, 0);
   
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');

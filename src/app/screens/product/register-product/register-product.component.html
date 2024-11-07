@@ -46,6 +46,7 @@
             placeholder="Enter cost"
             name="product_cost"
             min="0"
+            [max]="price"
             (input)="onCostChange($event)"
             (keypress)="onlyAllowNumbers($event)"
             required/>

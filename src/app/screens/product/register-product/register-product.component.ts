@@ -155,6 +155,10 @@ export class RegisterProductComponent implements OnInit {
     } else {
       this.price = input.value;
     }
+
+    if(this.cost != ''  ){
+      this.onCostChange(event);
+    }
   }
 
   onCostChange(event: Event) {
@@ -164,10 +168,14 @@ export class RegisterProductComponent implements OnInit {
     if (value < 0) {
       input.value = '0';
       this.cost = '0';
+    } else if (value >= Number(this.price)) {
+      input.value = (Number(this.price) - 1).toString();
+      this.cost = (Number(this.price) - 1).toString();
     } else {
       this.cost = input.value;
     }
   }
+  
 
 
   onlyAllowNumbers(event: KeyboardEvent) {

@@ -11,8 +11,8 @@ import { throwError } from 'rxjs';
 })
 export class OrderService {
 
-  private baseUrl = 'https://candv-back.onrender.com';
-  //private baseLocalUrl = 'http://127.0.0.1:8000';
+  //private baseUrl = 'https://candv-back.onrender.com';
+  private baseUrl = 'http://127.0.0.1:8000'; 
   constructor(private http: HttpClient) { }
 
   async onRegister(order: Order): Promise<any | null> {
@@ -29,7 +29,7 @@ export class OrderService {
     try {
       const body = { new_order_items: newItems, new_order_total: total };
       await this.http.put(`${this.baseUrl}/orders/order-items/${orderId}`, body).toPromise();
-      
+
       return true;
     } catch (error: any) {
       console.error('Error adding order items:', error);
@@ -53,10 +53,10 @@ export class OrderService {
   getInactiveOrders(): Observable<Order>{
     return this.http.get<Order>(`${this.baseUrl}/orders`);
   }
-  
+
   assignOrderToTable(orderId: number, tableId: number): Observable<any> {
     console.log(`Assigning order ${orderId} to table ${tableId}`);
-  
+
     return this.http.put<any>(`${this.baseUrl}/asign-order-table/${orderId}/${tableId}`, null).pipe(
       tap(response => console.log('Response from API:', response)),
       catchError(error => {
@@ -71,7 +71,7 @@ export class OrderService {
   }
   deleteOrderItems(orderId: string, orderItems: string[]) {
     return this.http.delete(`${this.baseUrl}/delete-order-item/${orderId}`, {
-      body: orderItems 
+      body: orderItems
     });
   }
 

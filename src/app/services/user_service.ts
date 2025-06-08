@@ -12,13 +12,14 @@ import { Observable } from 'rxjs';
 export class UserService {
   currentUser: User | null = null;
 
-  private baseUrl = 'https://candv-back.onrender.com';
-  //private baseUrl = 'http://127.0.0.1:8000';
+  //private baseUrl = 'https://candv-back.onrender.com';
+  private baseUrl = 'http://127.0.0.1:8000';
+  
   idleTime: number = 0;
   maxIdleTime: number = 10 * 60 * 1000; // 10 minutos de inactividad
   idleInterval: any;
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.currentUser = user; // Usuario autenticado
@@ -37,7 +38,7 @@ export class UserService {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
       console.log('Usuario creado exitosamente:', firebaseUser);
-      
+
       // Preparar los datos adicionales para enviar al backend
       const data = {
         uid: firebaseUser.uid,
@@ -55,7 +56,7 @@ export class UserService {
       return false;
     }
   }
-  
+
   async login(email: string, password: string): Promise<boolean> {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -71,7 +72,7 @@ export class UserService {
     const url = `${this.baseUrl}/users/${uid}`; // URL del backend FastAPI
     return this.http.get(url); // Retorna un Observable con los datos del usuario
   }
-  
+
   async resetPassword(email: string): Promise<void> {
     try {
       await sendPasswordResetEmail(auth, email);
@@ -150,7 +151,7 @@ logOut(){
 
   getRewards(levelId: string): Observable<any>{
     const url = `${this.baseUrl}/rewards/${levelId}`;
-    return this.http.get(url); 
+    return this.http.get(url);
   }
 
   checkUserLevel(employee: string): Observable<any>{
@@ -160,10 +161,10 @@ logOut(){
   getTopLevelStatus(levelId: string): Observable<{ isTopLevel: boolean }> {
     return this.http.get<{ isTopLevel: boolean }>(`${this.baseUrl}/top-level-status/${levelId}`);
   }
-  
+
   resetMonthlyPoints(){
-    const url = `${this.baseUrl}/reset-monthly-points`; 
-    return this.http.get(url); 
+    const url = `${this.baseUrl}/reset-monthly-points`;
+    return this.http.get(url);
   }
 
 }

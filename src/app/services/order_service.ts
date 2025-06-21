@@ -12,12 +12,12 @@ import { throwError } from 'rxjs';
 export class OrderService {
 
   //private baseUrl = 'https://candv-back.onrender.com';
-  private baseUrl = 'http://127.0.0.1:8000'; 
+  private baseUrl = 'http://127.0.0.1:8000';
   constructor(private http: HttpClient) { }
 
   async onRegister(order: Order): Promise<any | null> {
     try {
-        const response = await this.http.post(`${this.baseUrl}/register-order`, order).toPromise();
+        const response = await this.http.post(`${this.baseUrl}/orders/register`, order).toPromise();
         return response;
     } catch (error: any) {
         console.error('Error durante el registro:', error);
@@ -47,17 +47,13 @@ export class OrderService {
 
   finalizeOrder(orderId: string): Observable<Order> {
     const updatedOrder = { status: 'FINALIZED' };
-    return this.http.put<Order>(`${this.baseUrl}/orders-finalize/${orderId}`, updatedOrder);
-  }
-
-  getInactiveOrders(): Observable<Order>{
-    return this.http.get<Order>(`${this.baseUrl}/orders`);
+    return this.http.put<Order>(`${this.baseUrl}/orders/finalize/${orderId}`, updatedOrder);
   }
 
   assignOrderToTable(orderId: number, tableId: number): Observable<any> {
     console.log(`Assigning order ${orderId} to table ${tableId}`);
 
-    return this.http.put<any>(`${this.baseUrl}/asign-order-table/${orderId}/${tableId}`, null).pipe(
+    return this.http.put<any>(`${this.baseUrl}/orders/asign-table/${orderId}/${tableId}`, null).pipe(
       tap(response => console.log('Response from API:', response)),
       catchError(error => {
         console.error('Error assigning order to table:', error);
@@ -67,10 +63,10 @@ export class OrderService {
   }
 
   assignEmployeeToOrder(orderId: number, uid: string){
-    return this.http.put<any>(`${this.baseUrl}/assign-order-employee/${orderId}/${uid}`, {});
+    return this.http.put<any>(`${this.baseUrl}/orders/assign-order-employee/${orderId}/${uid}`, {});
   }
   deleteOrderItems(orderId: string, orderItems: string[]) {
-    return this.http.delete(`${this.baseUrl}/delete-order-item/${orderId}`, {
+    return this.http.delete(`${this.baseUrl}/orders/delete-order-item/${orderId}`, {
       body: orderItems
     });
   }

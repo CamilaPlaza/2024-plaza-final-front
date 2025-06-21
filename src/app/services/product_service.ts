@@ -10,26 +10,27 @@ export class ProductService {
 
   //private baseUrl = 'https://candv-back.onrender.com';
   private baseUrl = 'http://127.0.0.1:8000';
-  
+
   constructor(private http: HttpClient) { }
 
   async onRegister(product: Product): Promise<boolean> {
     try {
       // Simplemente pasa el objeto `product` directamente en el post request
-      await this.http.post(`${this.baseUrl}/register-product`, product).toPromise();
+      await this.http.post(`${this.baseUrl}/products/register`, product).toPromise();
       return true;
     } catch (error: any) {
       console.error('Error durante el registro:', error);
       return false;
     }
   }
+
   getProducts(): Observable<{ products: Product[]; message: string }> {
-    return this.http.get<{ products: Product[]; message: string }>(`${this.baseUrl}/products`);
+    return this.http.get<{ products: Product[]; message: string }>(`${this.baseUrl}/products/getAll`);
   }
 
   async updateProductPrice(productId: string, newPrice: string): Promise<boolean> {
     try {
-      await this.http.put(`${this.baseUrl}/products/price/${productId}/${newPrice}`, { new_price: newPrice }).toPromise();
+      await this.http.put(`${this.baseUrl}/products/updatePriceByID/${productId}/${newPrice}`, { new_price: newPrice }).toPromise();
       return true;
     } catch (error: any) {
       console.error('Error durante la actualización del precio:', error);
@@ -40,7 +41,7 @@ export class ProductService {
   // Actualizar descripción de un producto
   async updateProductDescription(productId: string, newDescription: string): Promise<boolean> {
     try {
-      await this.http.put(`${this.baseUrl}/products/description/${productId}/${newDescription}`, { new_description: newDescription }).toPromise();
+      await this.http.put(`${this.baseUrl}/products/updateDescriptionByID/${productId}/${newDescription}`, { new_description: newDescription }).toPromise();
       return true;
     } catch (error: any) {
       console.error('Error durante la actualización de la descripción:', error);
@@ -51,7 +52,7 @@ export class ProductService {
   // Inside ProductService
   async updateProductCategories(productId: string, newCategories: string): Promise<boolean> {
     try {
-      await this.http.put(`${this.baseUrl}/products/categories/${productId}/${newCategories}`, { categories: newCategories }).toPromise();
+      await this.http.put(`${this.baseUrl}/products/updateCategoriesByID/${productId}/${newCategories}`, { categories: newCategories }).toPromise();
       return true;
     } catch (error: any) {
       console.error('Error updating categories:', error);
@@ -62,7 +63,7 @@ export class ProductService {
   async deleteProduct(productId: string): Promise<boolean> {
     try {
       // Send DELETE request to backend to remove the product by productId
-      await this.http.delete(`${this.baseUrl}/products/${productId}`).toPromise();
+      await this.http.delete(`${this.baseUrl}/products/deleteByID/${productId}`).toPromise();
       return true;
     } catch (error: any) {
       console.error('Error deleting product:', error);
@@ -76,7 +77,7 @@ export class ProductService {
 
   async updateNewStock(productId: string, newStock: string): Promise<boolean> {
   try {
-    await this.http.put(`${this.baseUrl}/update-stock/${productId}/${newStock}`, { stock: newStock }).toPromise();
+    await this.http.put(`${this.baseUrl}/products/updateStockByID/${productId}/${newStock}`, { stock: newStock }).toPromise();
     return true;
   } catch (error: any) {
     console.error('Error durante la actualización del stock:', error);
@@ -85,7 +86,7 @@ export class ProductService {
 }
   async updateLowerStock(productId: string, consumed: string): Promise<boolean> {
   try {
-    await this.http.put(`${this.baseUrl}/lower-stock/${productId}/${consumed}`, { stock: consumed }).toPromise();
+    await this.http.put(`${this.baseUrl}/products/lowerStockByID/${productId}/${consumed}`, { stock: consumed }).toPromise();
     return true;
   } catch (error: any) {
     console.error('Error durante la actualización del stock:', error);

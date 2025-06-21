@@ -16,7 +16,7 @@ export class TablesComponent implements OnInit {
   displayModal: boolean = false;
   selectedTable: Table = new Table('',1);
   selectedComponent: string = '';
-  inactiveOrdersCount: number = 0; 
+  inactiveOrdersCount: number = 0;
   inactiveOrders: Order[] = [];
   freeTables: Table[] = [];
   displayModalInactive: boolean =  false;
@@ -58,7 +58,7 @@ export class TablesComponent implements OnInit {
   }
 
   onNotificationClick(): void {
-    this.displayModalInactive = true; 
+    this.displayModalInactive = true;
   }
 
   closeModal() {
@@ -75,7 +75,7 @@ export class TablesComponent implements OnInit {
     this.tableService.getTables().subscribe({
       next: (data) => {
         if (Array.isArray(data)) {
-          this.tables = data; 
+          this.tables = data;
           this.sortTables();
           this.freeTables = this.tables.filter(table => table.status === 'FREE');
         } else {
@@ -90,14 +90,14 @@ export class TablesComponent implements OnInit {
 
   sortTables() {
     this.tables.sort((a, b) => {
-      const idA = a.id ?? Number.MAX_SAFE_INTEGER; 
+      const idA = a.id ?? Number.MAX_SAFE_INTEGER;
       const idB = b.id ?? Number.MAX_SAFE_INTEGER;
-      return idA - idB; 
+      return idA - idB;
     });
   }
 
   loadOrders(): void {
-    this.orderService.getInactiveOrders().subscribe({
+    this.orderService.getOrders().subscribe({
       next: (data) => {
         if (data && Array.isArray(data)) {
           this.inactiveOrders = data.filter(order => order.status === 'INACTIVE');
@@ -115,6 +115,6 @@ export class TablesComponent implements OnInit {
   countInactiveOrders() {
     this.inactiveOrdersCount = this.inactiveOrders.length;
   }
-  
-  
+
+
 }

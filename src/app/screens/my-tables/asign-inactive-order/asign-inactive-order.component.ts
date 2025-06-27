@@ -12,18 +12,18 @@ import { UserService } from 'src/app/services/user_service';
   styleUrls: ['./asign-inactive-order.component.css']
 })
 export class AsignInactiveOrderComponent implements OnInit {
-  @Input() orders: any[] = []; 
+  @Input() orders: any[] = [];
   @Input() freeTables: any[] = [];
   @Output() close = new EventEmitter<void>();
   order!: Order;
   searchId: string = '';
-  selectedOrder!: Order; 
+  selectedOrder!: Order;
   selectedTable!: Table;
   isLoading: boolean = false;
-  productsStock: Map<number, number> = new Map(); 
+  productsStock: Map<number, number> = new Map();
   confirmationDialog: boolean = false;
 
-  // Lista para almacenar los product_ids deshabilitados
+
   disabledProductIds: string[] = [];
   user: any | null
   uid: string = '';
@@ -64,7 +64,7 @@ export class AsignInactiveOrderComponent implements OnInit {
         this.productService.getProductById(productId).subscribe({
           next: (response: any) => {
             const product = response.product;
-  
+
             if (product && product.stock !== undefined) {
               const stock = Number(product.stock);
               if (!isNaN(stock)) {
@@ -104,15 +104,15 @@ export class AsignInactiveOrderComponent implements OnInit {
     }
   }
 
-  
+
   async deleteDisabledItemsAndAssignOrder() {
     if (this.disabledProductIds.length > 0) {
-      
+
       const selectedOrderId = this.selectedOrder.id ?? '0';
       this.orderService.deleteOrderItems(selectedOrderId.toString(), this.disabledProductIds).subscribe({
         next: async (response) => {
          console.log(response);
-          await this.updateProductsStock(); 
+          await this.updateProductsStock();
           await this.createOrder(this.selectedOrder.id ?? 0, this.selectedTable.id ?? 0);
         },
         error: (error) => {
@@ -130,20 +130,20 @@ export class AsignInactiveOrderComponent implements OnInit {
       const availableItems = this.selectedOrder.orderItems.filter(
         orderItem => !this.disabledProductIds.includes(orderItem.product_id.toString())
       );
-      const updatePromises = availableItems.map(orderItem => 
+      const updatePromises = availableItems.map(orderItem =>
         this.productService.updateLowerStock(
           orderItem.product_id?.toString() ?? '',
           orderItem.amount.toString()
         )
       );
-  
+
       const responses = await Promise.all(updatePromises);
       console.log('All updates successful', responses);
     } catch (error) {
       console.error('One or more updates failed', error);
     }
   }
-  
+
 
   // Función para crear la orden
   async createOrder(orderId: number, tableId: number) {

@@ -1,0 +1,94 @@
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(29, 26, 23, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background-color: #fff8f0;
+  border: 2px solid #533521;
+  border-radius: 20px;
+  padding: 30px 40px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup-content h2 {
+  color: #533521;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.check-in-text {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: #3e3e3e;
+}
+
+.checkin-button {
+  background-color: #533521;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checkin-button:hover {
+  background-color: #3e2a1b;
+}
+
+.observations-textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .popup-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .popup-content h2 {
+    font-size: 1.4rem;
+  }
+
+  .check-in-text {
+    font-size: 1rem;
+  }
+
+  .checkin-button {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+  }
+}
+

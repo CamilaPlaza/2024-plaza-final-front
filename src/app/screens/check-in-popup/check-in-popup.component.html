@@ -1,0 +1,13 @@
+<div class="popup-backdrop">
+  <div class="popup-content">
+    <h2>Welcome, {{ userName }}!</h2>
+    <p class="check-in-text">Check In Time: <strong>{{ currentTime }}</strong></p>
+    <textarea
+      [(ngModel)]="observations"
+      placeholder="Add a note or comment (optional)"
+      class="observations-textarea"
+      rows="4"
+    ></textarea>
+    <button class="checkin-button" (click)="onConfirm()">Confirm</button>
+  </div>
+</div>

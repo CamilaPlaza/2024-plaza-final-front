@@ -7,8 +7,9 @@ export class UserData {
     globalPoints: string = '';
     monthlyPoints: string = '';
     imageUrl: string = '';
+    role: string = '';
 
-    constructor( name: string, email: string, password: string, birthday: string, level: string, globalPoints: string, monthlyPoints: string, imageUrl: string) {
+    constructor( name: string, email: string, password: string, birthday: string, level: string, globalPoints: string, monthlyPoints: string, imageUrl: string, role: string) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -17,6 +18,6 @@ export class UserData {
         this.globalPoints = globalPoints;
         this.monthlyPoints = monthlyPoints;
         this.imageUrl = imageUrl;
+        this.role = role;
     }
   }
-  

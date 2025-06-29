@@ -69,6 +69,7 @@ import { AlertStockComponent } from './screens/product/alert-stock/alert-stock.c
 import { SplitterModule } from 'primeng/splitter';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { CheckInPopupComponent } from './screens/check-in-popup/check-in-popup.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     NoticeComponent,
     UserForgotPasswordComponent,
     CategoriesComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    CheckInPopupComponent
   ],
   imports: [
     BrowserModule,

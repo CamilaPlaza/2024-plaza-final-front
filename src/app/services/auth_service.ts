@@ -11,7 +11,6 @@ export class AuthService {
   currentUser: User | null = null;
 
   constructor(private router: Router) {
-    // Mantener el user actualizado
     onAuthStateChanged(auth, (user) => {
       this.currentUser = user;
     });
@@ -21,6 +20,7 @@ export class AuthService {
     return new Promise((resolve) => {
       const token = localStorage.getItem('token');
       if (!token) return resolve(false);
+      console.log(token);
 
       onAuthStateChanged(auth, (user) => {
         resolve(!!user);

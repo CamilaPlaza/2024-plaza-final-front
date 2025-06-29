@@ -16,14 +16,14 @@ export class LogInComponent implements OnInit {
   isMobile: boolean = window.innerWidth <= 800;
   displayForgotPasswordDialog: boolean = false;
   animateForm: boolean = false;
-  loading: boolean = false; 
+  loading: boolean = false;
   displayErrorDialog: boolean = false;
   displayEmailDialog: boolean = false;
   message: string = '';
 
-  
+
   constructor(private userService: UserService, private router: Router, private messageService: MessageService) {}
-  
+
   ngOnInit(): void {
     localStorage.removeItem("token");
   }
@@ -33,18 +33,15 @@ export class LogInComponent implements OnInit {
     const loginSuccess = await this.userService.login(this.email, this.password);
     setTimeout(async () => {
       this.loading = false;
-  }, 1000);
-    
-    // Si el login es exitoso, redirige a la página 'home'
+    }, 1000);
     if (loginSuccess) {
       this.router.navigate(['/home']);
       this.loading = false;
     } else {
-      // Si falla, muestra un mensaje de error (puedes usar un modal, snackbar, etc.)
-      this.showErrorDialog();    
+      this.showErrorDialog();
     }
   }
-  
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -60,14 +57,8 @@ export class LogInComponent implements OnInit {
   }
 
   onSignUpClick() {
-    // Activamos la animación
     this.animateForm = true;
     this.router.navigate(['/user-register']);
-
-    // Después de 1 segundo (la duración de la animación), navegamos al registro
-    /*setTimeout(() => {
-      this.router.navigate(['/user-register']);
-    }, 1000); */ // 1000ms = 1 segundo, coincidiendo con 'animation-duration-1000'
   }
 
   showErrorDialog() {

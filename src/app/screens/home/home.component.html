@@ -16,4 +16,6 @@
     <div class="slogan">
         "Where Every Sip Tells a Story, and Every Bite Brings You Home"
     </div>
+
+    <app-check-in-popup *ngIf="showCheckInPopup" [userName]="userName" (confirmed)="handleCheckIn($event)"></app-check-in-popup>
 </div>

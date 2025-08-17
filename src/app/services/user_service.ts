@@ -20,70 +20,40 @@ export class UserService {
   maxIdleTime: number = 10 * 60 * 1000;
   idleInterval: any;
 
-   constructor(private http: HttpClient) {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        this.currentUser = user;
-        const userData = await this.fetchUserData(user.uid);
-        this.currentUserData = userData;
-        this.currentUserData$.next(userData);
-      } else {
-        this.currentUser = null;
-        this.currentUserData = null;
-        this.currentUserData$.next(null);
-      }
-    });
-  }
-
-  async onRegister(email: string, password: string, name: string, birthday: string, imageUrl: string): Promise<boolean> {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const firebaseUser = userCredential.user;
-      console.log('Usuario creado exitosamente:', firebaseUser);
-
-      const token = await firebaseUser.getIdToken();
-      console.log('Token JWT tras registro:', token);  // <-- Acá ves el token en consola
-
-      const data = {
-        uid: firebaseUser.uid,
-        name: name,
-        birthday: birthday,
-        imageUrl: imageUrl
-      };
-
-      await this.http.post(`${this.baseUrl}/users/register/`, data).toPromise();
-      return true;
-    } catch (error: any) {
-      console.error('Error durante el registro:', error);
-      throw error;
-    }
-  }
+   constructor(private http: HttpClient) { }
 
   async login(email: string, password: string): Promise<boolean> {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const token = await userCredential.user?.getIdToken();
-      const uid = userCredential.user?.uid;
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user?.uid;
+    console.log("uid", uid); // este puede quedar, NO imprime el token
 
-      localStorage.setItem('token', token ?? '');
+    this.currentUser = userCredential.user;
 
-      if (uid) {
-        const userData = await this.fetchUserData(uid);
-        this.currentUserData = userData;
-        console.log('User data desde backend:', userData);
-      }
-
-      return true;
-    } catch (error) {
-      console.error('Error al iniciar sesión', error);
-      return false;
+    if (uid) {
+      const userData = await this.fetchUserData(uid);
+      userData.uid = uid;
+      this.currentUserData = userData;
+      this.currentUserData$.next(userData);
+      console.log('User data desde backend:', userData);
     }
+    return true;
+  } catch (error) {
+    console.error('Error al iniciar sesión', error);
+    return false;
   }
+}
+
 
   private async fetchUserData(uid: string): Promise<any> {
     const url = `${this.baseUrl}/users/getByID/${uid}`;
     return this.http.get(url).toPromise();
   }
+
+  logOut(){
+    return signOut(auth)
+  }
+
 
   async getUserDataFromFirestore(uid: string): Promise<Observable<any>> {
     const url = `${this.baseUrl}/users/getByID/${uid}`;
@@ -131,8 +101,30 @@ export class UserService {
     this.idleTime = 0;
   }
 
-  logOut(){
-    return signOut(auth)
+
+
+  async onRegister(email: string, password: string, name: string, birthday: string, imageUrl: string): Promise<boolean> {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const firebaseUser = userCredential.user;
+      console.log('Usuario creado exitosamente:', firebaseUser);
+
+      const token = await firebaseUser.getIdToken();
+      console.log('Token JWT tras registro:', token);  // <-- Acá ves el token en consola
+
+      const data = {
+        uid: firebaseUser.uid,
+        name: name,
+        birthday: birthday,
+        imageUrl: imageUrl
+      };
+
+      await this.http.post(`${this.baseUrl}/users/register/`, data).toPromise();
+      return true;
+    } catch (error: any) {
+      console.error('Error durante el registro:', error);
+      throw error;
+    }
   }
 
 

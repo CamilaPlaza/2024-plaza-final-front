@@ -1,50 +1,48 @@
+// auth.interceptor.ts
 import { Injectable } from '@angular/core';
 import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpErrorResponse
+  HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, from, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { AuthService } from '../services/auth_service'; // tu servicio que maneja login/token
-import { Router } from '@angular/router';
+import { auth } from '../services/firebaseconfig';
+import { getIdToken } from 'firebase/auth';
+import { AuthService } from '../services/auth_service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('token');
-    let cloned = req;
+    // Sólo agregar token para tu API
+    const isApiCall =
+      req.url.startsWith('http://127.0.0.1:8000') ||
+      req.url.includes('candv-back.onrender.com');
 
-    if (token) {
-      cloned = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-    }
+    if (!isApiCall) return next.handle(req);
 
-    return next.handle(cloned).pipe(
+    return from(this.attachToken(req, false)).pipe(
+      switchMap((authedReq) => next.handle(authedReq)),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          // TOKEN EXPIRED: acá le podés avisar al AuthService
-          return this.authService.handleTokenExpiration().pipe(
-            switchMap(() => {
-              const newToken = localStorage.getItem('token');
-              const retryReq = req.clone({
-                setHeaders: {
-                  Authorization: `Bearer ${newToken}`
-                }
-              });
-              return next.handle(retryReq);
-            })
+          // Fuerza refresh UNA vez y reintenta
+          return from(this.attachToken(req, true)).pipe(
+            switchMap((retryReq) => next.handle(retryReq)),
+            catchError((err) => throwError(() => err))
           );
         }
         return throwError(() => error);
       })
     );
+  }
+
+  private async attachToken(req: HttpRequest<any>, forceRefresh = false): Promise<HttpRequest<any>> {
+    const user = auth.currentUser;
+    if (!user) return req; // público
+
+    const token = await getIdToken(user, forceRefresh);
+    return req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` }
+    });
   }
 }

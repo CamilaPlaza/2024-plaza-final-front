@@ -1,34 +1,47 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { AuthService } from './services/auth_service';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './services/firebaseconfig';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'pm-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
-  showHeader: boolean = true;
-  isAuthenticated: boolean | null = null;
+export class AppComponent implements OnInit {
+  isLoggedIn = false;
+  isPublicRoute = true;
 
-  constructor(private router: Router, private authService: AuthService) {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      const publicRoutes = ['/', '/user-register', '/user-forgot-password', '/menu-order'];
-      if (publicRoutes.includes(this.router.url) || this.router.url.startsWith('/reset-password')) {
-        this.showHeader = false;
-      } else {
-        this.showHeader = true;
-      }
+  // ajustá acá tus rutas públicas reales
+  private publicRoutes = new Set([
+    '',                 // login en raíz
+    'login',
+    'user-register',
+    'user-forgot-password',
+    'reset-password',
+    'menu-order',       // si querés que los clientes vean esto sin login
+  ]);
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    // sesión
+    onAuthStateChanged(auth, (user) => {
+      this.isLoggedIn = !!user;
     });
-    
+
+    // detectar primer segmento de la URL para decidir si es pública
+    this.router.events
+      .pipe(filter((e) => e instanceof NavigationEnd))
+      .subscribe(() => {
+        const path = this.router.url.replace(/^\//, ''); // sin leading slash
+        const firstSeg = path.split('?')[0].split('/')[0]; // primer segmento
+        this.isPublicRoute = this.publicRoutes.has(firstSeg);
+      });
   }
 
-  ngOnInit() {
-    this.authService.isAuthenticated().then((authStatus) => {
-      this.isAuthenticated = authStatus;
-    });
+  get showShell(): boolean {
+    return this.isLoggedIn && !this.isPublicRoute;
   }
 }

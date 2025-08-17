@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user_service';
 import { Router } from '@angular/router';
 import { AssistanceService } from 'src/app/services/assistance_service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -21,56 +22,76 @@ export class HomeComponent implements OnInit{
     private assistanceService: AssistanceService
   ) {}
 
-ngOnInit(): void {
-  this.userService.currentUserData$.subscribe((userData) => {
-    if (userData && userData.role === 'EMPLOYEE') {
-      this.userName = userData.name || 'Empleado';
-      this.checkIfUserHasCheckedIn(userData.uid);
-    }
-  });
-}
+  ngOnInit(): void {
+    console.log("estoy en el home");
 
+    this.userService.currentUserData$
+      .pipe(
+        filter(data => !!data), // Esperamos hasta que tenga data
+      )
+      .subscribe(userData => {
+        console.log('userData recibido:', userData);
 
-checkIfUserHasCheckedIn(uid: string) {
-  this.assistanceService.getCurrentShiftId().subscribe({
-    next: (res: any) => {
-      const currentShiftId = res.shift_id;
-      this.currentShiftId = currentShiftId;
+        if (userData.role === 'EMPLOYEE') {
+          this.userName = userData.name || 'Empleado';
 
-      this.assistanceService.getOpenAttendance(uid, currentShiftId).subscribe({
-        next: (res: any) => {
-          console.log('Ya tiene check-in:', res);
-          this.attendanceId = res.attendance_id;
-          this.showCheckInPopup = false;
-        },
-        error: () => {
-          console.log('No tiene check-in: mostramos popup');
-          this.showCheckInPopup = true;
+          if (userData.uid) {
+            this.checkIfUserHasCheckedIn(userData.uid);
+          } else {
+            console.warn('userData.uid es undefined');
+          }
         }
       });
-    },
-    error: () => {
-      console.warn('No hay turno actual. No se muestra popup.');
-      this.showCheckInPopup = false;
+  }
+
+
+
+  checkIfUserHasCheckedIn(uid: string) {
+    if (!uid || uid === 'undefined') {
+      console.warn('No se puede chequear asistencia: uid inválido');
+      return;
     }
-  });
-}
 
-handleCheckIn(observations: string) {
-  const uid = this.userService.currentUser?.uid;
-  if (!uid) return;
-
-  this.assistanceService.checkIn(uid, this.currentShiftId, observations)
-    .subscribe({
+    this.assistanceService.getCurrentShiftId().subscribe({
       next: (res: any) => {
-        this.attendanceId = res.id;
-        this.showCheckInPopup = false;
+        const currentShiftId = res.shift_id;
+        this.currentShiftId = currentShiftId;
+
+        this.assistanceService.getOpenAttendance(uid, currentShiftId).subscribe({
+          next: (res: any) => {
+            console.log('Ya tiene check-in:', res);
+            this.attendanceId = res.attendance_id;
+            this.showCheckInPopup = false;
+          },
+          error: () => {
+            console.log('No tiene check-in: mostramos popup');
+            this.showCheckInPopup = true;
+          }
+        });
       },
-      error: (err) => {
-        console.error('Error al hacer check-in', err);
+      error: () => {
+        console.warn('No hay turno actual. No se muestra popup.');
+        this.showCheckInPopup = false;
       }
     });
-}
+  }
+
+
+  handleCheckIn(observations: string) {
+    const uid = this.userService.currentUser?.uid;
+    if (!uid) return;
+
+    this.assistanceService.checkIn(uid, this.currentShiftId, observations)
+      .subscribe({
+        next: (res: any) => {
+          this.attendanceId = res.id;
+          this.showCheckInPopup = false;
+        },
+        error: (err) => {
+          console.error('Error al hacer check-in', err);
+        }
+      });
+  }
 
   navigateToTables(): void {
     this.router.navigate(['/tables']);

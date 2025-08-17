@@ -41,7 +41,7 @@ export class AuthService {
       await auth.signOut();
     } finally {
       this.currentUser = null;
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login'], { replaceUrl: true });
     }
   }
 

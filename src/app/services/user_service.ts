@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { auth } from '../services/firebaseconfig';
 import { signInWithEmailAndPassword, sendPasswordResetEmail, deleteUser, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, UserCredential, User, onAuthStateChanged, setPersistence, browserSessionPersistence, signOut, confirmPasswordReset } from 'firebase/auth';
 import { Observable, BehaviorSubject  } from 'rxjs';
+import { AuthService } from './auth_service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class UserService {
   maxIdleTime: number = 10 * 60 * 1000;
   idleInterval: any;
 
-   constructor(private http: HttpClient) { }
+   constructor(private http: HttpClient, private authService: AuthService) { }
 
   async login(email: string, password: string): Promise<boolean> {
   try {
@@ -50,8 +51,13 @@ export class UserService {
     return this.http.get(url).toPromise();
   }
 
-  logOut(){
-    return signOut(auth)
+  logOut() {
+    this.currentUser = null;
+    this.currentUserData = null;
+    this.currentUserData$.next(null);
+    if (this.idleInterval) clearInterval(this.idleInterval);
+
+    return this.authService.logout();
   }
 
 

@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
     'user-register',
     'user-forgot-password',
     'reset-password',
-    'menu-order',       // si querés que los clientes vean esto sin login
+    'menu-order',
   ]);
 
   constructor(private router: Router) {}

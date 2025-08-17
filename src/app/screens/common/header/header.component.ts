@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user_service';
+import { AuthService } from 'src/app/services/auth_service';
 
 @Component({
     selector: 'app-header',
@@ -12,7 +13,7 @@ export class HeaderComponent implements OnInit {
     items: MenuItem[] | undefined;
     displayConfirmDialog: boolean = false;
 
-    constructor(private router: Router, public userService: UserService, private confirmationService: ConfirmationService) { }
+    constructor(private router: Router, public userService: UserService, private authService: AuthService) { }
 
     ngOnInit(): void {
         this.items = [
@@ -75,22 +76,20 @@ export class HeaderComponent implements OnInit {
             }
         ];
     }
-    
-    logOut() {
-        this.userService.logOut().then(() => {
-            localStorage.removeItem("token");
-            this.router.navigate(['/']);
-        });     
+
+    async logOut() {
+      await this.authService.logout();
     }
+
     showConfirmDialog() {
         this.displayConfirmDialog = true;
       }
-    
+
       closeConfirmDialog() {
         this.displayConfirmDialog = false;
       }
 }
-    
+
 
 
 

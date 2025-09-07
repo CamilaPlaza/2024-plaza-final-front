@@ -18,8 +18,8 @@ import { UserService } from 'src/app/services/user_service';
 export class TableFreeComponent implements OnInit {
   @Input() table: Table = new Table('', 1);
   @Output() close = new EventEmitter<void>();
-  searchTerm: string = ''; 
-  filteredProducts: Product[] = []; 
+  searchTerm: string = '';
+  filteredProducts: Product[] = [];
   categories: Category[] = [];
   orderItems: OrderItem[] = [];
   loading: boolean = false;
@@ -33,7 +33,7 @@ export class TableFreeComponent implements OnInit {
   currentDate: string = this.formatDate(new Date());
   user: any | null
   uid: string = '';
-  
+
   selectedCategories: Array<{ id: any, name: string }> = [];
 
   constructor(
@@ -94,14 +94,14 @@ export class TableFreeComponent implements OnInit {
       this.resetForm();
     }
   }
-  
+
   removeOrderItem(item: OrderItem) {
     const index = this.orderItems.indexOf(item);
     if (index > -1) {
       this.orderItems.splice(index, 1);
     }
   }
-  
+
   resetForm() {
     this.selectedProduct = null;
     this.selectedAmount = 1;
@@ -128,12 +128,12 @@ export class TableFreeComponent implements OnInit {
       amountOfPeople: this.selectedAmountOfPeople,
       employee: this.uid
     };
-  
+
     try {
       const response = await this.orderService.onRegister(this.order);
-  
+
       if (response && response.order && response.order_id) {
-      
+
         await this.updateProductsStock();
         await this.tableService.updateTableAndOrder(response.order, response.order_id);
         this.updateTable();
@@ -147,14 +147,14 @@ export class TableFreeComponent implements OnInit {
       this.loading = false;
     }
   }
-  
 
-  
+
+
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`; 
+    return `${year}-${month}-${day}`;
   }
 
 
@@ -193,7 +193,7 @@ export class TableFreeComponent implements OnInit {
     });
   }
 
-  
+
   filterProductsByCategory() {
     if (this.selectedCategories.length === 0) {
       this.filteredProducts = [];
@@ -218,26 +218,23 @@ export class TableFreeComponent implements OnInit {
       })
       .catch((err) => {
         console.error('Error fetching products by category:', err);
-        this.filteredProducts = []; 
+        this.filteredProducts = [];
       });
   }
-  
+
   onProductChange(event: any) {
     const selectedProduct = event.value;
-    
-    // Verifica si el producto seleccionado está deshabilitado
     if (selectedProduct?.disabled) {
-      // Si está deshabilitado, cancela la selección
       this.selectedProduct = null;
     }
   }
-  
-  
-  
+
+
+  /*PODRIA SER UNA FUNCION EN EL BACK LA VERDAD */
 
   async updateProductsStock() {
     try {
-      const updatePromises = this.orderItems.map(orderItem => 
+      const updatePromises = this.orderItems.map(orderItem =>
         this.productService.updateLowerStock(
           orderItem.product_id?.toString() ?? '',
           orderItem.amount.toString()
@@ -253,7 +250,7 @@ export class TableFreeComponent implements OnInit {
   validateAmount() {
     const maxStock = Number(this.selectedProduct?.stock) || 1;
     const enteredAmount = Number(this.selectedAmount);
-  
+
     if (enteredAmount > maxStock) {
       this.selectedAmount = maxStock;
     } else if (enteredAmount < 1) {

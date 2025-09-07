@@ -21,10 +21,8 @@ export class AssistanceService {
     return this.http.put(`${this.baseUrl}/attendance/checkout/${attendance_id}`, {});
   }
 
-  getOpenAttendance(employee_id: string, shift_id: string) {
-    const params = new HttpParams()
-      .set('employee_id', employee_id)
-      .set('shift_id', shift_id);
+  getOpenAttendance(employee_id: string) {
+    const params = new HttpParams().set('employee_id', employee_id);
     return this.http.get(`${this.baseUrl}/attendance/open-attendance`, { params });
   }
 

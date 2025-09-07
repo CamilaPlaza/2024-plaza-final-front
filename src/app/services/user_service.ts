@@ -27,9 +27,13 @@ export class UserService {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const uid = userCredential.user?.uid;
-    console.log("uid", uid); // este puede quedar, NO imprime el token
+    console.log("uid", uid);
 
     this.currentUser = userCredential.user;
+
+    const user = userCredential.user;
+    const idToken = await user.getIdToken();
+    console.log('ID TOKEN:', idToken);
 
     if (uid) {
       const userData = await this.fetchUserData(uid);
@@ -116,7 +120,7 @@ export class UserService {
       console.log('Usuario creado exitosamente:', firebaseUser);
 
       const token = await firebaseUser.getIdToken();
-      console.log('Token JWT tras registro:', token);  // <-- Acá ves el token en consola
+      console.log('Token JWT tras registro:', token);
 
       const data = {
         uid: firebaseUser.uid,

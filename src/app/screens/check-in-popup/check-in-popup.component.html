@@ -1,85 +1,118 @@
 <div class="popup-backdrop">
-  <div class="popup-content">
-    <h2>Welcome, {{ userName }}!</h2>
+  <div class="popup-content" role="dialog" aria-modal="true" aria-label="Check-in">
 
-    <p class="check-in-text">Check In Time: <strong>{{ currentTime }}</strong></p>
-
-    <ng-container *ngIf="!resultInfo; else resultTpl">
-      <div *ngIf="loadingPreview" class="msg info">
-        Calculando tu estado de turno...
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="avatar">☕</div>
+      <div class="title-wrap">
+        <h2>Hi, {{ userName || 'Employee' }}</h2>
+        <div class="sub">Check-in at <strong>{{ currentTime }}</strong></div>
       </div>
 
-      <div *ngIf="!loadingPreview && previewInfo">
+      <!-- Status chip -->
+      <div class="status-chip"
+           [ngClass]="{
+             'ok'   : !previewInfo?.off_shift && !previewInfo?.is_late && previewInfo?.can_check_in !== false,
+             'late' : !previewInfo?.off_shift &&  previewInfo?.is_late  && previewInfo?.can_check_in !== false,
+             'off'  :  previewInfo?.off_shift,
+             'open' :  previewInfo?.can_check_in === false && previewInfo?.reason === 'already_open'
+           }"
+           *ngIf="!resultInfo">
+        <ng-container *ngIf="previewInfo?.can_check_in === false && previewInfo?.reason === 'already_open'">Already open</ng-container>
+        <ng-container *ngIf="previewInfo?.can_check_in !== false && previewInfo?.off_shift">Off shift</ng-container>
+        <ng-container *ngIf="previewInfo?.can_check_in !== false && !previewInfo?.off_shift && previewInfo?.is_late">Late</ng-container>
+        <ng-container *ngIf="previewInfo?.can_check_in !== false && !previewInfo?.off_shift && !previewInfo?.is_late">On time</ng-container>
+      </div>
+    </div>
 
-        <div *ngIf="previewInfo?.can_check_in === false && previewInfo?.reason === 'already_open'" class="msg ok">
-          Ya tenés un check-in abierto hoy. No es necesario registrar otro.
+    <!-- Loading preview -->
+    <div *ngIf="!resultInfo && loadingPreview" class="msg info">
+      <span class="spin"></span> Computing your shift status…
+    </div>
+
+    <!-- PREVIEW (before POST) -->
+    <ng-container *ngIf="!resultInfo && !loadingPreview && previewInfo">
+
+      <!-- Already has open attendance -->
+      <div *ngIf="previewInfo?.can_check_in === false && previewInfo?.reason === 'already_open'" class="msg ok">
+        <i>✓</i> You already have an open check-in today. No need to register another.
+      </div>
+
+      <!-- Context messages -->
+      <ng-container *ngIf="previewInfo?.can_check_in !== false">
+        <div *ngIf="previewInfo?.off_shift" class="msg warn">
+          <i>!</i> You’re about to check in <strong>outside your assigned shift</strong>.
         </div>
 
-        <ng-container *ngIf="previewInfo?.can_check_in !== false">
+        <div *ngIf="!previewInfo?.off_shift && previewInfo?.is_late" class="msg alert">
+          <i>⏰</i> You’re <strong>late</strong> ({{ previewInfo?.minutes_late }} min).
+        </div>
 
-          <p *ngIf="previewInfo?.off_shift" class="msg warn">
-            Estás por registrar check-in <strong>fuera de tu turno</strong>.
-            <span *ngIf="previewInfo?.expected_start && previewInfo?.expected_end">
-              Tu turno es <strong>{{ previewInfo.expected_start }}–{{ previewInfo.expected_end }}</strong>.
-            </span>
-            Igual podés continuar.
-          </p>
+        <div *ngIf="!previewInfo?.off_shift && !previewInfo?.is_late" class="msg ok">
+          <i>✓</i> You’re within your scheduled time. You can proceed.
+        </div>
 
-          <p *ngIf="!previewInfo?.off_shift && previewInfo?.is_late" class="msg alert">
-            Estás llegando <strong>tarde</strong> ({{ previewInfo?.minutes_late }} min).
-            Horario de entrada: <strong>{{ previewInfo?.expected_start }}</strong>.
-          </p>
-
-          <p *ngIf="!previewInfo?.off_shift && !previewInfo?.is_late" class="msg ok">
-            Estás dentro de tu horario. Podés registrar el check-in.
-          </p>
-
-          <textarea
-            [(ngModel)]="observations"
-            placeholder="Add a note or comment (optional)"
-            class="observations-textarea"
-            rows="4"
-          ></textarea>
-
-          <div class="buttons">
-            <button class="checkin-button secondary" (click)="onClose()">Cancelar</button>
-            <button
-              class="checkin-button"
-              [disabled]="loadingSubmit || previewInfo?.can_check_in === false"
-              (click)="onConfirm()">
-              {{ loadingSubmit ? 'Registering...' : 'Confirm' }}
-            </button>
+        <!-- Expected shift window -->
+        <div class="shift-box" *ngIf="previewInfo?.expected_start && previewInfo?.expected_end">
+          <div class="row">
+            <span class="label">Your shift</span>
+            <span class="value">{{ previewInfo.expected_start }}–{{ previewInfo.expected_end }}</span>
           </div>
-        </ng-container>
-      </div>
+        </div>
+
+        <!-- Notes -->
+        <textarea
+          [(ngModel)]="observations"
+          placeholder="Optional note for your check-in"
+          class="observations-textarea"
+          rows="4"
+          aria-label="Observations">
+        </textarea>
+
+        <!-- Actions -->
+        <div class="buttons">
+          <button class="btn ghost" (click)="onClose()">Cancel</button>
+          <button
+            class="btn primary"
+            [disabled]="loadingSubmit || previewInfo?.can_check_in === false"
+            (click)="onConfirm()">
+            <span *ngIf="loadingSubmit" class="spin inline"></span>
+            {{ loadingSubmit ? 'Registering…' : 'Confirm check-in' }}
+          </button>
+        </div>
+      </ng-container>
     </ng-container>
 
+    <!-- RESULT (after POST) -->
     <ng-template #resultTpl>
-      <div class="result-box">
-        <p *ngIf="resultInfo?.created === false" class="msg ok">
-          Ya tenías un check-in registrado para hoy. ¡Listo!
-        </p>
+      <div class="result-block">
+        <div *ngIf="resultInfo?.created === false" class="msg ok">
+          <i>✓</i> You already had a check-in for today. All set!
+        </div>
 
-        <p *ngIf="resultInfo?.created !== false && resultInfo?.off_shift" class="msg warn">
-          Check-in <strong>fuera de tu turno</strong>.
-          <span *ngIf="resultInfo?.expected_start && resultInfo?.expected_end">
-            Tu turno es <strong>{{ resultInfo.expected_start }}–{{ resultInfo.expected_end }}</strong>.
-          </span>
-          Se registró igual.
-        </p>
+        <div *ngIf="resultInfo?.created !== false && resultInfo?.off_shift" class="msg warn">
+          <i>!</i> Check-in <strong>outside your assigned shift</strong>. It was recorded anyway.
+        </div>
 
-        <p *ngIf="resultInfo?.created !== false && !resultInfo?.off_shift && resultInfo?.is_late" class="msg alert">
-          Llegaste tarde <strong>{{ resultInfo?.minutes_late }}</strong> min.
-          Horario de entrada: <strong>{{ resultInfo?.expected_start }}</strong>.
-          Check-in registrado.
-        </p>
+        <div *ngIf="resultInfo?.created !== false && !resultInfo?.off_shift && resultInfo?.is_late" class="msg alert">
+          <i>⏰</i> You arrived late by <strong>{{ resultInfo?.minutes_late }}</strong> min. Check-in recorded.
+        </div>
 
-        <p *ngIf="resultInfo?.created !== false && !resultInfo?.off_shift && !resultInfo?.is_late" class="msg ok">
-          ¡Bienvenido/a! Check-in registrado correctamente.
-        </p>
+        <div *ngIf="resultInfo?.created !== false && !resultInfo?.off_shift && !resultInfo?.is_late" class="msg ok">
+          <i>✓</i> Welcome! Check-in recorded successfully.
+        </div>
+
+        <div class="shift-box compact" *ngIf="resultInfo?.expected_start && resultInfo?.expected_end">
+          <div class="row">
+            <span class="label">Shift</span>
+            <span class="value">{{ resultInfo.expected_start }}–{{ resultInfo.expected_end }}</span>
+          </div>
+        </div>
       </div>
 
-      <button class="checkin-button" (click)="onClose()">OK</button>
+      <div class="buttons center">
+        <button class="btn primary" (click)="onClose()">OK</button>
+      </div>
     </ng-template>
   </div>
 </div>

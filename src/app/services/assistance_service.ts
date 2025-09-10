@@ -29,4 +29,17 @@ export class AssistanceService {
   getCurrentShiftId() {
     return this.http.get<{ shift_id: string }>(`${this.baseUrl}/shifts/current`);
   }
+
+  getCheckinPreview(employeeId: string, shiftId: string) {
+    return this.http.get(`${this.baseUrl}/attendance/checkin-preview`, {
+      params: { employee_id: employeeId, shift_id: shiftId }
+    });
+  }
+
+  getAssignedShiftForEmployee(employeeId: string) {
+    return this.http.get(`${this.baseUrl}/shifts/assigned`, {
+      params: { employee_id: employeeId }
+    });
+  }
+
 }

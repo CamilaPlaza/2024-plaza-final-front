@@ -49,6 +49,8 @@ ngOnInit(): void {
         return this.assistanceService.getCurrentShiftId().pipe(
           tap((res: any) => {
             this.currentShiftId = res?.shift_id ?? 'UNASSIGNED';
+            console.log("current shift id")
+            console.log(this.currentShiftId);
           }),
           switchMap(() => {
             return this.assistanceService.getOpenAttendance(uid).pipe(
@@ -98,26 +100,6 @@ ngOnInit(): void {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  handleCheckIn(observations: string) {
-    const uid = this.userService.currentUser?.uid;
-    if (!uid) return;
-
-    const shiftId = this.currentShiftId || 'UNASSIGNED';
-    console.log(shiftId);
-
-    this.assistanceService.checkIn(uid, shiftId, observations)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res: any) => {
-          this.attendanceId = res?.id ?? null;
-          this.showCheckInPopup = false;
-        },
-        error: (err) => {
-          console.error('Error al hacer check-in', err);
-        }
-      });
   }
 
   navigateToTables(): void { this.router.navigate(['/tables']); }

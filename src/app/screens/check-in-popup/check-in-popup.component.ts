@@ -17,8 +17,9 @@ export class CheckInPopupComponent implements OnInit, OnDestroy {
   observations: string = '';
   loadingPreview = false;
   loadingSubmit  = false;
+
   previewInfo: any = null;
-  resultInfo:  any = null;
+  resultInfo:  any = null;   // ← agregado para que compile el template
 
   private shiftId: string = 'UNASSIGNED';
   private destroy$ = new Subject<void>();
@@ -53,32 +54,28 @@ export class CheckInPopupComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // =============== Flujo principal ===============
-
   private loadPreview(uid: string) {
     this.loadingPreview = true;
 
     return this.assistanceService.getAssignedShiftForEmployee(uid).pipe(
       switchMap((shift: any) => {
         this.shiftId = shift?.id ?? 'UNASSIGNED';
-        console.log('[CheckIn] assigned shiftId:', this.shiftId, shift);
         return this.assistanceService.getCheckinPreview(uid, this.shiftId);
       }),
-      catchError((err) => {
-        console.error('[CheckIn] assigned shift error:', err);
-        // Fallback: si falla, permití check-in pero marcá fuera de turno
-        return of({ can_check_in: true, reason: 'ok', off_shift: true });
-      }),
+      catchError(() => of({ can_check_in: true, reason: 'ok', off_shift: true })),
       switchMap((prev: any) => {
         this.previewInfo = prev;
-        console.log('[CheckIn] preview:', prev);
         if (prev?.now) this.currentTime = this.formatTime(prev.now);
         this.loadingPreview = false;
+
+        // auto-cerrar si no corresponde abrir
+        if (prev?.can_check_in === false && (prev?.reason === 'already_open' || prev?.reason === 'already_completed')) {
+          setTimeout(() => this.onClose(), 0);
+        }
         return of(null);
       })
     );
   }
-
 
   onConfirm() {
     if (this.loadingPreview || this.loadingSubmit) return;
@@ -87,17 +84,13 @@ export class CheckInPopupComponent implements OnInit, OnDestroy {
     if (!uid || this.previewInfo?.can_check_in === false) return;
 
     this.loadingSubmit = true;
+
+    // No usamos takeUntil acá para que no se cancele si el modal se cierra
     this.assistanceService
       .checkIn(uid, this.shiftId || 'UNASSIGNED', this.observations || '')
-      .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res: any) => {
-          this.resultInfo = res;
-
-          if (res?.check_in_time) this.currentTime = this.formatTime(res.check_in_time);
-          this.loadingSubmit = false;
-        },
-        error: () => { this.loadingSubmit = false; }
+        next: () => { this.loadingSubmit = false; this.onClose(); },
+        error: () => { this.loadingSubmit = false; this.onClose(); }
       });
   }
 

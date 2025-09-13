@@ -1,1 +1,147 @@
-<p>workday works!</p>
+<div class="container workspace">
+  <!-- Hero / image -->
+  <div class="section image-section">
+    <img src="../../../../assets/images/view-products.jpg" alt="Workspace" class="image">
+  </div>
+
+  <!-- Title bar + main actions (mismo estilo que tus vistas) -->
+  <div class="section title-section">
+    <p class="title">MY WORKSPACE</p>
+
+    <!-- Check-out visible si hay check-in abierto -->
+    <button
+      *ngIf="attendanceOpen"
+      class="p-button-rounded checkout-title-button"
+      (click)="onCheckOut()">
+      <span class="pi pi-sign-out"></span>
+      <span class="button-text">Check out</span>
+    </button>
+
+    <!-- Check-in visible si NO hay check-in -->
+    <button
+      *ngIf="!attendanceOpen"
+      class="p-button-rounded checkin-title-button"
+      (click)="onCheckIn()">
+      <span class="pi pi-sign-in"></span>
+      <span class="button-text">Check in</span>
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="section table-section">
+    <div class="card">
+
+      <!-- TODAY'S STATUS (full width) -->
+      <section class="ws-status">
+        <div class="status-header">
+          <h3>Today’s status</h3>
+          <span class="pill" [ngClass]="attendanceOpen ? 'ok' : 'off'">
+            {{ attendanceOpen ? 'ON SHIFT' : 'OFF SHIFT' }}
+          </span>
+        </div>
+
+        <div class="status-row">
+          <div class="status-item">
+            <span class="label">Assigned shift</span>
+            <span class="value mono">{{ shiftLabel }}</span>
+          </div>
+
+          <div class="status-item">
+            <span class="label">Check-in</span>
+            <span class="value">{{ checkInTime || '—' }}</span>
+          </div>
+
+          <div class="status-item">
+            <span class="label">Check-out</span>
+            <span class="value">{{ checkOutTime || '—' }}</span>
+          </div>
+
+          <div class="status-item">
+            <span class="label">Tips today</span>
+            <span class="value accent">{{ tipsToday | currency:'USD' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ASSIGNED TASKS BOARD (full width) -->
+      <section class="ws-board">
+        <div class="board-head">
+          <h3>Assigned tasks</h3>
+          <small class="muted">Drag tasks between columns</small>
+        </div>
+
+        <div class="columns">
+          <!-- Assigned -->
+          <div class="col">
+            <div class="col-title">Assigned</div>
+            <div class="dropzone"
+                 [class.is-dragover]="over.todo"
+                 (dragenter)="onDragEnter('todo')"
+                 (dragleave)="onDragLeave('todo')"
+                 (dragover)="onDragOver($event)"
+                 (drop)="onDrop($event, 'todo')">
+              <div class="task"
+                   *ngFor="let t of tasksTodo"
+                   draggable="true"
+                   (dragstart)="onDragStart($event, t, 'todo')">
+                <div class="task-body">
+                  <div class="task-title">{{ t.title }}</div>
+                  <div class="task-note" *ngIf="t.note">{{ t.note }}</div>
+                </div>
+                <span class="task-tag" *ngIf="t.tag">{{ t.tag }}</span>
+              </div>
+              <div class="empty-col" *ngIf="!tasksTodo.length">No tasks</div>
+            </div>
+          </div>
+
+          <!-- In progress -->
+          <div class="col">
+            <div class="col-title">In progress</div>
+            <div class="dropzone"
+                 [class.is-dragover]="over.doing"
+                 (dragenter)="onDragEnter('doing')"
+                 (dragleave)="onDragLeave('doing')"
+                 (dragover)="onDragOver($event)"
+                 (drop)="onDrop($event, 'doing')">
+              <div class="task"
+                   *ngFor="let t of tasksDoing"
+                   draggable="true"
+                   (dragstart)="onDragStart($event, t, 'doing')">
+                <div class="task-body">
+                  <div class="task-title">{{ t.title }}</div>
+                  <div class="task-note" *ngIf="t.note">{{ t.note }}</div>
+                </div>
+                <span class="task-tag" *ngIf="t.tag">{{ t.tag }}</span>
+              </div>
+              <div class="empty-col" *ngIf="!tasksDoing.length">Move tasks here</div>
+            </div>
+          </div>
+
+          <!-- Finished -->
+          <div class="col">
+            <div class="col-title">Finished</div>
+            <div class="dropzone"
+                 [class.is-dragover]="over.done"
+                 (dragenter)="onDragEnter('done')"
+                 (dragleave)="onDragLeave('done')"
+                 (dragover)="onDragOver($event)"
+                 (drop)="onDrop($event, 'done')">
+              <div class="task done"
+                   *ngFor="let t of tasksDone"
+                   draggable="true"
+                   (dragstart)="onDragStart($event, t, 'done')">
+                <div class="task-body">
+                  <div class="task-title">{{ t.title }}</div>
+                  <div class="task-note" *ngIf="t.note">{{ t.note }}</div>
+                </div>
+                <span class="task-tag" *ngIf="t.tag">Done</span>
+              </div>
+              <div class="empty-col" *ngIf="!tasksDone.length">No finished tasks</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>

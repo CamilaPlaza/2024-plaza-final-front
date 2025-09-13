@@ -61,6 +61,11 @@ export class HeaderComponent implements OnInit {
                 tooltip: 'Orders'
             },
             {
+                icon: 'pi pi-clipboard',
+                routerLink: '/workday',
+                tooltip: 'My Workday'
+            },
+            {
                 icon: 'pi pi-fw pi-user-edit',
                 routerLink: '/user-profile',
                 items: [

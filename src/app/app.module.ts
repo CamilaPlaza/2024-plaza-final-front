@@ -70,6 +70,7 @@ import { SplitterModule } from 'primeng/splitter';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CheckInPopupComponent } from './screens/check-in-popup/check-in-popup.component';
+import { WorkdayComponent } from './screens/workday/workday.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { CheckInPopupComponent } from './screens/check-in-popup/check-in-popup.c
     UserForgotPasswordComponent,
     CategoriesComponent,
     ResetPasswordComponent,
-    CheckInPopupComponent
+    CheckInPopupComponent,
+    WorkdayComponent
   ],
   imports: [
     BrowserModule,

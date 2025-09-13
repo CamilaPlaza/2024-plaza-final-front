@@ -13,9 +13,8 @@ export class AppComponent implements OnInit {
   isLoggedIn = false;
   isPublicRoute = true;
 
-  // ajustá acá tus rutas públicas reales
   private publicRoutes = new Set([
-    '',                 // login en raíz
+    '',
     'login',
     'user-register',
     'user-forgot-password',
@@ -26,12 +25,10 @@ export class AppComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // sesión
     onAuthStateChanged(auth, (user) => {
       this.isLoggedIn = !!user;
     });
 
-    // detectar primer segmento de la URL para decidir si es pública
     this.router.events
       .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe(() => {

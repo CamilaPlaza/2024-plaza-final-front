@@ -54,7 +54,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 }
 .status-header h3{ margin:0; color:#333; font-size:1.1rem; }
 .pill{
-  padding:4px 10px; border-radius:999px; font-weight:800; font-size:.8rem;
+  padding:4px 10px; border-radius:500px; font-weight:750; font-size:.8rem;
   border:1px solid #e5e7eb; background:#ececec; color:#333;
 }
 .pill.ok{ background:#eaf8ee; color:#1a7f37; border-color:#d7f0df; }
@@ -69,16 +69,15 @@ html, body { height: 100%; margin: 0; padding: 0; }
   padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
 }
 .label{ color:#667085; font-weight:700; }
-.value{ color:#222; font-weight:800; }
+.value{ color:#222; font-weight:700; }
 .value.accent{ color:#7f522e; }
-.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
 /* ============ TASKS BOARD (full width) ============ */
 .ws-board{
   background:#fff; border:1px solid #e5e7eb; border-radius:12px;
   margin: 0 14px 14px; padding: 12px 14px;
   box-shadow:0 6px 16px rgba(0,0,0,.06);
-  height: calc(100% - 140px); /* ocupa el resto del alto */
+  height: calc(100% - 140px);
   display:flex; flex-direction:column;
 }
 .board-head{
@@ -117,7 +116,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 }
 .task.done{ opacity:.85; }
 .task-body{ display:flex; flex-direction:column; }
-.task-title{ font-weight:800; color:#222; }
+.task-title{ font-weight:700; color:#222; margin-bottom:6px; }
 .task-note{ color:#6b7280; font-size:.9rem; }
 .task-tag{
   padding:4px 8px; border-radius:999px; border:1px solid #e5e7eb;

@@ -1,37 +1,43 @@
 <div class="container workspace">
-  <!-- Hero / image -->
   <div class="section image-section">
     <img src="../../../../assets/images/view-products.jpg" alt="Workspace" class="image">
   </div>
 
-  <!-- Title bar + main actions (mismo estilo que tus vistas) -->
   <div class="section title-section">
     <p class="title">MY WORKSPACE</p>
 
-    <!-- Check-out visible si hay check-in abierto -->
-    <button
-      *ngIf="attendanceOpen"
-      class="p-button-rounded checkout-title-button"
-      (click)="onCheckOut()">
-      <span class="pi pi-sign-out"></span>
-      <span class="button-text">Check out</span>
-    </button>
+    <!-- Mismo lugar SIEMPRE: aparece uno u otro botón -->
+    <div class="action-slot">
+      <button
+        *ngIf="showCheckOutButton"
+        class="p-button-rounded checkout-title-button"
+        (click)="onCheckOut()"
+        [disabled]="loading">
+        <span class="pi pi-sign-out"></span>
+        <span class="button-text">Check out</span>
+      </button>
 
-    <!-- Check-in visible si NO hay check-in -->
-    <button
-      *ngIf="!attendanceOpen"
-      class="p-button-rounded checkin-title-button"
-      (click)="onCheckIn()">
-      <span class="pi pi-sign-in"></span>
-      <span class="button-text">Check in</span>
-    </button>
+      <button
+        *ngIf="showCheckInButton"
+        class="p-button-rounded checkin-title-button"
+        (click)="onCheckIn()"
+        [disabled]="loading">
+        <span class="pi pi-sign-in"></span>
+        <span class="button-text">Check in</span>
+      </button>
+    </div>
   </div>
 
-  <!-- Content -->
+  <app-check-in-popup
+    *ngIf="showCheckInPopup"
+    [userName]="userName"
+    (closed)="onPopupClosed()">
+  </app-check-in-popup>
+
   <div class="section table-section">
     <div class="card">
 
-      <!-- TODAY'S STATUS (full width) -->
+      <!-- TODAY'S STATUS -->
       <section class="ws-status">
         <div class="status-header">
           <h3>Today’s status</h3>
@@ -63,7 +69,7 @@
         </div>
       </section>
 
-      <!-- ASSIGNED TASKS BOARD (full width) -->
+      <!-- ASSIGNED TASKS BOARD -->
       <section class="ws-board">
         <div class="board-head">
           <h3>Assigned tasks</h3>

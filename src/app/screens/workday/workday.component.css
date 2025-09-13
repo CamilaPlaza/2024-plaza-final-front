@@ -19,10 +19,19 @@ html, body { height: 100%; margin: 0; padding: 0; }
 }
 .title { font-size: 2rem; margin: 0; flex-grow: 1; text-align: center; }
 
-/* Botones del title (siguen tu patrón Add/Update) */
+/* Slot fijo: el botón visible (check-in o check-out) ocupa SIEMPRE el mismo lugar */
+.action-slot {
+  position: absolute;
+  right: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
+/* Mantengo tus clases y colores */
 .checkin-title-button,
 .checkout-title-button {
-  position: absolute; right: 2%;
   background-color: #caa171; color: #7f522e;
   border: none; border-radius: 5px;
   padding: 0.5rem 1.4rem;
@@ -31,8 +40,8 @@ html, body { height: 100%; margin: 0; padding: 0; }
   display: flex; align-items: center; justify-content: center;
   white-space: nowrap; cursor: pointer;
 }
-.checkout-title-button { right: 13%; }
-.checkin-title-button:hover, .checkout-title-button:hover { background-color: #b58958; }
+.checkin-title-button:hover,
+.checkout-title-button:hover { background-color: #b58958; }
 .button-text { margin-left: 8%; }
 
 /* Zona de contenido como tus tablas */
@@ -71,6 +80,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 .label{ color:#667085; font-weight:700; }
 .value{ color:#222; font-weight:700; }
 .value.accent{ color:#7f522e; }
+.value.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
 /* ============ TASKS BOARD (full width) ============ */
 .ws-board{
@@ -89,14 +99,10 @@ html, body { height: 100%; margin: 0; padding: 0; }
 /* Columnas */
 .columns{
   display:grid; grid-template-columns: repeat(3, 1fr);
-  gap: 12px; flex:1; min-height: 0; /* permite que los children hagan scroll */
+  gap: 12px; flex:1; min-height: 0;
 }
-.col{
-  display:flex; flex-direction:column; min-height:0;
-}
-.col-title{
-  font-weight:800; color:#7f522e; margin-bottom:8px;
-}
+.col{ display:flex; flex-direction:column; min-height:0; }
+.col-title{ font-weight:800; color:#7f522e; margin-bottom:8px; }
 
 /* Dropzones con scroll interno */
 .dropzone{
@@ -104,9 +110,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
   padding:8px; border:1px dashed #d1d5db; border-radius:10px; background:#fcfcfc;
   transition: background .15s ease, border-color .15s ease;
 }
-.dropzone.is-dragover{
-  background:#fff8f0; border-color:#caa171;
-}
+.dropzone.is-dragover{ background:#fff8f0; border-color:#caa171; }
 
 .task{
   display:grid; grid-template-columns: 1fr auto; align-items:center; gap:10px;
@@ -131,8 +135,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
   .title-section { flex: 0; }
   .title { font-size: 1.2rem; padding: 10px; }
 
-  .checkin-title-button, .checkout-title-button{ right: 2%; padding: 0.5rem 0.6rem; }
-  .checkout-title-button{ right: 13%; }
+  .checkin-title-button, .checkout-title-button{ padding: 0.5rem 0.6rem; }
   .button-text{ display:none; }
 
   .status-row{ grid-template-columns: 1fr 1fr; }

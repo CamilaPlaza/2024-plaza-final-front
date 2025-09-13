@@ -21,7 +21,7 @@ export class UserService {
   maxIdleTime: number = 10 * 60 * 1000;
   idleInterval: any;
 
-   constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   async login(email: string, password: string): Promise<boolean> {
   try {

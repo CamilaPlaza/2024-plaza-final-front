@@ -1,0 +1,102 @@
+<div class="popup-backdrop">
+  <div class="popup-content" role="dialog" aria-modal="true" aria-label="Check-in">
+
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="avatar">☕</div>
+      <div class="title-wrap">
+        <h2>Hi, {{ userName || 'Employee' }}</h2>
+        <div class="sub">Check-Out at <strong>{{ currentTime }}</strong></div>
+      </div>
+
+    <!-- Loading preview -->
+    <div *ngIf="!resultInfo && loadingPreview" class="msg info">
+      <span class="spin"></span> Computing your shift status…
+    </div>
+
+    <!-- PREVIEW (before POST) -->
+    <ng-container *ngIf="!resultInfo && !loadingPreview && previewInfo">
+
+      <!-- Already has open attendance -->
+      <div *ngIf="previewInfo?.can_check_in === false && previewInfo?.reason === 'already_open'" class="msg ok">
+        <i>✓</i> You already have an open check-in today. No need to register another.
+      </div>
+
+      <!-- Context messages -->
+      <ng-container *ngIf="previewInfo?.can_check_in !== false">
+        <div *ngIf="previewInfo?.off_shift" class="msg warn">
+          <i>!</i> You’re about to check in <strong>outside your assigned shift</strong>.
+        </div>
+
+        <div *ngIf="!previewInfo?.off_shift && previewInfo?.is_late" class="msg alert">
+          <i>⏰</i> You’re <strong>late</strong> ({{ previewInfo?.minutes_late }} min).
+        </div>
+
+        <div *ngIf="!previewInfo?.off_shift && !previewInfo?.is_late" class="msg ok">
+          <i>✓</i> You’re within your scheduled time. You can proceed.
+        </div>
+
+        <!-- Expected shift window -->
+        <div class="shift-box" *ngIf="previewInfo?.expected_start && previewInfo?.expected_end">
+          <div class="row">
+            <span class="label">Your shift</span>
+            <span class="value">{{ previewInfo.expected_start }}–{{ previewInfo.expected_end }}</span>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <textarea
+          [(ngModel)]="observations"
+          placeholder="Optional note for your check-in"
+          class="observations-textarea"
+          rows="4"
+          aria-label="Observations">
+        </textarea>
+
+        <!-- Actions -->
+        <div class="buttons">
+          <button class="btn ghost" (click)="onClose()">Cancel</button>
+          <button
+            class="btn primary"
+            [disabled]="loadingSubmit || previewInfo?.can_check_in === false"
+            (click)="onConfirm()">
+            <span *ngIf="loadingSubmit" class="spin inline"></span>
+            {{ loadingSubmit ? 'Registering…' : 'Confirm check-in' }}
+          </button>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <!-- RESULT (after POST) -->
+    <ng-template #resultTpl>
+      <div class="result-block">
+        <div *ngIf="resultInfo?.created === false" class="msg ok">
+          <i>✓</i> You already had a check-in for today. All set!
+        </div>
+
+        <div *ngIf="resultInfo?.created !== false && resultInfo?.off_shift" class="msg warn">
+          <i>!</i> Check-in <strong>outside your assigned shift</strong>. It was recorded anyway.
+        </div>
+
+        <div *ngIf="resultInfo?.created !== false && !resultInfo?.off_shift && resultInfo?.is_late" class="msg alert">
+          <i>⏰</i> You arrived late by <strong>{{ resultInfo?.minutes_late }}</strong> min. Check-in recorded.
+        </div>
+
+        <div *ngIf="resultInfo?.created !== false && !resultInfo?.off_shift && !resultInfo?.is_late" class="msg ok">
+          <i>✓</i> Welcome! Check-in recorded successfully.
+        </div>
+
+        <div class="shift-box compact" *ngIf="resultInfo?.expected_start && resultInfo?.expected_end">
+          <div class="row">
+            <span class="label">Shift</span>
+            <span class="value">{{ resultInfo.expected_start }}–{{ resultInfo.expected_end }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons center">
+        <button class="btn primary" (click)="onClose()">OK</button>
+      </div>
+    </ng-template>
+  </div>
+</div>

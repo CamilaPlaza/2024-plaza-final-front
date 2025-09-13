@@ -42,4 +42,10 @@ export class AssistanceService {
     });
   }
 
+  getTodayAttendance(employee_id: string) {
+    const params = new HttpParams().set('employee_id', employee_id);
+    return this.http.get(`${this.baseUrl}/attendance/today`, { params });
+  }
+
+
 }

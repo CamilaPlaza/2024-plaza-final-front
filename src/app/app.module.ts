@@ -71,6 +71,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CheckInPopupComponent } from './screens/check-in-popup/check-in-popup.component';
 import { WorkdayComponent } from './screens/workday/workday.component';
+import { CheckOutPopupComponent } from './screens/check-out-popup/check-out-popup.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { WorkdayComponent } from './screens/workday/workday.component';
     RegisterProductComponent,
     LogInComponent,
     UserRegisterComponent,
+    CheckOutPopupComponent,
     NoticeComponent,
     UserForgotPasswordComponent,
     CategoriesComponent,

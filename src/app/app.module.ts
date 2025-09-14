@@ -71,6 +71,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CheckInPopupComponent } from './screens/check-in-popup/check-in-popup.component';
 import { WorkdayComponent } from './screens/workday/workday.component';
+import { AdminTaskManagerComponent } from './screens/admin-task-manager/admin-task-manager.component';
+import { EmployeeTaskBoardComponent } from './screens/employee-task-board/employee-task-board.component';
 import { CheckOutPopupComponent } from './screens/check-out-popup/check-out-popup.component';
 
 @NgModule({
@@ -109,7 +111,9 @@ import { CheckOutPopupComponent } from './screens/check-out-popup/check-out-popu
     CategoriesComponent,
     ResetPasswordComponent,
     CheckInPopupComponent,
-    WorkdayComponent
+    WorkdayComponent,
+    AdminTaskManagerComponent,
+    EmployeeTaskBoardComponent
   ],
   imports: [
     BrowserModule,

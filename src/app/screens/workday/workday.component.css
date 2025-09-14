@@ -128,6 +128,27 @@ html, body { height: 100%; margin: 0; padding: 0; }
 }
 .empty-col{ text-align:center; color:#9ca3af; padding:14px 4px; }
 
+/* Loader overlay */
+.card { position: relative; }
+.page-loader{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+  background: rgba(240,240,240,.6);
+  backdrop-filter: blur(2px);
+  z-index: 5;
+}
+.loader-box{
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  padding:14px 16px; box-shadow:0 12px 30px rgba(0,0,0,.12);
+  display:flex; align-items:center; gap:10px; color:#533521; font-weight:700;
+}
+.spin-xl{
+  width:28px; height:28px; border-radius:50%;
+  border:3px solid #cfd8e3; border-top-color:#7f522e;
+  display:inline-block; animation:spin .8s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg); } }
+
 /* Responsive */
 @media (max-width: 768px){
   .container { margin-left: 10%; }

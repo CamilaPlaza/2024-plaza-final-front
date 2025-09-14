@@ -6,7 +6,7 @@
   <div class="section title-section">
     <p class="title">MY WORKSPACE</p>
 
-    <div class="action-slot">
+    <div class="action-slot" *ngIf="!pageLoading">
       <button
         *ngIf="showCheckOutButton"
         class="p-button-rounded checkout-title-button"
@@ -41,8 +41,14 @@
 
   <div class="section table-section">
     <div class="card">
+      <div class="page-loader" *ngIf="pageLoading">
+        <div class="loader-box">
+          <span class="spin-xl"></span>
+          <span>Loading workspace…</span>
+        </div>
+      </div>
 
-      <section class="ws-status">
+      <section class="ws-status" *ngIf="!pageLoading">
         <div class="status-header">
           <h3>Today’s status</h3>
           <span class="pill" [ngClass]="attendanceOpen ? 'ok' : 'off'">
@@ -73,7 +79,7 @@
         </div>
       </section>
 
-      <section class="ws-board">
+      <section class="ws-board" *ngIf="!pageLoading">
         <div class="board-head">
           <h3>Assigned tasks</h3>
           <small class="muted">Drag tasks between columns</small>

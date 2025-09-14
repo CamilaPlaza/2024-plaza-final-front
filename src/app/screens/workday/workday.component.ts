@@ -2,8 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AssistanceService } from 'src/app/services/assistance_service';
 import { UserService } from 'src/app/services/user_service';
 import { Subscription, lastValueFrom } from 'rxjs';
-
-// Fallback a Firebase Auth
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from 'src/app/services/firebaseconfig';
 
@@ -18,6 +16,7 @@ const TAG = '[WORKDAY]';
   styleUrls: ['./workday.component.css'],
 })
 export class WorkdayComponent implements OnInit, OnDestroy {
+  pageLoading = true;
   loading = false;
 
   uid: string | null = null;
@@ -58,17 +57,14 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     console.log(TAG, 'init');
 
     if (this.userService.currentUserData?.uid) {
-      console.log(TAG, 'boot with currentUserData in memory', this.userService.currentUserData);
       this.initForUid(this.userService.currentUserData.uid, this.userService.currentUserData.name);
     }
 
     this.sub = this.userService.currentUserData$.subscribe(async (u: any) => {
-      console.log(TAG, 'userService.currentUserData$ emit', u);
       if (u?.uid) await this.initForUid(u.uid, u.name);
     });
 
     this.authUnsub = onAuthStateChanged(auth, async (fbUser) => {
-      console.log(TAG, 'onAuthStateChanged', fbUser?.uid || null);
       if (!fbUser?.uid) return;
       if (this.uid) return;
       try {
@@ -77,7 +73,6 @@ export class WorkdayComponent implements OnInit, OnDestroy {
           const userData = { ...(data || {}), uid: fbUser.uid };
           this.userService.currentUserData = userData;
           this.userService.currentUserData$.next(userData);
-          console.log(TAG, 'user data loaded via API (fallback)', userData);
         });
       } catch {
         await this.initForUid(fbUser.uid, 'Employee');
@@ -91,117 +86,82 @@ export class WorkdayComponent implements OnInit, OnDestroy {
   }
 
   private async initForUid(uid: string, name?: string): Promise<void> {
+    this.pageLoading = true;
     this.uid = uid;
     if (name) this.userName = name;
-    console.log(TAG, 'initForUid', { uid: this.uid, userName: this.userName });
-    await this.loadAssignedShift(uid);
-    await this.refreshAttendanceState(uid);
+
+    try {
+      await this.loadAssignedShift(uid);
+      await this.refreshAttendanceState(uid);
+    } finally {
+      this.pageLoading = false;
+    }
   }
 
-  get showCheckInButton(): boolean  { return !this.attendanceOpen && this.allowCheckIn; }
-  get showCheckOutButton(): boolean { return this.attendanceOpen; }
+  get showCheckInButton(): boolean  { return !this.pageLoading && !this.attendanceOpen && this.allowCheckIn; }
+  get showCheckOutButton(): boolean { return !this.pageLoading && this.attendanceOpen; }
 
-  onCheckIn(): void {
-    console.log(TAG, 'onCheckIn click');
-    this.showCheckInPopup = true;
-  }
-
+  onCheckIn(): void { this.showCheckInPopup = true; }
   async onPopupClosed(): Promise<void> {
-    console.log(TAG, 'check-in popup closed → refresh');
     this.showCheckInPopup = false;
     if (!this.uid) return;
-    await this.refreshAttendanceState(this.uid);
+    this.pageLoading = true;
+    try { await this.refreshAttendanceState(this.uid); } finally { this.pageLoading = false; }
   }
 
-  onCheckOut(): void {
-    console.log(TAG, 'onCheckOut click → open popup');
-    this.showCheckOutPopup = true;
-  }
-
+  onCheckOut(): void { this.showCheckOutPopup = true; }
   async onCheckoutClosed(): Promise<void> {
-    console.log(TAG, 'check-out popup closed → refresh');
     this.showCheckOutPopup = false;
     if (!this.uid) return;
-    await this.refreshAttendanceState(this.uid);
+    this.pageLoading = true;
+    try { await this.refreshAttendanceState(this.uid); } finally { this.pageLoading = false; }
   }
 
   private async loadAssignedShift(uid: string): Promise<void> {
-    console.log(TAG, 'loadAssignedShift start', { uid });
     try {
       const s: any = await lastValueFrom(this.assistance.getAssignedShiftForEmployee(uid));
-      console.log(TAG, 'assigned shift resp', s);
       this.shift = {
         id: s?.id ?? 'UNASSIGNED',
         name: s?.name ?? '—',
         start: s?.start_time ?? '—',
         end: s?.end_time ?? '—',
       };
-    } catch (e) {
-      console.warn(TAG, 'assigned shift failed, fallback to current shift', e);
+    } catch {
       try {
         const cur = await lastValueFrom(this.assistance.getCurrentShiftId());
-        console.log(TAG, 'current shift resp', cur);
         this.shift.id = (cur as any)?.shift_id ?? 'UNASSIGNED';
-      } catch (e2) {
-        console.error(TAG, 'current shift failed', e2);
-      }
+      } catch {}
     }
-    console.log(TAG, 'shift=', this.shift);
   }
 
   private async refreshAttendanceState(uid: string): Promise<void> {
-    console.log(TAG, 'refreshAttendanceState start', { uid });
-
     let openResp: any = null;
-    try {
-      openResp = await lastValueFrom(this.assistance.getOpenAttendance(uid));
-      console.log(TAG, 'open-attendance resp', openResp);
-    } catch (e) {
-      console.error(TAG, 'open-attendance error', e);
-    }
+    try { openResp = await lastValueFrom(this.assistance.getOpenAttendance(uid)); } catch {}
 
     this.attendanceOpen = !!openResp?.open;
     this.attendanceId   = openResp?.attendance_id ?? null;
-    console.log(TAG, 'state: attendanceOpen=', this.attendanceOpen, 'attendanceId=', this.attendanceId);
 
-    try {
-      await this.loadTodayTimes(uid);
-    } catch (e) {
-      console.error(TAG, 'today-times error', e);
-    }
+    try { await this.loadTodayTimes(uid); } catch {}
 
     if (this.attendanceOpen) {
       this.allowCheckIn = false;
-      console.log(TAG, 'allowCheckIn=false (open)');
       return;
     }
 
     const sid = this.shift.id && this.shift.id !== 'UNASSIGNED' ? this.shift.id : null;
     let prev: any = null;
     if (sid) {
-      try {
-        prev = await lastValueFrom(this.assistance.getCheckinPreview(uid, sid));
-        console.log(TAG, 'checkin-preview resp', prev);
-      } catch (e) {
-        console.error(TAG, 'checkin-preview error', e);
-      }
+      try { prev = await lastValueFrom(this.assistance.getCheckinPreview(uid, sid)); } catch {}
     }
     this.allowCheckIn = !!prev?.can_check_in && prev?.reason !== 'already_completed' && prev?.reason !== 'already_open';
-    console.log(TAG, 'allowCheckIn=', this.allowCheckIn);
   }
 
   private async loadTodayTimes(uid: string): Promise<void> {
-    console.log(TAG, 'GET today start', { uid });
     const data: any = await lastValueFrom(this.assistance.getTodayAttendance(uid));
-    console.log(TAG, 'today resp', data);
-
     this.attendanceId = data?.id ?? this.attendanceId;
     this.checkInTime  = data?.check_in_time  ? this.formatHHMM(data.check_in_time)  : null;
     this.checkOutTime = data?.check_out_time ? this.formatHHMM(data.check_out_time) : null;
-
     if (!this.checkInTime && this.attendanceOpen) this.checkInTime = this.nowHHMM();
-
-    console.log(TAG, 'times -> in:', this.checkInTime, 'out:', this.checkOutTime);
   }
 
   onDragStart(ev: DragEvent, task: Task, from: ColKey): void {

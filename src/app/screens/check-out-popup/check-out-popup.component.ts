@@ -1,51 +1,59 @@
 import { Component, EventEmitter, Output, Input, OnInit, OnDestroy } from '@angular/core';
-import { Subject, of } from 'rxjs';
-import { catchError, switchMap, takeUntil } from 'rxjs/operators';
+import { Subject, of, forkJoin } from 'rxjs';
+import { catchError, switchMap, takeUntil, map } from 'rxjs/operators';
 import { AssistanceService } from 'src/app/services/assistance_service';
 import { UserService } from 'src/app/services/user_service';
 
 @Component({
   selector: 'app-check-out-popup',
   templateUrl: './check-out-popup.component.html',
-  styleUrl: './check-out-popup.component.css'
+  styleUrls: ['./check-out-popup.component.css']
 })
 export class CheckOutPopupComponent implements OnInit, OnDestroy {
   @Input() userName: string = '';
   @Output() closed = new EventEmitter<void>();
 
-  currentTime: string = '';
-  observations: string = '';
   loadingPreview = false;
   loadingSubmit  = false;
-  previewInfo: any = null;
-  resultInfo:  any = null;
+  currentTime = '';
 
-  private shiftId: string = 'UNASSIGNED';
+  preview: {
+    workedMin: number;
+    expected_start?: string | null;
+    expected_end?: string | null;
+    check_in_time?: string | null;
+  } | null = null;
+
+  private uid: string | null = null;
+  private attendanceId: string | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
-    private assistanceService: AssistanceService,
+    private assistance: AssistanceService,
     public  userService: UserService
   ) {}
 
-  ngOnInit() {
-    this.setLocalTime();
+  ngOnInit(): void {
+    this.currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    const uid = this.userService.currentUser?.uid;
-    if (!uid) {
-      this.userService.currentUserData$
-        .pipe(
-          takeUntil(this.destroy$),
-          switchMap((u: any) => {
-            const finalUid = u?.uid;
-            if (!finalUid) return of(null);
-            return this.loadPreview(finalUid);
-          })
-        )
-        .subscribe();
-    } else {
-      this.loadPreview(uid).pipe(takeUntil(this.destroy$)).subscribe();
+    const direct = this.userService.currentUser?.uid ?? null;
+    if (direct) {
+      this.uid = direct;
+      this.loadPreview(direct).pipe(takeUntil(this.destroy$)).subscribe();
+      return;
     }
+
+    this.userService.currentUserData$
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(u => {
+          const uid = u?.uid as string | undefined;
+          if (!uid) return of(null);
+          this.uid = uid;
+          return this.loadPreview(uid);
+        })
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {
@@ -53,66 +61,66 @@ export class CheckOutPopupComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // =============== Flujo principal ===============
-
   private loadPreview(uid: string) {
     this.loadingPreview = true;
 
-    return this.assistanceService.getAssignedShiftForEmployee(uid).pipe(
-      switchMap((shift: any) => {
-        this.shiftId = shift?.id ?? 'UNASSIGNED';
-        console.log('[CheckIn] assigned shiftId:', this.shiftId, shift);
-        return this.assistanceService.getCheckinPreview(uid, this.shiftId);
+    return this.assistance.getOpenAttendance(uid).pipe(
+      switchMap((open: any) => {
+        if (!open?.open || !open?.attendance_id) {
+          this.loadingPreview = false;
+          this.onClose();
+          return of(null);
+        }
+        this.attendanceId = open.attendance_id;
+
+        return forkJoin({
+          today: this.assistance.getTodayAttendance(uid).pipe(catchError(() => of(null))),
+          shift: this.assistance.getAssignedShiftForEmployee(uid).pipe(catchError(() => of(null))),
+        }).pipe(
+          map(({ today, shift }: any) => {
+            const checkInIso: string | null = today?.check_in_time ?? null;
+            const startStr: string | null = shift?.start_time ?? null;
+            const endStr:   string | null = shift?.end_time   ?? null;
+
+            const now = new Date();
+            const checkIn = checkInIso ? new Date(checkInIso) : null;
+
+            let workedMin = 0;
+            if (checkIn) workedMin = Math.max(0, Math.floor((now.getTime() - checkIn.getTime()) / 60000));
+
+            this.preview = {
+              workedMin,
+              expected_start: startStr,
+              expected_end: endStr,
+              check_in_time: checkInIso,
+            };
+            this.loadingPreview = false;
+          })
+        );
       }),
-      catchError((err) => {
-        console.error('[CheckIn] assigned shift error:', err);
-        // Fallback: si falla, permití check-in pero marcá fuera de turno
-        return of({ can_check_in: true, reason: 'ok', off_shift: true });
-      }),
-      switchMap((prev: any) => {
-        this.previewInfo = prev;
-        console.log('[CheckIn] preview:', prev);
-        if (prev?.now) this.currentTime = this.formatTime(prev.now);
+      catchError(() => {
         this.loadingPreview = false;
+        this.onClose();
         return of(null);
       })
     );
   }
 
-
-  onConfirm() {
-    if (this.loadingPreview || this.loadingSubmit) return;
-
-    const uid = this.userService.currentUser?.uid;
-    if (!uid || this.previewInfo?.can_check_in === false) return;
-
+  onConfirm(): void {
+    if (this.loadingSubmit || !this.attendanceId) return;
     this.loadingSubmit = true;
-    this.assistanceService
-      .checkIn(uid, this.shiftId || 'UNASSIGNED', this.observations || '')
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res: any) => {
-          this.resultInfo = res;
-
-          if (res?.check_in_time) this.currentTime = this.formatTime(res.check_in_time);
-          this.loadingSubmit = false;
-        },
-        error: () => { this.loadingSubmit = false; }
-      });
+    this.assistance.checkOut(this.attendanceId).subscribe({
+      next: () => { this.loadingSubmit = false; this.onClose(); },
+      error: () => { this.loadingSubmit = false; this.onClose(); }
+    });
   }
 
-  onClose() {
-    this.closed.emit();
-  }
+  onClose(): void { this.closed.emit(); }
 
-  private setLocalTime() {
-    const now = new Date();
-    this.currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-
-  private formatTime(iso: string): string {
-    const d = new Date(iso);
-    if (isNaN(d.getTime())) return this.currentTime;
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  mmToHhMm(min: number): string {
+    const h = Math.floor(min / 60);
+    const m = min % 60;
+    if (h <= 0) return `${m} min`;
+    return `${h} h ${m} min`;
   }
 }

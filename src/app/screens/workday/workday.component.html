@@ -6,7 +6,6 @@
   <div class="section title-section">
     <p class="title">MY WORKSPACE</p>
 
-    <!-- Mismo lugar SIEMPRE: aparece uno u otro botón -->
     <div class="action-slot">
       <button
         *ngIf="showCheckOutButton"
@@ -34,10 +33,15 @@
     (closed)="onPopupClosed()">
   </app-check-in-popup>
 
+  <app-check-out-popup
+    *ngIf="showCheckOutPopup"
+    [userName]="userName"
+    (closed)="onCheckoutClosed()">
+  </app-check-out-popup>
+
   <div class="section table-section">
     <div class="card">
 
-      <!-- TODAY'S STATUS -->
       <section class="ws-status">
         <div class="status-header">
           <h3>Today’s status</h3>
@@ -69,7 +73,6 @@
         </div>
       </section>
 
-      <!-- ASSIGNED TASKS BOARD -->
       <section class="ws-board">
         <div class="board-head">
           <h3>Assigned tasks</h3>
@@ -77,7 +80,6 @@
         </div>
 
         <div class="columns">
-          <!-- Assigned -->
           <div class="col">
             <div class="col-title">Assigned</div>
             <div class="dropzone"
@@ -100,7 +102,6 @@
             </div>
           </div>
 
-          <!-- In progress -->
           <div class="col">
             <div class="col-title">In progress</div>
             <div class="dropzone"
@@ -123,7 +124,6 @@
             </div>
           </div>
 
-          <!-- Finished -->
           <div class="col">
             <div class="col-title">Finished</div>
             <div class="dropzone"

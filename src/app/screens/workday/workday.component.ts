@@ -31,6 +31,7 @@ export class WorkdayComponent implements OnInit, OnDestroy {
   checkOutTime: string | null = null;
 
   showCheckInPopup = false;
+  showCheckOutPopup = false;
 
   tipsToday = 17.50;
 
@@ -53,48 +54,32 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     public userService: UserService,
   ) {}
 
-  // ========= INIT =========
   ngOnInit(): void {
     console.log(TAG, 'init');
 
-    // 1) Si ya tengo los datos en memoria, arranco.
     if (this.userService.currentUserData?.uid) {
       console.log(TAG, 'boot with currentUserData in memory', this.userService.currentUserData);
       this.initForUid(this.userService.currentUserData.uid, this.userService.currentUserData.name);
     }
 
-    // 2) Me suscribo al BehaviorSubject por si el login los empuja luego.
     this.sub = this.userService.currentUserData$.subscribe(async (u: any) => {
       console.log(TAG, 'userService.currentUserData$ emit', u);
-      if (u?.uid) {
-        await this.initForUid(u.uid, u.name);
-      }
+      if (u?.uid) await this.initForUid(u.uid, u.name);
     });
 
-    // 3) Fallback: si refrescaste y el BehaviorSubject está null, uso Firebase Auth.
     this.authUnsub = onAuthStateChanged(auth, async (fbUser) => {
       console.log(TAG, 'onAuthStateChanged', fbUser?.uid || null);
       if (!fbUser?.uid) return;
-      if (this.uid) return; // ya inicializado
-
-      // Traigo los datos del usuario desde tu back y alimento el BehaviorSubject
+      if (this.uid) return;
       try {
-        const obs = await this.userService.getUserDataFromFirestore(fbUser.uid); // devuelve Promise<Observable<any>>
+        const obs = await this.userService.getUserDataFromFirestore(fbUser.uid);
         (await obs).subscribe((data: any) => {
-          try {
-            // Normalizo y empujo a tu servicio para que el resto de la app lo tenga
-            const userData = { ...(data || {}), uid: fbUser.uid };
-            this.userService.currentUserData = userData;
-            this.userService.currentUserData$.next(userData);
-            console.log(TAG, 'user data loaded via API (fallback)', userData);
-            // initForUid se disparará por la suscripción del punto 2
-          } catch (e) {
-            console.error(TAG, 'fallback set userData error', e);
-          }
+          const userData = { ...(data || {}), uid: fbUser.uid };
+          this.userService.currentUserData = userData;
+          this.userService.currentUserData$.next(userData);
+          console.log(TAG, 'user data loaded via API (fallback)', userData);
         });
-      } catch (e) {
-        console.error(TAG, 'fallback getUserDataFromFirestore error', e);
-        // Último recurso: inicializo con sólo el uid
+      } catch {
         await this.initForUid(fbUser.uid, 'Employee');
       }
     });
@@ -109,12 +94,10 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     this.uid = uid;
     if (name) this.userName = name;
     console.log(TAG, 'initForUid', { uid: this.uid, userName: this.userName });
-
     await this.loadAssignedShift(uid);
     await this.refreshAttendanceState(uid);
   }
 
-  // ========= UI helpers =========
   get showCheckInButton(): boolean  { return !this.attendanceOpen && this.allowCheckIn; }
   get showCheckOutButton(): boolean { return this.attendanceOpen; }
 
@@ -124,35 +107,24 @@ export class WorkdayComponent implements OnInit, OnDestroy {
   }
 
   async onPopupClosed(): Promise<void> {
-    console.log(TAG, 'popup closed → refresh');
+    console.log(TAG, 'check-in popup closed → refresh');
     this.showCheckInPopup = false;
     if (!this.uid) return;
     await this.refreshAttendanceState(this.uid);
   }
 
-  async onCheckOut(): Promise<void> {
-    if (!this.uid) return;
-    console.log(TAG, 'onCheckOut click');
-    this.loading = true;
-    try {
-      if (!this.attendanceId) {
-        const open: any = await lastValueFrom(this.assistance.getOpenAttendance(this.uid));
-        console.log(TAG, 'open-attendance resp', open);
-        this.attendanceId = open?.attendance_id ?? null;
-      }
-      if (!this.attendanceId) { console.warn(TAG, 'no attendanceId to checkout'); return; }
-
-      const res = await lastValueFrom(this.assistance.checkOut(this.attendanceId));
-      console.log(TAG, 'checkout resp', res);
-      await this.refreshAttendanceState(this.uid);
-    } catch (e) {
-      console.error(TAG, 'checkout error', e);
-    } finally {
-      this.loading = false;
-    }
+  onCheckOut(): void {
+    console.log(TAG, 'onCheckOut click → open popup');
+    this.showCheckOutPopup = true;
   }
 
-  // ========= Data loaders =========
+  async onCheckoutClosed(): Promise<void> {
+    console.log(TAG, 'check-out popup closed → refresh');
+    this.showCheckOutPopup = false;
+    if (!this.uid) return;
+    await this.refreshAttendanceState(this.uid);
+  }
+
   private async loadAssignedShift(uid: string): Promise<void> {
     console.log(TAG, 'loadAssignedShift start', { uid });
     try {
@@ -232,7 +204,6 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     console.log(TAG, 'times -> in:', this.checkInTime, 'out:', this.checkOutTime);
   }
 
-  // ========= Board (igual) =========
   onDragStart(ev: DragEvent, task: Task, from: ColKey): void {
     ev.dataTransfer?.setData('text/plain', JSON.stringify({ id: task.id, from }));
     if (ev.dataTransfer) ev.dataTransfer.effectAllowed = 'move';

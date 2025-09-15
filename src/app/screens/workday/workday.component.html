@@ -6,7 +6,7 @@
   <div class="section title-section">
     <p class="title">MY WORKSPACE</p>
 
-    <div class="action-slot" *ngIf="!pageLoading">
+    <div class="action-slot" *ngIf="!pageLoading && user">
       <button
         *ngIf="showCheckOutButton"
         class="p-button-rounded checkout-title-button"
@@ -29,13 +29,13 @@
 
   <app-check-in-popup
     *ngIf="showCheckInPopup"
-    [userName]="userName"
+    [userName]="user?.name || 'Employee'"
     (closed)="onPopupClosed()">
   </app-check-in-popup>
 
   <app-check-out-popup
     *ngIf="showCheckOutPopup"
-    [userName]="userName"
+    [userName]="user?.name || 'Employee'"
     (closed)="onCheckoutClosed()">
   </app-check-out-popup>
 
@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <section class="ws-status" *ngIf="!pageLoading">
+      <section class="ws-status" *ngIf="!pageLoading && user">
         <div class="status-header">
           <h3>Today’s status</h3>
           <span class="pill" [ngClass]="attendanceOpen ? 'ok' : 'off'">
@@ -79,79 +79,29 @@
         </div>
       </section>
 
-      <section class="ws-board" *ngIf="!pageLoading">
+      <!-- === AQUÍ CONMUTO ENTRE VISTAS === -->
+      <section class="ws-board" *ngIf="!pageLoading && user">
         <div class="board-head">
-          <h3>Assigned tasks</h3>
-          <small class="muted">Drag tasks between columns</small>
+          <h3>{{ user.role === 'admin' ? 'Task management' : 'Assigned tasks' }}</h3>
+          <small class="muted" *ngIf="user.role !== 'admin'">Drag tasks between columns</small>
         </div>
 
-        <div class="columns">
-          <div class="col">
-            <div class="col-title">Assigned</div>
-            <div class="dropzone"
-                 [class.is-dragover]="over.todo"
-                 (dragenter)="onDragEnter('todo')"
-                 (dragleave)="onDragLeave('todo')"
-                 (dragover)="onDragOver($event)"
-                 (drop)="onDrop($event, 'todo')">
-              <div class="task"
-                   *ngFor="let t of tasksTodo"
-                   draggable="true"
-                   (dragstart)="onDragStart($event, t, 'todo')">
-                <div class="task-body">
-                  <div class="task-title">{{ t.title }}</div>
-                  <div class="task-note" *ngIf="t.note">{{ t.note }}</div>
-                </div>
-                <span class="task-tag" *ngIf="t.tag">{{ t.tag }}</span>
-              </div>
-              <div class="empty-col" *ngIf="!tasksTodo.length">No tasks</div>
-            </div>
-          </div>
+        <ng-container [ngSwitch]="user.role">
+          <!--<app-admin-task-manager
+            *ngSwitchCase="'admin'"
+            [currentAdminUid]="user.uid"
+            [currentAdminName]="user.name"
+            [shift]="shift">
+          </app-admin-task-manager>-->
 
-          <div class="col">
-            <div class="col-title">In progress</div>
-            <div class="dropzone"
-                 [class.is-dragover]="over.doing"
-                 (dragenter)="onDragEnter('doing')"
-                 (dragleave)="onDragLeave('doing')"
-                 (dragover)="onDragOver($event)"
-                 (drop)="onDrop($event, 'doing')">
-              <div class="task"
-                   *ngFor="let t of tasksDoing"
-                   draggable="true"
-                   (dragstart)="onDragStart($event, t, 'doing')">
-                <div class="task-body">
-                  <div class="task-title">{{ t.title }}</div>
-                  <div class="task-note" *ngIf="t.note">{{ t.note }}</div>
-                </div>
-                <span class="task-tag" *ngIf="t.tag">{{ t.tag }}</span>
-              </div>
-              <div class="empty-col" *ngIf="!tasksDoing.length">Move tasks here</div>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="col-title">Finished</div>
-            <div class="dropzone"
-                 [class.is-dragover]="over.done"
-                 (dragenter)="onDragEnter('done')"
-                 (dragleave)="onDragLeave('done')"
-                 (dragover)="onDragOver($event)"
-                 (drop)="onDrop($event, 'done')">
-              <div class="task done"
-                   *ngFor="let t of tasksDone"
-                   draggable="true"
-                   (dragstart)="onDragStart($event, t, 'done')">
-                <div class="task-body">
-                  <div class="task-title">{{ t.title }}</div>
-                  <div class="task-note" *ngIf="t.note">{{ t.note }}</div>
-                </div>
-                <span class="task-tag" *ngIf="t.tag">Done</span>
-              </div>
-              <div class="empty-col" *ngIf="!tasksDone.length">No finished tasks</div>
-            </div>
-          </div>
-        </div>
+          <app-employee-task-board
+            *ngSwitchDefault
+            [employeeUid]="user.uid"
+            [employeeName]="user.name"
+            [shift]="shift"
+            [attendanceOpen]="attendanceOpen">
+          </app-employee-task-board>
+        </ng-container>
       </section>
 
     </div>

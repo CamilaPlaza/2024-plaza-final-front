@@ -1,0 +1,52 @@
+/* Encabezado mini */
+.board-head{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;
+}
+.board-head h4{ margin:0; color:#333; font-size:1rem; }
+.muted{ color:#6b7280; }
+.pill{
+  padding:4px 10px; border-radius:500px; font-weight:750; font-size:.8rem;
+  border:1px solid #e5e7eb; background:#ececec; color:#333;
+}
+.pill.ok{ background:#eaf8ee; color:#1a7f37; border-color:#d7f0df; }
+.pill.off{ background:#f3ecff; color:#6d28d9; border-color:#e9d5ff; }
+
+/* Columnas */
+.columns{
+  display:grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; min-height: 0;
+}
+.columns.loading{ opacity:.6; pointer-events:none; }
+
+.col{ display:flex; flex-direction:column; min-height:0; }
+.col-title{ font-weight:800; color:#7f522e; margin-bottom:8px; }
+
+/* Dropzones con scroll interno */
+.dropzone{
+  flex:1; min-height:120px; overflow:auto;
+  padding:8px; border:1px dashed #d1d5db; border-radius:10px; background:#fcfcfc;
+  transition: background .15s ease, border-color .15s ease;
+}
+.dropzone.is-dragover{ background:#fff8f0; border-color:#caa171; }
+
+/* Tarjetas */
+.task{
+  display:grid; grid-template-columns: 1fr auto; align-items:center; gap:10px;
+  padding:10px; border:1px solid #e5e7eb; border-radius:10px; background:#fff;
+  margin-bottom:8px; cursor:grab;
+  box-shadow:0 4px 10px rgba(0,0,0,.04);
+}
+.task.done{ opacity:.85; }
+.task-body{ display:flex; flex-direction:column; }
+.task-title{ font-weight:700; color:#222; margin-bottom:6px; }
+.task-note{ color:#6b7280; font-size:.9rem; }
+.task-tag{
+  padding:4px 8px; border-radius:999px; border:1px solid #e5e7eb;
+  background:#f3f4f6; color:#7f522e; font-weight:700; font-size:.8rem;
+}
+.empty-col{ text-align:center; color:#9ca3af; padding:14px 4px; }
+
+/* Responsive */
+@media (max-width: 768px){
+  .columns{ grid-template-columns: 1fr; }
+}

@@ -4,9 +4,7 @@ import { UserService } from 'src/app/services/user_service';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from 'src/app/services/firebaseconfig';
-
-type ColKey = 'todo' | 'doing' | 'done';
-interface Task { id: string; title: string; note?: string; tag?: string; }
+import { UiUser } from 'src/app/models/task';
 
 const TAG = '[WORKDAY]';
 
@@ -19,31 +17,23 @@ export class WorkdayComponent implements OnInit, OnDestroy {
   pageLoading = true;
   loading = false;
 
-  uid: string | null = null;
-  userName = 'Employee';
+  // Usuario/rol
+  user: UiUser | null = null;
 
+  // Asistencia
   attendanceOpen = false;
   attendanceId: string | null = null;
   allowCheckIn = false;
-
   checkInTime: string | null = null;
   checkOutTime: string | null = null;
 
-  showCheckInPopup = false;
-  showCheckOutPopup = false;
-
-  tipsToday = 17.50;
-
+  // Turno
   shift = { id: 'UNASSIGNED', name: '—', start: '—', end: '—' };
   get shiftLabel(): string { return `${this.shift.start}–${this.shift.end}`; }
 
-  tasksTodo: Task[] = [
-    { id: 't1', title: 'Prep espresso station', note: 'Restock cups & napkins', tag: 'Bar' },
-    { id: 't2', title: 'Clean patio tables', note: 'After rush', tag: 'Floor' },
-  ];
-  tasksDoing: Task[] = [{ id: 't3', title: 'Update croissant stock', note: 'Ask kitchen', tag: 'Inventory' }];
-  tasksDone: Task[] = [{ id: 't4', title: 'Check grinder calibration', tag: 'Bar' }];
-  over = { todo: false, doing: false, done: false };
+  showCheckInPopup = false;
+  showCheckOutPopup = false;
+  tipsToday = 17.50;
 
   private sub?: Subscription;
   private authUnsub?: () => void;
@@ -56,17 +46,20 @@ export class WorkdayComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     console.log(TAG, 'init');
 
-    if (this.userService.currentUserData?.uid) {
-      this.initForUid(this.userService.currentUserData.uid, this.userService.currentUserData.name);
-    }
+    // Si ya hay user en memoria…
+    const u0 = this.userService.currentUserData;
+    if (u0?.uid) this.initForUser(this.mapToUiUser(u0));
 
+    // Suscripción a cambios del user
     this.sub = this.userService.currentUserData$.subscribe(async (u: any) => {
-      if (u?.uid) await this.initForUid(u.uid, u.name);
+      if (u?.uid) await this.initForUser(this.mapToUiUser(u));
     });
 
+    // Fallback Firebase
     this.authUnsub = onAuthStateChanged(auth, async (fbUser) => {
       if (!fbUser?.uid) return;
-      if (this.uid) return;
+      if (this.user?.uid) return;
+
       try {
         const obs = await this.userService.getUserDataFromFirestore(fbUser.uid);
         (await obs).subscribe((data: any) => {
@@ -75,7 +68,13 @@ export class WorkdayComponent implements OnInit, OnDestroy {
           this.userService.currentUserData$.next(userData);
         });
       } catch {
-        await this.initForUid(fbUser.uid, 'Employee');
+        // Fallback extremo si no hay perfil: trato como employee
+        await this.initForUser({
+          uid: fbUser.uid,
+          name: 'Employee',
+          role: 'employee',
+          requiresAttendance: true
+        } as UiUser);
       }
     });
   }
@@ -85,36 +84,46 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     if (this.authUnsub) this.authUnsub();
   }
 
-  private async initForUid(uid: string, name?: string): Promise<void> {
-    this.pageLoading = true;
-    this.uid = uid;
-    if (name) this.userName = name;
-
-    try {
-      await this.loadAssignedShift(uid);
-      await this.refreshAttendanceState(uid);
-    } finally {
-      this.pageLoading = false;
-    }
+  // --- UI helpers ---
+  get showCheckInButton(): boolean  {
+    return !this.pageLoading
+      && !!this.user?.requiresAttendance
+      && !this.attendanceOpen
+      && this.allowCheckIn;
+  }
+  get showCheckOutButton(): boolean {
+    return !this.pageLoading
+      && !!this.user?.requiresAttendance
+      && this.attendanceOpen;
   }
 
-  get showCheckInButton(): boolean  { return !this.pageLoading && !this.attendanceOpen && this.allowCheckIn; }
-  get showCheckOutButton(): boolean { return !this.pageLoading && this.attendanceOpen; }
-
+  // --- Events ---
   onCheckIn(): void { this.showCheckInPopup = true; }
   async onPopupClosed(): Promise<void> {
     this.showCheckInPopup = false;
-    if (!this.uid) return;
+    if (!this.user?.uid) return;
     this.pageLoading = true;
-    try { await this.refreshAttendanceState(this.uid); } finally { this.pageLoading = false; }
+    try { await this.refreshAttendanceState(this.user.uid); } finally { this.pageLoading = false; }
   }
 
   onCheckOut(): void { this.showCheckOutPopup = true; }
   async onCheckoutClosed(): Promise<void> {
     this.showCheckOutPopup = false;
-    if (!this.uid) return;
+    if (!this.user?.uid) return;
     this.pageLoading = true;
-    try { await this.refreshAttendanceState(this.uid); } finally { this.pageLoading = false; }
+    try { await this.refreshAttendanceState(this.user.uid); } finally { this.pageLoading = false; }
+  }
+
+  // --- Init + loaders ---
+  private async initForUser(u: UiUser): Promise<void> {
+    this.pageLoading = true;
+    this.user = u;
+    try {
+      await this.loadAssignedShift(u.uid);
+      await this.refreshAttendanceState(u.uid);
+    } finally {
+      this.pageLoading = false;
+    }
   }
 
   private async loadAssignedShift(uid: string): Promise<void> {
@@ -164,32 +173,30 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     if (!this.checkInTime && this.attendanceOpen) this.checkInTime = this.nowHHMM();
   }
 
-  onDragStart(ev: DragEvent, task: Task, from: ColKey): void {
-    ev.dataTransfer?.setData('text/plain', JSON.stringify({ id: task.id, from }));
-    if (ev.dataTransfer) ev.dataTransfer.effectAllowed = 'move';
-  }
-  onDragOver(ev: DragEvent): void { ev.preventDefault(); if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'move'; }
-  onDragEnter(col: ColKey): void { this.over[col] = true; }
-  onDragLeave(col: ColKey): void { this.over[col] = false; }
-  onDrop(ev: DragEvent, to: ColKey): void {
-    ev.preventDefault();
-    const raw = ev.dataTransfer?.getData('text/plain'); this.over[to] = false;
-    if (!raw) return;
-    try {
-      const { id, from } = JSON.parse(raw) as { id: string; from: ColKey };
-      if (from === to) return;
-      const src = this.getList(from), dst = this.getList(to);
-      const i = src.findIndex(t => t.id === id); if (i === -1) return;
-      const [task] = src.splice(i, 1); dst.unshift(task);
-    } catch {}
-  }
-  private getList(k: ColKey){ return k==='todo'?this.tasksTodo:k==='doing'?this.tasksDoing:this.tasksDone; }
-
+  // --- fmt helpers ---
   private formatHHMM(iso: string): string {
     const d = new Date(iso);
     return isNaN(d.getTime()) ? '—' : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
   private nowHHMM(): string {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  private mapToUiUser(raw: any): UiUser {
+    const role = this.normalizeRole(raw?.role);
+    return {
+      uid: String(raw?.uid),
+      name: raw?.name || 'Employee',
+      role,
+      requiresAttendance: typeof raw?.requiresAttendance === 'boolean'
+        ? raw.requiresAttendance
+        : (role === 'employee'),
+    } as UiUser;
+  }
+
+  private normalizeRole(r: any): 'employee' | 'admin' {
+    const s = String(r ?? '').trim().toLowerCase();
+    if (s === 'admin' || s === 'administrator') return 'admin';
+    return 'employee';
   }
 }

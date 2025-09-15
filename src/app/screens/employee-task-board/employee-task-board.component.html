@@ -1,1 +1,75 @@
-<p>employee-task-board works!</p>
+
+
+<div class="columns" [class.loading]="loading">
+  <div class="col">
+    <div class="col-title">Assigned</div>
+    <div class="dropzone"
+         [class.is-dragover]="over.todo"
+         (dragenter)="onDragEnter('todo')"
+         (dragleave)="onDragLeave('todo')"
+         (dragover)="onDragOver($event)"
+         (drop)="onDrop($event, 'todo')">
+
+      <div class="task"
+           *ngFor="let t of tasksTodo"
+           draggable="true"
+           (dragstart)="onDragStart($event, t, 'todo')">
+        <div class="task-body">
+          <div class="task-title">{{ t.title }}</div>
+          <div class="task-note" *ngIf="t.note">{{ t.note }}</div>
+        </div>
+        <span class="task-tag" *ngIf="t.tag">{{ t.tag }}</span>
+      </div>
+
+      <div class="empty-col" *ngIf="!tasksTodo.length">No tasks</div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="col-title">In progress</div>
+    <div class="dropzone"
+         [class.is-dragover]="over.doing"
+         (dragenter)="onDragEnter('doing')"
+         (dragleave)="onDragLeave('doing')"
+         (dragover)="onDragOver($event)"
+         (drop)="onDrop($event, 'doing')">
+
+      <div class="task"
+           *ngFor="let t of tasksDoing"
+           draggable="true"
+           (dragstart)="onDragStart($event, t, 'doing')">
+        <div class="task-body">
+          <div class="task-title">{{ t.title }}</div>
+          <div class="task-note" *ngIf="t.note">{{ t.note }}</div>
+        </div>
+        <span class="task-tag" *ngIf="t.tag">{{ t.tag }}</span>
+      </div>
+
+      <div class="empty-col" *ngIf="!tasksDoing.length">Move tasks here</div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="col-title">Finished</div>
+    <div class="dropzone"
+         [class.is-dragover]="over.done"
+         (dragenter)="onDragEnter('done')"
+         (dragleave)="onDragLeave('done')"
+         (dragover)="onDragOver($event)"
+         (drop)="onDrop($event, 'done')">
+
+      <div class="task done"
+           *ngFor="let t of tasksDone"
+           draggable="true"
+           (dragstart)="onDragStart($event, t, 'done')">
+        <div class="task-body">
+          <div class="task-title">{{ t.title }}</div>
+          <div class="task-note" *ngIf="t.note">{{ t.note }}</div>
+        </div>
+        <span class="task-tag" *ngIf="t.tag">Done</span>
+      </div>
+
+      <div class="empty-col" *ngIf="!tasksDone.length">No finished tasks</div>
+    </div>
+  </div>
+</div>

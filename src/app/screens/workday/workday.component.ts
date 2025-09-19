@@ -6,8 +6,6 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from 'src/app/services/firebaseconfig';
 import { UiUser } from 'src/app/models/task';
 
-const TAG = '[WORKDAY]';
-
 @Component({
   selector: 'app-workday',
   templateUrl: './workday.component.html',
@@ -44,8 +42,6 @@ export class WorkdayComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log(TAG, 'init');
-
     // Si ya hay user en memoria…
     const u0 = this.userService.currentUserData;
     if (u0?.uid) this.initForUser(this.mapToUiUser(u0));

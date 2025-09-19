@@ -1,13 +1,17 @@
-export class ShiftEmployee {
-    id?: number;
-    id_employee: string = '';
-    id_shift: number;
-    assigned_tasks: string[] = [];
+import { EmbeddedTask } from './task';
 
-    constructor(id_employee: string, id_shift: number, assigned_tasks: string[], id?:number) {
-      this.id_employee = id_employee;
-      this.id_shift = id_shift;
-      this.id = id;
-      this.assigned_tasks = assigned_tasks;
-    }
+export interface ShiftEmployee {
+  id?: string;
+  id_employee: string;
+  id_shift: string;
+  shift_assignments: EmbeddedTask[];
+  updated_at?: string;
+}
+
+export function newShiftEmployee(id_employee: string, id_shift: string): ShiftEmployee {
+  return {
+    id_employee,
+    id_shift,
+    shift_assignments: [],
+  };
 }

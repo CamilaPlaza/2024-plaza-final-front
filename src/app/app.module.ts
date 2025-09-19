@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
@@ -128,6 +128,7 @@ import { CheckOutPopupComponent } from './screens/check-out-popup/check-out-popu
     FileUploadModule,
     AutoCompleteModule,
     SplitterModule,
+    ReactiveFormsModule,
     TagModule,
     TableModule,
     ColorPickerModule,

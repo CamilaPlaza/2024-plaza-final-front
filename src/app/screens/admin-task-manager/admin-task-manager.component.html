@@ -1,1 +1,144 @@
-<p>admin-task-manager works!</p>
+<div class="atm-wrapper">
+  <div class="atm-head">
+    <div class="left">
+      <h4>Task manager</h4>
+      <small class="muted">Create & assign tasks to employees</small>
+    </div>
+    <div class="right">
+      <span class="who">Admin: <strong>{{ currentAdminName || currentAdminUid }}</strong></span>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <form [formGroup]="form" class="card form" (ngSubmit)="createAndAssign()">
+    <div class="grid">
+      <label class="field">
+        <span class="label">Employee</span>
+        <select formControlName="assignee_uid"
+                (change)="onEmployeeChange($any($event.target).value)"
+                [class.invalid]="f['assignee_uid'].invalid && f['assignee_uid'].touched">
+          <option value="" disabled>Select employee…</option>
+          <option *ngFor="let e of employees" [value]="e.uid">
+            {{ e.name }} <span *ngIf="e.shiftLabel"> ({{ e.shiftLabel }})</span>
+          </option>
+        </select>
+        <small class="hint">We’ll fetch the assigned shift to attach the task to the right shift.</small>
+        <small class="err" *ngIf="f['assignee_uid'].invalid && f['assignee_uid'].touched">Required</small>
+      </label>
+
+      <label class="field">
+        <span class="label">Title</span>
+        <input type="text" formControlName="title" placeholder="e.g. Deep clean bar area"
+               [class.invalid]="f['title'].invalid && f['title'].touched">
+        <small class="err" *ngIf="f['title'].invalid && f['title'].touched">Required</small>
+      </label>
+
+      <label class="field">
+        <span class="label">Description</span>
+        <textarea rows="3" formControlName="description" placeholder="Details or acceptance criteria…"
+                  [class.invalid]="f['description'].invalid && f['description'].touched"></textarea>
+        <small class="err" *ngIf="f['description'].invalid && f['description'].touched">Required</small>
+      </label>
+
+      <div class="grid-2">
+        <label class="field">
+          <span class="label">Start (optional)</span>
+          <input type="datetime-local" formControlName="start_at_local">
+        </label>
+
+        <label class="field">
+          <span class="label">Due (optional)</span>
+          <input type="datetime-local" formControlName="due_at_local">
+        </label>
+      </div>
+
+      <label class="field">
+        <span class="label">Tag (optional)</span>
+        <input type="text" formControlName="tag" placeholder="e.g. Bar / Inventory / Floor">
+      </label>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" type="submit" [disabled]="creating || form.invalid || !selectedEmployeeId">
+        <span class="pi pi-plus"></span>
+        <span>Create & Assign</span>
+      </button>
+    </div>
+  </form>
+
+  <!-- LIST PANEL -->
+  <div class="card list">
+    <div class="list-head">
+      <h4>Tasks for selected employee</h4>
+      <small class="muted" *ngIf="selectedEmployeeId && !loadingTasks">
+        {{ selectedEmployeeName }} ({{ selectedEmployeeShiftLabel }})
+      </small>
+    </div>
+
+    <div class="loader" *ngIf="loadingTasks">Loading…</div>
+
+    <div class="table" *ngIf="!loadingTasks">
+      <div class="thead">
+        <div>Task</div>
+        <div>Description</div>
+        <div>Status</div>
+        <div>Window</div>
+      </div>
+
+      <div class="trow" *ngFor="let row of tasksForSelected">
+        <div class="cell strong">{{ row.title }}</div>
+        <div class="cell">{{ row.description || '—' }}</div>
+        <div class="cell">
+          <select [ngModel]="row.status" (ngModelChange)="onStatusChange(row, $event)">
+            <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+        <div class="cell">
+          <ng-container *ngIf="row.shift_window; else noWin">
+            {{ row.shift_window.start || '—' }} → {{ row.shift_window.end || '—' }}
+          </ng-container>
+          <ng-template #noWin>—</ng-template>
+        </div>
+      </div>
+
+      <div class="empty" *ngIf="!tasksForSelected.length && selectedEmployeeId">
+        No tasks for this employee/shift yet.
+      </div>
+      <div class="empty" *ngIf="!selectedEmployeeId">
+        Select an employee to view tasks.
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT PANEL -->
+  <div class="card list">
+    <div class="list-head">
+      <h4>Recently created</h4>
+      <small class="muted">Local session (after saving to backend)</small>
+    </div>
+
+    <div class="table">
+      <div class="thead">
+        <div>Task</div>
+        <div>Description</div>
+        <div>Assigned to</div>
+        <div>Status</div>
+      </div>
+
+      <div class="trow" *ngFor="let row of recentTasks">
+        <div class="cell strong">{{ row.title }}</div>
+        <div class="cell">{{ row.description || '—' }}</div>
+        <div class="cell">{{ row.assignee_name || row.assignee_uid }}</div>
+        <div class="cell">
+          <select [ngModel]="row.status" (ngModelChange)="onStatusChange(row, $event)">
+            <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="empty" *ngIf="!recentTasks.length">
+        Nothing here yet. Create your first task ↑
+      </div>
+    </div>
+  </div>
+</div>

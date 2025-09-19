@@ -87,12 +87,12 @@
         </div>
 
         <ng-container [ngSwitch]="user.role">
-          <!--<app-admin-task-manager
+          <app-admin-task-manager
             *ngSwitchCase="'admin'"
             [currentAdminUid]="user.uid"
             [currentAdminName]="user.name"
             [shift]="shift">
-          </app-admin-task-manager>-->
+          </app-admin-task-manager>
 
           <app-employee-task-board
             *ngSwitchDefault

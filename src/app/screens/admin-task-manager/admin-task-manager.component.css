@@ -3,6 +3,7 @@
 .atm-head { display:flex; align-items:center; justify-content:space-between; }
 .atm-head h4 { margin:0; color:#333; font-size:1rem; }
 .muted { color:#6b7280; }
+.small { font-size:.85rem; }
 .who { color:#533521; }
 
 .card {
@@ -11,23 +12,58 @@
   padding:12px 14px;
 }
 
-.form .grid { display:grid; grid-template-columns: 1fr; gap:10px; }
-.grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-
+/* ====== form create ====== */
+.form .create-grid {
+  display:grid;
+  grid-template-columns: 1.2fr 1.2fr 0.9fr 0.8fr;
+  gap:12px;
+  align-items:start;
+}
 .field { display:flex; flex-direction:column; gap:6px; }
 .label { font-weight:700; color:#333; }
 input[type="text"], input[type="datetime-local"], textarea, select {
   border:1px solid #e5e7eb; border-radius:10px; padding:10px; background:#fff; outline:none;
 }
+textarea { min-height: 84px; }
 input.invalid, textarea.invalid, select.invalid { border-color:#ef4444; }
 .err { color:#b91c1c; font-size:.85rem; }
 .hint { color:#6b7280; font-size:.85rem; }
 
-.actions { display:flex; justify-content:flex-end; margin-top:8px; }
+/* Start / Due apilados */
+.col-start-due { display:flex; flex-direction:column; gap:10px; }
+
+/* Tag compacto ocupa la última columna */
+.tag-col { align-self:stretch; }
+
+/* ====== preview ====== */
+.preview-head { margin-bottom:6px; }
+.preview-body { display:flex; flex-direction:column; gap:6px; }
+.title-row { display:flex; align-items:center; gap:8px; }
+.title-row .title { font-weight:800; color:#222; }
+.chip {
+  padding:2px 8px; border-radius:999px; border:1px solid #e5e7eb;
+  background:#f3f4f6; color:#7f522e; font-weight:700; font-size:.8rem;
+}
+.win { display:flex; gap:6px; align-items:center; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* ====== assign ====== */
+.assign-head { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.assign-row {
+  display:grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap:12px; align-items:end;
+}
+.field.sel select { min-width: 260px; }
+.sel-info { display:flex; flex-direction:column; gap:2px; }
+.strong { font-weight:700; color:#222; }
+.actions.right { display:flex; justify-content:flex-end; }
+
 .btn { display:inline-flex; align-items:center; gap:8px; border:none; border-radius:10px; padding:10px 14px; cursor:pointer; }
 .btn.primary { background:#caa171; color:#7f522e; }
 .btn.primary:hover { background:#b58958; }
 
+/* ====== list tables ====== */
 .list .list-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
 .loader { padding:8px 0; color:#6b7280; }
 
@@ -37,7 +73,13 @@ input.invalid, textarea.invalid, select.invalid { border-color:#ef4444; }
 .trow .cell.strong { font-weight:700; color:#222; }
 .empty { text-align:center; color:#9ca3af; padding:12px 4px; }
 
+/* ====== responsive ====== */
+@media (max-width: 1024px){
+  .form .create-grid { grid-template-columns: 1fr 1fr; }
+  .col-start-due { order:3; }
+  .tag-col { order:4; }
+  .assign-row { grid-template-columns: 1fr; }
+}
 @media (max-width: 768px){
-  .grid-2 { grid-template-columns: 1fr; }
   .thead, .trow { grid-template-columns: 1fr; }
 }

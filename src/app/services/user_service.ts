@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { auth } from '../services/firebaseconfig';
-import { signInWithEmailAndPassword, sendPasswordResetEmail, deleteUser, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, UserCredential, User, onAuthStateChanged, setPersistence, browserSessionPersistence, signOut, confirmPasswordReset } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail, deleteUser, createUserWithEmailAndPassword, User, confirmPasswordReset } from 'firebase/auth';
 import { Observable, BehaviorSubject  } from 'rxjs';
 import { AuthService } from './auth_service';
+import { EmployeeWithShift } from '../models/user';
+import { Shift } from '../models/shift';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +52,6 @@ export class UserService {
   }
 }
 
-
   private async fetchUserData(uid: string): Promise<any> {
     const url = `${this.baseUrl}/users/getByID/${uid}`;
     return this.http.get(url).toPromise();
@@ -63,7 +65,6 @@ export class UserService {
 
     return this.authService.logout();
   }
-
 
   async getUserDataFromFirestore(uid: string): Promise<Observable<any>> {
     const url = `${this.baseUrl}/users/getByID/${uid}`;
@@ -80,7 +81,8 @@ export class UserService {
   }
 
   async confirmPasswordReset(oobCode: string, newPassword: string) {
-    return confirmPasswordReset(auth, oobCode, newPassword);}
+    return confirmPasswordReset(auth, oobCode, newPassword);
+  }
 
   async deleteCurrentUser(): Promise<void> {
     const user = auth.currentUser;
@@ -111,31 +113,49 @@ export class UserService {
     this.idleTime = 0;
   }
 
+async onRegister(email: string, password: string, name: string, birthday: string, imageUrl: string): Promise<boolean> {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const firebaseUser = userCredential.user;
+    const token = await firebaseUser.getIdToken();
 
+    const data = {
+      uid: firebaseUser.uid,
+      name,
+      birthday,
+      imageUrl
+    };
 
-  async onRegister(email: string, password: string, name: string, birthday: string, imageUrl: string): Promise<boolean> {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const firebaseUser = userCredential.user;
-      console.log('Usuario creado exitosamente:', firebaseUser);
+    await this.http.post(
+      `${this.baseUrl}/users/register/`,
+      data,
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).toPromise();
 
-      const token = await firebaseUser.getIdToken();
-      console.log('Token JWT tras registro:', token);
+    return true;
+  } catch (error: any) {
+    if (error?.code === 'auth/email-already-in-use') {
+      const { signInWithEmailAndPassword, fetchSignInMethodsForEmail } = await import('firebase/auth');
 
-      const data = {
-        uid: firebaseUser.uid,
-        name: name,
-        birthday: birthday,
-        imageUrl: imageUrl
-      };
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      const user = cred.user;
+      const token = await user.getIdToken();
 
-      await this.http.post(`${this.baseUrl}/users/register/`, data).toPromise();
+      const data = { uid: user.uid, name, birthday, imageUrl };
+
+      await this.http.post(
+        `${this.baseUrl}/users/register/`,
+        data,
+        { headers: { Authorization: `Bearer ${token}` } }
+      ).toPromise();
+
       return true;
-    } catch (error: any) {
-      console.error('Error durante el registro:', error);
-      throw error;
     }
+
+    console.error('Error durante el registro:', error);
+    throw error;
   }
+}
 
 
   monitorUserActivity() {
@@ -184,6 +204,35 @@ export class UserService {
     const url = `${this.baseUrl}/users/reset-monthly-points`;
     return this.http.get(url);
   }
+
+  listEmployeesWithShift(): Observable<EmployeeWithShift[]> {
+  return this.http
+    .get<{ employees: any[] }>(`${this.baseUrl}/users/employees-with-shift`)
+    .pipe(
+      map(resp => {
+        const arr = resp?.employees ?? [];
+        return arr.map((e: any) => {
+          const s = e?.shift || null;
+
+          return new EmployeeWithShift({
+            uid: String(e?.uid ?? ''),
+            name: String(e?.name ?? 'Employee'),
+            role: 'employee',
+            shift: s
+              ? new Shift(
+                  String(s.start_time ?? ''),
+                  String(s.end_time ?? ''),
+                  '',
+                  String(s.name ?? ''),
+                  (s.id as any)
+                )
+              : null,
+          });
+        });
+      })
+    );
+  }
+
 
 }
 

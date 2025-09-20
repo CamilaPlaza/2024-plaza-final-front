@@ -1,46 +1,40 @@
 <div class="atm-wrapper">
   <div class="atm-head">
     <div class="left">
-      <h4>Task manager</h4>
-      <small class="muted">Create & assign tasks to employees</small>
+      <h4>Tasks</h4>
+      <small class="muted">Create task & assign to an employee</small>
     </div>
     <div class="right">
       <span class="who">Admin: <strong>{{ currentAdminName || currentAdminUid }}</strong></span>
     </div>
   </div>
 
-  <!-- FORM -->
+  <!-- ====== CREATE TASK (fields) ====== -->
   <form [formGroup]="form" class="card form" (ngSubmit)="createAndAssign()">
-    <div class="grid">
-      <label class="field">
-        <span class="label">Employee</span>
-        <select formControlName="assignee_uid"
-                (change)="onEmployeeChange($any($event.target).value)"
-                [class.invalid]="f['assignee_uid'].invalid && f['assignee_uid'].touched">
-          <option value="" disabled>Select employee…</option>
-          <option *ngFor="let e of employees" [value]="e.uid">
-            {{ e.name }} <span *ngIf="e.shiftLabel"> ({{ e.shiftLabel }})</span>
-          </option>
-        </select>
-        <small class="hint">We’ll fetch the assigned shift to attach the task to the right shift.</small>
-        <small class="err" *ngIf="f['assignee_uid'].invalid && f['assignee_uid'].touched">Required</small>
-      </label>
+    <div class="grid create-grid">
 
+      <!-- Título -->
       <label class="field">
         <span class="label">Title</span>
-        <input type="text" formControlName="title" placeholder="e.g. Deep clean bar area"
+        <input type="text"
+               formControlName="title"
+               placeholder="e.g. Deep clean bar area"
                [class.invalid]="f['title'].invalid && f['title'].touched">
         <small class="err" *ngIf="f['title'].invalid && f['title'].touched">Required</small>
       </label>
 
+      <!-- Descripción -->
       <label class="field">
         <span class="label">Description</span>
-        <textarea rows="3" formControlName="description" placeholder="Details or acceptance criteria…"
+        <textarea rows="3"
+                  formControlName="description"
+                  placeholder="Details or acceptance criteria…"
                   [class.invalid]="f['description'].invalid && f['description'].touched"></textarea>
         <small class="err" *ngIf="f['description'].invalid && f['description'].touched">Required</small>
       </label>
 
-      <div class="grid-2">
+      <!-- Start / Due (apilados) -->
+      <div class="col-start-due">
         <label class="field">
           <span class="label">Start (optional)</span>
           <input type="datetime-local" formControlName="start_at_local">
@@ -52,26 +46,78 @@
         </label>
       </div>
 
-      <label class="field">
+      <!-- Tag compacto -->
+      <label class="field tag-col">
         <span class="label">Tag (optional)</span>
         <input type="text" formControlName="tag" placeholder="e.g. Bar / Inventory / Floor">
       </label>
     </div>
-
-    <div class="actions">
-      <button class="btn primary" type="submit" [disabled]="creating || form.invalid || !selectedEmployeeId">
-        <span class="pi pi-plus"></span>
-        <span>Create & Assign</span>
-      </button>
-    </div>
   </form>
 
-  <!-- LIST PANEL -->
+  <!-- ====== PREVIEW ====== -->
+  <div class="card preview">
+    <div class="preview-head">
+      <span class="muted">Preview</span>
+    </div>
+    <div class="preview-body">
+      <div class="title-row">
+        <span class="title">{{ previewTitle }}</span>
+        <span *ngIf="previewTag" class="chip">{{ previewTag }}</span>
+      </div>
+      <div class="desc">{{ previewDescription }}</div>
+      <div class="win" *ngIf="previewWindow as w">
+        <span class="muted">Window:</span>
+        <span class="mono">{{ w.start || '—' }} → {{ w.end || '—' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== ASSIGN TO ====== -->
+  <div class="card assign">
+    <div class="assign-head">
+      <h5>Assign to</h5>
+      <small class="muted" *ngIf="loadingEmployees">Loading employees…</small>
+      <small class="err" *ngIf="!loadingEmployees && loadEmployeesError">{{ loadEmployeesError }}</small>
+    </div>
+
+    <div class="assign-row">
+      <label class="field sel">
+        <span class="label">Employee</span>
+        <select
+          [disabled]="loadingEmployees || !employees.length"
+          [ngModel]="selectedEmployeeId"
+          (ngModelChange)="onEmployeeChange($event)">
+          <option [ngValue]="null" disabled>Select employee…</option>
+          <!-- Nota: dentro de <option> sólo texto plano -->
+          <option *ngFor="let e of employees" [ngValue]="e.uid">
+            {{ e.name }} — {{ e.shift?.name || '—' }}
+          </option>
+        </select>
+      </label>
+
+      <div class="sel-info" *ngIf="selectedEmployeeId">
+        <div class="muted">Selected:</div>
+        <div class="strong">{{ selectedEmployeeName }}</div>
+        <div class="muted small">Shift: <span class="mono">{{ selectedShiftName }}</span></div>
+      </div>
+
+      <div class="actions right">
+        <button class="btn primary"
+                (click)="createAndAssign()"
+                [disabled]="creating || form.invalid || !selectedEmployeeId">
+          <span class="pi pi-plus"></span>
+          <span>Create task & assign</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== LIST: tareas del empleado seleccionado ====== -->
   <div class="card list">
     <div class="list-head">
       <h4>Tasks for selected employee</h4>
       <small class="muted" *ngIf="selectedEmployeeId && !loadingTasks">
-        {{ selectedEmployeeName }} ({{ selectedEmployeeShiftLabel }})
+        {{ selectedEmployeeName }} — {{ selectedShiftName }}
       </small>
     </div>
 
@@ -110,11 +156,11 @@
     </div>
   </div>
 
-  <!-- RECENT PANEL -->
+  <!-- ====== RECENT (local cache) ====== -->
   <div class="card list">
     <div class="list-head">
       <h4>Recently created</h4>
-      <small class="muted">Local session (after saving to backend)</small>
+      <small class="muted">Local session</small>
     </div>
 
     <div class="table">

@@ -15,10 +15,9 @@ export class WorkdayComponent implements OnInit, OnDestroy {
   pageLoading = true;
   loading = false;
 
-  // Usuario/rol
   user: UiUser | null = null;
 
-  // Asistencia
+  // Asistencia (solo empleado)
   attendanceOpen = false;
   attendanceId: string | null = null;
   allowCheckIn = false;
@@ -42,16 +41,13 @@ export class WorkdayComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Si ya hay user en memoria…
     const u0 = this.userService.currentUserData;
     if (u0?.uid) this.initForUser(this.mapToUiUser(u0));
 
-    // Suscripción a cambios del user
     this.sub = this.userService.currentUserData$.subscribe(async (u: any) => {
       if (u?.uid) await this.initForUser(this.mapToUiUser(u));
     });
 
-    // Fallback Firebase
     this.authUnsub = onAuthStateChanged(auth, async (fbUser) => {
       if (!fbUser?.uid) return;
       if (this.user?.uid) return;
@@ -64,7 +60,6 @@ export class WorkdayComponent implements OnInit, OnDestroy {
           this.userService.currentUserData$.next(userData);
         });
       } catch {
-        // Fallback extremo si no hay perfil: trato como employee
         await this.initForUser({
           uid: fbUser.uid,
           name: 'Employee',
@@ -80,20 +75,22 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     if (this.authUnsub) this.authUnsub();
   }
 
-  // --- UI helpers ---
+  // --- UI helpers (no muestran en admin) ---
   get showCheckInButton(): boolean  {
     return !this.pageLoading
+      && this.user?.role !== 'admin'
       && !!this.user?.requiresAttendance
       && !this.attendanceOpen
       && this.allowCheckIn;
   }
   get showCheckOutButton(): boolean {
     return !this.pageLoading
+      && this.user?.role !== 'admin'
       && !!this.user?.requiresAttendance
       && this.attendanceOpen;
   }
 
-  // --- Events ---
+  // --- Events (empleado) ---
   onCheckIn(): void { this.showCheckInPopup = true; }
   async onPopupClosed(): Promise<void> {
     this.showCheckInPopup = false;
@@ -101,7 +98,6 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     this.pageLoading = true;
     try { await this.refreshAttendanceState(this.user.uid); } finally { this.pageLoading = false; }
   }
-
   onCheckOut(): void { this.showCheckOutPopup = true; }
   async onCheckoutClosed(): Promise<void> {
     this.showCheckOutPopup = false;
@@ -115,8 +111,14 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     this.pageLoading = true;
     this.user = u;
     try {
-      await this.loadAssignedShift(u.uid);
-      await this.refreshAttendanceState(u.uid);
+      if (u.role === 'admin') {
+        // Para admin no pedimos asistencia ni turno.
+        // El Task Manager del admin no los necesita.
+        this.shift = { id: 'UNASSIGNED', name: '—', start: '—', end: '—' };
+      } else {
+        await this.loadAssignedShift(u.uid);
+        await this.refreshAttendanceState(u.uid);
+      }
     } finally {
       this.pageLoading = false;
     }

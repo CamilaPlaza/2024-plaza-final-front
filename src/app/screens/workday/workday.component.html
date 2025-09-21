@@ -6,7 +6,8 @@
   <div class="section title-section">
     <p class="title">MY WORKSPACE</p>
 
-    <div class="action-slot" *ngIf="!pageLoading && user">
+    <!-- botones SOLO para empleados -->
+    <div class="action-slot" *ngIf="!pageLoading && user && user.role !== 'admin'">
       <button
         *ngIf="showCheckOutButton"
         class="p-button-rounded checkout-title-button"
@@ -27,14 +28,15 @@
     </div>
   </div>
 
+  <!-- popups SOLO para empleados -->
   <app-check-in-popup
-    *ngIf="showCheckInPopup"
+    *ngIf="showCheckInPopup && user?.role !== 'admin'"
     [userName]="user?.name || 'Employee'"
     (closed)="onPopupClosed()">
   </app-check-in-popup>
 
   <app-check-out-popup
-    *ngIf="showCheckOutPopup"
+    *ngIf="showCheckOutPopup && user?.role !== 'admin'"
     [userName]="user?.name || 'Employee'"
     (closed)="onCheckoutClosed()">
   </app-check-out-popup>
@@ -48,7 +50,8 @@
         </div>
       </div>
 
-      <section class="ws-status" *ngIf="!pageLoading && user">
+      <!-- STATUS SOLO empleados -->
+      <section class="ws-status" *ngIf="!pageLoading && user && user.role !== 'admin'">
         <div class="status-header">
           <h3>Today’s status</h3>
           <span class="pill" [ngClass]="attendanceOpen ? 'ok' : 'off'">
@@ -79,28 +82,30 @@
         </div>
       </section>
 
-      <!-- === AQUÍ CONMUTO ENTRE VISTAS === -->
+      <!-- BOARD: para admin se muestra SOLO el task manager -->
       <section class="ws-board" *ngIf="!pageLoading && user">
-        <div class="board-head">
-          <h3>{{ user.role === 'admin' ? 'Task management' : 'Assigned tasks' }}</h3>
-          <small class="muted" *ngIf="user.role !== 'admin'">Drag tasks between columns</small>
-        </div>
-
         <ng-container [ngSwitch]="user.role">
+          <!-- ADMIN -->
           <app-admin-task-manager
             *ngSwitchCase="'admin'"
             [currentAdminUid]="user.uid"
             [currentAdminName]="user.name"
-            [shift]="shift">
+            [shift]="null">
           </app-admin-task-manager>
 
-          <app-employee-task-board
-            *ngSwitchDefault
-            [employeeUid]="user.uid"
-            [employeeName]="user.name"
-            [shift]="shift"
-            [attendanceOpen]="attendanceOpen">
-          </app-employee-task-board>
+          <!-- EMPLOYEE -->
+          <ng-container *ngSwitchDefault>
+            <div class="board-head">
+              <h3>Assigned tasks</h3>
+              <small class="muted">Drag tasks between columns</small>
+            </div>
+            <app-employee-task-board
+              [employeeUid]="user.uid"
+              [employeeName]="user.name"
+              [shift]="shift"
+              [attendanceOpen]="attendanceOpen">
+            </app-employee-task-board>
+          </ng-container>
         </ng-container>
       </section>
 

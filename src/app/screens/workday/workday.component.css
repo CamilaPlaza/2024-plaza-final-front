@@ -1,25 +1,33 @@
 /* === base igual a tus páginas === */
 html, body { height: 100%; margin: 0; padding: 0; }
 
+/* Clave: que el contenedor pueda CRECER (no height fijo) */
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;        /* antes: height: 100vh */
   margin-left: 5%;
 }
-.section { flex: 1; }
 
-.image-section { flex: 0.5; height: 10%; width: 100%; overflow: hidden; }
+/* Clave: que cada sección no “estire” a la fuerza el viewport */
+.section { flex: 0 0 auto; }
+
+/* Imagen siempre visible arriba, con alto fijo razonable */
+.image-section {
+  height: 220px;            /* antes: flex: 0.5; height:10% */
+  width: 100%;
+  overflow: hidden;
+}
 .image { width: 100%; height: 100%; object-fit: cover; }
 
+/* Título fijo debajo de la imagen */
 .title-section {
-  flex: 0.15;
-  display: flex; align-items: center; justify-content: center;
+  padding: 12px 0;          /* antes: flex: 0.15; */
   background-color: #7f522e; color: #f2f2f2; position: relative;
 }
-.title { font-size: 2rem; margin: 0; flex-grow: 1; text-align: center; }
+.title { font-size: 2rem; margin: 0; text-align: center; }
 
-/* Slot fijo: el botón visible (check-in o check-out) ocupa SIEMPRE el mismo lugar */
+/* Slot de acciones (botones), solo para employee como ya tenés en el HTML */
 .action-slot {
   position: absolute;
   right: 2%;
@@ -29,7 +37,6 @@ html, body { height: 100%; margin: 0; padding: 0; }
   align-items: center;
 }
 
-/* Mantengo tus clases y colores */
 .checkin-title-button,
 .checkout-title-button {
   background-color: #caa171; color: #7f522e;
@@ -44,15 +51,40 @@ html, body { height: 100%; margin: 0; padding: 0; }
 .checkout-title-button:hover { background-color: #b58958; }
 .button-text { margin-left: 8%; }
 
-/* Zona de contenido como tus tablas */
+/* Zona principal de contenido. Ya NO forzamos alturas. */
 .table-section {
-  flex: 1;
   background-color: #d0d0d0;
   display: flex; align-items: center; justify-content: center;
+  padding-bottom: 24px;     /* un poco de aire al final del scroll */
 }
-.card { width: 100%; height: 100%; background:#f7f7f7; }
+.card {
+  width: 100%;
+  background:#f7f7f7;
+  /* antes tenía height:100%; que hacía que “tape” lo de arriba */
+  position: relative;       /* para el overlay del loader */
+}
 
-/* ============ TODAY'S STATUS (full width) ============ */
+/* Loader overlay */
+.page-loader{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+  background: rgba(240,240,240,.6);
+  backdrop-filter: blur(2px);
+  z-index: 5;
+}
+.loader-box{
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  padding:14px 16px; box-shadow:0 12px 30px rgba(0,0,0,.12);
+  display:flex; align-items:center; gap:10px; color:#533521; font-weight:700;
+}
+.spin-xl{
+  width:28px; height:28px; border-radius:50%;
+  border:3px solid #cfd8e3; border-top-color:#7f522e;
+  display:inline-block; animation:spin .8s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg); } }
+
+/* ============ TODAY'S STATUS (solo employee, ya controlado por *ngIf) ============ */
 .ws-status{
   background:#fff; border:1px solid #e5e7eb; border-radius:12px;
   margin: 14px; padding: 12px 14px;
@@ -82,13 +114,14 @@ html, body { height: 100%; margin: 0; padding: 0; }
 .value.accent{ color:#7f522e; }
 .value.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
-/* ============ TASKS BOARD (full width) ============ */
+/* ============ TASKS BOARD (admin o employee) ============ */
 .ws-board{
   background:#fff; border:1px solid #e5e7eb; border-radius:12px;
   margin: 0 14px 14px; padding: 12px 14px;
   box-shadow:0 6px 16px rgba(0,0,0,.06);
-  height: calc(100% - 140px);
-  display:flex; flex-direction:column;
+  /* Clave: que no limite la altura. Dejamos crecer y hacer scroll de toda la página */
+  height: auto;            /* antes: height: calc(100% - 140px); */
+  min-height: 320px;
 }
 .board-head{
   display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;
@@ -96,17 +129,16 @@ html, body { height: 100%; margin: 0; padding: 0; }
 .board-head h3{ margin:0; color:#333; font-size:1.1rem; }
 .muted{ color:#6b7280; }
 
-/* Columnas */
+/* Columnas (si tuvieras board de employee, lo dejo como estaba) */
 .columns{
   display:grid; grid-template-columns: repeat(3, 1fr);
-  gap: 12px; flex:1; min-height: 0;
+  gap: 12px; min-height: 0;
 }
-.col{ display:flex; flex-direction:column; min-height:0; }
+.col{ display:flex; flex-direction:column; }
 .col-title{ font-weight:800; color:#7f522e; margin-bottom:8px; }
 
-/* Dropzones con scroll interno */
 .dropzone{
-  flex:1; min-height:120px; overflow:auto;
+  min-height:120px; overflow:auto;
   padding:8px; border:1px dashed #d1d5db; border-radius:10px; background:#fcfcfc;
   transition: background .15s ease, border-color .15s ease;
 }
@@ -128,32 +160,10 @@ html, body { height: 100%; margin: 0; padding: 0; }
 }
 .empty-col{ text-align:center; color:#9ca3af; padding:14px 4px; }
 
-/* Loader overlay */
-.card { position: relative; }
-.page-loader{
-  position:absolute; inset:0;
-  display:grid; place-items:center;
-  background: rgba(240,240,240,.6);
-  backdrop-filter: blur(2px);
-  z-index: 5;
-}
-.loader-box{
-  background:#fff; border:1px solid #e5e7eb; border-radius:12px;
-  padding:14px 16px; box-shadow:0 12px 30px rgba(0,0,0,.12);
-  display:flex; align-items:center; gap:10px; color:#533521; font-weight:700;
-}
-.spin-xl{
-  width:28px; height:28px; border-radius:50%;
-  border:3px solid #cfd8e3; border-top-color:#7f522e;
-  display:inline-block; animation:spin .8s linear infinite;
-}
-@keyframes spin{ to{ transform: rotate(360deg); } }
-
 /* Responsive */
 @media (max-width: 768px){
   .container { margin-left: 10%; }
-  .image-section { flex: 0.2; }
-  .title-section { flex: 0; }
+  .image-section { height: 160px; }
   .title { font-size: 1.2rem; padding: 10px; }
 
   .checkin-title-button, .checkout-title-button{ padding: 0.5rem 0.6rem; }

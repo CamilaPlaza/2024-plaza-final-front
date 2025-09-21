@@ -9,110 +9,108 @@
     </div>
   </div>
 
-  <!-- ====== CREATE TASK (fields) ====== -->
-  <form [formGroup]="form" class="card form" (ngSubmit)="createAndAssign()">
-    <div class="grid create-grid">
+  <!-- ===== TOP AREA: izquierda (campos), derecha (assign + preview + botón) ===== -->
+  <form class="card top-card" [formGroup]="form" (ngSubmit)="createAndAssign()">
+    <div class="top-grid">
 
-      <!-- Título -->
-      <label class="field">
-        <span class="label">Title</span>
-        <input type="text"
-               formControlName="title"
-               placeholder="e.g. Deep clean bar area"
-               [class.invalid]="f['title'].invalid && f['title'].touched">
-        <small class="err" *ngIf="f['title'].invalid && f['title'].touched">Required</small>
-      </label>
-
-      <!-- Descripción -->
-      <label class="field">
-        <span class="label">Description</span>
-        <textarea rows="3"
-                  formControlName="description"
-                  placeholder="Details or acceptance criteria…"
-                  [class.invalid]="f['description'].invalid && f['description'].touched"></textarea>
-        <small class="err" *ngIf="f['description'].invalid && f['description'].touched">Required</small>
-      </label>
-
-      <!-- Start / Due (apilados) -->
-      <div class="col-start-due">
+      <!-- Columna izquierda: creación (stack) -->
+      <div class="create-col">
         <label class="field">
-          <span class="label">Start (optional)</span>
-          <input type="datetime-local" formControlName="start_at_local">
+          <span class="label">Title</span>
+          <input type="text"
+                 formControlName="title"
+                 placeholder="e.g. Deep clean bar area"
+                 [class.invalid]="f['title'].invalid && f['title'].touched">
+          <small class="err" *ngIf="f['title'].invalid && f['title'].touched">Required</small>
         </label>
 
         <label class="field">
-          <span class="label">Due (optional)</span>
-          <input type="datetime-local" formControlName="due_at_local">
+          <span class="label">Description</span>
+          <textarea rows="8"
+                    formControlName="description"
+                    placeholder="Details or acceptance criteria…"
+                    [class.invalid]="f['description'].invalid && f['description'].touched"></textarea>
+          <small class="err" *ngIf="f['description'].invalid && f['description'].touched">Required</small>
+        </label>
+
+        <div class="start-due-row">
+          <label class="field">
+            <span class="label">Start (optional)</span>
+            <input type="datetime-local" formControlName="start_at_local">
+          </label>
+
+          <label class="field">
+            <span class="label">Due (optional)</span>
+            <input type="datetime-local" formControlName="due_at_local">
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="label">Tag (optional)</span>
+          <input type="text" formControlName="tag" placeholder="e.g. Bar / Inventory / Floor">
         </label>
       </div>
 
-      <!-- Tag compacto -->
-      <label class="field tag-col">
-        <span class="label">Tag (optional)</span>
-        <input type="text" formControlName="tag" placeholder="e.g. Bar / Inventory / Floor">
-      </label>
+      <!-- Columna derecha: assign + preview + botón -->
+      <div class="assign-col">
+        <div class="box assign-box">
+          <div class="box-head">
+            <h5>Assign employee</h5>
+            <small class="muted" *ngIf="loadingEmployees">Loading employees…</small>
+            <small class="err" *ngIf="!loadingEmployees && loadEmployeesError">{{ loadEmployeesError }}</small>
+          </div>
+
+          <label class="field">
+            <span class="label">Employee</span>
+            <select formControlName="assignee_uid"
+                    [disabled]="loadingEmployees || !employees.length"
+                    (change)="onEmployeeChange($any($event.target).value)"
+                    [class.invalid]="f['assignee_uid'].invalid && f['assignee_uid'].touched">
+              <option value="" disabled>Select employee…</option>
+              <option *ngFor="let e of employees" [value]="e.uid">
+                {{ e.name }} — {{ e.shift?.name || '—' }}
+              </option>
+            </select>
+            <small class="err" *ngIf="f['assignee_uid'].invalid && f['assignee_uid'].touched">Required</small>
+          </label>
+
+          <div class="mini-info" *ngIf="selectedEmployeeId">
+            <div>Selected: <strong>{{ selectedEmployeeName }}</strong></div>
+            <div class="muted small">Shift: <span class="mono">{{ selectedShiftName }}</span></div>
+          </div>
+        </div>
+
+        <div class="box preview-box">
+          <div class="box-head"><h5>Preview</h5></div>
+          <div class="preview-body">
+            <div class="title-row">
+              <span class="title">{{ previewTitle }}</span>
+              <span *ngIf="previewTag" class="chip">{{ previewTag }}</span>
+            </div>
+            <div class="desc">{{ previewDescription }}</div>
+            <div class="win" *ngIf="previewWindow as w">
+              <span class="muted">Window:</span>
+              <span class="mono">{{ w.start || '—' }} → {{ w.end || '—' }}</span>
+            </div>
+            <div class="assign-line" *ngIf="selectedEmployeeId">
+              <span class="muted">Assigned to:</span>
+              <span><strong>{{ selectedEmployeeName }}</strong> — {{ selectedShiftName }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions right">
+          <button class="btn primary" type="submit" [disabled]="creating || form.invalid">
+            <span class="pi pi-plus"></span>
+            <span>Create task & assign</span>
+          </button>
+        </div>
+      </div>
+
     </div>
   </form>
 
-  <!-- ====== PREVIEW ====== -->
-  <div class="card preview">
-    <div class="preview-head">
-      <span class="muted">Preview</span>
-    </div>
-    <div class="preview-body">
-      <div class="title-row">
-        <span class="title">{{ previewTitle }}</span>
-        <span *ngIf="previewTag" class="chip">{{ previewTag }}</span>
-      </div>
-      <div class="desc">{{ previewDescription }}</div>
-      <div class="win" *ngIf="previewWindow as w">
-        <span class="muted">Window:</span>
-        <span class="mono">{{ w.start || '—' }} → {{ w.end || '—' }}</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ====== ASSIGN TO ====== -->
-  <div class="card assign">
-    <div class="assign-head">
-      <h5>Assign to</h5>
-      <small class="muted" *ngIf="loadingEmployees">Loading employees…</small>
-      <small class="err" *ngIf="!loadingEmployees && loadEmployeesError">{{ loadEmployeesError }}</small>
-    </div>
-
-    <div class="assign-row">
-      <label class="field sel">
-        <span class="label">Employee</span>
-        <select
-          [disabled]="loadingEmployees || !employees.length"
-          [ngModel]="selectedEmployeeId"
-          (ngModelChange)="onEmployeeChange($event)">
-          <option [ngValue]="null" disabled>Select employee…</option>
-          <!-- Nota: dentro de <option> sólo texto plano -->
-          <option *ngFor="let e of employees" [ngValue]="e.uid">
-            {{ e.name }} — {{ e.shift?.name || '—' }}
-          </option>
-        </select>
-      </label>
-
-      <div class="sel-info" *ngIf="selectedEmployeeId">
-        <div class="muted">Selected:</div>
-        <div class="strong">{{ selectedEmployeeName }}</div>
-        <div class="muted small">Shift: <span class="mono">{{ selectedShiftName }}</span></div>
-      </div>
-
-      <div class="actions right">
-        <button class="btn primary"
-                (click)="createAndAssign()"
-                [disabled]="creating || form.invalid || !selectedEmployeeId">
-          <span class="pi pi-plus"></span>
-          <span>Create task & assign</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ====== LIST: tareas del empleado seleccionado ====== -->
+  <!-- ===== LIST: tareas del empleado seleccionado ===== -->
   <div class="card list">
     <div class="list-head">
       <h4>Tasks for selected employee</h4>
@@ -156,7 +154,7 @@
     </div>
   </div>
 
-  <!-- ====== RECENT (local cache) ====== -->
+  <!-- ===== RECENT (local cache) ===== -->
   <div class="card list">
     <div class="list-head">
       <h4>Recently created</h4>

@@ -7,7 +7,6 @@ import { TaskService } from 'src/app/services/task_service';
 import { AssistanceService } from 'src/app/services/assistance_service';
 import { UserService } from 'src/app/services/user_service';
 import { EmployeeWithShift } from 'src/app/models/user';
-import { Shift } from 'src/app/models/shift';
 
 type ShiftLite = { id: string; name: string; start: string; end: string };
 
@@ -22,20 +21,17 @@ export class AdminTaskManagerComponent implements OnInit {
   @Input() currentAdminUid!: string;
   @Input() currentAdminName!: string;
 
-  // (no lo usamos mucho acá, pero Workday lo pasa)
+  // (lo pasás desde Workday; acá no lo usamos mucho)
   @Input() shift: ShiftLite | null = null;
-  get adminShiftLabel(): string {
-    return this.shift ? `${this.shift.start}–${this.shift.end}` : '—';
-    // solo para depurar si querés mostrar algo del admin
-  }
 
   form!: FormGroup;
+
   creating = false;
   loadingTasks = false;
+
+  // empleados reales (sin admins)
   loadingEmployees = false;
   loadEmployeesError: string | null = null;
-
-  // empleados reales (sin admins), vienen del back con turno
   employees: EmployeeWithShift[] = [];
 
   // selección actual
@@ -44,6 +40,7 @@ export class AdminTaskManagerComponent implements OnInit {
   selectedShiftId: string | null = null;
   selectedShiftName: string = '—';
 
+  // datos
   statusOptions: TaskStatus[] = ['assigned', 'in_progress', 'done'];
   recentTasks: TaskDTO[] = [];
   tasksForSelected: TaskDTO[] = [];
@@ -58,12 +55,13 @@ export class AdminTaskManagerComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(1)]],
-      description: ['', [Validators.required, Validators.minLength(1)]],
-      tag: [''],
-      assignee_uid: ['', [Validators.required]],
+      title:        ['', [Validators.required, Validators.minLength(1)]],
+      description:  ['', [Validators.required, Validators.minLength(1)]],
       start_at_local: [''],
-      due_at_local: [''],
+      due_at_local:   [''],
+      tag:          [''],
+      // lo marcamos required para asegurarnos que se elija alguien
+      assignee_uid: ['', [Validators.required]],
     });
 
     this.loadEmployees();
@@ -80,8 +78,7 @@ export class AdminTaskManagerComponent implements OnInit {
     this.cdr.markForCheck();
     try {
       const list = await firstValueFrom(this.users.listEmployeesWithShift());
-      this.employees = list; // EmployeeWithShift[]
-      // si querés, podrías autoseleccionar el primero
+      this.employees = list;
     } catch (e: any) {
       console.error('[ADMIN] load employees error', e);
       this.employees = [];
@@ -93,17 +90,18 @@ export class AdminTaskManagerComponent implements OnInit {
   }
 
   async onEmployeeChange(uid: string): Promise<void> {
+    // reflejamos selección
     this.selectedEmployeeId = uid;
 
     const emp = this.employees.find(e => e.uid === uid) || null;
     this.selectedEmployeeName = emp?.name || uid;
 
-    // seteo turno desde lo que ya trajo el /users/employees-with-shift
-    const shift: Shift | null = emp?.shift ?? null;
+    // seteo turno desde lo que ya trajo /users/employees-with-shift
+    const shift = emp?.shift ?? null;
     this.selectedShiftId = shift?.id != null ? String(shift.id as any) : null;
     this.selectedShiftName = shift?.name || '—';
 
-    // fallback: si no tenemos id de shift aún, traigo el current shift del día
+    // fallback: si no hay id de turno, uso current shift del día
     if (!this.selectedShiftId) {
       try {
         const cur: any = await firstValueFrom(this.assistance.getCurrentShiftId());
@@ -125,7 +123,10 @@ export class AdminTaskManagerComponent implements OnInit {
     this.loadingTasks = true;
     this.cdr.markForCheck();
     try {
-      const list$ = this.tasks.getTasksForEmployeeDTO(this.selectedEmployeeId, this.selectedShiftId || undefined);
+      const list$ = this.tasks.getTasksForEmployeeDTO(
+        this.selectedEmployeeId,
+        this.selectedShiftId || undefined
+      );
       this.tasksForSelected = await firstValueFrom(list$) || [];
     } catch (e) {
       console.error('[ADMIN] load tasks error', e);
@@ -156,11 +157,13 @@ export class AdminTaskManagerComponent implements OnInit {
   }
 
   // =========================
-  // Create + Assign
+  // Create + Assign (submit del form)
   // =========================
   async createAndAssign(): Promise<void> {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    if (!this.selectedEmployeeId) return;
+
+    const uid = this.f['assignee_uid'].value as string;
+    await this.onEmployeeChange(uid); // asegura shift seleccionado
 
     this.creating = true;
     this.cdr.markForCheck();
@@ -175,34 +178,35 @@ export class AdminTaskManagerComponent implements OnInit {
     const due_at_iso   = due_local ? this.localToIso(due_local)   : undefined;
 
     try {
+      // si (por lo que sea) no tengo shift id, traigo current
       if (!this.selectedShiftId) {
         const cur: any = await firstValueFrom(this.assistance.getCurrentShiftId());
         this.selectedShiftId = cur?.shift_id ?? 'UNASSIGNED';
       }
 
       const resp = await firstValueFrom(this.tasks.createAndAttachTask({
-        employeeId: this.selectedEmployeeId,
+        employeeId: uid,
         shiftId: this.selectedShiftId || 'UNASSIGNED',
         dto: { title, description, status: 'assigned', tag, start_at: start_at_iso, due_at: due_at_iso },
       }));
 
       const newId = (resp as any)?.id as string | undefined;
 
-      // cache local “recently created”
+      // cache local
       const row: TaskDTO = {
         id: newId || (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
         title, description, tag,
         status: 'assigned',
-        assignee_uid: this.selectedEmployeeId,
-        assignee_name: this.selectedEmployeeName || this.selectedEmployeeId,
+        assignee_uid: uid,
+        assignee_name: this.selectedEmployeeName || uid,
         shift_window: (start_at_iso || due_at_iso) ? { start: start_at_iso || '', end: due_at_iso || '' } : undefined,
-        // id_shift no está tipado en TaskDTO; lo guardo en runtime por conveniencia:
-        ...(this.selectedShiftId ? { id_shift: this.selectedShiftId } : {}),
+        ...(this.selectedShiftId ? { id_shift: this.selectedShiftId } as any : {}),
       } as any;
-      this.recentTasks = [row, ...this.recentTasks];
 
+      this.recentTasks = [row, ...this.recentTasks];
       await this.refreshTasksList();
 
+      // reseteo campos de contenido, dejo el empleado
       const assignee_uid = this.f['assignee_uid'].value;
       this.form.reset({ assignee_uid });
     } catch (e) {
@@ -213,9 +217,7 @@ export class AdminTaskManagerComponent implements OnInit {
     }
   }
 
-  // =========================
-  // Previsualización (solo getters, sin helpers raros)
-  // =========================
+  // ===== Preview getters =====
   get previewTitle(): string {
     return (this.f?.['title']?.value || '').trim() || 'Untitled task';
   }
@@ -230,19 +232,10 @@ export class AdminTaskManagerComponent implements OnInit {
     const s = this.f?.['start_at_local']?.value as string | '';
     const d = this.f?.['due_at_local']?.value as string | '';
     if (!s && !d) return null;
-    return {
-      start: s ? this.formatLocal(s) : undefined,
-      end:   d ? this.formatLocal(d) : undefined,
-    };
+    return { start: s || undefined, end: d || undefined };
   }
 
   // ===== utils =====
-  private formatLocal(local: string): string {
-    const dt = new Date(local);
-    return isNaN(dt.getTime())
-      ? local
-      : dt.toLocaleString([], { year:'2-digit', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
-  }
   private localToIso(local: string): string {
     const d = new Date(local);
     return isNaN(d.getTime()) ? '' : d.toISOString();

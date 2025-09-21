@@ -1,7 +1,6 @@
 <div class="atm-wrapper">
   <div class="atm-head">
     <div class="left">
-      <h4>Tasks</h4>
       <small class="muted">Create task & assign to an employee</small>
     </div>
     <div class="right">
@@ -9,11 +8,11 @@
     </div>
   </div>
 
-  <!-- ===== TOP AREA: izquierda (campos), derecha (assign + preview + botón) ===== -->
+  <!-- TOP -->
   <form class="card top-card" [formGroup]="form" (ngSubmit)="createAndAssign()">
     <div class="top-grid">
 
-      <!-- Columna izquierda: creación (stack) -->
+      <!-- izquierda: crear -->
       <div class="create-col">
         <label class="field">
           <span class="label">Title</span>
@@ -36,12 +35,18 @@
         <div class="start-due-row">
           <label class="field">
             <span class="label">Start (optional)</span>
-            <input type="datetime-local" formControlName="start_at_local">
+            <input type="datetime-local"
+                   formControlName="start_at_local"
+                   [min]="minStartLocal">
+            <small class="err" *ngIf="form.errors?.['startPast']">Start cannot be in the past.</small>
           </label>
 
           <label class="field">
             <span class="label">Due (optional)</span>
-            <input type="datetime-local" formControlName="due_at_local">
+            <input type="datetime-local"
+                   formControlName="due_at_local"
+                   [min]="minDueLocal">
+            <small class="err" *ngIf="form.errors?.['dueBeforeStart']">Due cannot be before Start.</small>
           </label>
         </div>
 
@@ -51,12 +56,12 @@
         </label>
       </div>
 
-      <!-- Columna derecha: assign + preview + botón -->
+      <!-- derecha: assign + preview + botón -->
       <div class="assign-col">
         <div class="box assign-box">
           <div class="box-head">
             <h5>Assign employee</h5>
-            <small class="muted" *ngIf="loadingEmployees">Loading employees…</small>
+            <small class="muted" *ngIf="loadingEmployees"><span class="spin-sm"></span> Loading…</small>
             <small class="err" *ngIf="!loadingEmployees && loadEmployeesError">{{ loadEmployeesError }}</small>
           </div>
 
@@ -101,8 +106,9 @@
 
         <div class="actions right">
           <button class="btn primary" type="submit" [disabled]="creating || form.invalid">
-            <span class="pi pi-plus"></span>
-            <span>Create task & assign</span>
+            <span *ngIf="!creating" class="pi pi-plus"></span>
+            <span *ngIf="creating" class="spin-btn" aria-hidden="true"></span>
+            <span>{{ creating ? 'Creating…' : 'Create task & assign' }}</span>
           </button>
         </div>
       </div>
@@ -110,7 +116,7 @@
     </div>
   </form>
 
-  <!-- ===== LIST: tareas del empleado seleccionado ===== -->
+  <!-- LIST -->
   <div class="card list">
     <div class="list-head">
       <h4>Tasks for selected employee</h4>
@@ -119,7 +125,7 @@
       </small>
     </div>
 
-    <div class="loader" *ngIf="loadingTasks">Loading…</div>
+    <div class="loader" *ngIf="loadingTasks"><span class="spin"></span> Loading…</div>
 
     <div class="table" *ngIf="!loadingTasks">
       <div class="thead">
@@ -154,14 +160,16 @@
     </div>
   </div>
 
-  <!-- ===== RECENT (local cache) ===== -->
+  <!-- RECENT -->
   <div class="card list">
     <div class="list-head">
       <h4>Recently created</h4>
       <small class="muted">Local session</small>
     </div>
 
-    <div class="table">
+    <div class="loader" *ngIf="creating"><span class="spin"></span> Saving…</div>
+
+    <div class="table" *ngIf="!creating">
       <div class="thead">
         <div>Task</div>
         <div>Description</div>

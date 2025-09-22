@@ -30,7 +30,6 @@ export class UserService {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const uid = userCredential.user?.uid;
-    console.log("uid", uid);
 
     this.currentUser = userCredential.user;
 
@@ -43,7 +42,6 @@ export class UserService {
       userData.uid = uid;
       this.currentUserData = userData;
       this.currentUserData$.next(userData);
-      console.log('User data desde backend:', userData);
     }
     return true;
   } catch (error) {

@@ -111,35 +111,21 @@ export class UserService {
     this.idleTime = 0;
   }
 
-async onRegister(email: string, password: string, name: string, birthday: string, imageUrl: string): Promise<boolean> {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const firebaseUser = userCredential.user;
-    const token = await firebaseUser.getIdToken();
 
-    const data = {
-      uid: firebaseUser.uid,
-      name,
-      birthday,
-      imageUrl
-    };
+  async onRegister(
+    email: string,
+    password: string,
+    name: string,
+    birthday: string,
+    imageUrl: string,
+    shift_name: string
+  ): Promise<boolean> {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const firebaseUser = userCredential.user;
+      const token = await firebaseUser.getIdToken();
 
-    await this.http.post(
-      `${this.baseUrl}/users/register/`,
-      data,
-      { headers: { Authorization: `Bearer ${token}` } }
-    ).toPromise();
-
-    return true;
-  } catch (error: any) {
-    if (error?.code === 'auth/email-already-in-use') {
-      const { signInWithEmailAndPassword, fetchSignInMethodsForEmail } = await import('firebase/auth');
-
-      const cred = await signInWithEmailAndPassword(auth, email, password);
-      const user = cred.user;
-      const token = await user.getIdToken();
-
-      const data = { uid: user.uid, name, birthday, imageUrl };
+      const data = { uid: firebaseUser.uid, name, birthday, imageUrl, shift_name };
 
       await this.http.post(
         `${this.baseUrl}/users/register/`,
@@ -148,13 +134,26 @@ async onRegister(email: string, password: string, name: string, birthday: string
       ).toPromise();
 
       return true;
+    } catch (error: any) {
+      if (error?.code === 'auth/email-already-in-use') {
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        const user = cred.user;
+        const token = await user.getIdToken();
+
+        const data = { uid: user.uid, name, birthday, imageUrl, shift_name };
+
+        await this.http.post(
+          `${this.baseUrl}/users/register/`,
+          data,
+          { headers: { Authorization: `Bearer ${token}` } }
+        ).toPromise();
+
+        return true;
+      }
+      console.error('Error durante el registro:', error);
+      throw error;
     }
-
-    console.error('Error durante el registro:', error);
-    throw error;
   }
-}
-
 
   monitorUserActivity() {
     window.addEventListener('mousemove', () => this.resetIdleTime());

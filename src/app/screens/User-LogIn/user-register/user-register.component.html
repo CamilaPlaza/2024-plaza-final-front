@@ -1,15 +1,11 @@
 <div class="login-container">
-    <!-- Imagen de fondo borrosa -->
     <div class="background-blurred"></div>
 
-    <!-- Mostrar el spinner si loading es true -->
     <div *ngIf="loading" class="spinner-container">
-        <p-progressSpinner ariaLabel="loading" />
+        <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
     </div>
 
-    <!-- Ocultar el contenido del formulario mientras loading es true -->
     <div *ngIf="!loading" class="center-container">
-        <!-- Imagen partida a la mitad -->
         <div class="image-half">
             <img src="assets/images/login.jpg" alt="Imagen centrada">
             <div class="centered-text">
@@ -18,28 +14,40 @@
             </div>
         </div>
 
-        <!-- Formulario en fondo marrón -->
         <div class="form-half">
             <div class="form-container">
-                <!-- Botones de navegación en la parte superior -->
                 <div class="nav-buttons">
                     <button class="nav-btn" [routerLink]="'/'">LOG IN</button>
                     <button class="nav-btn active">SIGN UP</button>
                 </div>
-            
-                <!-- Formulario de registro -->
+
                 <div class="login-form">
-                    <!-- Campo de Nombre -->
-                    <div class="form-input">
-                        <div class="card flex justify-content-center">
-                            <p-floatLabel>
-                                <input pInputText id="name" [(ngModel)]="name" name="name" />
-                                <label for="name">Name</label>
-                            </p-floatLabel>
+                    <!-- NAME + AVATAR -->
+                    <div class="form-input name-avatar-row row-name">
+                        <div class="card name-card">
+                            <div class="name-with-avatar">
+                                <p-floatLabel class="name-field">
+                                    <input pInputText id="name" [(ngModel)]="name" name="name" />
+                                    <label for="name">Name</label>
+                                </p-floatLabel>
+
+                                <div class="avatar-uploader"
+                                     [class.avatar-has-image]="imageUrl"
+                                     (click)="onAvatarClick(avatarInput)">
+                                    <img *ngIf="imageUrl" [src]="imageUrl" alt="Avatar preview" />
+                                    <i *ngIf="!imageUrl" class="pi pi-camera avatar-icon"></i>
+                                    <button *ngIf="imageUrl"
+                                            type="button"
+                                            class="avatar-clear"
+                                            aria-label="Remove image"
+                                            (click)="clearAvatar($event)">✕</button>
+                                </div>
+                                <input #avatarInput type="file" accept="image/*" (change)="onAvatarChange($event)" hidden />
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Campo de Email -->
+                    <!-- Email -->
                     <div class="form-input">
                         <div class="card flex justify-content-center">
                             <p-floatLabel>
@@ -48,13 +56,12 @@
                             </p-floatLabel>
                         </div>
                     </div>
-            
-                    <!-- Campo de Contraseña -->
+
+                    <!-- Password -->
                     <div class="form-input">
                         <div class="card flex justify-content-center">
                             <p-floatLabel>
-                                <p-password [toggleMask]="true" [(ngModel)]="password" (ngModelChange)="validatePassword()" class="custom-password">         
-                                    <!-- Footer Template -->
+                                <p-password [toggleMask]="true" [(ngModel)]="password" (ngModelChange)="validatePassword()" class="custom-password">
                                     <ng-template pTemplate="footer">
                                         <p-divider></p-divider>
                                         <p class="mt-2">Requirements</p>
@@ -71,7 +78,7 @@
                         </div>
                     </div>
 
-                    <!-- Campo de Fecha de Nacimiento -->
+                    <!-- Birthday -->
                     <div class="form-input">
                         <div class="card flex justify-content-center">
                             <p-floatLabel>
@@ -81,38 +88,44 @@
                         </div>
                     </div>
 
-                    <div class="form-input">
-                        <div class="card flex justify-content-center">
-
-                            <p-fileUpload 
-                                #fileUpload 
-                                mode="basic" 
-                                chooseLabel="Profile Image" 
-                                accept="image/*" 
-                                maxFileSize="1000000"
-                                (onSelect)="onImageSelect($event)" 
-                                (onClear)="onImageClear(fileUpload)" 
-                                [disabled]="fileName !== ''" 
-                                [auto]="true"
-                                class="custom-file-upload">
-                            </p-fileUpload>
-
-                            <div *ngIf="fileName" class="file-details">
-                                <span class="file-name">{{ fileName }}</span>
-                                <i (click)="onImageClear(fileUpload)" class="pi pi-trash clear-btn"></i>
+                    <!-- SELECT SHIFT -->
+                    <div class="form-input row-shift">
+                        <div class="card shift-card">
+                            <div class="shift-input-like">
+                                <span class="fake-label">Select Shift</span>
+                                <div class="shift-dots">
+                                    <button type="button"
+                                            class="shift-dot"
+                                            title="Morning"
+                                            [class.selected]="selectedShift==='mañana' || selectedShift==='morning'"
+                                            (click)="setShift('mañana')">
+                                        <span class="short">M</span><span class="full">Morning</span>
+                                    </button>
+                                    <button type="button"
+                                            class="shift-dot"
+                                            title="Afternoon"
+                                            [class.selected]="selectedShift==='tarde' || selectedShift==='afternoon'"
+                                            (click)="setShift('tarde')">
+                                        <span class="short">A</span><span class="full">Afternoon</span>
+                                    </button>
+                                    <button type="button"
+                                            class="shift-dot"
+                                            title="Night"
+                                            [class.selected]="selectedShift==='noche' || selectedShift==='night'"
+                                            (click)="setShift('noche')">
+                                        <span class="short">N</span><span class="full">Night</span>
+                                    </button>
+                                </div>
                             </div>
-                            
                         </div>
-                        
                     </div>
-            
-                    <!-- Botón de Enviar -->
+
+                    <!-- Register -->
                     <div class="form-button">
                         <div class="card flex justify-content-center">
                             <p-button label="Register" [disabled]="!areAllFieldsFilled()" (click)="showConfirmDialog()"></p-button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -120,16 +133,16 @@
 </div>
 
 <p-dialog [(visible)]="displayConfirmDialog" [modal]="true" header="Confirm Registration" [closable]="true">
-    <app-confirmation-pop-up 
-        [subtitle]="'Are you sure you want to proceed?'" 
-        (onClose)="closeConfirmDialog()"    
+    <app-confirmation-pop-up
+        [subtitle]="'Are you sure you want to proceed?'"
+        (onClose)="closeConfirmDialog()"
         (onSend)="onRegister()">
     </app-confirmation-pop-up>
 </p-dialog>
 
 <p-dialog [(visible)]="displayErrorDialog" [modal]="true" header="Error" [closable]="true">
     <app-notice
-        [subtitle]="'This email already exists'" 
+        [subtitle]="'This email already exists'"
         (onClose)="closeErrorDialog()">
     </app-notice>
 </p-dialog>

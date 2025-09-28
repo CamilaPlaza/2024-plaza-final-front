@@ -74,6 +74,7 @@ import { WorkdayComponent } from './screens/workday/workday.component';
 import { AdminTaskManagerComponent } from './screens/admin-task-manager/admin-task-manager.component';
 import { EmployeeTaskBoardComponent } from './screens/employee-task-board/employee-task-board.component';
 import { CheckOutPopupComponent } from './screens/check-out-popup/check-out-popup.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @NgModule({
   declarations: [
@@ -138,6 +139,7 @@ import { CheckOutPopupComponent } from './screens/check-out-popup/check-out-popu
     TieredMenuModule,
     PasswordModule,
     InputIconModule,
+    SelectButtonModule,
     ProgressSpinnerModule,
     ButtonModule,
     DialogModule,

@@ -9,6 +9,8 @@ import { TableService } from 'src/app/services/table_service';
 import { CategoryService } from 'src/app/services/category_service';
 import { Category } from 'src/app/models/category';
 import { UserService } from 'src/app/services/user_service';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-table-free',
@@ -31,8 +33,10 @@ export class TableFreeComponent implements OnInit {
   currentTime: string = '';
   order: Order | undefined;
   currentDate: string = this.formatDate(new Date());
-  user: any | null
+  user: any | null;
   uid: string = '';
+  categoriesLoading: boolean = false;
+  filteredProductsLoading: boolean = false;
 
   selectedCategories: Array<{ id: any, name: string }> = [];
 
@@ -41,7 +45,8 @@ export class TableFreeComponent implements OnInit {
     private orderService: OrderService,
     private tableService: TableService,
     private categoryService: CategoryService,
-    private userService: UserService
+    private userService: UserService,
+    private ngZone: NgZone
   ) {}
 
   async ngOnInit() {
@@ -54,11 +59,26 @@ export class TableFreeComponent implements OnInit {
       if (userData) {
         this.user = userData;
         this.uid = user.uid;
-        console.log(this.user);
       } else {
         console.error('Error fetching user points data.');
       }
-  }
+    }
+    if (!this.uid) {
+      const auth = getAuth();
+      const u = auth.currentUser;
+
+      if (u?.uid) {
+        this.uid = u.uid;
+      } else {
+        onAuthStateChanged(auth, (usr) => {
+          this.ngZone.run(() => {
+            if (usr?.uid && !this.uid) {
+              this.uid = usr.uid;
+            }
+          });
+        });
+      }
+    }
   }
 
   loadProducts(): void {
@@ -115,40 +135,62 @@ export class TableFreeComponent implements OnInit {
     }, 0);
   }
 
-  async createOrder() {
-    this.loading = true;
-    const total = this.calculateTotal();
-    this.order = {
-      status: 'IN PROGRESS',
-      tableNumber: this.table?.id ?? 0,
-      date: this.currentDate,
-      time: this.currentTime,
-      total: total.toString(),
-      orderItems: this.orderItems,
-      amountOfPeople: this.selectedAmountOfPeople,
-      employee: this.uid
-    };
+  private ensureUidReady(): boolean {
+    if (this.uid) return true;
 
-    try {
-      const response = await this.orderService.onRegister(this.order);
-
-      if (response && response.order && response.order_id) {
-
-        await this.updateProductsStock();
-        await this.tableService.updateTableAndOrder(response.order, response.order_id);
-        this.updateTable();
-        this.closeDialog();
-      } else {
-        console.log('Order registration failed');
-      }
-    } catch (error: any) {
-      console.error('Error durante el registro:', error);
-    } finally {
-      this.loading = false;
+    const uSvc = this.userService.currentUser as any;
+    if (uSvc?.uid) {
+      this.uid = uSvc.uid;
+      return true;
     }
+
+    const uFb = getAuth().currentUser;
+    if (uFb?.uid) {
+      this.uid = uFb.uid;
+      return true;
+    }
+
+    return false;
   }
 
 
+  async createOrder() {
+    this.loading = true;
+    this.ensureUidReady();
+    if (!this.ensureUidReady()) {
+      console.error('No UID available to create order');
+      this.loading = false;
+      return;
+    }
+
+  const total = this.calculateTotal();
+  this.order = {
+    status: 'IN PROGRESS',
+    tableNumber: this.table?.id ?? 0,
+    date: this.currentDate,
+    time: this.currentTime,
+    total: total.toString(),
+    orderItems: this.orderItems,
+    amountOfPeople: this.selectedAmountOfPeople,
+    employee: this.uid
+  };
+
+  try {
+    const response = await this.orderService.onRegister(this.order);
+    if (response && response.order && response.order_id) {
+      await this.updateProductsStock();
+      await this.tableService.updateTableAndOrder(response.order, response.order_id);
+      this.updateTable();
+      this.closeDialog();
+    } else {
+      console.log('Order registration failed');
+    }
+  } catch (error: any) {
+    console.error('Error durante el registro:', error);
+  } finally {
+    this.loading = false;
+  }
+}
 
   formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -177,6 +219,7 @@ export class TableFreeComponent implements OnInit {
   }
 
   loadCategories(): void {
+    this.categoriesLoading = true;
     this.categoryService.getCategories().subscribe({
       next: (data) => {
         if (data && Array.isArray(data.categories)) {
@@ -186,9 +229,10 @@ export class TableFreeComponent implements OnInit {
             type: item.type
           }));
         }
+        this.categoriesLoading = false;
       },
-      error: (err) => {
-        console.error('Error fetching categories:', err);
+      error: () => {
+        this.categoriesLoading = false;
       }
     });
   }
@@ -204,21 +248,22 @@ export class TableFreeComponent implements OnInit {
   }
 
   getProductsByCategory(categoryIds: string) {
+    this.filteredProductsLoading = true;
     this.categoryService.getProductsByCategory(categoryIds)
       .then((data) => {
         if (data && Array.isArray(data)) {
           this.filteredProducts = data.map(product => ({
             ...product,
-            disabled: product.stock === '0'  // Si stock es '0', deshabilitar
+            disabled: product.stock === '0'
           }));
         } else {
-          console.error('Unexpected data format:', data);
           this.filteredProducts = [];
         }
+        this.filteredProductsLoading = false;
       })
-      .catch((err) => {
-        console.error('Error fetching products by category:', err);
+      .catch(() => {
         this.filteredProducts = [];
+        this.filteredProductsLoading = false;
       });
   }
 
@@ -228,9 +273,6 @@ export class TableFreeComponent implements OnInit {
       this.selectedProduct = null;
     }
   }
-
-
-  /*PODRIA SER UNA FUNCION EN EL BACK LA VERDAD */
 
   async updateProductsStock() {
     try {

@@ -1,3 +1,4 @@
+// src/app/components/table-busy/table-busy.component.ts
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { Order } from 'src/app/models/order';
@@ -19,7 +20,7 @@ import { firstValueFrom } from 'rxjs';
 export class TableBusyComponent implements OnInit {
   @Input() table: Table = new Table('',1);
   @Output() close = new EventEmitter<void>();
-  actualOrder?: Order; 
+  actualOrder?: Order;
   initialOI: OrderItem[] = [];
   orderItems: OrderItem[] = [];
   products : Product[] = [];
@@ -37,11 +38,20 @@ export class TableBusyComponent implements OnInit {
   amountOfPeople: number = 0;
   categories: Category[] = [];
   selectedCategories: Array<{ id: any, name: string }> = [];
-  filteredProducts: Product[] = []; 
+  filteredProducts: Product[] = [];
   user: any | null;
   newOrderItems: OrderItem[] = [];
+  initialLoading: boolean = true;
+  private productsLoaded: boolean = false;
+  private categoriesLoaded: boolean = false;
+  private orderLoaded: boolean = false;
+
+  tipMode: 'none' | 'percent' | 'absolute' = 'none';
+  tipPercent: 5 | 10 | 15 | null = null;
+  tipAbsolute: string = '';
 
   constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService, private userService: UserService) {}
+
   async ngOnInit() {
     this.loadProducts();
     this.getOrderInformation();
@@ -50,7 +60,7 @@ export class TableBusyComponent implements OnInit {
     this.currentTime = this.actualOrder?.time ?? '';
     this.order = this.actualOrder ?? new Order('', 0, '', '', '', [],1, '');
     this.loadCategories();
-}
+  }
 
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
@@ -62,14 +72,16 @@ export class TableBusyComponent implements OnInit {
             type: item.type
           }));
         }
+        this.categoriesLoaded = true;
+        this.checkInitLoadingDone();
       },
       error: (err) => {
-        console.error('Error fetching categories:', err);
+        this.categoriesLoaded = true;
+        this.checkInitLoadingDone();
       }
     });
   }
 
-    
   filterProductsByCategory() {
     if (this.selectedCategories.length === 0) {
       this.filteredProducts = [];
@@ -80,7 +92,6 @@ export class TableBusyComponent implements OnInit {
   }
 
   async getOrderInformation() {
-    console.log(this.table);
     if (this.table.order_id) {
       this.orderService.getOrderById(this.table.order_id.toString()).subscribe({
         next: async (order) => {
@@ -94,39 +105,47 @@ export class TableBusyComponent implements OnInit {
             try {
               const userData = await firstValueFrom(await this.userService.getUserDataFromFirestore(this.actualOrder.employee));
               this.employee = userData?.name ?? 'Unknown Employee';
-              console.log('Employee Name:', this.employee);
-            } catch (err) {
-              console.error('Error fetching employee data:', err);
-            }
+            } catch {}
           }
+          this.orderLoaded = true;
+          this.checkInitLoadingDone();
         },
-        error: (err) => {
-          console.error('Error fetching order information:', err);
+        error: () => {
+          this.orderLoaded = true;
+          this.checkInitLoadingDone();
         }
       });
+    } else {
+      this.orderLoaded = true;
+      this.checkInitLoadingDone();
     }
   }
-  
+
   loadProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
-        console.log('Products fetched:', data);
         if (data && Array.isArray(data.products)) {
           this.products = data.products;
-        } else {
-          console.error('Unexpected data format:', data);
         }
+        this.productsLoaded = true;
+        this.checkInitLoadingDone();
       },
-      error: (err) => {
-        console.error('Error fetching products:', err);
+      error: () => {
+        this.productsLoaded = true;
+        this.checkInitLoadingDone();
       }
-      
     });
   }
 
+  private checkInitLoadingDone() {
+    if (this.productsLoaded && this.categoriesLoaded && this.orderLoaded) {
+      this.initialLoading = false;
+    }
+  }
 
   validateForm() {
     this.canAddProduct = !!this.selectedProduct && this.selectedAmount > 0;
+    return !this.canAddProduct;
   }
 
   addNewProducts() {
@@ -134,8 +153,6 @@ export class TableBusyComponent implements OnInit {
   }
 
   addOrderItem() {
-    console.log(this.selectedProduct);
-    console.log(this.selectedAmount);
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
         product_id: this.selectedProduct.id ?? 0,
@@ -148,14 +165,13 @@ export class TableBusyComponent implements OnInit {
       this.resetForm();
     }
   }
-  
+
   getProductById(productId: number | undefined): Product | undefined {
     if (productId === undefined) {
-      return undefined; 
+      return undefined;
     }
     return this.products.find(product => (product.id) === productId);
   }
-  
 
   removeOrderItem(item: OrderItem) {
     const index = this.orderItems.indexOf(item);
@@ -166,7 +182,7 @@ export class TableBusyComponent implements OnInit {
 
   resetForm() {
     this.selectedProduct = null;
-    this.selectedAmount = 1;
+       this.selectedAmount = 1;
     this.canAddProduct = false;
   }
 
@@ -177,106 +193,127 @@ export class TableBusyComponent implements OnInit {
     }, 0);
   }
 
-  //UPDATE
   async updateOrder() {
     this.loading = true;
     const total = this.calculateTotal().toString();
-  
     if (this.table.order_id) {
       try {
         const success = await this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total);
-  
         if (success) {
-          
           await this.updateProductsStock();
-          console.log('Order items added and stock updated successfully');
-        } else {
-          console.error('Error adding order items.');
         }
       } catch (error) {
-        console.error('Error adding order items:', error);
       } finally {
-        // Finaliza la carga y cierra el diálogo
         this.loading = false;
         this.closeDialog();
       }
     } else {
-      console.error('Order ID is undefined.');
       this.loading = false;
     }
   }
-  
 
   async closeAndUpdateOrder() {
-    this.loading = true;
-    const total = this.calculateTotal().toString();
-  
-    if (!this.table.order_id) {
-      console.error('Order ID is undefined.');
-      this.loading = false;
-      return;
-    }
-  
-    try {
-      // Agregar los elementos de la orden
-      const success = await this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total);
-      if (!success) {
-        console.error('Error adding order items.');
-        return;
-      }
+    this.displayCloseTableDialog = true;
+    this.tipMode = 'none';
+    this.tipPercent = null;
+    this.tipAbsolute = '';
+  }
 
-      await this.updateProductsStock();
-  
-      // Finalizar la orden
+  async confirmCloseWithTip() {
+    if (!this.table.order_id) return;
+    if (!(await this.ensureOrderItemsSaved())) return;
+    this.loading = true;
+    try {
+      console.log("finalizando orden");
       await this.orderService.finalizeOrder(this.table.order_id.toString()).toPromise();
-      console.log('Order status updated to FINALIZED');
-      this.userService.checkUserLevel(this.actualOrder?.employee ?? '').subscribe({
-        next: (response) => {
-            console.log('User level checked successfully:', response);
-        },
-        error: (error) => {
-            console.error('Error checking user level:', error);
+      if (this.tipMode === 'percent' && (this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15)) {
+        await this.orderService.applyTip(this.table.order_id.toString(), 'percent', this.tipPercent);
+      } else if (this.tipMode === 'absolute') {
+        const val = Number(this.tipAbsolute);
+        if (val > 0) {
+          console.log("aplicando tip");
+          await this.orderService.applyTip(this.table.order_id.toString(), 'absolute', val);
         }
-    });
-        
-      // Cerrar la mesa
+      }
       await this.tableService.closeTable(this.table).toPromise();
-      console.log('Table closed successfully');
-  
-      // Cierra el diálogo
       this.closeDialog();
-    
-  
-    } catch (error) {
-      console.error('An error occurred:', error);
+    } catch (e) {
     } finally {
       this.loading = false;
+      this.displayCloseTableDialog = false;
     }
   }
-  
+
+  private async ensureOrderItemsSaved(): Promise<boolean> {
+    const total = this.calculateTotal().toString();
+    try {
+      const ok = await this.orderService.addOrderItems(this.table.order_id!.toString(), this.orderItems, total);
+      if (ok) {
+        await this.updateProductsStock();
+      }
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+
+  tipPreview(): number {
+    const total = this.calculateTotal();
+    if (this.tipMode === 'percent' && this.tipPercent) {
+      return Math.round((total * (this.tipPercent / 100)) * 100) / 100;
+    }
+    if (this.tipMode === 'absolute') {
+      const v = Number(this.tipAbsolute);
+      if (!isNaN(v) && v > 0) return Math.round(v * 100) / 100;
+    }
+    return 0;
+  }
+
+  canSubmitClose(): boolean {
+    if (this.tipMode === 'none') return true;
+    if (this.tipMode === 'percent') return this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15;
+    if (this.tipMode === 'absolute') return Number(this.tipAbsolute) > 0;
+    return false;
+  }
+
+  selectPercent(p: 5 | 10 | 15) {
+    this.tipMode = 'percent';
+    this.tipPercent = p;
+    this.tipAbsolute = '';
+  }
+
+  selectAbsoluteMode() {
+    this.tipMode = 'absolute';
+    this.tipPercent = null;
+  }
+
+  selectNoTip() {
+    this.tipMode = 'none';
+    this.tipPercent = null;
+    this.tipAbsolute = '';
+  }
 
   closeDialog() {
     this.wantToAddNewProduct = false;
     this.displayConfirmDialog = false;
+    this.displayCloseTableDialog = false;
     location.reload();
-    this.close.emit();  
+    this.close.emit();
   }
 
   showConfirmDialog() {
-  
     if (this.areOrderItemsEqual(this.initialOI, this.orderItems)) {
       this.closeDialog();
     } else {
       this.displayConfirmDialog = true;
     }
   }
-  
+
   areOrderItemsEqual(items1: OrderItem[] = [], items2: OrderItem[] = []): boolean {
     if (items1.length !== items2.length) {
       return false;
     }
-  
-    return items1.every((item, index) => 
+    return items1.every((item, index) =>
       item.product_id === items2[index].product_id && item.amount === items2[index].amount
     );
   }
@@ -287,25 +324,20 @@ export class TableBusyComponent implements OnInit {
         if (data && Array.isArray(data)) {
           this.filteredProducts = data.map(product => ({
             ...product,
-            disabled: product.stock === '0'  // Si stock es '0', deshabilitar
+            disabled: product.stock === '0'
           }));
         } else {
-          console.error('Unexpected data format:', data);
           this.filteredProducts = [];
         }
       })
-      .catch((err) => {
-        console.error('Error fetching products by category:', err);
-        this.filteredProducts = []; 
+      .catch(() => {
+        this.filteredProducts = [];
       });
   }
-  
+
   onProductChange(event: any) {
     const selectedProduct = event.value;
-    
-    // Verifica si el producto seleccionado está deshabilitado
     if (selectedProduct?.disabled) {
-      // Si está deshabilitado, cancela la selección
       this.selectedProduct = null;
     }
   }
@@ -313,8 +345,6 @@ export class TableBusyComponent implements OnInit {
   validateAmount() {
     const maxStock = Number(this.selectedProduct?.stock) || 1;
     const enteredAmount = Number(this.selectedAmount);
-  
-    // Asegura que no se pueda poner más del stock disponible ni menos de 1
     if (enteredAmount > maxStock) {
       this.selectedAmount = maxStock;
     } else if (enteredAmount < 1) {
@@ -323,10 +353,12 @@ export class TableBusyComponent implements OnInit {
       this.selectedAmount = enteredAmount;
     }
   }
-  
 
   showCloseTableDialog() {
     this.displayCloseTableDialog = true;
+    this.tipMode = 'none';
+    this.tipPercent = null;
+    this.tipAbsolute = '';
   }
 
   closeCloseTableDialog() {
@@ -335,18 +367,14 @@ export class TableBusyComponent implements OnInit {
 
   async updateProductsStock() {
     try {
-      const updatePromises = this.newOrderItems.map(orderItem => 
+      const updatePromises = this.newOrderItems.map(orderItem =>
         this.productService.updateLowerStock(
           orderItem.product_id?.toString() ?? '',
           orderItem.amount.toString()
         )
       );
-      const responses = await Promise.all(updatePromises);
-      console.log('All updates successful', responses);
+      await Promise.all(updatePromises);
     } catch (error) {
-      console.error('One or more updates failed', error);
     }
   }
-
 }
- 

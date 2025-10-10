@@ -1,3 +1,4 @@
+// src/app/services/order_service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Order } from '../models/order';
@@ -5,13 +6,10 @@ import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-
-  //private baseUrl = 'https://candv-back.onrender.com';
   private baseUrl = 'http://127.0.0.1:8000';
   constructor(private http: HttpClient) { }
 
@@ -29,7 +27,6 @@ export class OrderService {
     try {
       const body = { new_order_items: newItems, new_order_total: total };
       await this.http.put(`${this.baseUrl}/orders/order-items/${orderId}`, body).toPromise();
-
       return true;
     } catch (error: any) {
       console.error('Error adding order items:', error);
@@ -51,8 +48,6 @@ export class OrderService {
   }
 
   assignOrderToTable(orderId: number, tableId: number): Observable<any> {
-    console.log(`Assigning order ${orderId} to table ${tableId}`);
-
     return this.http.put<any>(`${this.baseUrl}/orders/asign-table/${orderId}/${tableId}`, null).pipe(
       tap(response => console.log('Response from API:', response)),
       catchError(error => {
@@ -65,10 +60,21 @@ export class OrderService {
   assignEmployeeToOrder(orderId: number, uid: string){
     return this.http.put<any>(`${this.baseUrl}/orders/assign-order-employee/${orderId}/${uid}`, {});
   }
+
   deleteOrderItems(orderId: string, orderItems: string[]) {
     return this.http.delete(`${this.baseUrl}/orders/delete-order-item/${orderId}`, {
       body: orderItems
-    });
+    });
   }
 
+  async applyTip(orderId: string, mode: 'percent' | 'absolute', value: number): Promise<any | null> {
+    try {
+      const body = { order_id: orderId, mode, value };
+      const res = await this.http.post(`${this.baseUrl}/attendance/tips/apply`, body).toPromise();
+      return res;
+    } catch (error) {
+      console.error('Error applying tip:', error);
+      return null;
+    }
+  }
 }

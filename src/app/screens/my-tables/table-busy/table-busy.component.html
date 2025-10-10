@@ -1,141 +1,142 @@
+<!-- src/app/components/table-busy/table-busy.component.html -->
 <div class="container-table-free">
+
+  <div *ngIf="initialLoading" class="loading-overlay">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
 
   <div *ngIf="loading" class="loading-overlay">
     <p-progressSpinner></p-progressSpinner>
   </div>
 
-    <div class="header">
-      <h2 class="table-number">Table: {{ table.id }}</h2>
+  <div class="header">
+    <h2 class="table-number">Table: {{ table.id }}</h2>
+    <div style="display:flex; align-items:center; gap:.5rem;">
       <span class="status">{{ table.status }}</span>
-    </div>
-  
-    <div class="body">
-      <div class="subtitle">
-        <div class="date-time-wrapper">
-          <p class="capacity">Capacity: {{ table.capacity }}</p>
-          <p>People: {{amountOfPeople}}</p>
-          <p>Employee: {{employee}}</p>
-        </div>
-        <div class="date-time-wrapper">
-          <p class="current-date">{{ currentDate }}</p>
-          <p class="current-time">{{ currentTime }}hs</p>
-        </div>
-      </div>
-  
-      <!-- Formulario de la orden -->
-      <div class="order-form">
-        <div class="table-wrapper">
-          <table class="product-table">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Amount</th>
-                <th>Price</th>
-                <!--<th></th>-->
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of orderItems">
-                <td>{{ getProductById(item.product_id)?.name }}</td>
-                <td>{{ item.amount }}</td>
-                <td>{{ getProductById(item.product_id)?.price | currency }}</td>
-                <!-- <td>
-                 <button class="remove-button" (click)="removeOrderItem(item)">
-                    <i class="pi pi-trash"></i>
-                  </button>
-                </td>-->
-              </tr>
-              
-            </tbody>
-          </table>
-        </div>
-
-        <div *ngIf="wantToAddNewProduct">
-
-          <div class="category-selection">
-            <div class="category">
-              <label for="categories">Select Categories:</label>
-              <p-multiSelect 
-                id="categories" 
-                [options]="categories" 
-                [appendTo]="'body'"
-                [(ngModel)]="selectedCategories" 
-                optionLabel="name" 
-                placeholder="Choose Categories" 
-                (onChange)="filterProductsByCategory()">
-              </p-multiSelect>
-            </div>
-          </div>
-    
-          <div  *ngIf="selectedCategories.length > 0">
-            <div class="add-product">
-                <label for="product">Product:</label>
-                <p-dropdown 
-                  [options]="filteredProducts" 
-                  [(ngModel)]="selectedProduct" 
-                  optionLabel="name"
-                  [appendTo]="'body'"
-                  [filter]="true"
-                  filterBy="name"
-                  [showClear]="true"
-                  placeholder="Select a Product"
-                  (onChange)="onProductChange($event)">
-                
-                  <ng-template pTemplate="selectedItem" let-selectedProduct>
-                    <div class="flex align-items-center gap-2">
-                      <div>{{ selectedProduct?.name }}</div>
-                    </div>
-                  </ng-template>
-                
-                  <ng-template let-product pTemplate="item">
-                    <div 
-                      class="flex align-items-center gap-2" 
-                      [ngClass]="{'disabled-option': product.disabled}"
-                      [class.pointer-none]="product.disabled">
-                      <div>{{ product.name }}</div>
-                      <span *ngIf="product.disabled" class="out-of-stock"> (Out of stock)</span>
-                    </div>
-                  </ng-template>
-                </p-dropdown>
-              
-                <div class="amount-price-wrapper">
-                  <div class="amount">
-                    <label for="amount">Amount:</label>
-                    <input id="amount" type="number"  (blur)="validateAmount()" [(ngModel)]="selectedAmount" min="1"  [max]="selectedProduct?.stock || 1" [title]="'Maximum stock: ' + (selectedProduct?.stock || 0)"/>
-                  </div>
-                  <div class="price">
-                    <label for="price">Price:</label>
-                    <input id="price" type="text" [value]="selectedProduct?.price" disabled />
-                  </div>
-                </div>
-                
-              </div>
-    
-          <div class="add-product-button">
-            <button  [disabled]="validateForm()" (click)="addOrderItem()">Add Product</button>
-          </div>
-        </div>
-      </div>
-
-        <div *ngIf="!wantToAddNewProduct" class="add-product-button">
-          <button (click)="addNewProducts()">Add Products</button>
-        </div>
-  
-      </div>
-  
-      <!-- Total -->
-      <div class="total">
-        <p>Total: {{ calculateTotal() | currency }}</p>
-      </div>
-  
-      <!-- Botones de acción -->
-      <div class="action-buttons">
-        <button pButton label="Close Table" class="create-order-button" (click)="showCloseTableDialog()"></button>
-        <button pButton label="Save" class="close-button" (click)="showConfirmDialog()"></button>
-      </div>
+      <button
+        pButton
+        type="button"
+        icon="pi pi-times"
+        class="p-button-rounded p-button-text p-button-danger"
+        (click)="closeDialog()"
+        aria-label="Close dialog">
+      </button>
     </div>
   </div>
-  
+
+  <div class="body">
+    <div class="subtitle">
+      <div class="date-time-wrapper">
+        <p class="capacity">Capacity: {{ table.capacity }}</p>
+        <p>People: {{amountOfPeople}}</p>
+        <p>Employee: {{employee}}</p>
+      </div>
+      <div class="date-time-wrapper">
+        <p class="current-date">{{ currentDate }}</p>
+        <p class="current-time">{{ currentTime }}hs</p>
+      </div>
+    </div>
+
+    <div class="order-form">
+      <div class="table-wrapper">
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Amount</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of orderItems">
+              <td>{{ getProductById(item.product_id)?.name }}</td>
+              <td>{{ item.amount }}</td>
+              <td>{{ getProductById(item.product_id)?.price | currency }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="wantToAddNewProduct">
+        <div class="category-selection">
+          <div class="category">
+            <label for="categories">Select Categories:</label>
+            <p-multiSelect
+              id="categories"
+              [options]="categories"
+              [appendTo]="'body'"
+              [(ngModel)]="selectedCategories"
+              optionLabel="name"
+              placeholder="Choose Categories"
+              (onChange)="filterProductsByCategory()">
+            </p-multiSelect>
+          </div>
+        </div>
+
+        <div *ngIf="selectedCategories.length > 0">
+          <div class="add-product">
+            <label for="product">Product:</label>
+            <p-dropdown
+              [options]="filteredProducts"
+              [(ngModel)]="selectedProduct"
+              optionLabel="name"
+              [appendTo]="'body'"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              placeholder="Select a Product"
+              (onChange)="onProductChange($event)">
+
+              <ng-template pTemplate="selectedItem" let-selectedProduct>
+                <div class="flex align-items-center gap-2">
+                  <div>{{ selectedProduct?.name }}</div>
+                </div>
+              </ng-template>
+
+              <ng-template let-product pTemplate="item">
+                <div
+                  class="flex align-items-center gap-2"
+                  [ngClass]="{'disabled-option': product.disabled}"
+                  [class.pointer-none]="product.disabled">
+                  <div>{{ product.name }}</div>
+                  <span *ngIf="product.disabled" class="out-of-stock"> (Out of stock)</span>
+                </div>
+              </ng-template>
+            </p-dropdown>
+
+            <div class="amount-price-wrapper">
+              <div class="amount">
+                <label for="amount">Amount:</label>
+                <input id="amount" type="number" (blur)="validateAmount()" [(ngModel)]="selectedAmount" min="1" [max]="selectedProduct?.stock || 1" [title]="'Maximum stock: ' + (selectedProduct?.stock || 0)"/>
+              </div>
+              <div class="price">
+                <label for="price">Price:</label>
+                <input id="price" type="text" [value]="selectedProduct?.price" disabled />
+              </div>
+            </div>
+          </div>
+
+          <div class="add-product-button">
+            <button [disabled]="validateForm()" (click)="addOrderItem()">Add Product</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!wantToAddNewProduct" class="add-product-button">
+        <button (click)="addNewProducts()">Add Products</button>
+      </div>
+    </div>
+
+    <div class="total">
+      <p>Total: {{ calculateTotal() | currency }}</p>
+    </div>
+
+    <div class="action-buttons">
+      <button pButton label="Close Table" class="create-order-button" (click)="showCloseTableDialog()"></button>
+      <button pButton label="Save" class="close-button" (click)="showConfirmDialog()"></button>
+    </div>
+  </div>
+
   <p-dialog class="white-background-modal" [(visible)]="displayConfirmDialog" [modal]="true" header="Save Changes" [closable]="true">
     <app-confirmation-pop-up
       [subtitle]="'Do you want to save your changes?'"
@@ -145,15 +146,32 @@
       [sendLabel]="'Yes'">
     </app-confirmation-pop-up>
   </p-dialog>
-  
-  <p-dialog class="white-background-modal" [(visible)]="displayCloseTableDialog" [modal]="true" header="Close Table" [closable]="true">
-    <app-confirmation-pop-up
-      [subtitle]="'Are you sure you want to close this table?'"
-      (onClose)="closeCloseTableDialog()"
-      (onSend)="closeAndUpdateOrder()"
-      [cancelLabel]="'No'"
-      [sendLabel]="'Yes'">
-    </app-confirmation-pop-up>
-  </p-dialog>
-  
 
+  <p-dialog class="white-background-modal" [(visible)]="displayCloseTableDialog" [modal]="true" header="Close Table" [closable]="true">
+    <div style="display:flex; flex-direction:column; gap:12px; min-width:260px;">
+      <div style="font-weight:600;">¿Dejaron propina?</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button pButton [class]="tipMode==='percent' && tipPercent===5 ? 'p-button p-button-success' : 'p-button p-button-outlined'" label="5%" (click)="selectPercent(5)"></button>
+        <button pButton [class]="tipMode==='percent' && tipPercent===10 ? 'p-button p-button-success' : 'p-button p-button-outlined'" label="10%" (click)="selectPercent(10)"></button>
+        <button pButton [class]="tipMode==='percent' && tipPercent===15 ? 'p-button p-button-success' : 'p-button p-button-outlined'" label="15%" (click)="selectPercent(15)"></button>
+        <button pButton [class]="tipMode==='absolute' ? 'p-button p-button-warning' : 'p-button p-button-outlined'" label="Otro $" (click)="selectAbsoluteMode()"></button>
+        <button pButton [class]="tipMode==='none' ? 'p-button p-button-secondary' : 'p-button p-button-outlined'" label="Sin propina" (click)="selectNoTip()"></button>
+      </div>
+
+      <div *ngIf="tipMode==='absolute'" style="display:flex; align-items:center; gap:8px;">
+        <span>$</span>
+        <input type="number" min="1" [(ngModel)]="tipAbsolute" style="flex:1; padding:6px 8px; border-radius:6px; border:1px solid #ddd;" />
+      </div>
+
+      <div *ngIf="tipMode!=='none'" style="font-weight:600;">
+        Total tip: {{ tipPreview() | currency }}
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+        <button pButton class="p-button-outlined" label="Cancelar" (click)="closeCloseTableDialog()"></button>
+        <button pButton class="p-button-success" [disabled]="!canSubmitClose()" label="Save" (click)="confirmCloseWithTip()"></button>
+      </div>
+    </div>
+  </p-dialog>
+
+</div>

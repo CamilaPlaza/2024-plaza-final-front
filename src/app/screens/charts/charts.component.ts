@@ -134,62 +134,54 @@ export class ChartsComponent implements OnInit {
 
     // ==== SIN localStorage ====
     loadMonthlyRevenue() {
-        this.startLoading();
-        this.chartService.getMonthlyRevenue()
-            .pipe(finalize(() => this.doneLoading()))
-            .subscribe(
-            (response) => {
-                if (response && Object.keys(response).length > 0) {
-                    const monthNames: { [key: string]: string } = {
-                        "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
-                        "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
-                        "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
-                    };
+  this.startLoading();
+  this.chartService.getMonthlyRevenue()
+    .pipe(finalize(() => this.doneLoading()))
+    .subscribe(
+      (response) => {
+        if (!response || Object.keys(response).length === 0) {
+          console.warn('No monthly revenue data available');
+          this.monthlyData = { labels: [], datasets: [] };
+          return;
+        }
 
-                    const years: { [year: string]: { [month: string]: number } } = {};
+        // Mapa: year -> [12 meses en 0]
+        const byYear: Record<string, number[]> = {};
 
-                    Object.keys(response).forEach(date => {
-                        const [year, month] = date.split('-');
-                        if (!years[year]) years[year] = {};
-                        years[year][month] = response[date];
-                    });
+        // Normalizo claves tipo "YYYY-MM" y cargo al año/mes correspondiente
+        Object.entries(response).forEach(([ym, value]) => {
+          const [yearRaw, monthRaw] = ym.split('-');
+          const year = String(yearRaw);
+          const monthIdx = Math.max(0, Math.min(11, parseInt(monthRaw, 10) - 1));
+          const amount = typeof value === 'number' ? value : parseFloat(String(value) || '0');
 
-                    const datasets: { label: string, data: number[], fill: boolean, borderColor: string, tension: number }[] = [];
-                    const lineColors = ['#0000FF', '#8B4513'];
+          if (!byYear[year]) byYear[year] = new Array(12).fill(0);
+          byYear[year][monthIdx] += isNaN(amount) ? 0 : amount;
+        });
 
-                    Object.keys(years).forEach((year, index) => {
-                        const monthsInYear = Object.keys(years[year]).sort((a, b) => parseInt(a) - parseInt(b));
-                        const revenueData = monthsInYear.map(month => years[year][month]);
-                        const borderColor = index === 0 ? lineColors[0] : lineColors[1];
+        const labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-                        datasets.push({
-                            label: `Revenue ${year}`,
-                            data: revenueData,
-                            fill: false,
-                            borderColor,
-                            tension: 0.4
-                        });
-                    });
+        const lineColors = ['#0000FF', '#8B4513', '#2E8B57', '#A52A2A', '#4B0082'];
 
-                    const orderedMonthNames = Object.keys(monthNames)
-                        .sort((a, b) => parseInt(a) - parseInt(b))
-                        .map(month => monthNames[month]);
+        const yearsSorted = Object.keys(byYear).sort();
+        const datasets = yearsSorted.map((year, idx) => ({
+          label: `Revenue ${year}`,
+          data: byYear[year],
+          fill: false,
+          borderColor: lineColors[idx % lineColors.length],
+          tension: 0.4,
+          pointRadius: 3
+        }));
 
-                    this.monthlyData = {
-                        labels: orderedMonthNames,
-                        datasets
-                    };
-                } else {
-                    console.warn('No monthly revenue data available');
-                    this.monthlyData = { labels: [], datasets: [] };
-                }
-            },
-            (error) => {
-                console.error('Error fetching monthly revenue', error);
-                this.monthlyData = { labels: [], datasets: [] };
-            }
-        );
-    }
+        this.monthlyData = { labels, datasets };
+      },
+      (error) => {
+        console.error('Error fetching monthly revenue', error);
+        this.monthlyData = { labels: [], datasets: [] };
+      }
+    );
+}
+
 
     loadAveragePerPersonData() {
         const year = this.selectedYear ?? this.yearActual.toString();

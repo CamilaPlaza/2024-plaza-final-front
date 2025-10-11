@@ -200,16 +200,17 @@ html, body {
 
 /* Overlay */
 .spinner-overlay {
-  position: absolute;
-  inset: 0; /* top/right/bottom/left: 0 */
+  position: fixed;         /* ⬅️ cubre toda la ventana */
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.65); /* leve velo */
+  background: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(2px);
-  z-index: 10; /* por encima de los charts */
+  z-index: 9999;           /* bien arriba de todo */
   flex-direction: column;
+  pointer-events: all; 
 }
 
 .spinner-text {

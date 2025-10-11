@@ -119,16 +119,16 @@ html, body {
 }
 
 .per-day-chart .card, .per-person-chart .card {
-    width: 96%; 
-    height: auto; 
+    width: 96%;
+    height: auto;
 }
 
 .per-day-chart .card, .per-person-chart .card {
-    width: 96%; 
-    height: auto; 
+    width: 96%;
+    height: auto;
 }
 
-::ng-deep .per-day-chart p-chart, 
+::ng-deep .per-day-chart p-chart,
 ::ng-deep .per-person-chart p-chart {
     width: 70%;
     height: auto;
@@ -187,9 +187,44 @@ html, body {
     margin-top: 20px;
 }
 
+/* Mantengo tus estilos; agrego sólo lo del overlay */
+
+.container {
+  position: relative;
+}
+
+.charts {
+  position: relative; /* para que el overlay posicione respecto a este contenedor */
+  min-height: 300px;  /* asegura altura para ver el spinner */
+}
+
+/* Overlay */
+.spinner-overlay {
+  position: absolute;
+  inset: 0; /* top/right/bottom/left: 0 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.65); /* leve velo */
+  backdrop-filter: blur(2px);
+  z-index: 10; /* por encima de los charts */
+  flex-direction: column;
+}
+
+.spinner-text {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* Opcional: evitar clics debajo mientras carga */
+.spinner-overlay {
+  pointer-events: all;
+}
+
 
 @media (max-width: 768px) {
-   
+
     .container {
         margin-left: 10%;
     }
@@ -197,7 +232,7 @@ html, body {
     .title-section {
         flex: 0.05;
     }
-    
+
     .title {
         font-size: 1.5rem;
     }
@@ -210,20 +245,20 @@ html, body {
     .chart-wrapper.category-revenue,
     .chart-wrapper.monthly-revenue {
         max-width: 100%;
-        margin-bottom: 10px; 
+        margin-bottom: 10px;
     }
 
     .chart-wrapper.per-day-chart,
     .chart-wrapper.per-person-chart {
-        max-width: 100%; 
-        margin-top: -10%; 
+        max-width: 100%;
+        margin-top: -10%;
     }
 
     .card {
         width: 100%;
     }
 
-    ::ng-deep .per-day-chart p-chart, 
+    ::ng-deep .per-day-chart p-chart,
     ::ng-deep .per-person-chart p-chart{
         width: 100%;
         height: auto;

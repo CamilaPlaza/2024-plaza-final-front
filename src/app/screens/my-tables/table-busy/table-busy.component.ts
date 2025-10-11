@@ -309,7 +309,6 @@ async confirmCloseWithTip() {
 
     const value = (e.target as HTMLInputElement).value;
     const newChar = e.key;
-    const max = this.maxTip.toString();
 
     if (['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'].includes(e.key)) return;
 

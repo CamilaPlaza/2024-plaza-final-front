@@ -30,7 +30,7 @@ export class WorkdayComponent implements OnInit, OnDestroy {
 
   showCheckInPopup = false;
   showCheckOutPopup = false;
-  tipsToday = 17.50;
+  tipsToday = 0;
 
   private sub?: Subscription;
   private authUnsub?: () => void;
@@ -149,6 +149,13 @@ export class WorkdayComponent implements OnInit, OnDestroy {
     this.attendanceId   = openResp?.attendance_id ?? null;
 
     try { await this.loadTodayTimes(uid); } catch {}
+
+    try {
+      const tips = await lastValueFrom(this.assistance.getCurrentTipsTotal());
+      this.tipsToday = Number(tips?.tips_total_ars ?? 0) || 0;
+    } catch {
+      this.tipsToday = 0;
+    }
 
     if (this.attendanceOpen) {
       this.allowCheckIn = false;

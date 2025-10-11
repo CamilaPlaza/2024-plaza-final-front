@@ -47,5 +47,11 @@ export class AssistanceService {
     return this.http.get(`${this.baseUrl}/attendance/today`, { params });
   }
 
+  getCurrentTipsTotal() {
+    return this.http.get<{ open: boolean; attendance_id: string | null; tips_total_ars: number; tipped_orders: string[] }>(
+      `${this.baseUrl}/attendance/tips/total`
+    );
+  }
+
 
 }

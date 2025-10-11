@@ -61,38 +61,31 @@ export class NewGoalComponent implements OnInit  {
     const response = await this.goalService.createGoal(newGoal);
 
     if (response) {
-        // Si la respuesta es válida, emitimos el evento
         this.goalAdded.emit(newGoal);
     } else {
-        // Manejo de errores si la creación falla
         console.error("Failed to create goal");
-        // Puedes agregar aquí lógica adicional si deseas mostrar un mensaje de error al usuario
     }
   }
 
   async addCategoryGoal() {
     const newGoal = new Goal(
-        this.goalTitle, 
-        this.goalDescription, 
-        this.targetAmount, 
-        0, 
-        this.goalColor, 
-        'pi ' + this.selectedIcon, 
-        this.formatDeadline(this.goalDeadline), 
-        this.selectedCategory?.id // Usamos `?.` para evitar errores si no hay categoría seleccionada
+        this.goalTitle,
+        this.goalDescription,
+        this.targetAmount,
+        0,
+        this.goalColor,
+        'pi ' + this.selectedIcon,
+        this.formatDeadline(this.goalDeadline),
+        this.selectedCategory?.id
     );
     console.log(newGoal);
 
-    // Llamada al servicio para crear el objetivo
     const response = await this.goalService.createGoal(newGoal);
 
     if (response) {
-        // Si la respuesta es válida, emitimos el evento
         this.goalAdded.emit(newGoal);
     } else {
-        // Manejo de errores si la creación falla
         console.error("Failed to create goal");
-        // Puedes agregar aquí lógica adicional si deseas mostrar un mensaje de error al usuario
     }
 }
 
@@ -116,33 +109,32 @@ export class NewGoalComponent implements OnInit  {
 
   formatDeadline(date: Date): string {
     if (!date) return '';
-    
+
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear().toString().slice(-2);
-    
+
     return `${month}/${year}`;
   }
-  
+
 
   selectGoalType(type: string) {
     this.selectedGoalType = type;
   }
   loadCategories(): void {
-    const month = (this.goalDeadline.getMonth() + 1).toString(); 
-    const year = (this.goalDeadline.getFullYear().toString()).slice(-2); 
-  
+    const month = (this.goalDeadline.getMonth() + 1).toString();
+    const year = (this.goalDeadline.getFullYear().toString()).slice(-2);
+
     this.goalService.getGoals(month, year).subscribe((goals: Goal[]) => {
       this.goals = goals;
-      
-      // Check if there is already a final gain goal (categoryId = null)
+
       this.hasFinalGainGoal = goals.some(goal => goal.categoryId === null);
       console.log('Is there a final gain goal for this period?', this.hasFinalGainGoal);
-  
+
       const categoryIdsWithGoals = goals.map(goal => goal.categoryId?.toString());
       this.categoryService.getCategories().subscribe({
         next: (categoryData) => {
           if (categoryData && Array.isArray(categoryData.categories)) {
-            this.categories = categoryData.categories.filter(category => 
+            this.categories = categoryData.categories.filter(category =>
               !categoryIdsWithGoals.includes(category.id?.toString())
             );
           }
@@ -165,7 +157,7 @@ export class NewGoalComponent implements OnInit  {
  isFormValid(): boolean {
   return this.goalTitle && this.goalDeadline && this.goalDescription && this.goalColor && this.selectedIcon &&
          this.targetAmount > 0 &&
-         ((this.selectedGoalType === 'category' && this.selectedCategory) || 
+         ((this.selectedGoalType === 'category' && this.selectedCategory) ||
           (this.selectedGoalType === 'finalGain' && !this.hasFinalGainGoal));
 }
 

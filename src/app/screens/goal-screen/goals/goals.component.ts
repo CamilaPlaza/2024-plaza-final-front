@@ -14,7 +14,7 @@ export class GoalsComponent implements OnInit {
   visibleGoals: Goal[] = [];
   currentIndex: number = 0;
   itemsPerPage: number = 4;
-  selectedDate: Date = new Date();  
+  selectedDate: Date = new Date();
   data: any;
   options: any;
   isMobile: boolean = false;
@@ -22,7 +22,7 @@ export class GoalsComponent implements OnInit {
   displayDialog: boolean = false;
   totalIncomeExpected: number = 0;
 
-  constructor(private goalService: GoalService) { 
+  constructor(private goalService: GoalService) {
     this.checkIfMobile();
   }
 
@@ -30,7 +30,7 @@ export class GoalsComponent implements OnInit {
     const date = new Date();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = String(date.getFullYear()).slice(-2);
-    this.getGoals(month, year);    
+    this.getGoals(month, year);
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -57,19 +57,19 @@ export class GoalsComponent implements OnInit {
 
     this.goalService.getGoals(month, year).subscribe(
       (goals: Goal[]) => {
-        this.goals = goals; 
+        this.goals = goals;
         this.visibleGoals = this.goals.slice(0, this.itemsPerPage);
         this.updateVisibleGoals();
-  
+
         this.calculateProgressValues();
         this.totalProgress = this.goals.reduce((acc, item) => acc + item.actualIncome, 0);
         this.totalIncomeExpected = this.goals.reduce((acc, item) => acc + item.expectedIncome, 0);
-  
+
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-  
+
         this.data = {
           labels: this.goals.map(goal => goal.title),
           datasets: [
@@ -81,7 +81,7 @@ export class GoalsComponent implements OnInit {
             }
           ]
         };
-  
+
         this.options = {
           indexAxis: 'y',
           maintainAspectRatio: false,
@@ -120,7 +120,7 @@ export class GoalsComponent implements OnInit {
         };
       },
       (error) => {
-        console.error('Error fetching goals:', error);  // Error handling
+        console.error('Error fetching goals:', error);
       }
     );
 
@@ -130,9 +130,9 @@ export class GoalsComponent implements OnInit {
   onDateChange(event: any){
     const month = String(this.selectedDate.getMonth() + 1).padStart(2, '0');
     const year = String(this.selectedDate.getFullYear()).slice(-2);
-    this.getGoals(month, year);   
+    this.getGoals(month, year);
   }
-  
+
 
   calculateProgressValues() {
     this.goals.forEach(goal => {
@@ -142,7 +142,6 @@ export class GoalsComponent implements OnInit {
   }
 
   progressWidth(progress: number) {
-    // Cap the progress at 100 before dividing
     return progress / this.goals.length;
   }
 
@@ -167,7 +166,7 @@ export class GoalsComponent implements OnInit {
     this.selectedDate = new Date(year, month, 0);
   }
 
-  
+
   updateVisibleCategories(): void {
     this.visibleGoals = this.goals.slice(this.currentIndex, this.currentIndex + this.itemsPerPage);
   }
@@ -198,11 +197,10 @@ export class GoalsComponent implements OnInit {
     const totalExpectedIncome = this.goals.reduce((acc, item) => acc + item.expectedIncome, 0);
     const progress = (this.totalProgress/totalExpectedIncome)*100;
 
-  
+
     if (dayOfMonth >= 1 && dayOfMonth <= 10) {
-      return 'green'; // Siempre verde entre el día 1 y 10
+      return 'green';
     } else if (dayOfMonth >= 11 && dayOfMonth <= 20) {
-      // Lógica entre el día 11 y 20
       if (progress > 40) {
         return 'green';
       } else if (progress > 20) {
@@ -211,7 +209,6 @@ export class GoalsComponent implements OnInit {
         return 'red';
       }
     } else {
-      // Lógica entre el día 21 y el último día del mes
       if (progress > 80) {
         return 'green';
       } else if (progress > 50) {
@@ -221,17 +218,15 @@ export class GoalsComponent implements OnInit {
       }
     }
   }
-  
+
   openDialog() {
     this.displayDialog = true;
   }
 
   onGoalAdded(newGoal: any) {
     this.goals.push(newGoal);
-    console.log(newGoal);
     this.displayDialog = false;
   }
-  
-  
+
 
 }

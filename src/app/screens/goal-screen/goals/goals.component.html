@@ -97,6 +97,11 @@
   </div>
 </div>
 
-<p-dialog header="Add New Goal" class="new-goal-dialog" [(visible)]="displayDialog" [modal]="true" [closable]="true">
+<!-- 👇 ÚNICO CAMBIO: usar styleClass en lugar de class -->
+<p-dialog header="Add New Goal"
+          [(visible)]="displayDialog"
+          [modal]="true"
+          [closable]="true"
+          styleClass="new-goal-dialog">
   <app-new-goal (goalAdded)="onGoalAdded($event)"></app-new-goal>
 </p-dialog>

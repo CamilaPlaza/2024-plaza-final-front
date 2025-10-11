@@ -147,15 +147,22 @@
     </app-confirmation-pop-up>
   </p-dialog>
 
-  <p-dialog class="white-background-modal" [(visible)]="displayCloseTableDialog" [modal]="true" header="Close Table" [closable]="true">
+  <p-dialog
+    class="white-background-modal tip-dialog"
+    [(visible)]="displayCloseTableDialog"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    header="Close Table"
+    [closable]="true">
     <div style="display:flex; flex-direction:column; gap:12px; min-width:260px;">
-      <div style="font-weight:600;">¿Dejaron propina?</div>
+      <div style="font-weight:600;">Did they leave a tip?</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
         <button pButton [class]="tipMode==='percent' && tipPercent===5 ? 'p-button p-button-success' : 'p-button p-button-outlined'" label="5%" (click)="selectPercent(5)"></button>
         <button pButton [class]="tipMode==='percent' && tipPercent===10 ? 'p-button p-button-success' : 'p-button p-button-outlined'" label="10%" (click)="selectPercent(10)"></button>
         <button pButton [class]="tipMode==='percent' && tipPercent===15 ? 'p-button p-button-success' : 'p-button p-button-outlined'" label="15%" (click)="selectPercent(15)"></button>
-        <button pButton [class]="tipMode==='absolute' ? 'p-button p-button-warning' : 'p-button p-button-outlined'" label="Otro $" (click)="selectAbsoluteMode()"></button>
-        <button pButton [class]="tipMode==='none' ? 'p-button p-button-secondary' : 'p-button p-button-outlined'" label="Sin propina" (click)="selectNoTip()"></button>
+        <button pButton [class]="tipMode==='absolute' ? 'p-button p-button-warning' : 'p-button p-button-outlined'" label="Other $" (click)="selectAbsoluteMode()"></button>
+        <button pButton [class]="tipMode==='none' ? 'p-button p-button-secondary' : 'p-button p-button-outlined'" label="No tip" (click)="selectNoTip()"></button>
       </div>
 
       <div *ngIf="tipMode==='absolute'" style="display:flex; align-items:center; gap:8px;">
@@ -168,7 +175,7 @@
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
-        <button pButton class="p-button-outlined" label="Cancelar" (click)="closeCloseTableDialog()"></button>
+        <button pButton class="p-button-outlined" label="Cancel" (click)="closeCloseTableDialog()"></button>
         <button pButton class="p-button-success" [disabled]="!canSubmitClose()" label="Save" (click)="confirmCloseWithTip()"></button>
       </div>
     </div>

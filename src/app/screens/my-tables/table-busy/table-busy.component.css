@@ -6,7 +6,7 @@
     margin: auto;
     overflow: hidden;
   }
-  
+
   .header {
     display: flex;
     justify-content: space-between;
@@ -14,84 +14,84 @@
     padding: 15px;
     background-color: #7f522e;
   }
-  
+
   .table-number {
     font-size: 1.5rem;
     color: #ffffff;
     margin: 0;
   }
-  
+
   .status {
     font-size: 1.2rem;
     font-weight: 500;
     color: #ffffff;
   }
-  
+
   .body {
     padding: 20px;
   }
-  
+
   .date-time-wrapper {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0px;
     margin-top: -15px;
   }
-  
+
   .current-date,
   .current-time {
     font-size: 1rem;
     color: #533521;
   }
-  
+
   .order-form {
     margin-bottom: 20px;
   }
-  
+
   .table-wrapper {
     max-height: 130px;
     overflow-y: auto;
     margin-bottom: 20px;
   }
-  
+
   .product-table {
     width: 100%;
     border-collapse: collapse;
     font-family: 'Arial', sans-serif;
   }
-  
+
   .product-table th {
     background-color: #f5f5f5;
     padding: 12px;
     border-bottom: 2px solid #ddd;
   }
-  
+
   .product-table td {
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #ddd;
   }
-  
+
   .product-table th,
   .product-table td {
     border: none;
   }
-  
+
   .product-table tr:hover {
     background-color: #f9f9f9;
   }
-  
+
   .total {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 20px;
     color: #533521;
   }
-  
+
   .create-order-button{
     margin-right: 2%;
   }
-  
+
   .close-button {
     background-color: #7f522e;
     border: none;
@@ -103,7 +103,7 @@
     transition: background-color 0.3s;
     outline: none;
   }
-  
+
   .create-order-button{
     background-color: #23ae43;
     border: none;
@@ -115,21 +115,21 @@
     transition: background-color 0.3s;
     outline: none;
   }
-  
+
   .close-button:hover {
     background-color: #613d20;
   }
-  
-  
+
+
   .create-order-button:hover {
     background-color: #1b8734;
   }
-  
+
   .action-buttons {
     margin-top: -40px;
     text-align: right;
   }
-  
+
   .add-product {
     justify-content: center;
     display: flex;
@@ -137,13 +137,13 @@
     gap: 10px;
     margin-bottom: 10px;
   }
-  
+
   .add-product label {
     font-weight: bold;
     color: #7f522e;
   }
-  
- 
+
+
 .add-product select {
   width: 110px; /* Ancho reducido */
   padding: 8px;
@@ -159,7 +159,7 @@
   border-radius: 8px;
   border: 1px solid #ddd;
 }
-  
+
   .add-product input[type="text"] {
     width: 80px; /* Tamaño reducido */
     padding: 8px;
@@ -167,14 +167,14 @@
     border: 1px solid #ddd;
     text-align: center;
   }
-  
+
   .add-product-button {
     display: flex;
     justify-content: center;
-    margin-bottom: 5%; 
+    margin-bottom: 5%;
     margin-top: 5%;
   }
-  
+
   .add-product-button button {
     text-align: center;
     background-color: #7f522ee0;
@@ -187,12 +187,12 @@
     transition: background-color 0.3s;
     outline: none;
   }
-  
+
   .add-product-button button:hover {
     background-color: #613d20dd;
   }
-  
-  
+
+
   .remove-button {
     background: none;
     border: none;
@@ -201,11 +201,11 @@
     font-size: 1.2rem;
     transition: color 0.3s;
   }
-  
+
   .remove-button:hover {
     color: #c0392b;
   }
-  
+
   ::ng-deep .white-background-modal .p-dialog {
     background-color: #ffffff !important; /* Fondo blanco del diálogo */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important; /* Sombra del diálogo */
@@ -215,18 +215,31 @@
     background-color: #ffffff !important; /* Fondo blanco del contenido del diálogo */
 }
 
-::ng-deep .white-background-modal .p-dialog .p-dialog-header {
-    background-color: #ffffff !important; /* Fondo blanco del header */
-    border-bottom: 1px solid #ddd !important; /* Opcional: línea en el header */
-}
 
 ::ng-deep .white-background-modal .p-dialog .p-dialog-footer {
     background-color: #ffffff !important; /* Fondo blanco del footer */
     border-top: 1px solid #ddd !important; /* Opcional: línea en el footer */
 }
 ::ng-deep .p-dialog-mask {
-  background-color: transparent !important; 
+  background-color: rgba(0, 0, 0, 0.6) !important;
 }
+
+::ng-deep .white-background-modal.tip-dialog .p-dialog .p-dialog-header {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Por si el tema dibuja línea desde el content */
+::ng-deep .white-background-modal.tip-dialog .p-dialog .p-dialog-content {
+  border-top: none !important;
+}
+
+::ng-deep .white-background-modal.tip-dialog .p-dialog-header {
+  cursor: default !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+}
+
 
 .loading-overlay {
   position: fixed;
@@ -239,7 +252,7 @@
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.3);
-  z-index: 9999; 
+  z-index: 9999;
 }
 
 .add-product {
@@ -248,7 +261,7 @@
 }
 
 .amount-price-wrapper {
-  display: flex; 
+  display: flex;
   gap: 10px;
   margin-top: 10px;
 }
@@ -308,23 +321,23 @@
   .body {
     padding: 15px;
   }
-  
+
   .header {
     padding: 10px;
   }
-  
+
   .table-number {
     font-size: 1.2rem;
   }
-  
+
   .status {
     font-size: 1rem;
   }
-  
+
   .date-time-wrapper {
     margin-bottom: -5px;
   }
-  
+
   .order-form {
     margin-bottom: 10px;
   }
@@ -334,8 +347,8 @@
     margin-top: -5px;
     margin-bottom: -5px;
   }
-  
-  
+
+
   .amountPeople {
     margin: 8px;
   }
@@ -347,8 +360,8 @@
   }
 
   ::ng-deep .p-multiselect-panel {
-    max-width: 150px; 
-    font-size: 0.9rem; 
+    max-width: 150px;
+    font-size: 0.9rem;
   }
 
   ::ng-deep .p-multiselect-item {
@@ -360,8 +373,8 @@
   }
 
   ::ng-deep .p-dropdown-panel {
-    max-width: 150px; 
-    font-size: 0.9rem; 
+    max-width: 150px;
+    font-size: 0.9rem;
   }
 
   ::ng-deep .p-dropdown-item {
@@ -376,20 +389,20 @@
 
   .amount-price-wrapper {
     display: flex;
-    gap: 10px; 
-    margin-top: 10px; 
+    gap: 10px;
+    margin-top: 10px;
   }
 
 
   input[type="number"],
   input[type="text"] {
-    width: 100%; 
+    width: 100%;
   }
-  
+
   .add-product input[type="text"] {
     width: 50px;
-  }  
-  
+  }
+
   .loading-overlay {
     width: 100%;
     margin-left: 3%;
@@ -399,8 +412,8 @@
   ::ng-deep .p-dialog {
     margin-left: 7%;
   }
-  
-    
+
+
   .action-buttons {
     margin-top: -10px;
     text-align: right;

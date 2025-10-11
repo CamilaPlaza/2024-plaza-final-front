@@ -1,7 +1,7 @@
 .container-table-free {
     background-color: #fff;
     border-radius: 30px;
-    width: 600px;
+    min-width: 600px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     margin: auto;
     overflow: hidden;
@@ -240,19 +240,18 @@
   user-select: none !important;
 }
 
-
+.container-table-free {
+  position: relative;
+}
 .loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  border-radius: 8px;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.3);
+  justify-content: center;
+  background-color: rgba(0,0,0,0.3);
   z-index: 9999;
+  border-radius: inherit;
 }
 
 .add-product {

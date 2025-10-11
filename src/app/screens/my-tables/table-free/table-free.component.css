@@ -1,7 +1,7 @@
 .container-table-free {
   background-color: #fff;
   border-radius: 30px;
-  width: 600px;
+  min-width: 600px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   margin: auto;
   overflow: hidden;
@@ -120,7 +120,6 @@
   background-color: #613d20;
 }
 
-
 .create-order-button:hover {
   background-color: #1b8734;
 }
@@ -142,14 +141,12 @@
   color: #7f522e;
 }
 
-
 .amountPeople input[type="number"] {
   width: 70px;
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #ddd;
 }
-
 
 .add-product {
   justify-content: center;
@@ -165,7 +162,7 @@
 }
 
 .add-product select {
-  width: 110px; /* Ancho reducido */
+  width: 110px;
   padding: 8px;
   font-size: 1rem;
   border-radius: 8px;
@@ -181,7 +178,7 @@
 }
 
 .add-product input[type="text"] {
-  width: 80px; /* Tamaño reducido */
+  width: 80px;
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -191,7 +188,7 @@
 .add-product-button {
   display: flex;
   justify-content: center;
-  margin-bottom: 5%; 
+  margin-bottom: 5%;
   margin-top: 5%;
 }
 
@@ -212,7 +209,6 @@
   background-color: #613d20dd;
 }
 
-
 .remove-button {
   background: none;
   border: none;
@@ -226,18 +222,19 @@
   color: #c0392b;
 }
 
+.container-table-free {
+  position: relative;
+}
+
 .loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  border-radius: 8px;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.3); 
+  justify-content: center;
+  background-color: rgba(0,0,0,0.3);
   z-index: 9999;
+  border-radius: inherit;
 }
 
 .add-product {
@@ -246,7 +243,7 @@
 }
 
 .amount-price-wrapper {
-  display: flex; 
+  display: flex;
   gap: 10px;
   margin-top: 10px;
 }
@@ -263,121 +260,137 @@
 }
 
 ::ng-deep .custom-modal .p-dialog {
-  background-color: transparent !important; /* Quita el fondo del diálogo */
-  box-shadow: none !important; /* Quita la sombra alrededor del diálogo */
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
 
 ::ng-deep .custom-modal .p-dialog-content {
-  background-color: transparent !important; /* Quita el fondo del contenido del diálogo */
+  background-color: transparent !important;
 }
 
 ::ng-deep .custom-modal .p-dialog .p-dialog-header {
-  background-color: transparent !important; /* Quita el fondo del header */
-  border-bottom: none !important; /* Opcional: quita la línea del header */
+  background-color: transparent !important;
+  border-bottom: none !important;
 }
 
 ::ng-deep .custom-modal .p-dialog .p-dialog-footer {
-  background-color: transparent !important; /* Quita el fondo del footer */
-  border-top: none !important; /* Opcional: quita la línea del footer */
+  background-color: transparent !important;
+  border-top: none !important;
 }
 
 @media (max-width: 768px) {
 
   .container-table-free {
-    width: 300px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     border-radius: 20px;
-    height: auto;
+    margin: 0;
   }
 
-  .body {
-    padding: 15px;
-  }
-  
   .header {
-    padding: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
-  
-  .table-number {
-    font-size: 1.2rem;
-  }
-  
-  .status {
-    font-size: 1rem;
-  }
-  
+
+
+  .table-number { font-size: 1.25rem; }
+  .status { font-size: 0.95rem; }
+
+  .body { padding: 12px; }
+
   .date-time-wrapper {
-    margin-bottom: 10px;
-  }
-  
-  .order-form {
-    margin-bottom: 10px;
-  }
-
-  .total {
-    font-size: 1.2rem;
-    margin-top: -5px;
-    margin-bottom: -5px;
-  }
-  
-  
-  .amountPeople {
-    margin: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 12px;
   }
 
-  /*REVISAR*/
+  .current-date,
+  .current-time { font-size: 0.95rem; }
 
-  ::ng-deep .p-multiselect {
-    width: 150px;
+  .category-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin: 10px 0 16px;
   }
 
-  ::ng-deep .p-multiselect-panel {
-    max-width: 150px; 
-    font-size: 0.9rem; 
+  .amountPeople input[type="number"] {
+    width: 100%;
   }
-
-  ::ng-deep .p-multiselect-item {
-    padding: 8px;
-  }
-
-  ::ng-deep .p-dropdown {
-    width: 150px;
-  }
-
-  ::ng-deep .p-dropdown-panel {
-    max-width: 150px; 
-    font-size: 0.9rem; 
-  }
-
-  ::ng-deep .p-dropdown-item {
-    padding: 8px;
-  }
-  /**/
 
   .add-product {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
 
   .amount-price-wrapper {
-    display: flex;
-    gap: 10px; 
-    margin-top: 10px; 
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 6px;
   }
 
-
-  input[type="number"],
-  input[type="text"] {
-    width: 100%; 
-  }
-  
+  .add-product select,
+  .add-product input[type="number"],
   .add-product input[type="text"] {
-    width: 50px;
-  }  
-  
-  .loading-overlay {
-    width: 90%;
-    margin-left: 10%;
-    height: 100%;
+    width: 100%;
   }
-  
+
+  ::ng-deep .p-multiselect,
+  ::ng-deep .p-dropdown {
+    width: 100% !important;
+  }
+
+  ::ng-deep .p-multiselect-panel,
+  ::ng-deep .p-dropdown-panel {
+    max-width: 100% !important;
+    font-size: 0.95rem;
+  }
+
+  .order-form { margin-bottom: 12px; }
+  .table-wrapper {
+    max-height: none;
+    overflow: auto;
+  }
+
+  .product-table { font-size: 0.95rem; }
+  .product-table th,
+  .product-table td { padding: 8px; }
+  .product-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .total {
+    font-size: 1.25rem;
+    margin: 8px 0;
+  }
+
+  .action-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    text-align: initial;
+  }
+  .create-order-button,
+  .close-button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .loading-overlay {
+    inset: 0;
+    margin: 0;
+    border-radius: inherit;
+  }
 }

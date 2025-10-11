@@ -16,6 +16,7 @@ export class CheckOutPopupComponent implements OnInit, OnDestroy {
   loadingPreview = false;
   loadingSubmit  = false;
   currentTime = '';
+  tipsToday = 0;
 
   preview: {
     workedMin: number;
@@ -76,8 +77,9 @@ export class CheckOutPopupComponent implements OnInit, OnDestroy {
         return forkJoin({
           today: this.assistance.getTodayAttendance(uid).pipe(catchError(() => of(null))),
           shift: this.assistance.getAssignedShiftForEmployee(uid).pipe(catchError(() => of(null))),
+          tips : this.assistance.getCurrentTipsTotal().pipe(catchError(() => of(null))),
         }).pipe(
-          map(({ today, shift }: any) => {
+          map(({ today, shift, tips }: any) => {
             const checkInIso: string | null = today?.check_in_time ?? null;
             const startStr: string | null = shift?.start_time ?? null;
             const endStr:   string | null = shift?.end_time   ?? null;
@@ -94,6 +96,9 @@ export class CheckOutPopupComponent implements OnInit, OnDestroy {
               expected_end: endStr,
               check_in_time: checkInIso,
             };
+
+            this.tipsToday = Number(tips?.tips_total_ars ?? 0) || 0;
+
             this.loadingPreview = false;
           })
         );

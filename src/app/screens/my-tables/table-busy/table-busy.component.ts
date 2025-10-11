@@ -193,6 +193,27 @@ export class TableBusyComponent implements OnInit {
     }, 0);
   }
 
+  get maxTip(): number {
+    return Math.max(0, this.calculateTotal());
+  }
+
+  // Bloquea notación científica y signos en el input number
+  blockInvalidKeys(e: KeyboardEvent) {
+    if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault();
+  }
+
+  // Recorta el valor tipeado al rango [1, maxTip] y redondea a 2 dec.
+  clampTip() {
+    let v = Number(this.tipAbsolute);
+    if (isNaN(v)) { this.tipAbsolute = ''; return; }
+    if (v < 1) v = 1;
+    const max = this.maxTip;
+    if (v > max) v = max;
+    v = Math.round(v * 100) / 100;
+    this.tipAbsolute = v.toString();
+  }
+
+
   async updateOrder() {
     this.loading = true;
     const total = this.calculateTotal().toString();
@@ -219,30 +240,41 @@ export class TableBusyComponent implements OnInit {
     this.tipAbsolute = '';
   }
 
-  async confirmCloseWithTip() {
-    if (!this.table.order_id) return;
-    if (!(await this.ensureOrderItemsSaved())) return;
-    this.loading = true;
-    try {
-      console.log("finalizando orden");
-      await this.orderService.finalizeOrder(this.table.order_id.toString()).toPromise();
-      if (this.tipMode === 'percent' && (this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15)) {
-        await this.orderService.applyTip(this.table.order_id.toString(), 'percent', this.tipPercent);
-      } else if (this.tipMode === 'absolute') {
-        const val = Number(this.tipAbsolute);
-        if (val > 0) {
-          console.log("aplicando tip");
-          await this.orderService.applyTip(this.table.order_id.toString(), 'absolute', val);
-        }
-      }
-      await this.tableService.closeTable(this.table).toPromise();
-      this.closeDialog();
-    } catch (e) {
-    } finally {
+async confirmCloseWithTip() {
+  if (!this.table.order_id) return;
+
+  this.loading = true;
+
+  try {
+    const ok = await this.ensureOrderItemsSaved();
+    if (!ok) {
       this.loading = false;
-      this.displayCloseTableDialog = false;
+      return;
     }
+
+    console.log("finalizando orden");
+    await this.orderService.finalizeOrder(this.table.order_id.toString()).toPromise();
+
+    if (this.tipMode === 'percent' && (this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15)) {
+      await this.orderService.applyTip(this.table.order_id.toString(), 'percent', this.tipPercent);
+    } else if (this.tipMode === 'absolute') {
+      const val = Number(this.tipAbsolute);
+      if (val > 0) {
+        console.log("aplicando tip");
+        await this.orderService.applyTip(this.table.order_id.toString(), 'absolute', val);
+      }
+    }
+
+    await this.tableService.closeTable(this.table).toPromise();
+    this.closeDialog();
+  } catch (e) {
+    console.error(e);
+  } finally {
+    this.loading = false;
+    this.displayCloseTableDialog = false;
   }
+}
+
 
   private async ensureOrderItemsSaved(): Promise<boolean> {
     const total = this.calculateTotal().toString();
@@ -269,10 +301,35 @@ export class TableBusyComponent implements OnInit {
     return 0;
   }
 
+  limitTipInput(e: KeyboardEvent) {
+    if (['e', 'E', '+', '-'].includes(e.key)) {
+      e.preventDefault();
+      return;
+    }
+
+    const value = (e.target as HTMLInputElement).value;
+    const newChar = e.key;
+    const max = this.maxTip.toString();
+
+    if (['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'].includes(e.key)) return;
+
+    const newValue = value + newChar;
+    const numericValue = Number(newValue);
+
+    if (!isNaN(numericValue) && numericValue > this.maxTip) {
+      e.preventDefault();
+    }
+  }
+
+
   canSubmitClose(): boolean {
     if (this.tipMode === 'none') return true;
-    if (this.tipMode === 'percent') return this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15;
-    if (this.tipMode === 'absolute') return Number(this.tipAbsolute) > 0;
+    if (this.tipMode === 'percent')
+      return this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15;
+    if (this.tipMode === 'absolute') {
+      const v = Number(this.tipAbsolute);
+      return !isNaN(v) && v > 0 && v <= this.maxTip;
+    }
     return false;
   }
 

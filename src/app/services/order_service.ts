@@ -48,7 +48,7 @@ export class OrderService {
   }
 
   assignOrderToTable(orderId: number, tableId: number): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/orders/asign-table/${orderId}/${tableId}`, null).pipe(
+    return this.http.put<any>(`${this.baseUrl}/orders/assign-table/${orderId}/${tableId}`, null).pipe(
       tap(response => console.log('Response from API:', response)),
       catchError(error => {
         console.error('Error assigning order to table:', error);
@@ -58,7 +58,8 @@ export class OrderService {
   }
 
   assignEmployeeToOrder(orderId: number, uid: string){
-    return this.http.put<any>(`${this.baseUrl}/orders/assign-order-employee/${orderId}/${uid}`, {});
+    const safeUid = encodeURIComponent(uid);
+    return this.http.put<any>(`${this.baseUrl}/orders/assign-order-employee/${orderId}/${safeUid}`, {});
   }
 
   deleteOrderItems(orderId: string, orderItems: string[]) {

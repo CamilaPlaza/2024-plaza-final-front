@@ -24,7 +24,7 @@ export class CategoriesComponent implements OnInit {
   categoryToDelete: any;
 
   /*categories: Category[] = [
-    new Category('Breakfast','Default', 1), new Category('Lunch','Default', 2), 
+    new Category('Breakfast','Default', 1), new Category('Lunch','Default', 2),
     new Category('Dinner','Default', 3), new Category('Drinks','Custom', 4)];*/
 
   constructor(private categoryService: CategoryService) {}
@@ -36,7 +36,6 @@ export class CategoriesComponent implements OnInit {
   loadCategories():void{
     this.categoryService.getCategories().subscribe({
       next: (data) => {
-        console.log('Categories fetched:', data);
         if (data && Array.isArray(data.categories)) {
           this.categories = data.categories;
         } else {
@@ -138,7 +137,7 @@ export class CategoriesComponent implements OnInit {
     this.displayDeleteDialog = false;
   }
 
-  
+
   showConfirmDialog(category: any) {
     this.editingCategory = category;
     this.displayConfirmDialog = true;
@@ -165,5 +164,5 @@ export class CategoriesComponent implements OnInit {
   closeNoticeDialog() {
     this.displayNoticeDialog = false;
   }
-  
+
 }

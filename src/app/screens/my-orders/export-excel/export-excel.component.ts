@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { ProductService } from 'src/app/services/product_service';
 
 @Component({
   selector: 'app-export-excel',
@@ -9,61 +8,49 @@ import { ProductService } from 'src/app/services/product_service';
   styleUrls: ['./export-excel.component.css']
 })
 export class ExportExcelComponent {
-  @Input() data: any[] = [];
-  products: any[] = [];
+  @Input() data: any[] = []; // Array de órdenes
 
-  constructor(private productService: ProductService) {
-    this.loadProducts();
-  }
-
-  loadProducts(): void {
-    this.productService.getProducts().subscribe({
-      next: (data) => {
-        if (data && data.message && Array.isArray(data.products)) {
-          this.products = data.products;
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching products:', err);
-      }
-    });
-  }
-  
   exportToExcel(): void {
-    if (this.data.length === 0) {
-      return;
-    }
+    if (!Array.isArray(this.data) || this.data.length === 0) return;
 
     const formattedData = this.data.map(order => ({
-      id: order.id,
-      date: order.date,
-      time: order.time,
-      status: order.status,
-      tableNumber: order.tableNumber,
-      orderItems: this.formatOrderItems(order.orderItems),
-      total: order.total
+      id: order.id ?? '',
+      date: order.date ?? '',
+      time: order.time ?? '',
+      status: order.status ?? '',
+      tableNumber: order.tableNumber ?? '',
+      // 👉 Usamos directamente los campos de orderItems
+      orderItems: this.formatOrderItems(order.orderItems ?? []),
+      // si el total viene como string, lo dejamos; si preferís número, parsealo
+      total: order.total ?? ''
     }));
 
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData);
     const headers = ['ID', 'DATE', 'TIME', 'STATUS', 'TABLENUMBER', 'ORDERITEMS', 'TOTAL'];
 
+    // Creamos sheet con datos (sin header automático)
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedData, { skipHeader: true });
+
+    // Insertamos header en la primera fila
     XLSX.utils.sheet_add_aoa(worksheet, [headers], { origin: 'A1' });
 
-    // Formato para los encabezados
-    const headerRow = worksheet['!rows'] || [];
-    const headerCells = headers.map((_, index) => XLSX.utils.encode_cell({ r: 0, c: index }));
+    // (Opcional) Anchos de columnas para que se vea prolijo
+    worksheet['!cols'] = [
+      { wch: 16 }, // ID
+      { wch: 12 }, // DATE
+      { wch: 10 }, // TIME
+      { wch: 12 }, // STATUS
+      { wch: 12 }, // TABLENUMBER
+      { wch: 60 }, // ORDERITEMS
+      { wch: 12 }, // TOTAL
+    ];
 
+    // (Opcional) Estilos de header — ojo: requieren soporte del build
+    const headerCells = headers.map((_, index) => XLSX.utils.encode_cell({ r: 0, c: index }));
     headerCells.forEach(cellRef => {
-      worksheet[cellRef].s = {
-        fill: {
-          fgColor: { rgb: "FFFF00" } // Color de fondo amarillo
-        },
-        font: {
-          bold: true,
-          color: { rgb: "000000" },
-          sz: 12,
-          name: "Arial"
-        }
+      if (!worksheet[cellRef]) return;
+      (worksheet as any)[cellRef].s = {
+        fill: { fgColor: { rgb: 'FFFF00' } },
+        font: { bold: true, color: { rgb: '000000' }, sz: 12, name: 'Arial' }
       };
     });
 
@@ -74,13 +61,23 @@ export class ExportExcelComponent {
     this.saveAsExcelFile(excelBuffer, 'orders');
   }
 
+  /** Devuelve un string legible: "Café x1 ($2500), Ñoquis... x2 ($17000)" */
   private formatOrderItems(orderItems: any[]): string {
+    if (!Array.isArray(orderItems) || orderItems.length === 0) return '';
+
+    const fmtMoney = (v: string | number) => {
+      const n = typeof v === 'number' ? v : Number(String(v).replace(',', '.')) || 0;
+      return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n);
+    };
+
     return orderItems.map(item => {
-      const product = this.products.find(p => p.id === item.product_id);
-      return product ? `${product.name} - ${item.amount}` : `Producto no encontrado - ${item.amount}`;
+      const name = item?.product_name ?? 'Producto';
+      const amount = item?.amount ?? 0;
+      const price = fmtMoney(item?.product_price ?? 0);
+      return `${name} x${amount} (${price})`;
     }).join(', ');
   }
-  
+
   private saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], { type: 'application/octet-stream' });
     saveAs(data, `${fileName}_${new Date().getTime()}.xlsx`);

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Table } from 'src/app/models/table';
 import { OrderService } from 'src/app/services/order_service';
 import { Order } from 'src/app/models/order';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-tables',
@@ -14,76 +15,56 @@ export class TablesComponent implements OnInit {
   public tableScrollHeight: string = '';
   tables: Table[] = [];
   displayModal: boolean = false;
-  selectedTable: Table = new Table('',1);
+  selectedTable: Table = new Table('', 1);
   selectedComponent: string = '';
   inactiveOrdersCount: number = 0;
   inactiveOrders: Order[] = [];
   freeTables: Table[] = [];
-  displayModalInactive: boolean =  false;
+  displayModalInactive: boolean = false;
+  isLoading: boolean = true; 
 
   constructor(private tableService: TableService, private orderService: OrderService) {}
 
   ngOnInit(): void {
-    this.loadTables();
-    this.loadOrders();
     this.setScrollHeight();
+    this.loadData();
+
     window.addEventListener('resize', () => {
       this.setScrollHeight();
     });
-
   }
 
   setScrollHeight() {
-    if (window.innerWidth <= 768) {
-      this.tableScrollHeight = '800px';
-    } else {
-      this.tableScrollHeight = '400px';
-    }
+    this.tableScrollHeight = window.innerWidth <= 768 ? '800px' : '400px';
   }
 
-  onTableClick(table: any) {
-    this.selectedTable = table;
-    if (table.status === 'FREE') {
-      this.selectedComponent = 'FREE';
-      this.displayModal = true;
-    } else if (table.status === 'BUSY') {
-      this.selectedComponent = 'BUSY';
-      this.displayModal = true;
-    } else if (table.status === 'FINISHED') {
-      this.selectedComponent = 'FINISHED';
-      this.displayModal = true;
-    } else {
-      console.log('Table is not available.');
-    }
-  }
+  loadData(): void {
+    this.isLoading = true;
+    document.body.style.overflow = 'hidden';
 
-  onNotificationClick(): void {
-    this.displayModalInactive = true;
-  }
-
-  closeModal() {
-    this.displayModal = false;
-    location.reload();
-  }
-
-  closeModalInactive(){
-    this.displayModalInactive = false;
-    location.reload();
-  }
-
-  loadTables(): void {
-    this.tableService.getTables().subscribe({
-      next: (data) => {
-        if (Array.isArray(data)) {
-          this.tables = data;
+    forkJoin({
+      tables: this.tableService.getTables(),
+      orders: this.orderService.getOrders()
+    }).subscribe({
+      next: ({ tables, orders }) => {
+        if (Array.isArray(tables)) {
+          this.tables = tables;
           this.sortTables();
-          this.freeTables = this.tables.filter(table => table.status === 'FREE');
-        } else {
-          console.error('Unexpected data format:', data);
+          this.freeTables = this.tables.filter(t => t.status === 'FREE');
         }
+
+        if (orders && Array.isArray(orders)) {
+          this.inactiveOrders = orders.filter(o => o.status === 'INACTIVE');
+          this.inactiveOrdersCount = this.inactiveOrders.length;
+        }
+
+        this.isLoading = false;
+        document.body.style.overflow = '';
       },
       error: (err) => {
-        console.error('Error fetching tables:', err);
+        console.error('Error loading data:', err);
+        this.isLoading = false;
+        document.body.style.overflow = '';
       }
     });
   }
@@ -96,25 +77,23 @@ export class TablesComponent implements OnInit {
     });
   }
 
-  loadOrders(): void {
-    this.orderService.getOrders().subscribe({
-      next: (data) => {
-        if (data && Array.isArray(data)) {
-          this.inactiveOrders = data.filter(order => order.status === 'INACTIVE');
-          this.countInactiveOrders();
-        } else {
-          console.error('Unexpected data format:', data);
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching orders:', err);
-      }
-    });
+  onTableClick(table: any) {
+    this.selectedTable = table;
+    this.selectedComponent = table.status;
+    this.displayModal = true;
   }
 
-  countInactiveOrders() {
-    this.inactiveOrdersCount = this.inactiveOrders.length;
+  onNotificationClick(): void {
+    this.displayModalInactive = true;
   }
 
+  closeModal() {
+    this.displayModal = false;
+    location.reload();
+  }
 
+  closeModalInactive() {
+    this.displayModalInactive = false;
+    location.reload();
+  }
 }

@@ -4,23 +4,39 @@ html, body {
     padding: 0;
 }
 
-.page-spinner-overlay {
+.spinner-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
-  gap: 12px;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.spinner {
+  border: 6px solid #eee;
+  border-top: 6px solid #7f522e;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
 }
 
 .spinner-text {
-  font-size: 0.95rem;
+  margin-top: 15px;
   color: #444;
+  font-weight: 500;
+  font-size: 1rem;
 }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 
 .container {
     display: flex;

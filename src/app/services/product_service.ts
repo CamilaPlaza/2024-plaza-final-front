@@ -15,7 +15,6 @@ export class ProductService {
 
   async onRegister(product: Product): Promise<boolean> {
     try {
-      // Simplemente pasa el objeto `product` directamente en el post request
       await this.http.post(`${this.baseUrl}/products/register`, product).toPromise();
       return true;
     } catch (error: any) {

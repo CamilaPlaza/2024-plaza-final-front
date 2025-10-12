@@ -1,3 +1,8 @@
+<div class="spinner-overlay" *ngIf="pageLoading">
+  <div class="spinner"></div>
+  <p class="spinner-text">Cargando…</p>
+</div>
+
 <div class="container workspace">
   <div class="section image-section">
     <img src="../../../../assets/images/view-products.jpg" alt="Workspace" class="image">
@@ -6,7 +11,6 @@
   <div class="section title-section">
     <p class="title">MY WORKSPACE</p>
 
-    <!-- botones SOLO para empleados -->
     <div class="action-slot" *ngIf="!pageLoading && user && user.role !== 'admin'">
       <button
         *ngIf="showCheckOutButton"
@@ -28,7 +32,6 @@
     </div>
   </div>
 
-  <!-- popups SOLO para empleados -->
   <app-check-in-popup
     *ngIf="showCheckInPopup && user?.role !== 'admin'"
     [userName]="user?.name || 'Employee'"
@@ -43,14 +46,6 @@
 
   <div class="section table-section">
     <div class="card">
-      <div class="page-loader" *ngIf="pageLoading">
-        <div class="loader-box">
-          <span class="spin-xl"></span>
-          <span>Loading workspace…</span>
-        </div>
-      </div>
-
-      <!-- STATUS SOLO empleados -->
       <section class="ws-status" *ngIf="!pageLoading && user && user.role !== 'admin'">
         <div class="status-header">
           <h3>Today’s status</h3>
@@ -82,10 +77,8 @@
         </div>
       </section>
 
-      <!-- BOARD: para admin se muestra SOLO el task manager -->
       <section class="ws-board" *ngIf="!pageLoading && user">
         <ng-container [ngSwitch]="user.role">
-          <!-- ADMIN -->
           <app-admin-task-manager
             *ngSwitchCase="'admin'"
             [currentAdminUid]="user.uid"
@@ -93,7 +86,6 @@
             [shift]="null">
           </app-admin-task-manager>
 
-          <!-- EMPLOYEE -->
           <ng-container *ngSwitchDefault>
             <div class="board-head">
               <h3>Assigned tasks</h3>

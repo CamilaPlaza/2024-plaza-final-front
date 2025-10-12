@@ -1,6 +1,6 @@
-<div class="page-spinner-overlay" *ngIf="isLoading">
-  <p-progressSpinner ariaLabel="Cargando"></p-progressSpinner>
-  <p class="spinner-text">Cargando productos…</p>
+<div class="spinner-overlay" *ngIf="isLoading">
+  <div class="spinner"></div>
+  <p class="spinner-text">Cargando…</p>
 </div>
 <div class="container">
   <div class="section image-section">
@@ -32,7 +32,6 @@
                       <th style="min-width:10rem">
                         <div class="flex align-items-center">
                           Category
-                          <!-- Filtro existente de Status -->
                           <p-columnFilter field="category" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
                             <ng-template pTemplate="header">
                               <div class="px-3 pt-3 pb-0"><span class="font-bold">Category Picker</span></div>
@@ -50,7 +49,6 @@
                                     </div>
                                     </ng-template>
                               </p-multiSelect>
-
                             </ng-template>
                           </p-columnFilter>
                         </div>
@@ -63,10 +61,7 @@
 
               <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
                   <tr [pEditableRow]="product" [pSelectableRow]="product"   [ngClass]="{'low-stock-row': isLowStock(product.stock)}">
-                      <!-- Name NO editable -->
                       <td>{{ product.name }}</td>
-
-                      <!-- Price editable con validación -->
                       <td>
                           <p-cellEditor>
                               <ng-template pTemplate="input">
@@ -77,8 +72,6 @@
                               </ng-template>
                           </p-cellEditor>
                       </td>
-
-                      <!-- Description editable -->
                       <td>
                           <p-cellEditor>
                               <ng-template pTemplate="input">
@@ -89,10 +82,7 @@
                               </ng-template>
                           </p-cellEditor>
                       </td>
-
                       <td>{{ product.stock }}</td>
-
-
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="input">
@@ -104,36 +94,26 @@
                                     [maxSelectedLabels]="100"
                                     (onChange)="updateTempSelectedCategories(product.id, editingProductCategories[product.id])">
                                 </p-multiSelect>
-
                             </ng-template>
                             <ng-template pTemplate="output">
                                 {{ getCategoryNamesByIds(product.category) }}
                             </ng-template>
                         </p-cellEditor>
                     </td>
-
                     <td>
                         <img [src]="product.imageUrl" [alt]="product.name" width="100" height="70" class="shadow-4" />
                     </td>
-
                     <td>
                         {{ product.calories }}
                     </td>
-
-
-                      <!-- Columna para íconos de editar y eliminar -->
                       <td>
                           <div class="flex align-items-center justify-content-center gap-2">
-                              <!-- Botón para editar -->
                               <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
                                   (click)="onRowEditInit(product)" class="p-button-rounded p-button-text"></button>
-                              <!-- Botón para guardar cambios -->
                               <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
                                   (click)="onRowEditSave(product)" [disabled]="!isProductDataValid(product)" class="p-button-rounded p-button-text p-button-success"></button>
-                              <!-- Botón para cancelar edición -->
                               <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
                                   (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
-                              <!-- Botón para eliminar producto -->
                               <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
                                   (click)="showConfirmDialog(product.id)"></button>
                           </div>

@@ -22,7 +22,6 @@ export class GoalsComponent implements OnInit {
   colors: string[] = ['#7f522e', '#b37a3a'];
   displayDialog: boolean = false;
   totalIncomeExpected: number = 0;
-
   loading: boolean = false;
 
   constructor(private goalService: GoalService) {
@@ -105,10 +104,14 @@ export class GoalsComponent implements OnInit {
     };
   }
 
+  private setLoading(state: boolean) {
+    this.loading = state;
+  }
+
   getGoals(month: string, year: string) {
-    this.loading = true;
+    this.setLoading(true);
     this.goalService.getGoals(month, year)
-      .pipe(finalize(() => this.loading = false))
+      .pipe(finalize(() => this.setLoading(false)))
       .subscribe(
         (goals: Goal[]) => {
           this.goals = Array.isArray(goals) ? goals : [];
@@ -116,8 +119,7 @@ export class GoalsComponent implements OnInit {
           this.calculateProgressValues();
           this.recalcTotalsAndChart();
         },
-        (error) => {
-          console.error('Error fetching goals:', error);
+        () => {
           this.goals = [];
           this.updateVisibleGoals();
           this.calculateProgressValues();
@@ -182,15 +184,13 @@ export class GoalsComponent implements OnInit {
     }
   }
 
-  // ====== NUEVO: helpers para la “days box” en base al mes seleccionado ======
-
   private isSameMonthYear(a: Date, b: Date): boolean {
     return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
   }
 
   private getSelectedMonthBounds() {
     const y = this.selectedDate.getFullYear();
-    const m = this.selectedDate.getMonth(); // 0-based
+    const m = this.selectedDate.getMonth();
     const first = new Date(y, m, 1);
     const last = new Date(y, m + 1, 0);
     return { first, last, totalDays: last.getDate() };
@@ -200,20 +200,17 @@ export class GoalsComponent implements OnInit {
     const today = new Date();
     const { last, totalDays } = this.getSelectedMonthBounds();
 
-    // Mes actual -> días restantes reales
     if (this.isSameMonthYear(this.selectedDate, today)) {
       const diff = Math.max(0, Math.ceil((last.getTime() - today.setHours(0,0,0,0)) / (1000 * 60 * 60 * 24)));
       const monthName = this.selectedDate.toLocaleString(undefined, { month: 'long' });
       return `${diff} days left in ${monthName}`;
     }
 
-    // Mes futuro -> aún no empezó
     if (this.selectedDate > today) {
       const monthName = this.selectedDate.toLocaleString(undefined, { month: 'long' });
       return `${monthName} has ${totalDays} days`;
     }
 
-    // Mes pasado -> ya terminó
     const monthName = this.selectedDate.toLocaleString(undefined, { month: 'long' });
     return `${monthName} ended (${totalDays} days)`;
   }
@@ -221,14 +218,11 @@ export class GoalsComponent implements OnInit {
   getDaysBlockColor(): string {
     const today = new Date();
     if (this.isSameMonthYear(this.selectedDate, today)) {
-      // usa el color dinámico según progreso solo en el mes actual
       return this.getProgressColor();
     }
-    // neutro para pasado/futuro
-    return '#9aa0a6'; // gris
+    return '#9aa0a6';
   }
 
-  // Color del progreso (solo lo usamos en el mes actual)
   getProgressColor(): string {
     const today = new Date();
     const dayOfMonth = today.getDate();
@@ -253,12 +247,12 @@ export class GoalsComponent implements OnInit {
   }
 
   onGoalAdded(newGoal: Goal) {
-    this.loading = true;
+    this.setLoading(true);
     this.goals.push(newGoal);
     this.updateVisibleGoals();
     this.calculateProgressValues();
     this.recalcTotalsAndChart();
     this.displayDialog = false;
-    this.loading = false;
+    this.setLoading(false);
   }
 }

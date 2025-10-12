@@ -23,7 +23,6 @@ export class UserProfileComponent implements OnInit {
   pointsNeededToMaintain: number | null = null;
   nextLevelData: any | null = null;
   isTopLevel: boolean = false;
-  displayConfirmDeleteDialog: boolean = false;
   displayErrorDialog: boolean = false;
   displayChangePasswordDialog: boolean = false;
   displayDiscountDialog = false;
@@ -158,20 +157,6 @@ export class UserProfileComponent implements OnInit {
     );
   }
 
-  async onDeleteAccount() {
-    this.userService.deleteCurrentUser()
-      .then(() => {
-        console.log('Account deleted successfully');
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error('Error deleting account:', error);
-        this.showErrorDialog();
-      });
-  }
-
   async changePassword() {
     this.userService.resetPassword(this.email ?? '');
     this.userService.logOut().then(() => {
@@ -188,22 +173,12 @@ export class UserProfileComponent implements OnInit {
     this.displayChangePasswordDialog = false;
   }
 
-  showConfirmDeleteDialog() {
-    this.displayConfirmDeleteDialog = true;
-  }
-
 
   showInfoPointsDialog() {
     this.displayInfoPointsDialog = true;
   }
 
-
-  closeConfirmDeleteDialog() {
-    this.displayConfirmDeleteDialog = false;
-  }
-
   showErrorDialog() {
-    this.closeConfirmDeleteDialog();
     this.displayErrorDialog = true;
   }
 

@@ -35,8 +35,6 @@ export class UserService {
 
     const user = userCredential.user;
     const idToken = await user.getIdToken();
-    console.log('ID TOKEN:', idToken);
-
     if (uid) {
       const userData = await this.fetchUserData(uid);
       userData.uid = uid;
@@ -88,7 +86,6 @@ export class UserService {
       this.http.delete(`${this.baseUrl}/users/deleteByID/${user.uid}`).toPromise();
       try {
         await deleteUser(user);
-        console.log('User deleted successfully');
       } catch (error) {
         console.error('Error deleting user:', error);
         throw error;

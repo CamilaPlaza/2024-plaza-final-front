@@ -45,7 +45,7 @@ html, body {
 
 .notification-bell .pi {
     font-size: 24px;
-    color: rgb(255, 255, 255); 
+    color: rgb(255, 255, 255);
     cursor: pointer;
 }
 
@@ -57,7 +57,7 @@ html, body {
     color: white;
     border-radius: 50%;
     padding: 2px 6px;
-    font-size: 12px;  
+    font-size: 12px;
     font-weight: bold;
     display: flex;
     justify-content: center;
@@ -77,7 +77,7 @@ html, body {
     flex: 1;
     background-color: #ffffff;
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -121,7 +121,7 @@ th, td {
     padding-right: 15%;
     display: flex;
     flex-wrap: wrap;
-    width: 100%; 
+    width: 100%;
     justify-content: center;
     align-items: center;
 }
@@ -155,12 +155,46 @@ th, td {
     color: white;
 }
 
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.spinner {
+  border: 6px solid #eee;
+  border-top: 6px solid #7f522e;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-text {
+  margin-top: 15px;
+  color: #444;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 
 @media (max-width: 600px) {
     .title{
         font-size: 1.2rem;
-        
+
     }
 
     .title-section {
@@ -196,11 +230,11 @@ th, td {
 
     .notification-bell .pi {
         font-size: 20px;
-        
+
     }
 
     .notification-bell .inactive-count {
-        font-size: 10px;  
+        font-size: 10px;
     }
 
     ::ng-deep .custom-modal .p-dialog {
@@ -208,5 +242,5 @@ th, td {
         margin-left: 10% !important; /* Ajusta este valor según lo que necesites */
         transform: none !important; /* Quita el centrado */
       }
-      
+
 }

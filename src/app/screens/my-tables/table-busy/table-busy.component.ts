@@ -1,8 +1,6 @@
-// src/app/components/table-busy/table-busy.component.ts
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { Order } from 'src/app/models/order';
-import { OrderItem } from 'src/app/models/orderItem';
 import { Product } from 'src/app/models/product';
 import { Table } from 'src/app/models/table';
 import { CategoryService } from 'src/app/services/category_service';
@@ -12,22 +10,31 @@ import { TableService } from 'src/app/services/table_service';
 import { UserService } from 'src/app/services/user_service';
 import { firstValueFrom } from 'rxjs';
 
+type OrderItemView = {
+  product_id: number | string;
+  amount: number;
+  product_name?: string | null;
+  product_price?: string | null;
+};
+
 @Component({
   selector: 'app-table-busy',
   templateUrl: './table-busy.component.html',
   styleUrls: ['./table-busy.component.css']
 })
 export class TableBusyComponent implements OnInit {
-  @Input() table: Table = new Table('',1);
+  @Input() table: Table = new Table('', 1);
+  @Input() readOnly: boolean = false;
   @Output() close = new EventEmitter<void>();
+
   actualOrder?: Order;
-  initialOI: OrderItem[] = [];
-  orderItems: OrderItem[] = [];
-  products : Product[] = [];
+  initialOI: OrderItemView[] = [];
+  orderItems: OrderItemView[] = [];
+  products: Product[] = [];
   currentDate: string = '';
   currentTime: string = '';
   employee: string = '';
-  order: Order = new Order('', 0, '', '', '', [],1, '') ;
+  order: Order = new Order('', 0, '', '', '', [], 1, '');
   selectedProduct: Product | null = null;
   selectedAmount: number = 1;
   canAddProduct: boolean = false;
@@ -37,10 +44,10 @@ export class TableBusyComponent implements OnInit {
   displayCloseTableDialog = false;
   amountOfPeople: number = 0;
   categories: Category[] = [];
-  selectedCategories: Array<{ id: any, name: string }> = [];
+  selectedCategories: Array<{ id: any; name: string }> = [];
   filteredProducts: Product[] = [];
   user: any | null;
-  newOrderItems: OrderItem[] = [];
+  newOrderItems: OrderItemView[] = [];
   initialLoading: boolean = true;
   private productsLoaded: boolean = false;
   private categoriesLoaded: boolean = false;
@@ -50,23 +57,39 @@ export class TableBusyComponent implements OnInit {
   tipPercent: 5 | 10 | 15 | null = null;
   tipAbsolute: string = '';
 
-  constructor(private productService: ProductService,  private orderService: OrderService, private tableService: TableService, private categoryService: CategoryService, private userService: UserService) {}
+  constructor(
+    private productService: ProductService,
+    private orderService: OrderService,
+    private tableService: TableService,
+    private categoryService: CategoryService,
+    private userService: UserService
+  ) {}
 
   async ngOnInit() {
     this.loadProducts();
     this.getOrderInformation();
-    this.orderItems = this.actualOrder?.orderItems ?? [];
+    this.orderItems = [];
     this.currentDate = this.actualOrder?.date ?? '';
     this.currentTime = this.actualOrder?.time ?? '';
-    this.order = this.actualOrder ?? new Order('', 0, '', '', '', [],1, '');
+    this.order = this.actualOrder ?? new Order('', 0, '', '', '', [], 1, '');
     this.loadCategories();
+  }
+
+  private mapToView(items: any[] | undefined): OrderItemView[] {
+    if (!Array.isArray(items)) return [];
+    return items.map((it: any) => ({
+      product_id: it?.product_id,
+      amount: Number(it?.amount ?? 0),
+      product_name: it?.product_name ?? null,
+      product_price: it?.product_price ?? null
+    }));
   }
 
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
       next: (data) => {
         if (data && Array.isArray(data.categories)) {
-          this.categories = data.categories.map(item => ({
+          this.categories = data.categories.map((item) => ({
             id: item.id,
             name: item.name,
             type: item.type
@@ -75,7 +98,7 @@ export class TableBusyComponent implements OnInit {
         this.categoriesLoaded = true;
         this.checkInitLoadingDone();
       },
-      error: (err) => {
+      error: () => {
         this.categoriesLoaded = true;
         this.checkInitLoadingDone();
       }
@@ -86,7 +109,7 @@ export class TableBusyComponent implements OnInit {
     if (this.selectedCategories.length === 0) {
       this.filteredProducts = [];
     } else {
-      const categoryIds = this.selectedCategories.map((category: { id: any; }) => category.id).join(', ');
+      const categoryIds = this.selectedCategories.map((category: { id: any }) => category.id).join(', ');
       this.getProductsByCategory(categoryIds);
     }
   }
@@ -96,14 +119,16 @@ export class TableBusyComponent implements OnInit {
       this.orderService.getOrderById(this.table.order_id.toString()).subscribe({
         next: async (order) => {
           this.actualOrder = order;
-          this.orderItems = this.actualOrder?.orderItems ?? [];
-          this.initialOI = JSON.parse(JSON.stringify(order.orderItems));
+          this.orderItems = this.mapToView(this.actualOrder?.orderItems);
+          this.initialOI = JSON.parse(JSON.stringify(this.orderItems)) as OrderItemView[];
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
-          this.amountOfPeople = this.actualOrder.amountOfPeople ?? 0;
-          if (this.actualOrder.employee) {
+          this.amountOfPeople = this.actualOrder?.amountOfPeople ?? 0;
+          if (this.actualOrder?.employee) {
             try {
-              const userData = await firstValueFrom(await this.userService.getUserDataFromFirestore(this.actualOrder.employee));
+              const userData = await firstValueFrom(
+                await this.userService.getUserDataFromFirestore(this.actualOrder.employee)
+              );
               this.employee = userData?.name ?? 'Unknown Employee';
             } catch {}
           }
@@ -143,53 +168,25 @@ export class TableBusyComponent implements OnInit {
     }
   }
 
-  validateForm() {
-    this.canAddProduct = !!this.selectedProduct && this.selectedAmount > 0;
-    return !this.canAddProduct;
+  private getCatalogProduct(pid: number | string | undefined): Product | undefined {
+    if (pid === undefined || pid === null) return undefined;
+    const n = Number(pid);
+    return this.products.find((p) => Number(p.id) === n);
   }
 
-  addNewProducts() {
-    this.wantToAddNewProduct = true;
-  }
-
-  addOrderItem() {
-    if (this.selectedProduct && this.selectedAmount > 0) {
-      const newItem: OrderItem = {
-        product_id: this.selectedProduct.id ?? 0,
-        amount: this.selectedAmount,
-        product_name: this.selectedProduct.name,
-        product_price: this.selectedProduct.price
-      };
-      this.orderItems.push(newItem);
-      this.newOrderItems.push(newItem);
-      this.resetForm();
-    }
-  }
-
-  getProductById(productId: number | undefined): Product | undefined {
-    if (productId === undefined) {
-      return undefined;
-    }
-    return this.products.find(product => (product.id) === productId);
-  }
-
-  removeOrderItem(item: OrderItem) {
-    const index = this.orderItems.indexOf(item);
-    if (index > -1) {
-      this.orderItems.splice(index, 1);
-    }
-  }
-
-  resetForm() {
-    this.selectedProduct = null;
-       this.selectedAmount = 1;
-    this.canAddProduct = false;
+  private calculateNewItemsTotal(): number {
+    return this.newOrderItems.reduce((acc, it) => {
+      const prod = this.getCatalogProduct(it.product_id);
+      const price = prod ? Number(prod.price) : 0;
+      return acc + Number(it.amount) * price;
+    }, 0);
   }
 
   calculateTotal() {
     return this.orderItems.reduce((total, item) => {
-      const product = this.products.find(p => p.id === item.product_id);
-      return product ? total + item.amount * parseFloat(product.price) : total;
+      const hasItemPrice = item.product_price !== undefined && item.product_price !== null && item.product_price !== '';
+      const unit = hasItemPrice ? Number(item.product_price) : Number(this.getCatalogProduct(item.product_id)?.price ?? 0);
+      return total + Number(item.amount) * unit;
     }, 0);
   }
 
@@ -197,15 +194,69 @@ export class TableBusyComponent implements OnInit {
     return Math.max(0, this.calculateTotal());
   }
 
-  // Bloquea notación científica y signos en el input number
+  validateForm() {
+    this.canAddProduct = !!this.selectedProduct && this.selectedAmount > 0;
+    return !this.canAddProduct;
+  }
+
+  addNewProducts() {
+    if (this.readOnly) return;
+    this.wantToAddNewProduct = true;
+  }
+
+  addOrderItem() {
+    if (this.readOnly) return;
+    if (this.selectedProduct && this.selectedAmount > 0) {
+      const prod = this.getCatalogProduct(this.selectedProduct.id);
+      const newItem: OrderItemView = {
+        product_id: Number(prod?.id ?? this.selectedProduct.id ?? 0),
+        amount: Number(this.selectedAmount),
+        product_name: prod?.name ?? this.selectedProduct.name,
+        product_price: String(prod?.price ?? this.selectedProduct.price)
+      };
+      this.orderItems.push(newItem);
+      this.newOrderItems.push(newItem);
+      this.resetForm();
+    }
+  }
+
+  getProductById(productId: number | string | undefined): Product | undefined {
+    if (productId === undefined) return undefined;
+    const n = Number(productId);
+    return this.products.find((product) => Number(product.id) === n);
+  }
+
+  removeOrderItem(item: OrderItemView) {
+    if (this.readOnly) return;
+    const index = this.orderItems.indexOf(item);
+    if (index > -1) this.orderItems.splice(index, 1);
+    this.newOrderItems = this.newOrderItems.filter(
+      (ni) =>
+        !(
+          Number(ni.product_id) === Number(item.product_id) &&
+          Number(ni.amount) === Number(item.amount) &&
+          String(ni.product_name ?? '') === String(item.product_name ?? '') &&
+          String(ni.product_price ?? '') === String(item.product_price ?? '')
+        )
+    );
+  }
+
+  resetForm() {
+    this.selectedProduct = null;
+    this.selectedAmount = 1;
+    this.canAddProduct = false;
+  }
+
   blockInvalidKeys(e: KeyboardEvent) {
     if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault();
   }
 
-  // Recorta el valor tipeado al rango [1, maxTip] y redondea a 2 dec.
   clampTip() {
     let v = Number(this.tipAbsolute);
-    if (isNaN(v)) { this.tipAbsolute = ''; return; }
+    if (isNaN(v)) {
+      this.tipAbsolute = '';
+      return;
+    }
     if (v < 1) v = 1;
     const max = this.maxTip;
     if (v > max) v = max;
@@ -213,76 +264,82 @@ export class TableBusyComponent implements OnInit {
     this.tipAbsolute = v.toString();
   }
 
-
   async updateOrder() {
+    if (this.readOnly) return;
     this.loading = true;
-    const total = this.calculateTotal().toString();
-    if (this.table.order_id) {
-      try {
-        const success = await this.orderService.addOrderItems(this.table.order_id.toString(), this.orderItems, total);
-        if (success) {
-          await this.updateProductsStock();
-        }
-      } catch (error) {
-      } finally {
-        this.loading = false;
-        this.closeDialog();
-      }
-    } else {
+    if (!this.table.order_id) {
       this.loading = false;
+      return;
+    }
+    try {
+      const ok = await this.ensureOrderItemsSaved();
+      if (ok && this.newOrderItems.length > 0) {
+        await this.updateProductsStock();
+        this.newOrderItems = [];
+      }
+    } catch {
+    } finally {
+      this.loading = false;
+      this.closeDialog();
     }
   }
 
   async closeAndUpdateOrder() {
+    if (this.readOnly) return;
     this.displayCloseTableDialog = true;
     this.tipMode = 'none';
     this.tipPercent = null;
     this.tipAbsolute = '';
   }
 
-async confirmCloseWithTip() {
-  if (!this.table.order_id) return;
-
-  this.loading = true;
-
-  try {
-    const ok = await this.ensureOrderItemsSaved();
-    if (!ok) {
-      this.loading = false;
-      return;
-    }
-
-    console.log("finalizando orden");
-    await this.orderService.finalizeOrder(this.table.order_id.toString()).toPromise();
-
-    if (this.tipMode === 'percent' && (this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15)) {
-      await this.orderService.applyTip(this.table.order_id.toString(), 'percent', this.tipPercent);
-    } else if (this.tipMode === 'absolute') {
-      const val = Number(this.tipAbsolute);
-      if (val > 0) {
-        console.log("aplicando tip");
-        await this.orderService.applyTip(this.table.order_id.toString(), 'absolute', val);
+  async confirmCloseWithTip() {
+    if (this.readOnly) return;
+    if (!this.table.order_id) return;
+    this.loading = true;
+    try {
+      const ok = await this.ensureOrderItemsSaved();
+      if (!ok) {
+        this.loading = false;
+        return;
       }
+      if (this.newOrderItems.length > 0) {
+        await this.updateProductsStock();
+        this.newOrderItems = [];
+      }
+      await this.orderService.finalizeOrder(this.table.order_id.toString()).toPromise();
+      if (this.tipMode === 'percent' && (this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15)) {
+        await this.orderService.applyTip(this.table.order_id.toString(), 'percent', this.tipPercent);
+      } else if (this.tipMode === 'absolute') {
+        const val = Number(this.tipAbsolute);
+        if (val > 0) {
+          await this.orderService.applyTip(this.table.order_id.toString(), 'absolute', val);
+        }
+      }
+      await this.tableService.closeTable(this.table).toPromise();
+      this.closeDialog();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.loading = false;
+      this.displayCloseTableDialog = false;
     }
-
-    await this.tableService.closeTable(this.table).toPromise();
-    this.closeDialog();
-  } catch (e) {
-    console.error(e);
-  } finally {
-    this.loading = false;
-    this.displayCloseTableDialog = false;
   }
-}
-
 
   private async ensureOrderItemsSaved(): Promise<boolean> {
-    const total = this.calculateTotal().toString();
+    if (!this.table.order_id) return false;
+    if (!this.newOrderItems || this.newOrderItems.length === 0) return true;
+    const newItems = this.newOrderItems.map((it) => {
+      const prod = this.getCatalogProduct(it.product_id);
+      return {
+        product_id: Number(it.product_id),
+        amount: Number(it.amount),
+        product_name: prod?.name ?? it.product_name ?? '',
+        product_price: String(prod?.price ?? it.product_price ?? '')
+      };
+    });
+    const total = String(this.calculateNewItemsTotal());
     try {
-      const ok = await this.orderService.addOrderItems(this.table.order_id!.toString(), this.orderItems, total);
-      if (ok) {
-        await this.updateProductsStock();
-      }
+      const ok = await this.orderService.addOrderItems(this.table.order_id!.toString(), newItems, total);
       return ok;
     } catch {
       return false;
@@ -292,7 +349,7 @@ async confirmCloseWithTip() {
   tipPreview(): number {
     const total = this.calculateTotal();
     if (this.tipMode === 'percent' && this.tipPercent) {
-      return Math.round((total * (this.tipPercent / 100)) * 100) / 100;
+      return Math.round(total * (this.tipPercent / 100) * 100) / 100;
     }
     if (this.tipMode === 'absolute') {
       const v = Number(this.tipAbsolute);
@@ -306,25 +363,19 @@ async confirmCloseWithTip() {
       e.preventDefault();
       return;
     }
-
     const value = (e.target as HTMLInputElement).value;
     const newChar = e.key;
-
     if (['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'].includes(e.key)) return;
-
     const newValue = value + newChar;
     const numericValue = Number(newValue);
-
     if (!isNaN(numericValue) && numericValue > this.maxTip) {
       e.preventDefault();
     }
   }
 
-
   canSubmitClose(): boolean {
     if (this.tipMode === 'none') return true;
-    if (this.tipMode === 'percent')
-      return this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15;
+    if (this.tipMode === 'percent') return this.tipPercent === 5 || this.tipPercent === 10 || this.tipPercent === 15;
     if (this.tipMode === 'absolute') {
       const v = Number(this.tipAbsolute);
       return !isNaN(v) && v > 0 && v <= this.maxTip;
@@ -333,17 +384,20 @@ async confirmCloseWithTip() {
   }
 
   selectPercent(p: 5 | 10 | 15) {
+    if (this.readOnly) return;
     this.tipMode = 'percent';
     this.tipPercent = p;
     this.tipAbsolute = '';
   }
 
   selectAbsoluteMode() {
+    if (this.readOnly) return;
     this.tipMode = 'absolute';
     this.tipPercent = null;
   }
 
   selectNoTip() {
+    if (this.readOnly) return;
     this.tipMode = 'none';
     this.tipPercent = null;
     this.tipAbsolute = '';
@@ -358,6 +412,7 @@ async confirmCloseWithTip() {
   }
 
   showConfirmDialog() {
+    if (this.readOnly) return;
     if (this.areOrderItemsEqual(this.initialOI, this.orderItems)) {
       this.closeDialog();
     } else {
@@ -365,20 +420,19 @@ async confirmCloseWithTip() {
     }
   }
 
-  areOrderItemsEqual(items1: OrderItem[] = [], items2: OrderItem[] = []): boolean {
-    if (items1.length !== items2.length) {
-      return false;
-    }
-    return items1.every((item, index) =>
-      item.product_id === items2[index].product_id && item.amount === items2[index].amount
+  areOrderItemsEqual(items1: OrderItemView[] = [], items2: OrderItemView[] = []): boolean {
+    if (items1.length !== items2.length) return false;
+    return items1.every(
+      (item, index) => item.product_id === items2[index].product_id && item.amount === items2[index].amount
     );
   }
 
   getProductsByCategory(categoryIds: string) {
-    this.categoryService.getProductsByCategory(categoryIds)
+    this.categoryService
+      .getProductsByCategory(categoryIds)
       .then((data) => {
         if (data && Array.isArray(data)) {
-          this.filteredProducts = data.map(product => ({
+          this.filteredProducts = data.map((product) => ({
             ...product,
             disabled: product.stock === '0'
           }));
@@ -411,6 +465,7 @@ async confirmCloseWithTip() {
   }
 
   showCloseTableDialog() {
+    if (this.readOnly) return;
     this.displayCloseTableDialog = true;
     this.tipMode = 'none';
     this.tipPercent = null;
@@ -423,14 +478,13 @@ async confirmCloseWithTip() {
 
   async updateProductsStock() {
     try {
-      const updatePromises = this.newOrderItems.map(orderItem =>
+      const updatePromises = this.newOrderItems.map((orderItem) =>
         this.productService.updateLowerStock(
-          orderItem.product_id?.toString() ?? '',
-          orderItem.amount.toString()
+          String(orderItem.product_id ?? ''),
+          String(orderItem.amount)
         )
       );
       await Promise.all(updatePromises);
-    } catch (error) {
-    }
+    } catch {}
   }
 }

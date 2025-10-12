@@ -1,3 +1,7 @@
+<div class="page-spinner-overlay" *ngIf="isLoading">
+  <p-progressSpinner ariaLabel="Cargando"></p-progressSpinner>
+  <p class="spinner-text">Cargando productos…</p>
+</div>
 <div class="container">
   <div class="section image-section">
       <img src="../../../../assets/images/view-products.jpg" alt="Imagen descriptiva" class="image">
@@ -17,7 +21,7 @@
 
   <div class="section table-section">
       <div class="card">
-        <p-table [value]="filteredProducts" dataKey="id" editMode="row" scrollable="true" selectionMode="single" 
+        <p-table [value]="filteredProducts" dataKey="id" editMode="row" scrollable="true" selectionMode="single"
         [(selection)]="selectedProduct"  [scrollHeight]="tableScrollHeight">
               <ng-template pTemplate="header">
                   <tr>
@@ -34,19 +38,19 @@
                               <div class="px-3 pt-3 pb-0"><span class="font-bold">Category Picker</span></div>
                             </ng-template>
                             <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-multiSelect 
-                                    [options]="categories" 
-                                    placeholder="Select" 
+                                <p-multiSelect
+                                    [options]="categories"
+                                    placeholder="Select"
                                     (onChange)="filterByCategory($event.value)"
-                                    optionLabel="name"  
-                                    optionValue="id"> 
+                                    optionLabel="name"
+                                    optionValue="id">
                                     <ng-template let-value pTemplate="item">
                                     <div class="inline-block">
                                         <span class="ml-1 mt-1">{{ value.name }}</span>
                                     </div>
                                     </ng-template>
                               </p-multiSelect>
-                              
+
                             </ng-template>
                           </p-columnFilter>
                         </div>
@@ -88,13 +92,13 @@
 
                       <td>{{ product.stock }}</td>
 
-                    
+
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="input">
-                                <p-multiSelect 
-                                    [options]="categories" 
-                                    [(ngModel)]="editingProductCategories[product.id]" 
+                                <p-multiSelect
+                                    [options]="categories"
+                                    [(ngModel)]="editingProductCategories[product.id]"
                                     optionLabel="name"
                                     placeholder="Select categories"
                                     [maxSelectedLabels]="100"
@@ -156,8 +160,8 @@
 </p-dialog>
 
 <p-dialog [(visible)]="displayUpdateStockDialog" [modal]="true" header="Update product stock" [closable]="true">
-    <app-update-stock 
-        [product]="selectedProduct" 
+    <app-update-stock
+        [product]="selectedProduct"
         (onClose)="displayUpdateStockDialog = false"
         (onFailed)="dialogNoticeError = true"
         (onSuccess)="dialogNoticeSuccess = true">

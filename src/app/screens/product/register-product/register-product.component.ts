@@ -29,13 +29,13 @@ export class RegisterProductComponent implements OnInit {
   displayConfirmDialog: boolean = false;
   displayErrorDialog: boolean = false;
   errorSubtitle: string = '';
-  loading: boolean = false; 
+  loading: boolean = false;
   isMobile: boolean = false;
   selectedCategories: Category[] = [];
   selectedCategoryIds: string = '';
   showCategoryPanel = false;
   showCaloriesPanel = false;
-  totalCaloriesValue?: number; 
+  totalCaloriesValue?: number;
   imageUrl: string = '';
   fileName: string = '';
 
@@ -44,24 +44,24 @@ export class RegisterProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
-    this.checkIfMobile();   
+    this.checkIfMobile();
   }
 
   onImageSelect(event: any) {
-    const file = event.files[0]; 
-    this.fileName = file.name;  
+    const file = event.files[0];
+    this.fileName = file.name;
 
-    const reader = new FileReader();  
+    const reader = new FileReader();
     reader.onload = (e: any) => {
-      this.imageUrl = e.target.result; 
+      this.imageUrl = e.target.result;
     };
-    reader.readAsDataURL(file);  
+    reader.readAsDataURL(file);
   }
 
   onImageClear(fileUpload: any) {
-    this.fileName = ''; 
-    this.imageUrl = ''; 
-    fileUpload.clear(); 
+    this.fileName = '';
+    this.imageUrl = '';
+    fileUpload.clear();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -78,12 +78,9 @@ export class RegisterProductComponent implements OnInit {
     this.loading = true;
     try {
       this.product = new Product(this.name, this.description, this.price, this.selectedCategoryIds, this.totalCaloriesValue ?? 0, this.cost, this.stock, this.imageUrl);
-
-      console.log('PRODUCT: ', this.product);
       const response = await this.productService.onRegister(this.product);
 
       if (response) {
-        console.log('Register successful', response);
         this.router.navigate(['/products-view']);
       } else {
         this.errorSubtitle = 'An unexpected error occurred. Please try again.';
@@ -103,18 +100,14 @@ export class RegisterProductComponent implements OnInit {
   }
 
   getSelectedCategoriesLabel(): string {
-    return this.selectedCategories.length > 0 
+    return this.selectedCategories.length > 0
       ? this.selectedCategories.map(cat => cat.name).join(', ')
-      : 'Select categories'; 
+      : 'Select categories';
   }
 
-  logSelectedCategories() {
-    console.log('Selected Categories: ', this.selectedCategories);
-  }
-  
 
   //POP UPS
-  
+
   showConfirmDialog() {
     this.displayConfirmDialog = true;
   }
@@ -132,11 +125,11 @@ export class RegisterProductComponent implements OnInit {
     this.displayErrorDialog = false;
   }
 
-  
+
   onStockChange(event: Event) {
     const input = event.target as HTMLInputElement;
     const value = parseFloat(input.value);
-  
+
     if (value < 0) {
       input.value = '0';
       this.stock = '0';
@@ -148,7 +141,7 @@ export class RegisterProductComponent implements OnInit {
   onPriceChange(event: Event) {
     const input = event.target as HTMLInputElement;
     const value = parseFloat(input.value);
-  
+
     if (value < 0) {
       input.value = '0';
       this.price = '0';
@@ -164,7 +157,7 @@ export class RegisterProductComponent implements OnInit {
   onCostChange(event: Event) {
     const input = event.target as HTMLInputElement;
     const value = parseFloat(input.value);
-  
+
     if (value < 0) {
       input.value = '0';
       this.cost = '0';
@@ -175,7 +168,7 @@ export class RegisterProductComponent implements OnInit {
       this.cost = input.value;
     }
   }
-  
+
 
 
   onlyAllowNumbers(event: KeyboardEvent) {
@@ -198,17 +191,17 @@ export class RegisterProductComponent implements OnInit {
 
   handleCategoryClose() {
     this.showCategoryPanel = false;
-  } 
-  
+  }
+
   isFormValid(): boolean {
-    return this.name.trim() !== '' && 
+    return this.name.trim() !== '' &&
            this.description.trim() !== '' &&
-           this.price !== '' && 
+           this.price !== '' &&
            parseFloat(this.price) > 0 &&
            this.selectedCategories.length > 0 &&
            this.totalCaloriesValue !== undefined;
   }
-  
+
 
   showCalories() {
     this.showCaloriesPanel = true;
@@ -222,17 +215,16 @@ export class RegisterProductComponent implements OnInit {
 
   handleCaloriesClose() {
     this.showCaloriesPanel = false;
-  } 
+  }
 
   handleTotalCalories(calories: number) {
-    this.totalCaloriesValue = calories; // Asignar el valor de las calorías recibidas
-    console.log('Total Calories:', this.totalCaloriesValue);
+    this.totalCaloriesValue = calories;
   }
 
   loadCategories() {
     this.categoryService.getCategories().subscribe(response => {
       this.categories = response.categories;
-  
+
       this.categoryOptions = this.categories.map((category: Category) => ({
         label: category.name,
         value: category.id !== undefined ? category.id.toString() : '' // Manejo de undefined

@@ -13,20 +13,18 @@ export class ChartService {
   constructor(private http: HttpClient) { }
 
   getCategoryRevenue(): Observable<any> {
-    const endpoint = `${this.baseUrl}/categories/revenue`;  // Construct the URL
-    console.log(`Fetching category revenue from: ${endpoint}`);  // Log the URL
+    const endpoint = `${this.baseUrl}/categories/revenue`;
     return this.http.get<any>(endpoint);
   }
   getMonthlyRevenue(): Observable<any>{
-    const endpoint = `${this.baseUrl}/charts/monthly-revenue`;  // Construct the URL
-    console.log(`Fetching category revenue from: ${endpoint}`);  // Log the URL
+    const endpoint = `${this.baseUrl}/charts/monthly-revenue`;
     return this.http.get<any>(endpoint);
   }
   getAveragePerPerson(year: string, month: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/charts/average_per_person/${year}/${month}`);
-}
+  }
 
   getAveragePerTicket(year: string, month: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/charts/averare_per_order/${year}/${month}`);
-}
+  }
 }

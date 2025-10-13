@@ -177,10 +177,11 @@ export class TableBusyComponent implements OnInit {
   private calculateNewItemsTotal(): number {
     return this.newOrderItems.reduce((acc, it) => {
       const prod = this.getCatalogProduct(it.product_id);
-      const price = prod ? Number(prod.price) : 0;
+      const price = prod ? Number(prod.price) : Number(it.product_price ?? 0);
       return acc + Number(it.amount) * price;
     }, 0);
   }
+
 
   calculateTotal() {
     return this.orderItems.reduce((total, item) => {
@@ -209,7 +210,7 @@ export class TableBusyComponent implements OnInit {
     if (this.selectedProduct && this.selectedAmount > 0) {
       const prod = this.getCatalogProduct(this.selectedProduct.id);
       const newItem: OrderItemView = {
-        product_id: Number(prod?.id ?? this.selectedProduct.id ?? 0),
+        product_id: String(prod?.id ?? this.selectedProduct.id ?? ''),
         amount: Number(this.selectedAmount),
         product_name: prod?.name ?? this.selectedProduct.name,
         product_price: String(prod?.price ?? this.selectedProduct.price)
@@ -233,7 +234,7 @@ export class TableBusyComponent implements OnInit {
     this.newOrderItems = this.newOrderItems.filter(
       (ni) =>
         !(
-          Number(ni.product_id) === Number(item.product_id) &&
+          String(ni.product_id) === String(item.product_id) &&
           Number(ni.amount) === Number(item.amount) &&
           String(ni.product_name ?? '') === String(item.product_name ?? '') &&
           String(ni.product_price ?? '') === String(item.product_price ?? '')
@@ -267,17 +268,14 @@ export class TableBusyComponent implements OnInit {
   async updateOrder() {
     if (this.readOnly) return;
     this.loading = true;
-    if (!this.table.order_id) {
-      this.loading = false;
-      return;
-    }
+    if (!this.table.order_id) { this.loading = false; return; }
     try {
       const ok = await this.ensureOrderItemsSaved();
       if (ok && this.newOrderItems.length > 0) {
         await this.updateProductsStock();
+        this.initialOI = JSON.parse(JSON.stringify(this.orderItems));
         this.newOrderItems = [];
       }
-    } catch {
     } finally {
       this.loading = false;
       this.closeDialog();
@@ -331,9 +329,9 @@ export class TableBusyComponent implements OnInit {
     const newItems = this.newOrderItems.map((it) => {
       const prod = this.getCatalogProduct(it.product_id);
       return {
-        product_id: Number(it.product_id),
+        product_id: String(it.product_id),
         amount: Number(it.amount),
-        product_name: prod?.name ?? it.product_name ?? '',
+        product_name: String(prod?.name ?? it.product_name ?? ''),
         product_price: String(prod?.price ?? it.product_price ?? '')
       };
     });
@@ -467,7 +465,7 @@ export class TableBusyComponent implements OnInit {
   showCloseTableDialog() {
     if (this.readOnly) return;
     this.displayCloseTableDialog = true;
-    this.tipMode = 'none';
+       this.tipMode = 'none';
     this.tipPercent = null;
     this.tipAbsolute = '';
   }

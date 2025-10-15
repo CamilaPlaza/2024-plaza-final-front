@@ -64,7 +64,6 @@ html, body {
     align-items: center;
 }
 
-
 .title {
     font-size: 2rem;
     margin: 0;
@@ -190,6 +189,57 @@ th, td {
   }
 }
 
+.readonly-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #fff3e0;
+  border: 1px solid #f0d7b3;
+  border-left: 6px solid #7f522e;
+  margin: 10px 0 0 0;
+}
+
+.readonly-banner .rb-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #5a4636;
+  font-weight: 500;
+}
+
+.readonly-banner .rb-left .pi {
+  font-size: 1.2rem;
+}
+
+.readonly-banner .rb-action {
+  background: #7f522e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.readonly .table-wrapper {
+  opacity: 0.98;
+}
+
+.notification-bell.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.row-disabled {
+  cursor: pointer;
+}
+
+.table-icon.icon-disabled {
+  opacity: 0.8;
+  cursor: pointer;
+}
 
 @media (max-width: 600px) {
     .title{

@@ -85,6 +85,21 @@
   z-index: 10001;
 }
 
+.readonly-inline-banner{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  margin:0 0 12px 0;
+  background:#fff3e0;
+  border:1px solid #f0d7b3;
+  border-left:6px solid #7f522e;
+  color:#5a4636;
+  font-weight:500;
+  border-radius:8px;
+}
+
+
 /* ===== FIX: Hueco en esquina superior izquierda en mobile ===== */
 @media (max-width: 768px) {
   .title {

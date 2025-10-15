@@ -19,7 +19,9 @@ import { NgZone } from '@angular/core';
 })
 export class TableFreeComponent implements OnInit {
   @Input() table: Table = new Table('', 1);
+  @Input() readOnly: boolean = false;
   @Output() close = new EventEmitter<void>();
+
   searchTerm: string = '';
   filteredProducts: Product[] = [];
   categories: Category[] = [];
@@ -103,6 +105,7 @@ export class TableFreeComponent implements OnInit {
   }
 
   addOrderItem() {
+    if (this.readOnly) return;
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
         product_id: this.selectedProduct.id ?? 0,
@@ -116,6 +119,7 @@ export class TableFreeComponent implements OnInit {
   }
 
   removeOrderItem(item: OrderItem) {
+    if (this.readOnly) return;
     const index = this.orderItems.indexOf(item);
     if (index > -1) {
       this.orderItems.splice(index, 1);
@@ -153,8 +157,8 @@ export class TableFreeComponent implements OnInit {
     return false;
   }
 
-
   async createOrder() {
+    if (this.readOnly) return;
     this.loading = true;
     this.ensureUidReady();
     if (!this.ensureUidReady()) {
@@ -163,34 +167,34 @@ export class TableFreeComponent implements OnInit {
       return;
     }
 
-  const total = this.calculateTotal();
-  this.order = {
-    status: 'IN PROGRESS',
-    tableNumber: this.table?.id ?? 0,
-    date: this.currentDate,
-    time: this.currentTime,
-    total: total.toString(),
-    orderItems: this.orderItems,
-    amountOfPeople: this.selectedAmountOfPeople,
-    employee: this.uid
-  };
+    const total = this.calculateTotal();
+    this.order = {
+      status: 'IN PROGRESS',
+      tableNumber: this.table?.id ?? 0,
+      date: this.currentDate,
+      time: this.currentTime,
+      total: total.toString(),
+      orderItems: this.orderItems,
+      amountOfPeople: this.selectedAmountOfPeople,
+      employee: this.uid
+    };
 
-  try {
-    const response = await this.orderService.onRegister(this.order);
-    if (response && response.order && response.order_id) {
-      await this.updateProductsStock();
-      await this.tableService.updateTableAndOrder(response.order, response.order_id);
-      this.updateTable();
-      this.closeDialog();
-    } else {
-      console.log('Order registration failed');
+    try {
+      const response = await this.orderService.onRegister(this.order);
+      if (response && response.order && response.order_id) {
+        await this.updateProductsStock();
+        await this.tableService.updateTableAndOrder(response.order, response.order_id);
+        this.updateTable();
+        this.closeDialog();
+      } else {
+        console.log('Order registration failed');
+      }
+    } catch (error: any) {
+      console.error('Error durante el registro:', error);
+    } finally {
+      this.loading = false;
     }
-  } catch (error: any) {
-    console.error('Error durante el registro:', error);
-  } finally {
-    this.loading = false;
   }
-}
 
   formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -199,17 +203,14 @@ export class TableFreeComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-
   getProductById(productId: number): Product | undefined {
     return this.products.find(product => product.id === productId);
   }
-
 
   updateTable() {
     this.table.status = 'BUSY';
     this.table.order_id = this.order?.id;
   }
-
 
   closeDialog() {
     this.orderItems = [];
@@ -236,7 +237,6 @@ export class TableFreeComponent implements OnInit {
       }
     });
   }
-
 
   filterProductsByCategory() {
     if (this.selectedCategories.length === 0) {
@@ -301,5 +301,4 @@ export class TableFreeComponent implements OnInit {
       this.selectedAmount = enteredAmount;
     }
   }
-
 }

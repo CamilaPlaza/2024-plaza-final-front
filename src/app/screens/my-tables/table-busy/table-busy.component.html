@@ -1,4 +1,3 @@
-<!-- src/app/components/table-busy/table-busy.component.html -->
 <div class="container-table-free">
 
   <div *ngIf="initialLoading" class="loading-overlay">
@@ -22,6 +21,11 @@
         aria-label="Close dialog">
       </button>
     </div>
+  </div>
+
+  <div *ngIf="readOnly" class="readonly-inline-banner">
+    <i class="pi pi-lock"></i>
+    <span>Vista sólo lectura. Hacé check-in para editar la orden o cerrar la mesa.</span>
   </div>
 
   <div class="body">
@@ -69,7 +73,8 @@
               [(ngModel)]="selectedCategories"
               optionLabel="name"
               placeholder="Choose Categories"
-              (onChange)="filterProductsByCategory()">
+              (onChange)="filterProductsByCategory()"
+              [disabled]="readOnly">
             </p-multiSelect>
           </div>
         </div>
@@ -86,7 +91,8 @@
               filterBy="name"
               [showClear]="true"
               placeholder="Select a Product"
-              (onChange)="onProductChange($event)">
+              (onChange)="onProductChange($event)"
+              [disabled]="readOnly">
 
               <ng-template pTemplate="selectedItem" let-selectedProduct>
                 <div class="flex align-items-center gap-2">
@@ -108,7 +114,7 @@
             <div class="amount-price-wrapper">
               <div class="amount">
                 <label for="amount">Amount:</label>
-                <input id="amount" type="number" (blur)="validateAmount()" [(ngModel)]="selectedAmount" min="1" [max]="selectedProduct?.stock || 1" [title]="'Maximum stock: ' + (selectedProduct?.stock || 0)"/>
+                <input id="amount" type="number" (blur)="validateAmount()" [(ngModel)]="selectedAmount" min="1" [max]="selectedProduct?.stock || 1" [title]="'Maximum stock: ' + (selectedProduct?.stock || 0)" [disabled]="readOnly || !selectedProduct"/>
               </div>
               <div class="price">
                 <label for="price">Price:</label>
@@ -118,13 +124,13 @@
           </div>
 
           <div class="add-product-button">
-            <button [disabled]="validateForm()" (click)="addOrderItem()">Add Product</button>
+            <button [disabled]="readOnly || validateForm()" (click)="addOrderItem()">Add Product</button>
           </div>
         </div>
       </div>
 
       <div *ngIf="!wantToAddNewProduct" class="add-product-button">
-        <button (click)="addNewProducts()">Add Products</button>
+        <button (click)="addNewProducts()" [disabled]="readOnly">Add Products</button>
       </div>
     </div>
 
@@ -133,8 +139,8 @@
     </div>
 
     <div class="action-buttons">
-      <button pButton label="Close Table" class="create-order-button" (click)="showCloseTableDialog()"></button>
-      <button pButton label="Save" class="close-button" (click)="showConfirmDialog()"></button>
+      <button pButton label="Close Table" class="create-order-button" (click)="showCloseTableDialog()" [disabled]="readOnly"></button>
+      <button pButton label="Save" class="close-button" (click)="showConfirmDialog()" [disabled]="readOnly"></button>
     </div>
   </div>
 

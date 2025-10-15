@@ -67,8 +67,8 @@
 
           <label class="field">
             <span class="label">Employee</span>
+            <!-- IMPORTANTE: sin [disabled]; el estado se maneja desde TS con enable/disable -->
             <select formControlName="assignee_uid"
-                    [disabled]="loadingEmployees || !employees.length"
                     (change)="onEmployeeChange($any($event.target).value)"
                     [class.invalid]="f['assignee_uid'].invalid && f['assignee_uid'].touched">
               <option value="" disabled>Select employee…</option>

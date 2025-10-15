@@ -54,7 +54,6 @@ export class AdminTaskManagerComponent implements OnInit {
   // límites de fecha para los inputs
   minStartLocal = this.toLocalInput(new Date());
   get minDueLocal(): string {
-    // due no puede ser antes que start; si no hay start: al menos ahora
     const s = this.f?.['start_at_local']?.value as string | '';
     return s || this.minStartLocal;
   }
@@ -68,6 +67,7 @@ export class AdminTaskManagerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Inicializo con assignee_uid deshabilitado (recomendación Angular)
     this.form = this.fb.group(
       {
         title: ['', [Validators.required, Validators.minLength(1)]],
@@ -75,7 +75,7 @@ export class AdminTaskManagerComponent implements OnInit {
         start_at_local: [''],
         due_at_local: [''],
         tag: [''],
-        assignee_uid: ['', [Validators.required]],
+        assignee_uid: [{ value: '', disabled: true }, [Validators.required]],
       },
       { validators: this.dateWindowValidator }
     );
@@ -101,10 +101,11 @@ export class AdminTaskManagerComponent implements OnInit {
   async loadEmployees(): Promise<void> {
     this.loadingEmployees = true;
     this.loadEmployeesError = null;
+    this.syncAssigneeDisabled(); // deshabilito mientras carga
     this.cdr.markForCheck();
     try {
       const list = await firstValueFrom(this.users.listEmployeesWithShift());
-      this.employees = list;
+      this.employees = list || [];
     } catch (e: any) {
       console.error('[ADMIN] load employees error', e);
       this.employees = [];
@@ -112,11 +113,22 @@ export class AdminTaskManagerComponent implements OnInit {
         e?.error?.detail || e?.message || 'Failed to load employees';
     } finally {
       this.loadingEmployees = false;
+      this.syncAssigneeDisabled(); // re-sync según resultado
       this.cdr.markForCheck();
     }
   }
 
+  private syncAssigneeDisabled(): void {
+    const ctrl = this.f?.['assignee_uid'];
+    if (!ctrl) return;
+    const shouldDisable = this.loadingEmployees || !this.employees.length;
+    if (shouldDisable && ctrl.enabled) ctrl.disable({ emitEvent: false });
+    if (!shouldDisable && ctrl.disabled) ctrl.enable({ emitEvent: false });
+  }
+
   async onEmployeeChange(uid: string): Promise<void> {
+    if (!uid) return;
+
     this.selectedEmployeeId = uid;
 
     const emp = this.employees.find((e) => e.uid === uid) || null;
@@ -128,9 +140,7 @@ export class AdminTaskManagerComponent implements OnInit {
 
     if (!this.selectedShiftId) {
       try {
-        const cur: any = await firstValueFrom(
-          this.assistance.getCurrentShiftId()
-        );
+        const cur: any = await firstValueFrom(this.assistance.getCurrentShiftId());
         this.selectedShiftId = cur?.shift_id ?? null;
       } catch {
         this.selectedShiftId = null;
@@ -257,6 +267,8 @@ export class AdminTaskManagerComponent implements OnInit {
       // reseteo contenido pero dejo el empleado
       const assignee_uid = this.f['assignee_uid'].value;
       this.form.reset({ assignee_uid });
+      // si la lista se vaciara o se vuelve a cargar, re-sync del estado:
+      this.syncAssigneeDisabled();
     } catch (e) {
       console.error('[ADMIN] create+assign error', e);
     } finally {

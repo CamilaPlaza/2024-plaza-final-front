@@ -206,3 +206,47 @@ html, body { height: 100%; margin: 0; padding: 0; }
   .status-row{ grid-template-columns: 1fr 1fr; }
   .columns{ grid-template-columns: 1fr; }
 }
+
+/* ====== Ajustes MOBILE para "Today's status" ====== */
+@media (max-width: 768px){
+
+  /* caja general un toque más chica */
+  .ws-status{ margin: 10px; padding: 10px 12px; }
+
+  /* título y pill más chicos */
+  .status-header h3{ font-size: clamp(.95rem, 2.8vw, 1rem); }
+  .pill{ font-size: .72rem; padding: 3px 8px; }
+
+  /* 2 columnas, menos gap */
+  .status-row{
+    grid-template-columns: 1fr 1fr;  /* aseguramos 2 cols */
+    gap: 8px;
+  }
+
+  /* EVITA desborde horizontal en grid */
+  .status-item{
+    padding: 8px 10px;
+    min-width: 0;                  /* clave en grid */
+  }
+  .status-item .label{
+    font-size: .85rem;
+  }
+  .status-item .value{
+    font-size: .95rem;
+    line-height: 1.1;
+    overflow-wrap: anywhere;       /* permite romper $2,500.00 si hiciera falta */
+  }
+  .status-item .value.accent{ font-size: .95rem; }
+  .value.mono{ font-variant-numeric: tabular-nums; letter-spacing: .2px; }
+
+  /* Botón del header más chico y sin texto (ya lo ocultaste) */
+  .checkin-title-button, .checkout-title-button{
+    padding: .45rem .6rem;
+  }
+  .checkin-title-button .pi, .checkout-title-button .pi{ font-size: 1rem; }
+}
+
+/* En teléfonos MUY angostos, pasamos a 1 columna para que nada se corte */
+@media (max-width: 380px){
+  .status-row{ grid-template-columns: 1fr; }
+}

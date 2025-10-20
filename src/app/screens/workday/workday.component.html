@@ -1,0 +1,106 @@
+<div class="spinner-overlay" *ngIf="pageLoading">
+  <div class="spinner"></div>
+  <p class="spinner-text">Cargando…</p>
+</div>
+
+<div class="container workspace">
+  <div class="section image-section">
+    <img src="../../../../assets/images/view-products.jpg" alt="Workspace" class="image">
+  </div>
+
+  <div class="section title-section">
+    <p class="title">MY WORKSPACE</p>
+
+    <div class="action-slot" *ngIf="!pageLoading && user && user.role !== 'admin'">
+      <button
+        *ngIf="showCheckOutButton"
+        class="p-button-rounded checkout-title-button"
+        (click)="onCheckOut()"
+        [disabled]="loading">
+        <span class="pi pi-sign-out"></span>
+        <span class="button-text">Check out</span>
+      </button>
+
+      <button
+        *ngIf="showCheckInButton"
+        class="p-button-rounded checkin-title-button"
+        (click)="onCheckIn()"
+        [disabled]="loading">
+        <span class="pi pi-sign-in"></span>
+        <span class="button-text">Check in</span>
+      </button>
+    </div>
+  </div>
+
+  <app-check-in-popup
+    *ngIf="showCheckInPopup && user?.role !== 'admin'"
+    [userName]="user?.name || 'Employee'"
+    (closed)="onPopupClosed()">
+  </app-check-in-popup>
+
+  <app-check-out-popup
+    *ngIf="showCheckOutPopup && user?.role !== 'admin'"
+    [userName]="user?.name || 'Employee'"
+    (closed)="onCheckoutClosed()">
+  </app-check-out-popup>
+
+  <div class="section table-section">
+    <div class="card">
+      <section class="ws-status" *ngIf="!pageLoading && user && user.role !== 'admin'">
+        <div class="status-header">
+          <h3>Today’s status</h3>
+          <span class="pill" [ngClass]="attendanceOpen ? 'ok' : 'off'">
+            {{ attendanceOpen ? 'ON SHIFT' : 'OFF SHIFT' }}
+          </span>
+        </div>
+
+        <div class="status-row">
+          <div class="status-item">
+            <span class="label">Assigned shift</span>
+            <span class="value mono">{{ shiftLabel }}</span>
+          </div>
+
+          <div class="status-item">
+            <span class="label">Check-in</span>
+            <span class="value">{{ checkInTime || '—' }}</span>
+          </div>
+
+          <div class="status-item">
+            <span class="label">Check-out</span>
+            <span class="value">{{ checkOutTime || '—' }}</span>
+          </div>
+
+          <div class="status-item">
+            <span class="label">Daily Tips</span>
+            <span class="value accent">{{ tipsToday | currency:'USD' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="ws-board" *ngIf="!pageLoading && user">
+        <ng-container [ngSwitch]="user.role">
+          <app-admin-task-manager
+            *ngSwitchCase="'admin'"
+            [currentAdminUid]="user.uid"
+            [currentAdminName]="user.name"
+            [shift]="null">
+          </app-admin-task-manager>
+
+          <ng-container *ngSwitchDefault>
+            <div class="board-head">
+              <h3>Assigned tasks</h3>
+              <small class="muted">Drag tasks between columns</small>
+            </div>
+            <app-employee-task-board
+              [employeeUid]="user.uid"
+              [employeeName]="user.name"
+              [shift]="shift"
+              [attendanceOpen]="attendanceOpen">
+            </app-employee-task-board>
+          </ng-container>
+        </ng-container>
+      </section>
+
+    </div>
+  </div>
+</div>

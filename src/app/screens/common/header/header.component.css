@@ -34,7 +34,7 @@
     transform: translateX(-50%);
     z-index: 1000;
     background-color: transparent;
-    padding: 0 10px; 
+    padding: 0 10px;
 }
 
 .menu-logo {
@@ -70,6 +70,18 @@
 
 :host ::ng-deep .p-submenu-icon {
     display: none;
+}
+
+/* Evita que el ícono reciba el click/foco: el foco queda en el <a.p-menuitem-link> */
+:host ::ng-deep .custom-tieredmenu .p-menuitem-icon {
+  pointer-events: none;
+}
+
+/* Mantiene tu layout centrado aunque el click vaya al <a> */
+:host ::ng-deep .custom-tieredmenu .p-menuitem-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 

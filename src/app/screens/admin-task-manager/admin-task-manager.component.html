@@ -1,0 +1,196 @@
+<div class="atm-wrapper">
+  <div class="atm-head">
+    <div class="left">
+      <small class="muted">Create task & assign to an employee</small>
+    </div>
+    <div class="right">
+      <span class="who">Admin: <strong>{{ currentAdminName || currentAdminUid }}</strong></span>
+    </div>
+  </div>
+
+  <!-- TOP -->
+  <form class="card top-card" [formGroup]="form" (ngSubmit)="createAndAssign()">
+    <div class="top-grid">
+
+      <!-- izquierda: crear -->
+      <div class="create-col">
+        <label class="field">
+          <span class="label">Title</span>
+          <input type="text"
+                 formControlName="title"
+                 placeholder="e.g. Deep clean bar area"
+                 [class.invalid]="f['title'].invalid && f['title'].touched">
+          <small class="err" *ngIf="f['title'].invalid && f['title'].touched">Required</small>
+        </label>
+
+        <label class="field">
+          <span class="label">Description</span>
+          <textarea rows="8"
+                    formControlName="description"
+                    placeholder="Details or acceptance criteria…"
+                    [class.invalid]="f['description'].invalid && f['description'].touched"></textarea>
+          <small class="err" *ngIf="f['description'].invalid && f['description'].touched">Required</small>
+        </label>
+
+        <div class="start-due-row">
+          <label class="field">
+            <span class="label">Start (optional)</span>
+            <input type="datetime-local"
+                   formControlName="start_at_local"
+                   [min]="minStartLocal">
+            <small class="err" *ngIf="form.errors?.['startPast']">Start cannot be in the past.</small>
+          </label>
+
+          <label class="field">
+            <span class="label">Due (optional)</span>
+            <input type="datetime-local"
+                   formControlName="due_at_local"
+                   [min]="minDueLocal">
+            <small class="err" *ngIf="form.errors?.['dueBeforeStart']">Due cannot be before Start.</small>
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="label">Tag (optional)</span>
+          <input type="text" formControlName="tag" placeholder="e.g. Bar / Inventory / Floor">
+        </label>
+      </div>
+
+      <!-- derecha: assign + preview + botón -->
+      <div class="assign-col">
+        <div class="box assign-box">
+          <div class="box-head">
+            <h5>Assign employee</h5>
+            <small class="muted" *ngIf="loadingEmployees"><span class="spin-sm"></span> Loading…</small>
+            <small class="err" *ngIf="!loadingEmployees && loadEmployeesError">{{ loadEmployeesError }}</small>
+          </div>
+
+          <label class="field">
+            <span class="label">Employee</span>
+            <!-- IMPORTANTE: sin [disabled]; el estado se maneja desde TS con enable/disable -->
+            <select formControlName="assignee_uid"
+                    (change)="onEmployeeChange($any($event.target).value)"
+                    [class.invalid]="f['assignee_uid'].invalid && f['assignee_uid'].touched">
+              <option value="" disabled>Select employee…</option>
+              <option *ngFor="let e of employees" [value]="e.uid">
+                {{ e.name }} — {{ e.shift?.name || '—' }}
+              </option>
+            </select>
+            <small class="err" *ngIf="f['assignee_uid'].invalid && f['assignee_uid'].touched">Required</small>
+          </label>
+
+          <div class="mini-info" *ngIf="selectedEmployeeId">
+            <div>Selected: <strong>{{ selectedEmployeeName }}</strong></div>
+            <div class="muted small">Shift: <span class="mono">{{ selectedShiftName }}</span></div>
+          </div>
+        </div>
+
+        <div class="box preview-box">
+          <div class="box-head"><h5>Preview</h5></div>
+          <div class="preview-body">
+            <div class="title-row">
+              <span class="title">{{ previewTitle }}</span>
+              <span *ngIf="previewTag" class="chip">{{ previewTag }}</span>
+            </div>
+            <div class="desc">{{ previewDescription }}</div>
+            <div class="win" *ngIf="previewWindow as w">
+              <span class="muted">Window:</span>
+              <span class="mono">{{ w.start || '—' }} → {{ w.end || '—' }}</span>
+            </div>
+            <div class="assign-line" *ngIf="selectedEmployeeId">
+              <span class="muted">Assigned to:</span>
+              <span><strong>{{ selectedEmployeeName }}</strong> — {{ selectedShiftName }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions right">
+          <button class="btn primary" type="submit" [disabled]="creating || form.invalid">
+            <span *ngIf="!creating" class="pi pi-plus"></span>
+            <span *ngIf="creating" class="spin-btn" aria-hidden="true"></span>
+            <span>{{ creating ? 'Creating…' : 'Create task & assign' }}</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </form>
+
+  <!-- LIST -->
+  <div class="card list">
+    <div class="list-head">
+      <h4>Tasks for selected employee</h4>
+      <small class="muted" *ngIf="selectedEmployeeId && !loadingTasks">
+        {{ selectedEmployeeName }} — {{ selectedShiftName }}
+      </small>
+    </div>
+
+    <div class="loader" *ngIf="loadingTasks"><span class="spin"></span> Loading…</div>
+
+    <div class="table" *ngIf="!loadingTasks">
+      <div class="thead">
+        <div>Task</div>
+        <div>Description</div>
+        <div>Status</div>
+        <div>Window</div>
+      </div>
+
+      <div class="trow" *ngFor="let row of tasksForSelected">
+        <div class="cell strong">{{ row.title }}</div>
+        <div class="cell">{{ row.description || '—' }}</div>
+        <div class="cell">
+          <select [ngModel]="row.status" (ngModelChange)="onStatusChange(row, $event)">
+            <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+        <div class="cell">
+          <ng-container *ngIf="row.shift_window; else noWin">
+            {{ row.shift_window.start || '—' }} → {{ row.shift_window.end || '—' }}
+          </ng-container>
+          <ng-template #noWin>—</ng-template>
+        </div>
+      </div>
+
+      <div class="empty" *ngIf="!tasksForSelected.length && selectedEmployeeId">
+        No tasks for this employee/shift yet.
+      </div>
+      <div class="empty" *ngIf="!selectedEmployeeId">
+        Select an employee to view tasks.
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT -->
+  <div class="card list">
+    <div class="list-head">
+      <h4>Recently created</h4>
+      <small class="muted">Local session</small>
+    </div>
+
+    <div class="loader" *ngIf="creating"><span class="spin"></span> Saving…</div>
+
+    <div class="table" *ngIf="!creating">
+      <div class="thead">
+        <div>Task</div>
+        <div>Description</div>
+        <div>Assigned to</div>
+        <div>Status</div>
+      </div>
+
+      <div class="trow" *ngFor="let row of recentTasks">
+        <div class="cell strong">{{ row.title }}</div>
+        <div class="cell">{{ row.description || '—' }}</div>
+        <div class="cell">{{ row.assignee_name || row.assignee_uid }}</div>
+        <div class="cell">
+          <select [ngModel]="row.status" (ngModelChange)="onStatusChange(row, $event)">
+            <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="empty" *ngIf="!recentTasks.length">
+        Nothing here yet. Create your first task ↑
+      </div>
+    </div>
+  </div>
+</div>

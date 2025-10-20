@@ -1,88 +1,137 @@
 <div class="popup-content">
-    <p class="subtitle">Choose what this new goal is for</p>
+  <p class="subtitle">Choose what this new goal is for</p>
 
-    <div class="form">
+  <div class="form">
 
-        <div class="goal-form">
-            <div class="goal-form-row">
-                <label for="goalTitle" class="goal-label">Title:</label>
-                <input type="text" id="goalTitle" class="goal-input" [(ngModel)]="goalTitle" placeholder="Enter goal title" />
-            </div>
-            <div class="goal-form-row">
-                <label for="goalDeadline" class="goal-label-date">For:</label>
+    <div class="goal-form">
+      <div class="goal-form-row">
+        <label for="goalTitle" class="goal-label">Title:</label>
+        <input
+          type="text"
+          id="goalTitle"
+          class="goal-input"
+          [(ngModel)]="goalTitle"
+          (ngModelChange)="checkFormComplete()"
+          placeholder="Enter goal title" />
+      </div>
 
-                <p-calendar class="calendar-button"
-                [(ngModel)]="goalDeadline" 
-                [iconDisplay]="'input'" 
-                [showIcon]="true" 
-                view="month" 
-                dateFormat="mm/yy"
-                appendTo="body"
-                [minDate]="minDate"
-                (ngModelChange)="onDateChange($event)"/>
-                
-            </div>
-        </div>
+      <div class="goal-form-row">
+        <label for="goalDeadline" class="goal-label-date">For:</label>
 
-        <div class="goal-form-row">
-            <label for="goalDescription" class="goal-label">Description:</label>
-            <input type="text" id="goalDescription" class="goal-input" [(ngModel)]="goalDescription" (input)="checkFormComplete()" placeholder="Enter goal description" />
-        </div>
-    
-
-        <div class="goal-type-selection">
-            <button (click)="selectGoalType('category')" [disabled]="!isFormComplete" [class.selected]="selectedGoalType === 'category'"  class="goal-type-button">Category</button>
-            <button (click)="selectGoalType('finalGain')" [disabled]="!isFormComplete" [class.selected]="selectedGoalType === 'finalGain'" class="goal-type-button">Final Gain</button>
-        </div>
-    
-        <!-- Campos para "Category" -->
-        <div *ngIf="selectedGoalType === 'category' && isFormComplete" class="goal-form">
-            <div class="goal-form-row">
-                <label for="categoryDropdown" class="category-label">Category:</label>
-                <p-dropdown 
-                    [options]="categories" 
-                    [(ngModel)]="selectedCategory" 
-                    placeholder="Choose a category"
-                    optionLabel="name" >
-                </p-dropdown>
-            </div>
-            <div class="goal-form-row">
-                <label for="categoryAmount" class="category-label-amount">Target Amount:</label>
-                <input type="number" id="categoryAmount" (change)="onTargetAmountChange()"  min="1" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target amount" />
-            </div>
-        </div>
-    
-        <!-- Campos para "Final Gain" -->
-        <div *ngIf="selectedGoalType === 'finalGain' && isFormComplete" class="goal-form">
-            <div class="goal-form-row">
-                <label for="finalGainAmount" class="category-label-final-gain">Target Amount:</label>
-                <input type="number"  (change)="onTargetAmountChange()"  min="1" id="finalGainAmount" class="target-amount-input" [(ngModel)]="targetAmount" placeholder="Enter target gain amount" />
-            </div>
-        </div>
-    
-
-        <div *ngIf="selectedGoalType && isFormComplete" class="goal-form">
-            <div class="goal-form-row">
-                <label>Select Color:</label>
-                <input class="color-input"  [(colorPicker)]="goalColor" [style.background]="goalColor" />
-            </div>
-            <div class="goal-form-row">
-                <label class="goal-label-icon">Select Icon:</label>
-                <p-dropdown class="icon-dropdown" [options]="icons" appendTo="body" [(ngModel)]="selectedIcon" placeholder="Choose an icon">
-                    <ng-template let-icon pTemplate="item">
-                        <i [class]="'pi ' + icon.value"></i>
-                        <span> - {{ icon.label }}</span>
-                    </ng-template>
-                </p-dropdown>
-            </div>
-        </div>
-        
-
+        <p-calendar class="calendar-button"
+          [(ngModel)]="goalDeadline"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          view="month"
+          dateFormat="mm/yy"
+          appendTo="body"
+          [minDate]="minDate"
+          (ngModelChange)="onDateChange($event)">
+        </p-calendar>
+      </div>
     </div>
-    
 
-    <!-- Botón de confirmación -->
-    <div *ngIf="selectedGoalType" class="confirm-button">
-        <button pButton type="button" label="Add Goal" (click)="addGoal()" [disabled]="!isFormValid()"></button>
+    <div class="goal-form-row">
+      <label for="goalDescription" class="goal-label">Description:</label>
+      <input
+        type="text"
+        id="goalDescription"
+        class="goal-input"
+        [(ngModel)]="goalDescription"
+        (input)="checkFormComplete()"
+        placeholder="Enter goal description" />
     </div>
+
+    <!-- Selección de tipo de goal -->
+    <div class="goal-type-selection">
+      <button
+        class="goal-type-button"
+        (click)="selectGoalType('category')"
+        [disabled]="!isFormComplete"
+        [class.selected]="selectedGoalType === 'category'">
+        Category
+      </button>
+
+      <!-- Botón Final Gain SIEMPRE visible; deshabilitado + tooltip cuando ya existe -->
+      <span
+        class="tooltip-wrapper"
+        pTooltip="{{ hasFinalGainGoal ? ('A Final Gain goal already exists for ' + getSelectedMonthLabel()) : '' }}"
+        [tooltipDisabled]="!hasFinalGainGoal"
+        tooltipPosition="top">
+        <button
+          class="goal-type-button"
+          (click)="selectGoalType('finalGain')"
+          [disabled]="!isFormComplete || hasFinalGainGoal"
+          [class.selected]="selectedGoalType === 'finalGain'">
+          Final Gain
+        </button>
+      </span>
+    </div>
+
+    <!-- Campos para "Category" -->
+    <div *ngIf="selectedGoalType === 'category' && isFormComplete" class="goal-form">
+      <div class="goal-form-row">
+        <label for="categoryDropdown" class="category-label">Category:</label>
+        <p-dropdown
+          [options]="categories"
+          [(ngModel)]="selectedCategory"
+          placeholder="Choose a category"
+          optionLabel="name"
+          appendTo="body">
+        </p-dropdown>
+      </div>
+      <div class="goal-form-row">
+        <label for="categoryAmount" class="category-label-amount">Target Amount:</label>
+        <input
+          type="number"
+          id="categoryAmount"
+          min="1"
+          class="target-amount-input"
+          [(ngModel)]="targetAmount"
+          (change)="onTargetAmountChange()"
+          placeholder="Enter target amount" />
+      </div>
+    </div>
+
+    <!-- Campos para "Final Gain" -->
+    <div *ngIf="selectedGoalType === 'finalGain' && isFormComplete" class="goal-form">
+      <div class="goal-form-row">
+        <label for="finalGainAmount" class="category-label-final-gain">Target Amount:</label>
+        <input
+          type="number"
+          id="finalGainAmount"
+          min="1"
+          class="target-amount-input"
+          [(ngModel)]="targetAmount"
+          (change)="onTargetAmountChange()"
+          placeholder="Enter target gain amount" />
+      </div>
+    </div>
+
+    <!-- Color & Icon -->
+    <div *ngIf="selectedGoalType && isFormComplete" class="goal-form">
+      <div class="goal-form-row">
+        <label>Select Color:</label>
+        <input class="color-input" [(colorPicker)]="goalColor" [style.background]="goalColor" />
+      </div>
+      <div class="goal-form-row">
+        <label class="goal-label-icon">Select Icon:</label>
+        <p-dropdown class="icon-dropdown"
+          [options]="icons"
+          appendTo="body"
+          [(ngModel)]="selectedIcon"
+          placeholder="Choose an icon">
+          <ng-template let-icon pTemplate="item">
+            <i [class]="'pi ' + icon.value"></i>
+            <span> - {{ icon.label }}</span>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón de confirmación -->
+  <div *ngIf="selectedGoalType" class="confirm-button">
+    <button pButton type="button" label="Add Goal" (click)="addGoal()" [disabled]="!isFormValid()"></button>
+  </div>
 </div>

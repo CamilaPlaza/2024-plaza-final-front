@@ -10,20 +10,19 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  
+
   email: string | null = null;
   name: string = '';
   birthday: Date | null = null;
   levelName: string = '';
   levelId: string | null = null;
-  isMobile: boolean = false; 
+  isMobile: boolean = false;
   currentGlobalPoints: number = 0;
   currentMonthlyPoints: number = 0;
   pointsToNextLevel: string | null = null;
   pointsNeededToMaintain: number | null = null;
   nextLevelData: any | null = null;
   isTopLevel: boolean = false;
-  displayConfirmDeleteDialog: boolean = false;
   displayErrorDialog: boolean = false;
   displayChangePasswordDialog: boolean = false;
   displayDiscountDialog = false;
@@ -50,9 +49,8 @@ export class UserProfileComponent implements OnInit {
     const user = this.userService.currentUser;
     if (user) {
       this.email = user.email;
-      this.loading = true; // Set loading to true when starting to fetch data
-    
-      // Fetch user data
+      this.loading = true;
+
       (await this.userService.getUserDataFromFirestore(user.uid)).subscribe(
         (userData) => {
           this.name = userData.name;
@@ -61,32 +59,29 @@ export class UserProfileComponent implements OnInit {
           this.levelId = userData.level.id;
           this.currentGlobalPoints = parseInt(userData.globalPoints, 10) || 0;
           this.currentMonthlyPoints = parseInt(userData.monthlyPoints, 10) || 0;
-  
-          // First check if the user is at the top level
+
           this.userService.getTopLevelStatus(this.levelId ?? '').subscribe(
             (statusData) => {
               this.isTopLevel = statusData.isTopLevel;
               if (!this.isTopLevel) {
-                // Only fetch next level data if not at top level
                 this.fetchNextLevelData();
               } else {
-                // If at top level, fetch points needed to maintain this level
                 this.fetchTopLevelStatus();
               }
-              this.fetchRewards(); // Fetch rewards here
-              this.fetchRankingData(); // Fetch ranking data here
+              this.fetchRewards();
+              this.fetchRankingData();
             },
             (error) => {
               console.error('Error checking top-level status:', error);
               this.showErrorDialog();
-              this.loading = false; // Stop loading in case of error
+              this.loading = false;
             }
           );
         },
         (error) => {
           console.error('Error fetching user data:', error);
           this.showErrorDialog();
-          this.loading = false; // Stop loading in case of error
+          this.loading = false;
         }
       );
     } else {
@@ -102,7 +97,7 @@ export class UserProfileComponent implements OnInit {
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 768;
   }
-  
+
   private fetchNextLevelData(): void {
     const nextLevelId = (parseInt(this.levelId ?? '', 10) + 1).toString();
     this.levelService.getLevel(nextLevelId).subscribe(
@@ -118,7 +113,7 @@ export class UserProfileComponent implements OnInit {
       }
     );
   }
-  
+
   private fetchTopLevelStatus(): void {
     // Calculate how many points are needed to maintain the top level
     this.pointsNeededToMaintain = 150 - this.currentMonthlyPoints;
@@ -162,20 +157,6 @@ export class UserProfileComponent implements OnInit {
     );
   }
 
-  async onDeleteAccount() {
-    this.userService.deleteCurrentUser()
-      .then(() => {
-        console.log('Account deleted successfully');
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error('Error deleting account:', error);
-        this.showErrorDialog();
-      });
-  }
-
   async changePassword() {
     this.userService.resetPassword(this.email ?? '');
     this.userService.logOut().then(() => {
@@ -192,22 +173,12 @@ export class UserProfileComponent implements OnInit {
     this.displayChangePasswordDialog = false;
   }
 
-  showConfirmDeleteDialog() {
-    this.displayConfirmDeleteDialog = true;
-  }
 
-  
   showInfoPointsDialog() {
     this.displayInfoPointsDialog = true;
   }
 
-
-  closeConfirmDeleteDialog() {
-    this.displayConfirmDeleteDialog = false;
-  }
-
   showErrorDialog() {
-    this.closeConfirmDeleteDialog();
     this.displayErrorDialog = true;
   }
 

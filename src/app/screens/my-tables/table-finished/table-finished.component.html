@@ -1,13 +1,18 @@
 <div class="container-table-free">
   <div class="body">
+    <div *ngIf="readOnly" class="readonly-inline-banner">
+      <i class="pi pi-lock"></i>
+      <span>Vista sólo lectura. Hacé check-in para marcar la mesa como limpia.</span>
+    </div>
+
     <div class="title"> The table was cleaned?</div>
     <div class="action-buttons">
-      <button pButton label="Yes" class="create-order-button" (click)="cleanTable()"></button>
+      <button pButton label="Yes" class="create-order-button" (click)="cleanTable()" [disabled]="readOnly"></button>
       <button pButton label="No" class="close-button" (click)="closeDialog()"></button>
     </div>
   </div>
 </div>
-       
+
 <div *ngIf="loading" class="overlay">
   <p-progressSpinner styleClass="custom-spinner" [animationDuration]="'0.5'"></p-progressSpinner>
 </div>

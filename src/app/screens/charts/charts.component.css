@@ -119,16 +119,16 @@ html, body {
 }
 
 .per-day-chart .card, .per-person-chart .card {
-    width: 96%; 
-    height: auto; 
+    width: 96%;
+    height: auto;
 }
 
 .per-day-chart .card, .per-person-chart .card {
-    width: 96%; 
-    height: auto; 
+    width: 96%;
+    height: auto;
 }
 
-::ng-deep .per-day-chart p-chart, 
+::ng-deep .per-day-chart p-chart,
 ::ng-deep .per-person-chart p-chart {
     width: 70%;
     height: auto;
@@ -187,9 +187,52 @@ html, body {
     margin-top: 20px;
 }
 
+/* Mantengo tus estilos; agrego sólo lo del overlay */
+
+.container {
+  position: relative;
+}
+
+.charts {
+  position: relative; /* para que el overlay posicione respecto a este contenedor */
+  min-height: 300px;  /* asegura altura para ver el spinner */
+}
+
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.spinner {
+  border: 6px solid #eee;
+  border-top: 6px solid #7f522e;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-text {
+  margin-top: 15px;
+  color: #444;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
 @media (max-width: 768px) {
-   
+
     .container {
         margin-left: 10%;
     }
@@ -197,7 +240,7 @@ html, body {
     .title-section {
         flex: 0.05;
     }
-    
+
     .title {
         font-size: 1.5rem;
     }
@@ -210,20 +253,20 @@ html, body {
     .chart-wrapper.category-revenue,
     .chart-wrapper.monthly-revenue {
         max-width: 100%;
-        margin-bottom: 10px; 
+        margin-bottom: 10px;
     }
 
     .chart-wrapper.per-day-chart,
     .chart-wrapper.per-person-chart {
-        max-width: 100%; 
-        margin-top: -10%; 
+        max-width: 100%;
+        margin-top: -10%;
     }
 
     .card {
         width: 100%;
     }
 
-    ::ng-deep .per-day-chart p-chart, 
+    ::ng-deep .per-day-chart p-chart,
     ::ng-deep .per-person-chart p-chart{
         width: 100%;
         height: auto;

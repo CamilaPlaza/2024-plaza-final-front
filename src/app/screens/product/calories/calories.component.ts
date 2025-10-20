@@ -34,7 +34,6 @@ export class CaloriesComponent implements OnInit {
           id: item.id ? item.id.toString() : '',  // Manejo de undefined
           calories: item.calories_portion
         }));
-        console.log(this.availableIngredients);  // Verifica los datos
       } else {
         console.error("No se encontraron alimentos en la respuesta.");
       }
@@ -42,7 +41,7 @@ export class CaloriesComponent implements OnInit {
       console.error("Error al cargar las calorías: ", error);
     });
   }
-  
+
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }
@@ -104,8 +103,8 @@ export class CaloriesComponent implements OnInit {
     if (this.ingredients.some(ingredient => ingredient.calories === 0)) {
       return 0; // Retorna 0 si alguna caloría es 0
     }
-    
+
     // Si no hay ingredientes con 0 calorías, suma las calorías de todos
     return this.ingredients.reduce((total, ingredient) => total + ingredient.calories, 0);
   }
-}  
+}

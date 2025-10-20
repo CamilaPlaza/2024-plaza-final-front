@@ -9,6 +9,8 @@ import { TableService } from 'src/app/services/table_service';
 import { CategoryService } from 'src/app/services/category_service';
 import { Category } from 'src/app/models/category';
 import { UserService } from 'src/app/services/user_service';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-table-free',
@@ -17,9 +19,11 @@ import { UserService } from 'src/app/services/user_service';
 })
 export class TableFreeComponent implements OnInit {
   @Input() table: Table = new Table('', 1);
+  @Input() readOnly: boolean = false;
   @Output() close = new EventEmitter<void>();
-  searchTerm: string = ''; 
-  filteredProducts: Product[] = []; 
+
+  searchTerm: string = '';
+  filteredProducts: Product[] = [];
   categories: Category[] = [];
   orderItems: OrderItem[] = [];
   loading: boolean = false;
@@ -31,9 +35,11 @@ export class TableFreeComponent implements OnInit {
   currentTime: string = '';
   order: Order | undefined;
   currentDate: string = this.formatDate(new Date());
-  user: any | null
+  user: any | null;
   uid: string = '';
-  
+  categoriesLoading: boolean = false;
+  filteredProductsLoading: boolean = false;
+
   selectedCategories: Array<{ id: any, name: string }> = [];
 
   constructor(
@@ -41,7 +47,8 @@ export class TableFreeComponent implements OnInit {
     private orderService: OrderService,
     private tableService: TableService,
     private categoryService: CategoryService,
-    private userService: UserService
+    private userService: UserService,
+    private ngZone: NgZone
   ) {}
 
   async ngOnInit() {
@@ -54,11 +61,26 @@ export class TableFreeComponent implements OnInit {
       if (userData) {
         this.user = userData;
         this.uid = user.uid;
-        console.log(this.user);
       } else {
         console.error('Error fetching user points data.');
       }
-  }
+    }
+    if (!this.uid) {
+      const auth = getAuth();
+      const u = auth.currentUser;
+
+      if (u?.uid) {
+        this.uid = u.uid;
+      } else {
+        onAuthStateChanged(auth, (usr) => {
+          this.ngZone.run(() => {
+            if (usr?.uid && !this.uid) {
+              this.uid = usr.uid;
+            }
+          });
+        });
+      }
+    }
   }
 
   loadProducts(): void {
@@ -83,6 +105,7 @@ export class TableFreeComponent implements OnInit {
   }
 
   addOrderItem() {
+    if (this.readOnly) return;
     if (this.selectedProduct && this.selectedAmount > 0) {
       const newItem: OrderItem = {
         product_id: this.selectedProduct.id ?? 0,
@@ -94,14 +117,15 @@ export class TableFreeComponent implements OnInit {
       this.resetForm();
     }
   }
-  
+
   removeOrderItem(item: OrderItem) {
+    if (this.readOnly) return;
     const index = this.orderItems.indexOf(item);
     if (index > -1) {
       this.orderItems.splice(index, 1);
     }
   }
-  
+
   resetForm() {
     this.selectedProduct = null;
     this.selectedAmount = 1;
@@ -115,8 +139,34 @@ export class TableFreeComponent implements OnInit {
     }, 0);
   }
 
+  private ensureUidReady(): boolean {
+    if (this.uid) return true;
+
+    const uSvc = this.userService.currentUser as any;
+    if (uSvc?.uid) {
+      this.uid = uSvc.uid;
+      return true;
+    }
+
+    const uFb = getAuth().currentUser;
+    if (uFb?.uid) {
+      this.uid = uFb.uid;
+      return true;
+    }
+
+    return false;
+  }
+
   async createOrder() {
+    if (this.readOnly) return;
     this.loading = true;
+    this.ensureUidReady();
+    if (!this.ensureUidReady()) {
+      console.error('No UID available to create order');
+      this.loading = false;
+      return;
+    }
+
     const total = this.calculateTotal();
     this.order = {
       status: 'IN PROGRESS',
@@ -128,12 +178,10 @@ export class TableFreeComponent implements OnInit {
       amountOfPeople: this.selectedAmountOfPeople,
       employee: this.uid
     };
-  
+
     try {
       const response = await this.orderService.onRegister(this.order);
-  
       if (response && response.order && response.order_id) {
-      
         await this.updateProductsStock();
         await this.tableService.updateTableAndOrder(response.order, response.order_id);
         this.updateTable();
@@ -147,27 +195,22 @@ export class TableFreeComponent implements OnInit {
       this.loading = false;
     }
   }
-  
 
-  
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`; 
+    return `${year}-${month}-${day}`;
   }
-
 
   getProductById(productId: number): Product | undefined {
     return this.products.find(product => product.id === productId);
   }
 
-
   updateTable() {
     this.table.status = 'BUSY';
     this.table.order_id = this.order?.id;
   }
-
 
   closeDialog() {
     this.orderItems = [];
@@ -177,6 +220,7 @@ export class TableFreeComponent implements OnInit {
   }
 
   loadCategories(): void {
+    this.categoriesLoading = true;
     this.categoryService.getCategories().subscribe({
       next: (data) => {
         if (data && Array.isArray(data.categories)) {
@@ -186,14 +230,14 @@ export class TableFreeComponent implements OnInit {
             type: item.type
           }));
         }
+        this.categoriesLoading = false;
       },
-      error: (err) => {
-        console.error('Error fetching categories:', err);
+      error: () => {
+        this.categoriesLoading = false;
       }
     });
   }
 
-  
   filterProductsByCategory() {
     if (this.selectedCategories.length === 0) {
       this.filteredProducts = [];
@@ -204,40 +248,35 @@ export class TableFreeComponent implements OnInit {
   }
 
   getProductsByCategory(categoryIds: string) {
+    this.filteredProductsLoading = true;
     this.categoryService.getProductsByCategory(categoryIds)
       .then((data) => {
         if (data && Array.isArray(data)) {
           this.filteredProducts = data.map(product => ({
             ...product,
-            disabled: product.stock === '0'  // Si stock es '0', deshabilitar
+            disabled: product.stock === '0'
           }));
         } else {
-          console.error('Unexpected data format:', data);
           this.filteredProducts = [];
         }
+        this.filteredProductsLoading = false;
       })
-      .catch((err) => {
-        console.error('Error fetching products by category:', err);
-        this.filteredProducts = []; 
+      .catch(() => {
+        this.filteredProducts = [];
+        this.filteredProductsLoading = false;
       });
   }
-  
+
   onProductChange(event: any) {
     const selectedProduct = event.value;
-    
-    // Verifica si el producto seleccionado está deshabilitado
     if (selectedProduct?.disabled) {
-      // Si está deshabilitado, cancela la selección
       this.selectedProduct = null;
     }
   }
-  
-  
-  
 
   async updateProductsStock() {
     try {
-      const updatePromises = this.orderItems.map(orderItem => 
+      const updatePromises = this.orderItems.map(orderItem =>
         this.productService.updateLowerStock(
           orderItem.product_id?.toString() ?? '',
           orderItem.amount.toString()
@@ -253,7 +292,7 @@ export class TableFreeComponent implements OnInit {
   validateAmount() {
     const maxStock = Number(this.selectedProduct?.stock) || 1;
     const enteredAmount = Number(this.selectedAmount);
-  
+
     if (enteredAmount > maxStock) {
       this.selectedAmount = maxStock;
     } else if (enteredAmount < 1) {
@@ -262,5 +301,4 @@ export class TableFreeComponent implements OnInit {
       this.selectedAmount = enteredAmount;
     }
   }
-
 }

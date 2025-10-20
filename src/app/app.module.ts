@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
@@ -38,7 +38,7 @@ import { TablesComponent } from './screens/my-tables/tables/tables.component';
 import { OrdersComponent } from './screens/my-orders/orders/orders.component';
 import { ResetPasswordComponent } from './screens/User-LogIn/reset-password/reset-password.component';
 import { CaloriesComponent } from './screens/product/calories/calories.component';
-import { MultiSelectModule } from 'primeng/multiselect';  
+import { MultiSelectModule } from 'primeng/multiselect';
 import { TableBusyComponent } from './screens/my-tables/table-busy/table-busy.component';
 import { TableFreeComponent } from './screens/my-tables/table-free/table-free.component';
 import { OrderInfoComponent } from './screens/my-orders/order-info/order-info.component';
@@ -52,7 +52,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MyCartComponent } from './screens/user-order/my-cart/my-cart.component';
 import { CreateOrderComponent } from './screens/user-order/create-order/create-order.component';
 import { AsignInactiveOrderComponent } from './screens/my-tables/asign-inactive-order/asign-inactive-order.component';
-import { InputIconModule } from 'primeng/inputicon'; 
+import { InputIconModule } from 'primeng/inputicon';
 import { GoalsComponent } from './screens/goal-screen/goals/goals.component';
 import { KnobModule } from 'primeng/knob';
 import { CardModule } from 'primeng/card';
@@ -67,6 +67,14 @@ import { UpdateStockComponent } from './screens/product/update-stock/update-stoc
 import { InfoPointsComponent } from './screens/info-points/info-points.component';
 import { AlertStockComponent } from './screens/product/alert-stock/alert-stock.component';
 import { SplitterModule } from 'primeng/splitter';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { CheckInPopupComponent } from './screens/check-in-popup/check-in-popup.component';
+import { WorkdayComponent } from './screens/workday/workday.component';
+import { AdminTaskManagerComponent } from './screens/admin-task-manager/admin-task-manager.component';
+import { EmployeeTaskBoardComponent } from './screens/employee-task-board/employee-task-board.component';
+import { CheckOutPopupComponent } from './screens/check-out-popup/check-out-popup.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @NgModule({
   declarations: [
@@ -98,10 +106,15 @@ import { SplitterModule } from 'primeng/splitter';
     RegisterProductComponent,
     LogInComponent,
     UserRegisterComponent,
+    CheckOutPopupComponent,
     NoticeComponent,
     UserForgotPasswordComponent,
     CategoriesComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    CheckInPopupComponent,
+    WorkdayComponent,
+    AdminTaskManagerComponent,
+    EmployeeTaskBoardComponent
   ],
   imports: [
     BrowserModule,
@@ -116,6 +129,7 @@ import { SplitterModule } from 'primeng/splitter';
     FileUploadModule,
     AutoCompleteModule,
     SplitterModule,
+    ReactiveFormsModule,
     TagModule,
     TableModule,
     ColorPickerModule,
@@ -125,6 +139,7 @@ import { SplitterModule } from 'primeng/splitter';
     TieredMenuModule,
     PasswordModule,
     InputIconModule,
+    SelectButtonModule,
     ProgressSpinnerModule,
     ButtonModule,
     DialogModule,
@@ -139,7 +154,16 @@ import { SplitterModule } from 'primeng/splitter';
     MeterGroupModule,
     CarouselModule
 ],
-  providers: [ConfirmationService, MessageService, DatePipe],
+  providers: [
+  ConfirmationService,
+  MessageService,
+  DatePipe,
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

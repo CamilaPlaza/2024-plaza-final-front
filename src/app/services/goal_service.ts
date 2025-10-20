@@ -7,13 +7,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class GoalService {
-  private baseUrl = 'https://candv-back.onrender.com';
-  //private baseLocalUrl = 'http://127.0.0.1:8000'; 
+  private baseUrl = 'https://two024-plaza-final-back-4lpd.onrender.com';
+  //private baseUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient) {}
   async createGoal(goal: Goal): Promise<any | null> {
     try {
-        const response = await this.http.post(`${this.baseUrl}/create-goal`, goal).toPromise();
+        const response = await this.http.post(`${this.baseUrl}/goals/create`, goal).toPromise();
         return response;
     } catch (error: any) {
         console.error('Error durante el registro:', error);
@@ -23,5 +23,6 @@ export class GoalService {
 
   getGoals(month: string, year: string): Observable<Goal[]> {
     return this.http.get<Goal[]>(`${this.baseUrl}/goals/${month}/${year}`);
-}
+  }
+
 }

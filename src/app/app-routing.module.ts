@@ -17,6 +17,8 @@ import { ChartsComponent } from './screens/charts/charts.component';
 import { OrdersComponent } from './screens/my-orders/orders/orders.component';
 import { MenuComponent } from './screens/user-order/menu/menu.component';
 import { GoalsComponent } from './screens/goal-screen/goals/goals.component';
+import { WorkdayComponent } from './screens/workday/workday.component';
+import { CheckOutPopupComponent } from './screens/check-out-popup/check-out-popup.component';
 
 const routes: Routes = [
   { path: '', component: LogInComponent},
@@ -35,6 +37,8 @@ const routes: Routes = [
   { path: 'charts', component: ChartsComponent, canActivate:[AuthGuard]},
   { path: 'goals', component: GoalsComponent, canActivate:[AuthGuard]},
   { path: 'menu-order', component: MenuComponent},
+  { path: 'workday', component: WorkdayComponent},
+  { path: 'checkout', component: CheckOutPopupComponent},
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 

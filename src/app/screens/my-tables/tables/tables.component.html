@@ -1,16 +1,25 @@
-<div class="container">
+<div class="container" *ngIf="!isLoading; else loadingSpinner">
   <div class="section image-section">
     <img src="../../../../assets/images/tables2.jpg" alt="Imagen descriptiva" class="image">
   </div>
+
   <div class="section title-section">
     <p class="title">MY TABLES</p>
-    <div class="notification-bell"  (click)="onNotificationClick()">
+    <div class="notification-bell" (click)="onNotificationBell()" [class.disabled]="isEmployee && !canInteract">
       <i class="pi pi-inbox"></i>
       <span class="inactive-count">{{ inactiveOrdersCount }}</span>
     </div>
   </div>
-  
-  <div class="section table-section">
+
+  <div *ngIf="isEmployee && !canInteract" class="readonly-banner">
+    <div class="rb-left">
+      <i class="pi pi-lock"></i>
+      <span>Estás en modo vista. Hacé check-in para operar mesas.</span>
+    </div>
+  </div>
+
+
+  <div class="section table-section" [class.readonly]="isEmployee && !canInteract">
     <div class="card table-wrapper">
       <p-table [value]="tables" dataKey="id" scrollable="true" [scrollHeight]="tableScrollHeight">
         <ng-template pTemplate="header">
@@ -22,10 +31,18 @@
         </ng-template>
 
         <ng-template pTemplate="body" let-table let-ri="rowIndex">
-          <tr (click)="onTableClick(table)">
+          <tr
+            (click)="onTableClick(table)"
+            [class.row-disabled]="isEmployee && !canInteract"
+            [pTooltip]="(isEmployee && !canInteract) ? 'Requiere check-in' : undefined"
+            tooltipPosition="top">
             <td>{{ table.id }}</td>
-            <td>{{ table.capacity}} </td>
-            <td [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY', 'status-finished': table.status === 'FINISHED'}">
+            <td>{{ table.capacity }}</td>
+            <td [ngClass]="{
+              'status-free': table.status === 'FREE',
+              'status-busy': table.status === 'BUSY',
+              'status-finished': table.status === 'FINISHED'
+            }">
               {{ table.status }}
             </td>
           </tr>
@@ -40,7 +57,16 @@
     </div>
 
     <div class="table-icons">
-      <div *ngFor="let table of tables" class="table-icon" [ngClass]="{'status-free': table.status === 'FREE', 'status-busy': table.status === 'BUSY', 'status-finished': table.status === 'FINISHED'}" (click)="onTableClick(table)">
+      <div *ngFor="let table of tables"
+           class="table-icon"
+           [ngClass]="{
+             'status-free': table.status === 'FREE',
+             'status-busy': table.status === 'BUSY',
+             'status-finished': table.status === 'FINISHED',
+             'icon-disabled': isEmployee && !canInteract
+           }"
+           (click)="onTableClick(table)"
+           [pTooltip]="(isEmployee && !canInteract) ? 'Requiere check-in' : undefined" tooltipPosition="top">
         <i class="fas fa-utensils"></i>
         <span>{{ table.id }}</span>
       </div>
@@ -48,33 +74,37 @@
   </div>
 </div>
 
+<ng-template #loadingSpinner>
+  <div class="spinner-overlay">
+    <div class="spinner"></div>
+    <p class="spinner-text">Cargando...</p>
+  </div>
+</ng-template>
+
 <p-dialog class="custom-modal" [(visible)]="displayModal" modal="true" [closable]="false" [responsive]="true">
   <ng-container *ngIf="selectedComponent === 'FREE'">
-    <app-table-free 
-      [table]="selectedTable" 
-      (close)="displayModal = false">
-    </app-table-free>
+    <app-table-free [table]="selectedTable" [readOnly]="isEmployee && !canInteract" (close)="displayModal = false"></app-table-free>
   </ng-container>
 
   <ng-container *ngIf="selectedComponent === 'BUSY'">
-    <app-table-busy
-      [table]="selectedTable" 
-      (close)="displayModal = false">
-    </app-table-busy>
+    <app-table-busy [table]="selectedTable" [readOnly]="isEmployee && !canInteract" (close)="displayModal = false"></app-table-busy>
   </ng-container>
 
   <ng-container *ngIf="selectedComponent === 'FINISHED'">
-    <app-table-finished
-      [table]="selectedTable" 
-      (close)="displayModal = false">
-    </app-table-finished>
+    <app-table-finished [table]="selectedTable" [readOnly]="isEmployee && !canInteract" (close)="displayModal = false"></app-table-finished>
   </ng-container>
 </p-dialog>
 
 <p-dialog class="custom-modal" [(visible)]="displayModalInactive" modal="true" header="Asign Table" [closable]="true" [responsive]="true">
-  <app-asign-inactive-order 
-    [orders]="inactiveOrders" 
+  <app-asign-inactive-order
+    [orders]="inactiveOrders"
     [freeTables]="freeTables"
     (close)="closeModalInactive()">
   </app-asign-inactive-order>
 </p-dialog>
+
+<app-check-in-popup
+  *ngIf="showCheckInPopup"
+  [userName]="userName"
+  (closed)="onCheckInPopupClosed()">
+</app-check-in-popup>

@@ -20,16 +20,20 @@
     margin-top: 20px;
 }
 
+/* El wrapper permite que el tooltip funcione sobre botones deshabilitados */
+.tooltip-wrapper {
+    display: inline-block;
+}
+
 .goal-type-button {
     background-color: #7f522e;
     color: #fff;
     border: none;
     padding: 12px 30px;
-    font-size: 0.8rem;
+    font-size: 18px;
     cursor: pointer;
     border-radius: 10px;
     transition: background-color 0.3s;
-    font-size: 18px;
 }
 
 .goal-type-button:hover {
@@ -38,17 +42,17 @@
 
 .goal-type-button.selected {
     background-color: #5a3a21;
-    border: 2px solid #333; 
+    border: 2px solid #333;
 }
 
 .goal-type-button:disabled {
-    background-color: #cccccc; /* fondo gris para botones deshabilitados */
-    color: #666666; /* texto gris claro para botones deshabilitados */
-    cursor: not-allowed; /* cambia el cursor para indicar que está deshabilitado */
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
 }
 
 .goal-type-button:not(:disabled):hover {
-    background-color: #0056b3; /* color de fondo al hacer hover en botones habilitados */
+    background-color: #0056b3;
     color: white;
 }
 
@@ -69,22 +73,22 @@
 .goal-label {
     font-weight: bold;
     color: #333;
-    min-width: 120px; 
+    min-width: 120px;
     white-space: nowrap;
 }
 
 .goal-label-date {
     font-weight: bold;
     color: #333;
-    min-width: 50px; 
+    min-width: 50px;
     white-space: nowrap;
     margin-left: 12%;
 }
 
-.goal-input, 
-.target-amount-input, 
+.goal-input,
+.target-amount-input,
 .gain-amount-input {
-    flex: 1; 
+    flex: 1;
     padding: 10px;
     border-radius: 5px;
     font-size: 1rem;
@@ -93,9 +97,8 @@
 
 .goal-input:focus {
     border-color: #aaa;
-    outline: none; 
+    outline: none;
 }
-
 
 .category-label-amount{
     margin-right: 3%;
@@ -135,12 +138,11 @@
 
 p-colorPicker,
 p-dropdown {
-    flex: 1; 
+    flex: 1;
     padding: 10px;
     border-radius: 5px;
     font-size: 1rem;
 }
-
 
 ::ng-deep .icon-dropdown .p-dropdown-panel {
     min-width: 180px;
@@ -150,20 +152,19 @@ p-dropdown {
     min-width: 180px;
 }
 
-
 .color-input {
-    width: 30px; 
-    height: 30px; 
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    cursor: pointer; 
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
     padding: 0;
     margin-left: 10px;
-    transition: transform 0.2s; 
+    transition: transform 0.2s;
 }
 
 .color-input:hover {
-    transform: scale(1.1); 
+    transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
@@ -188,7 +189,7 @@ p-dropdown {
         align-items: flex-start;
     }
 
-    .goal-label, 
+    .goal-label,
     .goal-label-date,
     .category-label-amount,
     .category-label-final-gain,

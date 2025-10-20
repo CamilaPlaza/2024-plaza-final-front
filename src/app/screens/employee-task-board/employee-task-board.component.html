@@ -1,0 +1,186 @@
+<div class="emp-board">
+  <div class="emp-head">
+    <div class="left">
+      <small class="muted">Drag tasks between columns</small>
+    </div>
+    <div class="right">
+      <button class="btn ghost" (click)="load()" [disabled]="loading || saving">
+        <span *ngIf="!loading" class="pi pi-refresh"></span>
+        <span *ngIf="loading" class="spin-sm"></span>
+        <span>{{ loading ? 'Refreshing…' : 'Refresh' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="warn" *ngIf="!attendanceOpen">
+    <span class="pi pi-info-circle"></span>
+    <span>Open your shift to update task status. On mobile you’ll see controls when on shift.</span>
+  </div>
+  <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <div class="columns">
+    <!-- Column: Assigned -->
+    <div class="col">
+      <div class="col-title">To do ({{ assigned.length }})</div>
+      <div class="dropzone"
+           [class.is-dragover]="dragOverCol==='assigned'"
+           (dragover)="allowDrop($event, 'assigned')"
+           (drop)="onDrop($event, 'assigned')">
+
+        <div class="task"
+             *ngFor="let t of assigned; trackBy: trackById"
+             [draggable]="attendanceOpen"
+             (dragstart)="onDragStart(t)"
+             (dragend)="onDragEnd()">
+
+          <div class="task-header">
+            <div class="title-row">
+              <span class="task-title">{{ t.title }}</span>
+            </div>
+            <span *ngIf="t.tag" class="chip right">{{ t.tag }}</span>
+          </div>
+
+          <div class="task-body">
+            <div class="task-desc" *ngIf="t.description">{{ t.description }}</div>
+
+            <div class="task-meta" *ngIf="t.shift_window">
+              <div class="meta-left">
+                <span class="muted">From</span>
+                <span class="mono">{{ formatFull(t.shift_window.start) }}</span>
+                <span class="muted">&nbsp;to&nbsp;</span>
+                <span class="mono">{{ formatFull(t.shift_window.end) }}</span>
+              </div>
+              <div class="meta-right" *ngIf="t.shift_window.end as endIso">
+                <ng-container [ngSwitch]="deadlineMeta(t).cls">
+                  <span class="badge ok"   *ngSwitchCase="'ok'">{{ deadlineMeta(t).label }}</span>
+                  <span class="badge warn" *ngSwitchCase="'warn'">{{ deadlineMeta(t).label }}</span>
+                  <span class="badge over" *ngSwitchCase="'over'">{{ deadlineMeta(t).label }}</span>
+                  <span class="badge"      *ngSwitchDefault>{{ deadlineMeta(t).label }}</span>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <!-- mobile-only segmented control -->
+          <div class="status-mobile" *ngIf="attendanceOpen">
+            <button class="seg" [class.active]="t.status==='assigned'"    (click)="setStatusFromMobile(t, 'assigned')">To do</button>
+            <button class="seg" [class.active]="t.status==='in_progress'" (click)="setStatusFromMobile(t, 'in_progress')">Doing</button>
+            <button class="seg" [class.active]="t.status==='done'"        (click)="setStatusFromMobile(t, 'done')">Done</button>
+          </div>
+        </div>
+
+        <div class="empty-col" *ngIf="!assigned.length && !loading">No tasks.</div>
+      </div>
+    </div>
+
+    <!-- Column: In progress -->
+    <div class="col">
+      <div class="col-title">Doing ({{ in_progress.length }})</div>
+      <div class="dropzone"
+           [class.is-dragover]="dragOverCol==='in_progress'"
+           (dragover)="allowDrop($event, 'in_progress')"
+           (drop)="onDrop($event, 'in_progress')">
+
+        <div class="task"
+             *ngFor="let t of in_progress; trackBy: trackById"
+             [draggable]="attendanceOpen"
+             (dragstart)="onDragStart(t)"
+             (dragend)="onDragEnd()">
+
+          <div class="task-header">
+            <div class="title-row">
+              <span class="task-title">{{ t.title }}</span>
+            </div>
+            <span *ngIf="t.tag" class="chip right">{{ t.tag }}</span>
+          </div>
+
+          <div class="task-body">
+            <div class="task-desc" *ngIf="t.description">{{ t.description }}</div>
+
+            <div class="task-meta" *ngIf="t.shift_window">
+              <div class="meta-left">
+                <span class="muted">From</span>
+                <span class="mono">{{ formatFull(t.shift_window.start) }}</span>
+                <span class="muted">&nbsp;to&nbsp;</span>
+                <span class="mono">{{ formatFull(t.shift_window.end) }}</span>
+              </div>
+              <div class="meta-right" *ngIf="t.shift_window.end as endIso">
+                <ng-container [ngSwitch]="deadlineMeta(t).cls">
+                  <span class="badge ok"   *ngSwitchCase="'ok'">{{ deadlineMeta(t).label }}</span>
+                  <span class="badge warn" *ngSwitchCase="'warn'">{{ deadlineMeta(t).label }}</span>
+                  <span class="badge over" *ngSwitchCase="'over'">{{ deadlineMeta(t).label }}</span>
+                  <span class="badge"      *ngSwitchDefault>{{ deadlineMeta(t).label }}</span>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-mobile" *ngIf="attendanceOpen">
+            <button class="seg" [class.active]="t.status==='assigned'"    (click)="setStatusFromMobile(t, 'assigned')">To do</button>
+            <button class="seg" [class.active]="t.status==='in_progress'" (click)="setStatusFromMobile(t, 'in_progress')">Doing</button>
+            <button class="seg" [class.active]="t.status==='done'"        (click)="setStatusFromMobile(t, 'done')">Done</button>
+          </div>
+        </div>
+
+        <div class="empty-col" *ngIf="!in_progress.length && !loading">No tasks.</div>
+      </div>
+    </div>
+
+    <!-- Column: Done -->
+    <div class="col">
+      <div class="col-title">Done ({{ done.length }})</div>
+      <div class="dropzone"
+           [class.is-dragover]="dragOverCol==='done'"
+           (dragover)="allowDrop($event, 'done')"
+           (drop)="onDrop($event, 'done')">
+
+        <div class="task"
+             *ngFor="let t of done; trackBy: trackById"
+             [draggable]="attendanceOpen"
+             (dragstart)="onDragStart(t)"
+             (dragend)="onDragEnd()">
+
+          <div class="task-header">
+            <div class="title-row">
+              <span class="task-title">{{ t.title }}</span>
+            </div>
+            <span *ngIf="t.tag" class="chip right">{{ t.tag }}</span>
+          </div>
+
+          <div class="task-body">
+            <div class="task-desc" *ngIf="t.description">{{ t.description }}</div>
+
+            <div class="task-meta" *ngIf="t.shift_window">
+              <div class="meta-left">
+                <span class="muted">From</span>
+                <span class="mono">{{ formatFull(t.shift_window.start) }}</span>
+                <span class="muted">&nbsp;to&nbsp;</span>
+                <span class="mono">{{ formatFull(t.shift_window.end) }}</span>
+              </div>
+              <div class="meta-right" *ngIf="t.shift_window.end as endIso">
+                <ng-container [ngSwitch]="deadlineMeta(t).cls">
+                  <span class="badge ok"   *ngSwitchCase="'ok'">{{ deadlineMeta(t).label }}</span>
+                  <span class="badge warn" *ngSwitchCase="'warn'">{{ deadlineMeta(t).label }}</span>
+                  <span class="badge over" *ngSwitchCase="'over'">{{ deadlineMeta(t).label }}</span>
+                  <span class="badge"      *ngSwitchDefault>{{ deadlineMeta(t).label }}</span>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-mobile" *ngIf="attendanceOpen">
+            <button class="seg" [class.active]="t.status==='assigned'"    (click)="setStatusFromMobile(t, 'assigned')">To do</button>
+            <button class="seg" [class.active]="t.status==='in_progress'" (click)="setStatusFromMobile(t, 'in_progress')">Doing</button>
+            <button class="seg" [class.active]="t.status==='done'"        (click)="setStatusFromMobile(t, 'done')">Done</button>
+          </div>
+        </div>
+
+        <div class="empty-col" *ngIf="!done.length && !loading">No tasks.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" *ngIf="saving">
+    <div class="overlay-box"><span class="spin"></span> Updating…</div>
+  </div>
+</div>

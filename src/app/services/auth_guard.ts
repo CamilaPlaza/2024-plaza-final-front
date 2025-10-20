@@ -1,29 +1,41 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
-import { AuthService } from './auth_service';
-import { Observable } from 'rxjs';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../services/firebaseconfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    const publicRoutes = ['/user-register', '/user-forgot-password', '/reset-password'];
-    const path = route.routeConfig?.path || '';  // Asigna un valor por defecto si path es undefined
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
-    if (publicRoutes.includes(path)) {
-      return true;  // Si la ruta es pública, permitir el acceso
+    const publicRoutes = new Set([
+      '',
+      'login',
+      'user-register',
+      'user-forgot-password',
+      'reset-password'
+    ]);
+
+    const path = route.routeConfig?.path ?? '';
+
+    if (publicRoutes.has(path)) {
+      return Promise.resolve(true);
     }
 
-    return this.authService.isAuthenticated().then(isAuth => {
-      if (!isAuth) {
-        this.router.navigate(['/']);  // Redirige a la página de login si no está autenticado
-        return false;
-      }
-      return true;
+    return new Promise<boolean>((resolve) => {
+      const unsub = onAuthStateChanged(auth, (user) => {
+        unsub();
+        if (user) {
+          resolve(true);
+        } else {
+          this.router.navigate(['/login'], { queryParams: { redirectTo: state.url } });
+          resolve(false);
+        }
+      });
     });
   }
 }

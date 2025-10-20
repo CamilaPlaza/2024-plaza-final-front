@@ -1,159 +1,148 @@
-<div class="container">
-    <div class="column column-left">
-        <p class="title">PROFILE</p>
-        <div class="profile-info">
-            <div class="info-group">
-                <label for="name">Name</label>
-                <p class="user-data">{{ name }}</p>
-                <hr>
-            </div>
-            <div class="info-group">
-                <label for="email">Email</label>
-                <p class="user-data">{{ email }}</p>
-                <hr>
-            </div>
-            <div class="info-group">
-                <label for="birthday">Birthday</label>
-                <p class="user-data">{{ birthday }}</p>
-                <hr>
-            </div>
-        </div>
-        
-        <!-- Grupo de botones -->
-        <div class="button-group">
-            <button (click)="showChangePasswordDialog()" class="btn">Change Password</button>
-            <button (click)="showConfirmDeleteDialog()" class="btn">Delete Account</button>
-            <button (click)="showInfoPointsDialog()" class="btn">C&V's Points Program</button>
-        </div>
-    </div>
-    
-    <div class="column-right">
-      <p-splitter [style]="{ height: '100vh' }" [panelSizes]="[70, 30]" layout="vertical">
-        <ng-template pTemplate>
-          <!-- Sección superior -->
-          <div class="right-top-section">
-            <div class="mug-icon-container">
-              <i class="fa-solid fa-mug-hot mug-icon mr-2"></i>
-              <p>{{currentGlobalPoints}}</p>
-            </div>
-      
-            <h1 class="rewards-title">C&V Rewards</h1>
-            <div class="user-info">
-              <p>{{name}}'s Level: {{ levelName }}</p>
-      
-              <p *ngIf="isTopLevel && !achievedMonthlyPointsMessage">
-                You are at the top level! {{ pointsNeededToMaintain }} points left to maintain this level.
-              </p>
-              <p *ngIf="!isTopLevel && nextLevelData">
-                C&V's points needed to upgrade to {{ nextLevelData.name }}: {{ pointsToNextLevel }}.
-              </p>
-              <p *ngIf="achievedMonthlyPointsMessage">
-                {{ achievedMonthlyPointsMessage }}
-              </p>
-              <p *ngIf="!nextLevelData && !isTopLevel">Loading next level data...</p>
-            </div>
-      
-            <div class="card carousel">
-              <p-carousel
-                [value]="rewards"
-                [numVisible]="isMobile ? 1 : 3"
-                [numScroll]="1"
-                [responsiveOptions]="responsiveOptions"
-                [showIndicators]="false">
-                <ng-template let-reward pTemplate="item">
-                  <div class="reward-box" (click)="showDiscountCode(reward)">
-                    <div class="reward-image-container">
-                      <img src="{{ reward.imageUrl }}" [alt]="reward.name" />
-                    </div>
-                    <div class="reward-name">
-                      {{ reward.name }}
-                    </div>
-                  </div>
-                </ng-template>
-              </p-carousel>
-            </div>
-            
-      
-            <p-dialog [(visible)]="displayDiscountDialog" [modal]="true" header="{{selectedReward?.name}}" [closable]="true" [responsive]="true" class="discount-dialog">
-              <div class="discount-dialog-content">
-                <p *ngIf="selectedReward?.description" class="discount-description">{{ selectedReward?.description }}</p>
-                <p class="discount-code">Use code <strong>{{ selectedReward?.code }}</strong> for a discount!</p>
-              </div>
-            </p-dialog>
-          </div>
-        </ng-template>
-      
-        <ng-template pTemplate>
-          <!-- Sección inferior -->
-          <div class="right-bottom-section">
-            <h2 class="ranking-title">Employee Monthly Ranking</h2>
-            <div class="table-container">
-              <p-table
-                #dt2
-                [value]="ranking"
-                dataKey="name"
-                [loading]="loading"
-                [scrollable]="true"
-                scrollHeight="400px"
-                class="user-table">
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Points</th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-user let-i="rowIndex">
-                  <tr>
-                    <td>{{ i + 1 }}</td>
-                    <td class="name-column">
-                      <img [alt]="user.name" [src]="user.imageUrl" class="user-image" />
-                      <span>{{ user.name }}</span>
-                    </td>
-                    <td>{{ user.monthlyPoints }}</td>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                  <tr>
-                    <td colspan="3">No users found.</td>
-                  </tr>
-                </ng-template>
-              </p-table>
-            </div>
-          </div>
-        </ng-template>
-      </p-splitter>
-      
-
-    </div>
+<div class="spinner-overlay" *ngIf="loading">
+  <div class="spinner"></div>
+  <p class="spinner-text">Cargando…</p>
 </div>
 
-<p-dialog [(visible)]="displayConfirmDeleteDialog" [modal]="true" header="Delete Account" [closable]="true">
-    <app-confirmation-pop-up
-      [subtitle]="'Are you sure you want to proceed?'"
-      (onClose)="closeConfirmDeleteDialog()"
-      (onSend)="onDeleteAccount()">
-    </app-confirmation-pop-up>
-  </p-dialog>
+<div class="container">
+  <div class="column column-left">
+      <p class="title">PROFILE</p>
+      <div class="profile-info">
+          <div class="info-group">
+              <label for="name">Name</label>
+              <p class="user-data">{{ name }}</p>
+              <hr>
+          </div>
+          <div class="info-group">
+              <label for="email">Email</label>
+              <p class="user-data">{{ email }}</p>
+              <hr>
+          </div>
+          <div class="info-group">
+              <label for="birthday">Birthday</label>
+              <p class="user-data">{{ birthday }}</p>
+              <hr>
+          </div>
+      </div>
 
-  <p-dialog [(visible)]="displayChangePasswordDialog" [modal]="true" header="Change Password Account" [closable]="true">
-    <app-confirmation-pop-up
-      [subtitle]="'Are you sure you want to proceed?'"
-      (onClose)="closeChangePasswordDialog()"
-      (onSend)="changePassword()">
-    </app-confirmation-pop-up>
-  </p-dialog>
-  
-  
-  <p-dialog [(visible)]="displayErrorDialog" [modal]="true" header="Error" [closable]="true">
-    <app-notice
-      [subtitle]="'Something went wrong, please try again'"
-      (onClose)="closeErrorDialog()">
-    </app-notice>
-  </p-dialog>
-  
-  <p-toast></p-toast>
+      <div class="button-group">
+          <button (click)="showChangePasswordDialog()" class="btn">Change Password</button>
+          <button (click)="showInfoPointsDialog()" class="btn">C&V's Points Program</button>
+      </div>
+  </div>
 
-  <p-dialog class="info-dialog" [(visible)]="displayInfoPointsDialog" [modal]="true" header="C&V Rewards" [closable]="true">
-    <app-info-points [name]="name" [levelName]="levelName"></app-info-points>
-  </p-dialog>
+  <div class="column-right">
+    <p-splitter [style]="{ height: '100vh' }" [panelSizes]="[70, 30]" layout="vertical">
+      <ng-template pTemplate>
+        <div class="right-top-section">
+          <div class="mug-icon-container">
+            <i class="fa-solid fa-mug-hot mug-icon mr-2"></i>
+            <p>{{currentGlobalPoints}}</p>
+          </div>
+
+          <h1 class="rewards-title">C&V Rewards</h1>
+          <div class="user-info">
+            <p>{{name}}'s Level: {{ levelName }}</p>
+
+            <p *ngIf="isTopLevel && !achievedMonthlyPointsMessage">
+              You are at the top level! {{ pointsNeededToMaintain }} points left to maintain this level.
+            </p>
+            <p *ngIf="!isTopLevel && nextLevelData">
+              C&V's points needed to upgrade to {{ nextLevelData.name }}: {{ pointsToNextLevel }}.
+            </p>
+            <p *ngIf="achievedMonthlyPointsMessage">
+              {{ achievedMonthlyPointsMessage }}
+            </p>
+            <p *ngIf="!nextLevelData && !isTopLevel">Loading next level data...</p>
+          </div>
+
+          <div class="card carousel">
+            <p-carousel
+              [value]="rewards"
+              [numVisible]="isMobile ? 1 : 3"
+              [numScroll]="1"
+              [responsiveOptions]="responsiveOptions"
+              [showIndicators]="false">
+              <ng-template let-reward pTemplate="item">
+                <div class="reward-box" (click)="showDiscountCode(reward)">
+                  <div class="reward-image-container">
+                    <img src="{{ reward.imageUrl }}" [alt]="reward.name" />
+                  </div>
+                  <div class="reward-name">
+                    {{ reward.name }}
+                  </div>
+                </div>
+              </ng-template>
+            </p-carousel>
+          </div>
+
+          <p-dialog [(visible)]="displayDiscountDialog" [modal]="true" header="{{selectedReward?.name}}" [closable]="true" [responsive]="true" class="discount-dialog">
+            <div class="discount-dialog-content">
+              <p *ngIf="selectedReward?.description" class="discount-description">{{ selectedReward?.description }}</p>
+              <p class="discount-code">Use code <strong>{{ selectedReward?.code }}</strong> for a discount!</p>
+            </div>
+          </p-dialog>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate>
+        <div class="right-bottom-section">
+          <h2 class="ranking-title">Employee Monthly Ranking</h2>
+          <div class="table-container">
+            <p-table
+              #dt2
+              [value]="ranking"
+              dataKey="name"
+              [loading]="loading"
+              [scrollable]="true"
+              scrollHeight="400px"
+              class="user-table">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Points</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-user let-i="rowIndex">
+                <tr>
+                  <td>{{ i + 1 }}</td>
+                  <td class="name-column">
+                    <img [alt]="user.name" [src]="user.imageUrl" class="user-image" />
+                    <span>{{ user.name }}</span>
+                  </td>
+                  <td>{{ user.monthlyPoints }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="3">No users found.</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </ng-template>
+    </p-splitter>
+  </div>
+</div>
+
+<p-dialog [(visible)]="displayChangePasswordDialog" [modal]="true" header="Change Password Account" [closable]="true">
+  <app-confirmation-pop-up
+    [subtitle]="'Are you sure you want to proceed?'"
+    (onClose)="closeChangePasswordDialog()"
+    (onSend)="changePassword()">
+  </app-confirmation-pop-up>
+</p-dialog>
+
+<p-dialog [(visible)]="displayErrorDialog" [modal]="true" header="Error" [closable]="true">
+  <app-notice
+    [subtitle]="'Something went wrong, please try again'"
+    (onClose)="closeErrorDialog()">
+  </app-notice>
+</p-dialog>
+
+<p-toast></p-toast>
+
+<p-dialog class="info-dialog" [(visible)]="displayInfoPointsDialog" [modal]="true" header="C&V Rewards" [closable]="true">
+  <app-info-points [name]="name" [levelName]="levelName"></app-info-points>
+</p-dialog>

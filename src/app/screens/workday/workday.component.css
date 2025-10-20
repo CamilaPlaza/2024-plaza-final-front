@@ -1,0 +1,208 @@
+/* === base igual a tus páginas === */
+html, body { height: 100%; margin: 0; padding: 0; }
+
+/* Clave: que el contenedor pueda CRECER (no height fijo) */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;        /* antes: height: 100vh */
+  margin-left: 5%;
+}
+
+/* Clave: que cada sección no “estire” a la fuerza el viewport */
+.section { flex: 0 0 auto; }
+
+/* Imagen siempre visible arriba, con alto fijo razonable */
+.image-section {
+  height: 220px;            /* antes: flex: 0.5; height:10% */
+  width: 100%;
+  overflow: hidden;
+}
+.image { width: 100%; height: 100%; object-fit: cover; }
+
+/* Título fijo debajo de la imagen */
+.title-section {
+  padding: 12px 0;          /* antes: flex: 0.15; */
+  background-color: #7f522e; color: #f2f2f2; position: relative;
+}
+.title { font-size: 2rem; margin: 0; text-align: center; }
+
+/* Slot de acciones (botones), solo para employee como ya tenés en el HTML */
+.action-slot {
+  position: absolute;
+  right: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.checkin-title-button,
+.checkout-title-button {
+  background-color: #caa171; color: #7f522e;
+  border: none; border-radius: 5px;
+  padding: 0.5rem 1.4rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s;
+  display: flex; align-items: center; justify-content: center;
+  white-space: nowrap; cursor: pointer;
+}
+.checkin-title-button:hover,
+.checkout-title-button:hover { background-color: #b58958; }
+.button-text { margin-left: 8%; }
+
+/* Zona principal de contenido. Ya NO forzamos alturas. */
+.table-section {
+  background-color: #d0d0d0;
+  display: flex; align-items: center; justify-content: center;
+  padding-bottom: 24px;     /* un poco de aire al final del scroll */
+}
+.card {
+  width: 100%;
+  background:#f7f7f7;
+  /* antes tenía height:100%; que hacía que “tape” lo de arriba */
+  position: relative;       /* para el overlay del loader */
+}
+
+/* Loader overlay */
+.page-loader{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+  background: rgba(240,240,240,.6);
+  backdrop-filter: blur(2px);
+  z-index: 5;
+}
+.loader-box{
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  padding:14px 16px; box-shadow:0 12px 30px rgba(0,0,0,.12);
+  display:flex; align-items:center; gap:10px; color:#533521; font-weight:700;
+}
+.spin-xl{
+  width:28px; height:28px; border-radius:50%;
+  border:3px solid #cfd8e3; border-top-color:#7f522e;
+  display:inline-block; animation:spin .8s linear infinite;
+}
+
+
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.spinner {
+  border: 6px solid #eee;
+  border-top: 6px solid #7f522e;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-text {
+  margin-top: 15px;
+  color: #444;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ============ TODAY'S STATUS (solo employee, ya controlado por *ngIf) ============ */
+.ws-status{
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  margin: 14px; padding: 12px 14px;
+  box-shadow:0 6px 16px rgba(0,0,0,.06);
+}
+.status-header{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+}
+.status-header h3{ margin:0; color:#333; font-size:1.1rem; }
+.pill{
+  padding:4px 10px; border-radius:500px; font-weight:750; font-size:.8rem;
+  border:1px solid #e5e7eb; background:#ececec; color:#333;
+}
+.pill.ok{ background:#eaf8ee; color:#1a7f37; border-color:#d7f0df; }
+.pill.off{ background:#f3ecff; color:#6d28d9; border-color:#e9d5ff; }
+
+.status-row{
+  display:grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px; margin-top: 6px;
+}
+.status-item{
+  background:#fafafa; border:1px solid #eee; border-radius:10px;
+  padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
+}
+.label{ color:#667085; font-weight:700; }
+.value{ color:#222; font-weight:700; }
+.value.accent{ color:#7f522e; }
+.value.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* ============ TASKS BOARD (admin o employee) ============ */
+.ws-board{
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  margin: 0 14px 14px; padding: 12px 14px;
+  box-shadow:0 6px 16px rgba(0,0,0,.06);
+  /* Clave: que no limite la altura. Dejamos crecer y hacer scroll de toda la página */
+  height: auto;            /* antes: height: calc(100% - 140px); */
+  min-height: 320px;
+}
+.board-head{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;
+}
+.board-head h3{ margin:0; color:#333; font-size:1.1rem; }
+.muted{ color:#6b7280; }
+
+/* Columnas (si tuvieras board de employee, lo dejo como estaba) */
+.columns{
+  display:grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; min-height: 0;
+}
+.col{ display:flex; flex-direction:column; }
+.col-title{ font-weight:800; color:#7f522e; margin-bottom:8px; }
+
+.dropzone{
+  min-height:120px; overflow:auto;
+  padding:8px; border:1px dashed #d1d5db; border-radius:10px; background:#fcfcfc;
+  transition: background .15s ease, border-color .15s ease;
+}
+.dropzone.is-dragover{ background:#fff8f0; border-color:#caa171; }
+
+.task{
+  display:grid; grid-template-columns: 1fr auto; align-items:center; gap:10px;
+  padding:10px; border:1px solid #e5e7eb; border-radius:10px; background:#fff;
+  margin-bottom:8px; cursor:grab;
+  box-shadow:0 4px 10px rgba(0,0,0,.04);
+}
+.task.done{ opacity:.85; }
+.task-body{ display:flex; flex-direction:column; }
+.task-title{ font-weight:700; color:#222; margin-bottom:6px; }
+.task-note{ color:#6b7280; font-size:.9rem; }
+.task-tag{
+  padding:4px 8px; border-radius:999px; border:1px solid #e5e7eb;
+  background:#f3f4f6; color:#7f522e; font-weight:700; font-size:.8rem;
+}
+.empty-col{ text-align:center; color:#9ca3af; padding:14px 4px; }
+
+/* Responsive */
+@media (max-width: 768px){
+  .container { margin-left: 10%; }
+  .image-section { height: 160px; }
+  .title { font-size: 1.2rem; padding: 10px; }
+
+  .checkin-title-button, .checkout-title-button{ padding: 0.5rem 0.6rem; }
+  .button-text{ display:none; }
+
+  .status-row{ grid-template-columns: 1fr 1fr; }
+  .columns{ grid-template-columns: 1fr; }
+}

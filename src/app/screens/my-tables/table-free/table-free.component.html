@@ -4,10 +4,14 @@
     <p-progressSpinner></p-progressSpinner>
   </div>
 
-  <!-- Título -->
   <div class="header">
     <h2 class="table-number">Table: {{ table.id }}</h2>
     <span class="status">{{ table.status }}</span>
+  </div>
+
+  <div *ngIf="readOnly" class="readonly-inline-banner">
+    <i class="pi pi-lock"></i>
+    <span>Vista sólo lectura. Hacé check-in para crear órdenes.</span>
   </div>
 
   <div class="body">
@@ -18,7 +22,6 @@
       </div>
     </div>
 
-    <!-- Formulario de la orden -->
     <div class="order-form" *ngIf="orderItems.length > 0">
       <div class="table-wrapper">
         <table class="product-table">
@@ -36,7 +39,7 @@
               <td>{{ item.amount }}</td>
               <td>{{ getProductById(item.product_id)?.price | currency }}</td>
               <td>
-                <button class="remove-button" (click)="removeOrderItem(item)">
+                <button class="remove-button" (click)="removeOrderItem(item)" [disabled]="readOnly">
                   <i class="pi pi-trash"></i>
                 </button>
               </td>
@@ -45,50 +48,66 @@
         </table>
       </div>
     </div>
-    <div>
 
+    <div>
       <div class="category-selection">
         <div class="category">
           <label for="categories">Select Categories:</label>
-          <p-multiSelect 
-            id="categories" 
-            [options]="categories" 
-            [appendTo]="'body'"
-            [(ngModel)]="selectedCategories" 
-            optionLabel="name" 
-            placeholder="Choose Categories" 
-            (onChange)="filterProductsByCategory()">
-          </p-multiSelect>
+
+          <ng-container *ngIf="categoriesLoading">
+            <p-progressSpinner [style]="{width:'18px',height:'18px'}" strokeWidth="4"></p-progressSpinner>
+          </ng-container>
+
+          <ng-container *ngIf="!categoriesLoading">
+            <p-multiSelect
+              id="categories"
+              [options]="categories"
+              [appendTo]="'body'"
+              [(ngModel)]="selectedCategories"
+              optionLabel="name"
+              placeholder="Choose Categories"
+              (onChange)="filterProductsByCategory()"
+              [disabled]="readOnly">
+            </p-multiSelect>
+          </ng-container>
         </div>
+
         <div class="amountPeople">
           <label for="amountOfPeople">People:</label>
-          <input id="amountOfPeople" type="number" [title]="'Table capacity: ' + table.capacity" [max]="table.capacity" [(ngModel)]="selectedAmountOfPeople" min="1" />
+          <input id="amountOfPeople" type="number" [title]="'Table capacity: ' + table.capacity" [max]="table.capacity" [(ngModel)]="selectedAmountOfPeople" min="1" [disabled]="readOnly" />
         </div>
       </div>
 
-      <div  *ngIf="selectedCategories.length > 0">
+      <div *ngIf="selectedCategories.length > 0">
         <div class="add-product">
-            <label for="product">Product:</label>
-            <p-dropdown 
-              [options]="filteredProducts" 
-              [(ngModel)]="selectedProduct" 
+          <label for="product">Product:</label>
+
+          <ng-container *ngIf="filteredProductsLoading">
+            <p-progressSpinner [style]="{width:'18px',height:'18px'}" strokeWidth="4"></p-progressSpinner>
+          </ng-container>
+
+          <ng-container *ngIf="!filteredProductsLoading">
+            <p-dropdown
+              [options]="filteredProducts"
+              [(ngModel)]="selectedProduct"
               optionLabel="name"
               [appendTo]="'body'"
               [filter]="true"
               filterBy="name"
               [showClear]="true"
               placeholder="Select a Product"
-              (onChange)="onProductChange($event)">
-            
+              (onChange)="onProductChange($event)"
+              [disabled]="readOnly">
+
               <ng-template pTemplate="selectedItem" let-selectedProduct>
                 <div class="flex align-items-center gap-2">
                   <div>{{ selectedProduct?.name }}</div>
                 </div>
               </ng-template>
-            
+
               <ng-template let-product pTemplate="item">
-                <div 
-                  class="flex align-items-center gap-2" 
+                <div
+                  class="flex align-items-center gap-2"
                   [ngClass]="{'disabled-option': product.disabled}"
                   [class.pointer-none]="product.disabled">
                   <div>{{ product.name }}</div>
@@ -96,36 +115,32 @@
                 </div>
               </ng-template>
             </p-dropdown>
-          
-            <div class="amount-price-wrapper">
-              <div class="amount">
-                <label for="amount">Amount:</label>
-                <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" (blur)="validateAmount()"  [max]="selectedProduct?.stock || 1" [title]="'Maximum stock: ' + (selectedProduct?.stock || 0)"/>
-              </div>
-              <div class="price">
-                <label for="price">Price:</label>
-                <input id="price" type="text" [value]="selectedProduct?.price" disabled />
-              </div>
+          </ng-container>
+
+          <div class="amount-price-wrapper">
+            <div class="amount">
+              <label for="amount">Amount:</label>
+              <input id="amount" type="number" [(ngModel)]="selectedAmount" min="1" (blur)="validateAmount()"  [max]="selectedProduct?.stock || 1" [title]="'Maximum stock: ' + (selectedProduct?.stock || 0)" [disabled]="readOnly || !selectedProduct"/>
             </div>
-            
-          </div>
-          
-          <div class="add-product-button">
-            <button [disabled]="!selectedProduct" (click)="addOrderItem()">Add Product</button>
-          </div>
 
+            <div class="price">
+              <label for="price">Price:</label>
+              <input id="price" type="text" [value]="selectedProduct?.price" disabled />
+            </div>
+          </div>
+        </div>
 
-        <!-- Total -->
+        <div class="add-product-button">
+          <button [disabled]="readOnly || !selectedProduct" (click)="addOrderItem()">Add Product</button>
+        </div>
+
         <div class="total">
           <p>Total: {{ calculateTotal() | currency }}</p>
         </div>
       </div>
 
-      
-
-    <!-- Botones de acción -->
     <div class="action-buttons">
-      <button pButton label="Create Order" class="create-order-button" (click)="createOrder()" [disabled]="orderItems.length === 0"></button>
+      <button pButton label="Create Order" class="create-order-button" (click)="createOrder()" [disabled]="readOnly || orderItems.length === 0"></button>
       <button pButton label="Close" class="close-button" (click)="closeDialog()"></button>
     </div>
   </div>

@@ -22,7 +22,6 @@
                 </div>
 
                 <div class="login-form">
-                    <!-- NAME + AVATAR -->
                     <div class="form-input name-avatar-row row-name">
                         <div class="card name-card">
                             <div class="name-with-avatar">
@@ -47,17 +46,24 @@
                         </div>
                     </div>
 
-                    <!-- Email -->
                     <div class="form-input">
                         <div class="card flex justify-content-center">
                             <p-floatLabel>
-                                <input pInputText id="email" [(ngModel)]="email" name="email" />
+                                <input pInputText
+                                       type="email"
+                                       id="email"
+                                       [(ngModel)]="email"
+                                       name="email"
+                                       (ngModelChange)="onEmailChange($event)"
+                                       (blur)="emailTouched=true"
+                                       [class.invalid]="emailTouched && !isEmailValid()"
+                                       autocomplete="email" />
                                 <label for="email">Email</label>
                             </p-floatLabel>
+                            <small class="err" *ngIf="emailTouched && !isEmailValid()">Invalid email</small>
                         </div>
                     </div>
 
-                    <!-- Password -->
                     <div class="form-input">
                         <div class="card flex justify-content-center">
                             <p-floatLabel>
@@ -78,7 +84,6 @@
                         </div>
                     </div>
 
-                    <!-- Birthday -->
                     <div class="form-input">
                         <div class="card flex justify-content-center">
                             <p-floatLabel>
@@ -88,7 +93,6 @@
                         </div>
                     </div>
 
-                    <!-- SELECT SHIFT -->
                     <div class="form-input row-shift">
                         <div class="card shift-card">
                             <div class="shift-input-like">
@@ -120,7 +124,6 @@
                         </div>
                     </div>
 
-                    <!-- Register -->
                     <div class="form-button">
                         <div class="card flex justify-content-center">
                             <p-button label="Register" [disabled]="!areAllFieldsFilled()" (click)="showConfirmDialog()"></p-button>

@@ -45,14 +45,8 @@
 
 /* NAME + AVATAR (desktop) */
 .name-avatar-row { margin-bottom:4.5%; }
-
-/* ⬇️ centra el bloque como los demás en desktop */
 .name-card { display:flex; justify-content:center; }
-
-/* el conjunto mide EXACTAMENTE 300px */
 .name-with-avatar { display:flex; align-items:center; gap:12px; width:300px; }
-
-/* input = 300 - gap(12) - avatar(56) = 232px */
 ::ng-deep .name-with-avatar input { width: calc(300px - 12px - 56px) !important; }
 
 .avatar-uploader { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,.15); border:1px solid #af9375; display:grid; place-items:center; position:relative; cursor:pointer; overflow:hidden; }
@@ -63,8 +57,7 @@
 .avatar-uploader.avatar-has-image:hover .avatar-clear { display:block; }
 
 /* SELECT SHIFT (desktop) */
-.shift-card { display:flex; justify-content:center; }   /* ⬅ centra igual que los otros */
-
+.shift-card { display:flex; justify-content:center; }
 .shift-input-like {
     width:300px; height:44px; border-radius:30px; border:1px solid #af9375; background:#af9375;
     display:flex; align-items:center; justify-content:space-between; padding:0 8px 0 12px; color:#fff; box-sizing:border-box;
@@ -73,11 +66,8 @@
 .shift-dots { display:flex; align-items:center; gap:8px; }
 .shift-dot { border:1px solid #af9375; background:#895f3c33; color:#fff; height:30px; min-width:30px; padding:0 8px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all .18s ease; font-size:14px; font-weight:400; white-space:nowrap; }
 .shift-dot .full { display:none; }
-
-/* Desktop: al seleccionar, mostrar texto largo */
 .shift-dot.selected .short { display: none; }
 .shift-dot.selected .full  { display: inline; }
-
 .shift-dot.selected { background:#ab602f; border-color:#ab602f; color:#fff; }
 .shift-dot:hover { transform:translateY(-1px); }
 
@@ -91,14 +81,68 @@
 .image-half .subtitle{ font-size:18px; color:#fff; text-shadow:2px 2px 4px rgba(0,0,0,.7); }
 .image-half .centered-text{ position:absolute; text-align:center; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2; font-family:'Arial', sans-serif; }
 
+/* Estados de error/validación */
+.p-inputtext.invalid,
+input.invalid,
+::ng-deep .p-password-input.invalid {
+  border-color: #e53935 !important;
+  box-shadow: 0 0 0 2px rgba(229,57,53,0.1);
+}
+.p-inputtext.invalid:focus,
+input.invalid:focus,
+::ng-deep .p-password-input.invalid:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(229,57,53,0.18);
+}
+.err {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #e53935;
+}
+
+/* Botón deshabilitado */
+.form-button button[disabled],
+.p-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(20%);
+}
+
+/* Campo + error en columna (input arriba, error abajo) */
+.form-input .card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Mantener el ancho del campo y del error alineados */
+.form-input .card .p-float-label {
+  width: 300px;
+  flex: 0 0 auto;
+}
+
+.err {
+  width: 300px;
+  text-align: left;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #e53935;
+  flex: 0 0 auto;
+}
+
+/* En responsive, que ocupen todo el ancho */
+@media (max-width: 920px) {
+  .form-input .card .p-float-label { width: 100%; }
+  .err { width: 100%; font-size: 11px; }
+}
+
+
 /* ======================= RESPONSIVE ======================= */
 @media (max-width: 920px) {
     ::ng-deep .form-input input,
     ::ng-deep .form-input p-password .p-password-input { width:100%; }
-
     .login-form .card { width:100%; }
-
-    /* NAME */
     .row-name .name-card { width:100%; max-width:400px; margin:0 auto; }
     .row-name .name-with-avatar {
         display:grid;
@@ -109,18 +153,15 @@
     .row-name .avatar-uploader { width:48px; height:48px; }
     .row-name .name-field { margin-left: 15%; width:70%; display:block; }
     .row-name .name-field input { width:100% !important; }
-
-    /* SHIFT */
     .row-shift .shift-card { width:65%; max-width:400px; margin:0 auto; }
     .row-shift .shift-input-like { width:100%; }
     .row-shift .shift-dots { justify-content:flex-end; gap:8px; }
     .row-shift .shift-dot .full { display:none !important; }
     .row-shift .shift-dot .short { display:inline !important; }
-
     .form-button .p-button { width:100%; }
     .nav-btn { padding:10px 20px; font-size:18px; }
-
     .login-form { margin-top:30%; }
+    .err { font-size: 11px; }
 }
 
 @media (max-width: 600px) {
@@ -129,8 +170,8 @@
     .form-half { width:100%; padding:10% 5%; }
     .form-container { width:100%; text-align:center; }
     .login-form { margin-top:0; display:flex; flex-direction:column; }
-
     .row-name .name-card,
     .row-shift .shift-card { max-width:320px; }
     .row-name .avatar-uploader { margin-left: -80%; width:44px; height:44px; }
+    .err { font-size: 11px; }
 }

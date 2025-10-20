@@ -15,27 +15,18 @@ export class UserRegisterComponent implements OnInit {
   email: string = '';
   password: string = '';
   birthDate!: Date;
-
-  // Avatar / imagen
   fileName: string = '';
   imageUrl: string = '';
-
   isMobile: boolean = window.innerWidth <= 800;
   loading: boolean = false;
-
-  // Validaciones password
   passwordValid = { lowercase: false, uppercase: false, numeric: false, minLength: false };
-
   formattedBirthDate: string = '';
   displayConfirmDialog: boolean = false;
   displayErrorDialog: boolean = false;
   maxDate: Date = new Date();
-
-  // Shift seleccionado
   selectedShift: string = '';
-
-  // Límite de imagen
-  readonly MAX_IMAGE_BYTES = 1000000; // 1 MB
+  readonly MAX_IMAGE_BYTES = 1000000;
+  emailTouched: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -48,9 +39,6 @@ export class UserRegisterComponent implements OnInit {
     localStorage.removeItem('token');
   }
 
-  /* ---------------------------
-     Avatar
-  ----------------------------*/
   onAvatarClick(inputEl: HTMLInputElement) {
     inputEl.click();
   }
@@ -59,16 +47,12 @@ export class UserRegisterComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const file = input?.files?.[0];
     if (!file) return;
-
     if (file.size > this.MAX_IMAGE_BYTES) {
       this.toastError(`Image is too large (${(file.size / 1024).toFixed(0)} KB). Max: ${(this.MAX_IMAGE_BYTES/1024).toFixed(0)} KB.`);
-      // Limpio el input para poder volver a elegir la misma imagen luego
       input.value = '';
       return;
     }
-
     this.fileName = file.name;
-
     const reader = new FileReader();
     reader.onload = (e: any) => {
       this.imageUrl = e.target.result;
@@ -77,27 +61,20 @@ export class UserRegisterComponent implements OnInit {
   }
 
   clearAvatar(ev?: Event) {
-    if (ev) ev.stopPropagation(); // no abrir el file picker
+    if (ev) ev.stopPropagation();
     this.fileName = '';
     this.imageUrl = '';
   }
 
-  /* ---------------------------
-     Shift
-  ----------------------------*/
   setShift(value: 'mañana' | 'tarde' | 'noche') {
     this.selectedShift = value;
   }
 
-  /* ---------------------------
-     Registro
-  ----------------------------*/
   async onRegister() {
     try {
       this.closeConfirmDialog();
       this.loading = true;
       this.formattedBirthDate = this.datePipe.transform(this.birthDate, 'dd/MM/yyyy') || '';
-
       const ok = await this.userService.onRegister(
         this.email,
         this.password,
@@ -111,7 +88,6 @@ export class UserRegisterComponent implements OnInit {
         this.router.navigate(['/home']);
       }
     } catch (error: any) {
-      console.error('Register failed', error);
       this.showErrorDialog();
     } finally {
       this.loading = false;
@@ -136,9 +112,20 @@ export class UserRegisterComponent implements OnInit {
            this.passwordValid.minLength;
   }
 
+  onEmailChange(v: string) {
+    this.email = v;
+    this.emailTouched = true;
+  }
+
+  isEmailValid(): boolean {
+    const e = this.email.trim();
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
+  }
+
   areAllFieldsFilled(): boolean {
     return this.name.trim() !== '' &&
            this.email.trim() !== '' &&
+           this.isEmailValid() &&
            this.password.trim() !== '' &&
            this.birthDate !== undefined &&
            this.selectedShift !== '' &&
@@ -150,9 +137,6 @@ export class UserRegisterComponent implements OnInit {
   showErrorDialog() { this.displayErrorDialog = true; }
   closeErrorDialog() { this.displayErrorDialog = false; }
 
-  /* ---------------------------
-     Toast helper
-  ----------------------------*/
   private toastError(detail: string) {
     this.messageService.add({
       severity: 'error',

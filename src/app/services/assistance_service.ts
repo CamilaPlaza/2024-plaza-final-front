@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AssistanceService {
-  private baseUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'https://two024-plaza-final-back-4lpd.onrender.com';
 
   constructor(private http: HttpClient) {}
 

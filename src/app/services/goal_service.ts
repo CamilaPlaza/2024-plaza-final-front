@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class GoalService {
-  //private baseUrl = 'https://candv-back.onrender.com';
-  private baseUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'https://two024-plaza-final-back-4lpd.onrender.com';
+  //private baseUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient) {}
   async createGoal(goal: Goal): Promise<any | null> {
@@ -24,5 +24,5 @@ export class GoalService {
   getGoals(month: string, year: string): Observable<Goal[]> {
     return this.http.get<Goal[]>(`${this.baseUrl}/goals/${month}/${year}`);
   }
-  
+
 }

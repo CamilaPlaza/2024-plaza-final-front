@@ -14,10 +14,9 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Sólo agregar token para tu API
     const isApiCall =
       req.url.startsWith('http://127.0.0.1:8000') ||
-      req.url.includes('candv-back.onrender.com');
+      req.url.includes('two024-plaza-final-back-4lpd.onrender.com');
 
     if (!isApiCall) return next.handle(req);
 

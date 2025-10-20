@@ -17,8 +17,8 @@ export class UserService {
   currentUserData: any = null;
   currentUserData$ = new BehaviorSubject<any>(null);
 
-  //private baseUrl = 'https://candv-back.onrender.com';
-  private baseUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'https://two024-plaza-final-back-4lpd.onrender.com';
+  //private baseUrl = 'http://127.0.0.1:8000';
 
   idleTime: number = 0;
   maxIdleTime: number = 10 * 60 * 1000;
@@ -41,6 +41,7 @@ export class UserService {
       this.currentUserData = userData;
       this.currentUserData$.next(userData);
     }
+    console.log("todo ok en firebase");
     return true;
   } catch (error) {
     console.error('Error al iniciar sesión', error);
@@ -169,9 +170,9 @@ export class UserService {
   handleAuthState() {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        this.monitorUserActivity();  // Monitorea la actividad después del inicio de sesión
-        this.startIdleTimer();       // Inicia el temporizador de inactividad
-        this.startSessionTimer();    // Inicia el temporizador de sesión fija
+        this.monitorUserActivity();
+        this.startIdleTimer();
+        this.startSessionTimer();
       }
     });
   }

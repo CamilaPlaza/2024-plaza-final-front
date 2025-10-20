@@ -10,7 +10,7 @@ import { throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class OrderService {
-  private baseUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'https://two024-plaza-final-back-4lpd.onrender.com';
   constructor(private http: HttpClient) { }
 
   async onRegister(order: Order): Promise<any | null> {

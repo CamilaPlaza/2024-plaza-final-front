@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 })
 export class ProductService {
 
-  //private baseUrl = 'https://candv-back.onrender.com';
-  private baseUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'https://two024-plaza-final-back-4lpd.onrender.com';
+  //private baseUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient) { }
 
@@ -37,7 +37,6 @@ export class ProductService {
     }
   }
 
-  // Actualizar descripción de un producto
   async updateProductDescription(productId: string, newDescription: string): Promise<boolean> {
     try {
       await this.http.put(`${this.baseUrl}/products/updateDescriptionByID/${productId}/${newDescription}`, { new_description: newDescription }).toPromise();
@@ -48,7 +47,6 @@ export class ProductService {
     }
   }
 
-  // Inside ProductService
   async updateProductCategories(productId: string, newCategories: string): Promise<boolean> {
     try {
       await this.http.put(`${this.baseUrl}/products/updateCategoriesByID/${productId}/${newCategories}`, { categories: newCategories }).toPromise();
@@ -61,7 +59,6 @@ export class ProductService {
 
   async deleteProduct(productId: string): Promise<boolean> {
     try {
-      // Send DELETE request to backend to remove the product by productId
       await this.http.delete(`${this.baseUrl}/products/deleteByID/${productId}`).toPromise();
       return true;
     } catch (error: any) {

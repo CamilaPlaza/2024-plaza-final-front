@@ -194,7 +194,6 @@ export class AsignInactiveOrderComponent implements OnInit {
             error: (error) => {
               console.error('Error al asignar la orden:', error);
               this.isLoading = false;
-              this.close.emit();
             }
           });
         },

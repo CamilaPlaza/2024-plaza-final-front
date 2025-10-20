@@ -41,7 +41,6 @@ export class UserService {
       this.currentUserData = userData;
       this.currentUserData$.next(userData);
     }
-    console.log("todo ok en firebase");
     return true;
   } catch (error) {
     console.error('Error al iniciar sesión', error);

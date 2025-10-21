@@ -124,14 +124,17 @@ export class TableBusyComponent implements OnInit {
           this.currentDate = this.actualOrder?.date ?? '';
           this.currentTime = this.actualOrder?.time ?? '';
           this.amountOfPeople = this.actualOrder?.amountOfPeople ?? 0;
+
           if (this.actualOrder?.employee) {
-            try {
-              const userData = await firstValueFrom(
-                await this.userService.getUserDataFromFirestore(this.actualOrder.employee)
-              );
-              this.employee = userData?.name ?? 'Unknown Employee';
-            } catch {}
+            this.orderService.getEmployeeNameByUid(this.actualOrder.employee).subscribe({
+              next: (name: string) => { this.employee = name || 'Employee'; },
+              error: () => { this.employee = 'Employee'; }
+            });
+
+          } else {
+            this.employee = '—';
           }
+
           this.orderLoaded = true;
           this.checkInitLoadingDone();
         },
@@ -145,6 +148,7 @@ export class TableBusyComponent implements OnInit {
       this.checkInitLoadingDone();
     }
   }
+
 
   loadProducts(): void {
     this.productService.getProducts().subscribe({

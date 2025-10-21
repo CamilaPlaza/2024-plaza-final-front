@@ -42,6 +42,11 @@ export class OrderService {
     return this.http.get<Order>(`${this.baseUrl}/orders`);
   }
 
+  getEmployeeNameByUid(userId: string): Observable<string> {
+    const url = `${this.baseUrl}/orders/employee/${encodeURIComponent(userId)}`;
+    return this.http.get(url, { responseType: 'text' as 'text' });
+  }
+
   finalizeOrder(orderId: string): Observable<Order> {
     const updatedOrder = { status: 'FINALIZED' };
     return this.http.put<Order>(`${this.baseUrl}/orders/finalize/${orderId}`, updatedOrder);
